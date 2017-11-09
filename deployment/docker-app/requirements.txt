@@ -1,0 +1,33 @@
+django
+psycopg2
+# tables display for price list
+django-tables2
+# import csv/xls
+lxml
+django-import-export
+# master password for dev site
+django-lockdown
+gevent
+gunicorn
+# https://devcenter.heroku.com/articles/django-assets
+whitenoise
+# allow gunicorn to change its process name
+setproctitle
+# debug
+django-debug-toolbar
+ipython
+ipdb
+# html to PDF
+xhtml2pdf>=0.2b1
+WeasyPrint>=0.34
+django-easy-pdf==0.2.0.dev1
+# lockout failed logins
+django-axes
+# include fontawesome for the logout icon
+django-fontawesome
+# change history for models
+django-simple-history
+# for admindocs
+docutils
+# settings in the DB (quotation version, etc)
+django-dbsettings

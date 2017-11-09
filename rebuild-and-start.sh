@@ -3,6 +3,8 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # todo make this be loaded on container startup from docker secrets
+# this is used by the build script to set the super user login and pass for the postgres db
+# also change it in the settings.py file
 export POSTGRES_USER=ateliersoude
 export POSTGRES_PASSWORD=ateliersoude
 

@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'axes',
+    # 'axes',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_tables2',
@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'simple_history',
     'dbsettings',
     'debug_toolbar',
+    'plateformeweb',
 ]
 
 MIDDLEWARE = [
@@ -101,6 +102,9 @@ DATABASES = {
         'PORT': '5432',
     }
 }
+
+# custom User model
+AUTH_USER_MODEL = "plateformeweb.User"
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators

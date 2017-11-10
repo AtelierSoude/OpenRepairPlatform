@@ -13,7 +13,11 @@ function rebuild_db() {
     docker build deployment/docker-db/ --tag ateliersoude-postgres
     docker stop ateliersoude-postgres
     docker rm -f ateliersoude-postgres
-    docker run --name ateliersoude-postgres --env POSTGRES_PASSWORD=ateliersoude --env POSTGRES_USER=ateliersoude --network ateliersoude --restart unless-stopped --detach ateliersoude-postgres
+    docker run --name ateliersoude-postgres --env POSTGRES_PASSWORD=ateliersoude \
+        --env POSTGRES_USER=ateliersoude --network ateliersoude \
+        --restart unless-stopped --detach ateliersoude-postgres
+    echo "resting a bit..."
+    sleep 10
 }
 
 function rebuild_app() {

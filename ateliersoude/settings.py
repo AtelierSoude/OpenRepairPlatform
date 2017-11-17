@@ -50,6 +50,9 @@ INSTALLED_APPS = [
     'dbsettings',
     'debug_toolbar',
     'plateformeweb',
+    'phonenumber_field',
+    'address',
+    'avatar',
 ]
 
 MIDDLEWARE = [
@@ -242,3 +245,6 @@ LOGIN_URL = '/auth/login/'
 
 # TODO remove this and use Redis for the shared cache
 DBSETTINGS_USE_CACHE = False
+
+# TODO for the address module; change it!
+GOOGLE_API_KEY = "AIzaSyCNZ-rIhY1zyq2LFghBV4x7mUQvtJCOK88"

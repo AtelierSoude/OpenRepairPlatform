@@ -1,4 +1,7 @@
 from django.db import models
+from phonenumber_field.modelfields import PhoneNumberField
+from address.models import AddressField
+from avatar.models import AvatarField
 
 # ------------------------------------------------------------------------------
 # custom User model
@@ -52,6 +55,23 @@ class User(AbstractUser):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
+
+    first_name = models.TextField(_('first name'), blank=True, null=True)
+    last_name = models.TextField(_("last name"), blank=True, null=True)
+
+    # https://github.com/stefanfoulis/django-phonenumber-field
+    phone_number = PhoneNumberField(_("phone number"), blank=True, null=True)
+
+    # https://github.com/furious-luke/django-address
+    street_address = AddressField(_("street address"), blank=True, null=True)
+
+    birth_date = models.DateField(_("date of birth"), blank=True, null=True)
+    registration_date = models.DateField(_("registration date"), auto_now_add=True, null=True)
+
+    # http://django-avatar.readthedocs.io/en/latest/
+    avatar_img = AvatarField(_("avatar"), blank=True, null=True)
+
+    bio = models.TextField(_("bio"), blank=True, null=True)
 
     objects = UserManager()
 

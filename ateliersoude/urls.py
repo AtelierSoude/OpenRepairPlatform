@@ -25,6 +25,7 @@ urlpatterns = [
     url(r'^admin/settings/', include('dbsettings.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^auth/', include('django.contrib.auth.urls')),
+    url(r'^avatar/', include('avatar.urls')),
 ]
 
 # DEBUG toolbar if DEBUG is true in the environment (see ../skinjay/settings.py)

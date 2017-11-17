@@ -31,3 +31,9 @@ django-simple-history
 docutils
 # settings in the DB (quotation version, etc)
 django-dbsettings
+# phone numbers field type
+django-phonenumber-field
+# address field and normalization through gmaps API
+git+https://github.com/dmorel/django-address.git
+# avatars
+django-avatar

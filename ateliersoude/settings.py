@@ -112,19 +112,19 @@ AUTH_USER_MODEL = "plateformeweb.User"
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME':
-        'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+            'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
     {
         'NAME':
-        'django.contrib.auth.password_validation.MinimumLengthValidator',
+            'django.contrib.auth.password_validation.MinimumLengthValidator',
     },
     {
         'NAME':
-        'django.contrib.auth.password_validation.CommonPasswordValidator',
+            'django.contrib.auth.password_validation.CommonPasswordValidator',
     },
     {
         'NAME':
-        'django.contrib.auth.password_validation.NumericPasswordValidator',
+            'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
 
@@ -201,7 +201,7 @@ LOGGING = {
         # },
         'axes.watch_login': {
             'handlers': ['console'],
-            'level': 'INFO', #os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
+            'level': 'INFO',  # os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
             'propagate': False,
         },
     },
@@ -236,9 +236,9 @@ EMAIL_PORT = 587
 LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/auth/login/'
 
-#FIXTURE_DIRS= (
+# FIXTURE_DIRS= (
 #    os.path.join(BASE_DIR, "fixtures"),
-#)
+# )
 
 # TODO remove this and use Redis for the shared cache
 DBSETTINGS_USE_CACHE = False

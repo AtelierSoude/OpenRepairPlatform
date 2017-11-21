@@ -2,6 +2,10 @@
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+ACTION="$1"
+PORT="$2"
+LOGLEVEL="$3"
+
 # todo make this be loaded on container startup from docker secrets
 # this is used by the build script to set the super user login and pass for the postgres db
 # also change it in the settings.py file
@@ -21,45 +25,67 @@ function rebuild_db() {
 }
 
 function rebuild_app() {
-    echo "run this script with DEBUG=<something> to have django pick up the setting from the environment"
-    if [[ ! -z "$DEBUG" ]]; then DEBUG=' --env DJANGO_DEBUG=1 '; fi
     docker build deployment/docker-app/ --tag ateliersoude-django-app
     docker stop ateliersoude-django
     docker rm -f ateliersoude-django
-    docker run --name ateliersoude-django $DEBUG --volume $DIR:/ateliersoude --network ateliersoude --restart unless-stopped --publish 8000 --publish 8001 $DETACH ateliersoude-django-app
 }
+
+function start_gunicorn() {
+    docker run --name ateliersoude-django \
+        --volume $DIR:/ateliersoude \
+        --network ateliersoude \
+        --restart unless-stopped \
+        --publish ${PORT:-8000}:8000 \
+        --env LOGLEVEL=${LOGLEVEL:-INFO} \
+        --detach \
+        ateliersoude-django-app
+    }
+
+function start_dev_server() {
+    docker run --name ateliersoude-django \
+        --env DJANGO_DEBUG=1 \
+        --tty --interactive \
+        --volume $DIR:/ateliersoude \
+        --network ateliersoude \
+        --publish ${PORT:-8001}:8001 \
+        ateliersoude-django-app
+}
+
 
 function get_ports() {
     echo "************** external ports used by the docker container **************"
     docker port ateliersoude-django
-    echo "Gunicorn main server: http://localhost:`docker port ateliersoude-django | grep 8000 | cut -d: -f2`"
-    echo "Dev server (not started by default): http://localhost:`docker port ateliersoude-django | grep 8001 | cut -d: -f2`"
+    echo `tput setaf 2`"Gunicorn main server: http://localhost:`docker port ateliersoude-django | grep 8000 | cut -d: -f2`"`tput sgr0`
     echo "*************************************************************************"
 }
 
-case $1 in
-    "rebuild_all")
-        DETACH="--detach"
+case "${ACTION}" in
+    "rebuild_db")
         rebuild_db
-        rebuild_app
-        get_ports
         ;;
     "rebuild")
-        DETACH="--detach"
         rebuild_app
+        start_gunicorn
         get_ports
         ;;
-    "debug")
-        DETACH="--tty --interactive"
+    "dev")
+        DEBUG=" --env DJANGO_DEBUG=1 "
         rebuild_app
-        get_ports
+        echo `tput setaf 2`"Dev server starting, no need to CTRL-C + reload to see changes, keep it running"`tput sgr0`
+        start_dev_server
         ;;
     "reload")
-        docker exec -ti ateliersoude-django /bin/bash -c 'kill -HUP `pgrep -f gunicorn:\ master`'
+        docker exec -ti ateliersoude-django /bin/bash -c 'kill -HUP `pgrep -f gunicorn:\ master` 2>/dev/null'
         if [ "$?" -eq 0 ]; then echo OK; else echo FAIL; fi
         ;;
     *)
-        echo "specify a command: rebuild, reload"
+        cat <<EOF
+$0 : Specify a command:
+    - rebuild_all (gunicorn + static files + postgres)
+    - rebuild (gunicorn + static files)
+    - reload (gunicorn)
+    - debug (launch dev server and keep a tty, no need to collectstatic)
+EOF
         exit 1
         ;;
 esac

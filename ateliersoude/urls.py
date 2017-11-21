@@ -16,11 +16,13 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
+from django.http import HttpResponseRedirect
+
 from . import views
 
 urlpatterns = [
-    url(r'^$', views.home, name='home'),
-    # url(r'^quotation/', include('quotation.urls')),
+    url(r'^$', views.home),
+    url(r'^plateformeweb/', include('plateformeweb.urls')),
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^admin/settings/', include('dbsettings.urls')),
     url(r'^admin/', admin.site.urls),

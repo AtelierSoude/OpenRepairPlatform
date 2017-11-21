@@ -192,11 +192,11 @@ LOGGING = {
         },
         # log DB queries, only works when DEBUG is True in
         # the global configuration
-        'django.db.backends': {
-            'handlers': ['console'],
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
-            'propagate': False,
-        },
+        # 'django.db.backends': {
+        #     'handlers': ['console'],
+        #     'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
+        #     'propagate': False,
+        # },
         # 'gunicorn.error': {
         #     'handlers': ['console'],
         #     'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),

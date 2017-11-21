@@ -6,4 +6,4 @@ from django.shortcuts import render, reverse
 
 @login_required
 def home(request):
-    return HttpResponseRedirect(reverse('quotation_form'))
+    return HttpResponseRedirect(reverse('homepage'))

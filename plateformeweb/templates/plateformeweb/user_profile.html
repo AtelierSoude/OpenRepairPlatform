@@ -1,9 +1,23 @@
 {% extends 'base.html' %}
 {% block content %}
-    <form method="POST" class="post-form" action="">
-        {% csrf_token %}
-        {{ user_form }}
-        <button type="submit" class="button button-primary" name="action">Save
-        </button>
+    <form method="POST" class="pure-form pure-form-aligned" action="">
+        <fieldset>
+            {% csrf_token %}
+            {% if user_form.errors %}
+                <p style="color: red;">Please correct the error(s) below:</p>
+                {{ user_form.errors }}
+            {% endif %}
+            {% for field in user_form %}
+                <div class="pure-control-group">
+                    <label>{{ field.label }}</label>{{ field }}
+                    <span class="pure-form-message-inline">{{ field.help_text }}</span>
+                </div>
+            {% endfor %}
+            <div class="pure-controls">
+                <button type="submit" class="pure-button pure-button-primary"
+                        name="action">Save
+                </button>
+            </div>
+        </fieldset>
     </form>
 {% endblock %}

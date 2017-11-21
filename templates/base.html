@@ -14,10 +14,18 @@
           rel="stylesheet" type="text/css">
 
     <!-- CSS –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-{#    <link rel="stylesheet" href="{% static "css/normalize.css" %}">#}
-{#    <link rel="stylesheet" href="{% static "css/skeleton.css" %}">#}
+    {#    <link rel="stylesheet" href="{% static "css/normalize.css" %}">#}
+    {#    <link rel="stylesheet" href="{% static "css/skeleton.css" %}">#}
     <link rel="stylesheet" href="{% static "css/ateliersoude.css" %}">
+
     <link rel="stylesheet" href="{% static "npm/purecss/build/pure-min.css" %}">
+    <!--[if lte IE 8]>
+        <link rel="stylesheet" href={% static "npm/purecss/grids-responsive-old-ie-min.css" %}>
+    <![endif]-->
+    <!--[if gt IE 8]><!-->
+    <link rel="stylesheet"
+          href={% static "npm/purecss/build/grids-responsive-min.css" %}>
+    <!--<![endif]-->
 
     <!-- Favicon –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 
@@ -33,17 +41,40 @@
 {% if user.is_authenticated %}
     <div style="position: fixed;top: 1%;right: 1%; z-index: 1">
         <a href="{% url 'logout' %}"
-           title="Logout">{% fontawesome_icon 'sign-out' color='white' large=True %}</a>
+           title="Logout">{% fontawesome_icon 'sign-out' color='grey' large=True %}</a>
     </div>
 {% endif %}
-<div class="container">
-    <!-- columns should be the immediate child of a .row -->
-    <div class="row">
-        <div class="twelve columns center">
-            <img class="logo" src="{% static 'img/logo_ateliersoude.png' %}">
+<div class="pure-g">
+    {#  logo #}
+    <div class="pure-u-1-12 pure-u-md-1-4">
+        <img class="logo pure-img"
+             src="{% static 'img/logo_ateliersoude.png' %}">
+    </div>
+    {# menu #}
+    <div class="pure-u-11-12 pure-u-md-3-4">
+        <div class="pure-menu pure-menu-horizontal">
+            <a href="{% url "homepage" %}"
+               class="pure-menu-heading pure-menu-link">Home</a>
+            <ul class="pure-menu-list">
+                <li class="pure-menu-item"><a href="#" class="pure-menu-link">Item1</a>
+                </li>
+                <li class="pure-menu-item"><a href="#" class="pure-menu-link">Item2</a>
+                </li>
+                <li class="pure-menu-item">
+                    {% if user.is_authenticated %}
+                        <a href="{% url "user_profile" %}"
+                           class="pure-menu-link">Mon compte</a>
+                    {% else %}
+                        <a href="{% url "login" %}"
+                           class="pure-menu-link">Login</a>
+                    {% endif %}
+                </li>
+            </ul>
         </div>
     </div>
-    {% block content %}{% endblock %}
 </div>
+
+{% block content %}{% endblock %}
+
 </body>
 </html>

@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+if [[ $EUID -eq 0 ]]; then
+  echo `tput setaf 1`"This script must NOT be run as root"`tput sgr0` 1>&2
+  exit 1
+fi
+
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 ACTION="$1"
@@ -81,7 +86,7 @@ case "${ACTION}" in
     *)
         cat <<EOF
 $0 : Specify a command:
-    - rebuild_all (gunicorn + static files + postgres)
+    - rebuild_db (gunicorn + static files + postgres)
     - rebuild (gunicorn + static files)
     - reload (gunicorn)
     - debug (launch dev server and keep a tty, no need to collectstatic)

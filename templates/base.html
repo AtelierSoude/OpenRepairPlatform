@@ -16,7 +16,6 @@
     <!-- CSS –––––––––––––––––––––––––––––––––––––––––––––––––– -->
     {#    <link rel="stylesheet" href="{% static "css/normalize.css" %}">#}
     {#    <link rel="stylesheet" href="{% static "css/skeleton.css" %}">#}
-    <link rel="stylesheet" href="{% static "css/ateliersoude.css" %}">
 
     <link rel="stylesheet" href="{% static "npm/purecss/build/pure-min.css" %}">
     <!--[if lte IE 8]>
@@ -26,7 +25,6 @@
     <link rel="stylesheet"
           href={% static "npm/purecss/build/grids-responsive-min.css" %}>
     <!--<![endif]-->
-
     <!-- Favicon –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 
     <!-- Fontawesome –––––––––––––––––––––––––––––––––––––––––––––––––– -->
@@ -36,6 +34,10 @@
     <script src="http://code.jquery.com/jquery-3.2.1.min.js"
             integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
             crossorigin="anonymous"></script>
+
+    <!-- keep last -->
+    <link rel="stylesheet" href="{% static "css/ateliersoude.css" %}">
+
 </head>
 <body>
 {% if user.is_authenticated %}

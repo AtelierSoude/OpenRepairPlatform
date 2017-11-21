@@ -10,12 +10,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- FONT –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-    <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600"
+          rel="stylesheet" type="text/css">
 
     <!-- CSS –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-    <link rel="stylesheet" href="{% static "css/normalize.css" %}">
-    <link rel="stylesheet" href="{% static "css/skeleton.css" %}">
+{#    <link rel="stylesheet" href="{% static "css/normalize.css" %}">#}
+{#    <link rel="stylesheet" href="{% static "css/skeleton.css" %}">#}
     <link rel="stylesheet" href="{% static "css/ateliersoude.css" %}">
+    <link rel="stylesheet" href="{% static "npm/purecss/build/pure-min.css" %}">
 
     <!-- Favicon –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 
@@ -24,13 +26,15 @@
 
     <!-- jQuery -->
     <script src="http://code.jquery.com/jquery-3.2.1.min.js"
-            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>
 </head>
 <body>
 {% if user.is_authenticated %}
-<div style="position: fixed;top: 1%;right: 1%; z-index: 1">
-    <a href="{% url 'logout' %}" title="Logout">{% fontawesome_icon 'sign-out' color='white' large=True %}</a>
-</div>
+    <div style="position: fixed;top: 1%;right: 1%; z-index: 1">
+        <a href="{% url 'logout' %}"
+           title="Logout">{% fontawesome_icon 'sign-out' color='white' large=True %}</a>
+    </div>
 {% endif %}
 <div class="container">
     <!-- columns should be the immediate child of a .row -->
@@ -39,7 +43,7 @@
             <img class="logo" src="{% static 'img/logo_ateliersoude.png' %}">
         </div>
     </div>
-    {% block content %}{% endblock  %}
+    {% block content %}{% endblock %}
 </div>
 </body>
 </html>

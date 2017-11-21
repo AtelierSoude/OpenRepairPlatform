@@ -154,6 +154,9 @@ STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
+STATICFILES_FINDERS = ['django.contrib.staticfiles.finders.FileSystemFinder',
+                       'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+                       'npm.finders.NpmFinder'] # for django-npm
 
 # LOCKDOWN_ENABLED = False
 # LOCKDOWN_PASSWORDS = ('76j&6wzz#!9fjP7fFQd',)
@@ -250,3 +253,10 @@ DBSETTINGS_USE_CACHE = False
 
 # TODO for the address module; change it!
 GOOGLE_API_KEY = "AIzaSyCNZ-rIhY1zyq2LFghBV4x7mUQvtJCOK88"
+
+# npm
+NPM_FILE_PATTERNS = {
+    'purecss': ['build/pure.css', 'build/pure-min.css'],
+}
+NPM_STATIC_FILES_PREFIX = 'npm'
+NPM_ROOT_PATH = BASE_DIR

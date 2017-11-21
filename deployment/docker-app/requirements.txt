@@ -37,3 +37,7 @@ django-phonenumber-field
 git+https://github.com/dmorel/django-address.git
 # avatars
 django-avatar
+# colored stacktraces
+colored-traceback
+# npm in django
+django-npm

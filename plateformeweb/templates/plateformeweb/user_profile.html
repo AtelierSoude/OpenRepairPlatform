@@ -1,23 +1,28 @@
 {% extends 'base.html' %}
 {% block content %}
-    <form method="POST" class="pure-form pure-form-aligned" action="">
-        <fieldset>
-            {% csrf_token %}
-            {% if user_form.errors %}
-                <p style="color: red;">Please correct the error(s) below:</p>
-                {{ user_form.errors }}
-            {% endif %}
-            {% for field in user_form %}
-                <div class="pure-control-group">
-                    <label>{{ field.label }}</label>{{ field }}
-                    <span class="pure-form-message-inline">{{ field.help_text }}</span>
+<wrapper class="pure-u-1 pure-g">
+    <section class="pure-u-11-12 pure-g">
+        <form method="POST" class="pure-form pure-form-stacked" action="">
+            <fieldset>
+                {% csrf_token %}
+                {% if user_form.errors %}
+                    <p class="error">Please correct the error(s) below:</p>
+                    {{ user_form.errors }}
+                {% endif %}
+                {% for field in user_form %}
+                    <div class="pure-control-group group pure-u-1-3">
+                        <span class="pure-form-message-inline">{{ field.help_text }}</span>
+                        {{ field }}
+                        <label>{{ field.label }}</label>
+                    </div>
+                {% endfor %}
+                <div class="pure-controls pure-u-1">
+                    <button type="submit" class="pure-button pure-button-primary"
+                            name="action">Save
+                    </button>
                 </div>
-            {% endfor %}
-            <div class="pure-controls">
-                <button type="submit" class="pure-button pure-button-primary"
-                        name="action">Save
-                </button>
-            </div>
-        </fieldset>
-    </form>
+            </fieldset>
+        </form>
+    </section>
+</wrapper>
 {% endblock %}

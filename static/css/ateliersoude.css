@@ -135,6 +135,9 @@ a {
     height: 150px;
     width: 150px; }
 
+.error {
+  color: #ff5959; }
+
 .left {
   float: left; }
 

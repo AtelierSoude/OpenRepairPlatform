@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
+<wrapper class="pure-u-1-1 gradient">
+<section class="pure-u-2-5">
+        <div class="avatar pure-u-1"><img src="../../static/img/avatar.png"></div>
 
     {% if form.errors %}
         <p>Your username and password didn't match. Please try again.</p>
@@ -15,16 +18,16 @@
         {% endif %}
     {% endif %}
 
-    <form method="post" action="{% url 'login' %}" class="pure-form pure-form-aligned">
+    <form method="post" action="{% url 'login' %}" class="pure-form pure-form-stacked">
         {% csrf_token %}
 
-        <div class="pure-control-group">
-            <td>{{ form.username.label_tag }}</td>
+        <div class="pure-control-group group">
             <td>{{ form.username }}</td>
+            <td>{{ form.username.label_tag }}</td>
         </div>
-        <div class="pure-control-group">
-            <td>{{ form.password.label_tag }}</td>
+        <div class="pure-control-group group">
             <td>{{ form.password }}</td>
+            <td>{{ form.password.label_tag }}</td>
         </div>
 
         <div class="pure-controls">
@@ -33,7 +36,8 @@
         </div>
     </form>
 
+
     {# Assumes you setup the password_reset view in your URLconf #}
     <p><a href="{% url 'password_reset' %}">Lost password?</a></p>
-
+</section></wrapper>
 {% endblock %}

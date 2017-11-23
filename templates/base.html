@@ -46,11 +46,13 @@
            title="Logout">{% fontawesome_icon 'sign-out' color='grey' large=True %}</a>
     </div>
 {% endif %}
+<header>
+    <nav class="principal-nav">
 <div class="pure-g">
     {#  logo #}
     <div class="pure-u-1-12 pure-u-md-1-4">
         <img class="logo pure-img"
-             src="{% static 'img/logo_ateliersoude.png' %}">
+             src="{% static 'img/logo_ateliersoude.svg' %}">
     </div>
     {# menu #}
     <div class="pure-u-11-12 pure-u-md-3-4">
@@ -75,6 +77,9 @@
         </div>
     </div>
 </div>
+</nav>
+</header>
+
 
 {% block content %}{% endblock %}
 

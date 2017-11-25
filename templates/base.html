@@ -38,6 +38,8 @@
     <!-- keep last -->
     <link rel="stylesheet" href="{% static "css/ateliersoude.css" %}">
 
+    {% if user_form %}{{ user_form.media }}{% endif %}
+
 </head>
 <body>
 {% if user.is_authenticated %}

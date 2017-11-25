@@ -16,7 +16,6 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
-from django.http import HttpResponseRedirect
 
 from . import views
 
@@ -25,7 +24,9 @@ urlpatterns = [
     url(r'^plateformeweb/', include('plateformeweb.urls')),
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^admin/settings/', include('dbsettings.urls')),
+    url(r'^grappelli/', include('grappelli.urls')),  # grappelli URLS
     url(r'^admin/', admin.site.urls),
+    url(r'^users/', include('users.urls')),
     url(r'^auth/', include('django.contrib.auth.urls')),
     url(r'^avatar/', include('avatar.urls')),
 ]

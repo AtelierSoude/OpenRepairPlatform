@@ -41,3 +41,7 @@ django-avatar
 colored-traceback
 # npm in django
 django-npm
+# better forms
+django-crispy-forms
+# better admin
+django-grappelli

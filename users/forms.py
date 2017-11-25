@@ -46,6 +46,10 @@ class UserForm(ModelForm):
                   'street_address', 'birth_date', 'avatar_img', 'bio']
         widgets = {
             'birth_date': SelectDateWidget(years=range(1900, date.today().year + 1)),
+
+            # TODO: possible to switch to a jquery datepicker once the localization
+            # issue is fixed (see the user profile form, and base.html
+            #
             # 'birth_date': forms.DateInput(attrs={'class':'datepicker'}),
             'email': widgets.EmailInput(),
             # 'phone_number': widgets.

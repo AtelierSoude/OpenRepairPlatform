@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     # 'axes',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'users',
     'django_tables2',
     'import_export',
     'fontawesome',
@@ -111,7 +112,7 @@ DATABASES = {
 }
 
 # custom User model
-AUTH_USER_MODEL = "plateformeweb.User"
+AUTH_USER_MODEL = "users.CustomUser"
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators

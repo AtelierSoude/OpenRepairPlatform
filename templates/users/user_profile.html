@@ -1,7 +1,29 @@
 {% extends 'base.html' %}
 {% block content %}
-<wrapper class="pure-u-1 pure-g">
-    <section class="pure-u-11-12 pure-g">
+<wrapper class="pure-u-1 pure-g gradient">
+<div class="cover-picture pure-u-1 gradient align-right">
+    <div class="user-bio pure-u-3-5 ">
+        <i class="fa fa-quote-left fa-2x fa-pull-left" aria-hidden="true"></i>
+        <span>Je suis un réparateur de génie. J'aime vraiment montrer aux autres que je sais tout faire et je déteste partager mes connaissances</span>
+        <i class="fa fa-quote-right fa-2x fa-pull-right" aria-hidden="true"></i>
+    </div>
+    <div class="tags">
+       <div class="tag pure-u-3-5">Consoles de jeux
+            <i class="fa fa-lg fa-close" aria-hidden="true"></i>
+       </div>
+    </div>
+</div>
+<main class="user-profile pure-u-1">
+
+    <div class="pure-u-lg-1-5 pure-u-1-3 pure-ms-1-2 avatar avatar-cover">
+         <img src="../../static/img/avatar.png">
+         <h2>Sylvain Pipoutouran</h2>
+         <span>Bénévole</span>
+         <span>Novice</span>
+         
+    </div>
+
+    <section class="pure-u-lg-14-24 pure-u-sm-1 pure-g">
         <form method="POST" class="pure-form pure-form-stacked" action="">
             <fieldset>
                 {% csrf_token %}
@@ -11,12 +33,12 @@
                 {% endif %}
                 {% for field in user_form %}
                     <div class="pure-control-group group pure-u-1-3">
+                        <label>{{ field.label }}</label>
                         <span class="pure-form-message-inline">{{ field.help_text }}</span>
                         {{ field }}
-                        <label>{{ field.label }}</label>
                     </div>
                 {% endfor %}
-                <div class="pure-controls pure-u-1">
+                <div class="pure-controls pure-u-1 button-xlarge">
                     <button type="submit" class="pure-button pure-button-primary"
                             name="action">Save
                     </button>
@@ -24,5 +46,6 @@
             </fieldset>
         </form>
     </section>
+    </main>
 </wrapper>
 {% endblock %}

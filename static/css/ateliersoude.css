@@ -62,7 +62,7 @@ body {
 
 wrapper {
   font-family: 'Dosis', sans-serif;
-  padding-top: 80px;
+  padding-top: 90px;
   text-align: center;
   height: 100%; }
 
@@ -98,19 +98,24 @@ a {
 
 .principal-nav {
   background-color: #011d28;
-  width: 100%;
-  height: 60px;
   position: absolute;
-  top: 0; }
-  .principal-nav .pure-menu-horizontal ul li {
+  height: 100%;
+  width: 70px; }
+  .principal-nav .pure-menu-horizontal {
+    width: 100%;
+    height: 70px;
+    top: 0; }
+  .principal-nav .custom-restricted-width {
+    /* display: inline-block; */ }
+  .principal-nav ul li {
     border-right: 2px solid #fee56e; }
-    .principal-nav .pure-menu-horizontal ul li:after {
+    .principal-nav ul li:after {
       content: "";
       display: block;
       width: 100%;
       background-color: #fee56e;
       height: 2px; }
-    .principal-nav .pure-menu-horizontal ul li a {
+    .principal-nav ul li a {
       font-family: "Bree serif", serif;
       display: inline-block;
       text-transform: uppercase;
@@ -120,13 +125,13 @@ a {
       padding-top: 0px;
       padding-bottom: 0px;
       color: #FFF;
-      line-height: 58px; }
-    .principal-nav .pure-menu-horizontal ul li .pure-menu-link:hover {
+      line-height: 68px; }
+    .principal-nav ul li .pure-menu-link:hover {
       background-color: #fee56e;
       color: #011d28 !important; }
 
 .logo {
-  height: 50px;
+  height: 60px;
   margin: 05px; }
 
 .avatar {

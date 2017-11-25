@@ -37,6 +37,7 @@ APPEND_SLASH = True
 # Application definition
 
 INSTALLED_APPS = [
+    'grappelli',
     'django.contrib.admin',
     'django.contrib.admindocs',
     'django.contrib.auth',
@@ -55,6 +56,7 @@ INSTALLED_APPS = [
     'phonenumber_field',
     'address',
     'avatar',
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [

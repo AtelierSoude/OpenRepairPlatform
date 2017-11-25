@@ -25,6 +25,7 @@ urlpatterns = [
     url(r'^plateformeweb/', include('plateformeweb.urls')),
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^admin/settings/', include('dbsettings.urls')),
+    url(r'^grappelli/', include('grappelli.urls')),  # grappelli URLS
     url(r'^admin/', admin.site.urls),
     url(r'^auth/', include('django.contrib.auth.urls')),
     url(r'^avatar/', include('avatar.urls')),

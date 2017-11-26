@@ -15,7 +15,7 @@
 </div>
 <main class="user-profile pure-u-1">
 
-    <div class="pure-u-lg-1-5 pure-u-1-3 pure-ms-1-2 avatar avatar-cover">
+    <div class="pure-u-lg-1-5 pure-u-1-3 pure-ms-1-2 avatar avatar-cover sticky">
          <img src="https://d1ulmmr4d4i8j4.cloudfront.net/static/images/avatars/User/ifixit/avatar-1.large">
          <h2>Sylvain Pipoutouran</h2>
          <span>Bénévole</span>
@@ -48,6 +48,13 @@
     </section>
     </main>
 </wrapper>
+
+<script>
+
+ $(document).ready(function(){ 
+       $('.avatar-cover').Stickyfill(); 
+       });
+</script>
 
 {#    TODO: the tag LANGUAGE is available everywhere (set in base.html), under #}
 {#    the form 'fr' or 'en', but the jquery datepicker requires a locale: fr-FR #}

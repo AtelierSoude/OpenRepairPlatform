@@ -1,5 +1,7 @@
 {% load staticfiles %}
 {% load fontawesome %}
+{% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -34,6 +36,17 @@
     <script src="http://code.jquery.com/jquery-3.2.1.min.js"
             integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
             crossorigin="anonymous"></script>
+
+{#    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"#}
+{#            integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="#}
+{#            crossorigin="anonymous"></script>#}
+
+{#    <link rel="stylesheet"#}
+{#          href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">#}
+{##}
+{#    <script src="https://cdnjs.cloudflare.com/ajax/libs/datepicker/0.6.4/i18n/datepicker.fr-FR.min.js"#}
+{#            integrity="sha256-LfRC4/3bBAGT8y5dQmQSzKtY+5dfIkCvwyNj9UhgMP8="#}
+{#            crossorigin="anonymous"></script>#}
 
     <!-- keep last -->
     <link rel="stylesheet" href="{% static "css/ateliersoude.css" %}">
@@ -77,18 +90,16 @@
                     {% if user.is_authenticated %}
                         <a href="{% url "user_profile" %}"
                            class="pure-menu-link"> <i class="fa fa-users fa-2x" aria-hidden="true"></i>
-                           <span>Mon compte</span></a>
+                           <span>My accompte</span></a>
                     {% else %}
                         <a href="{% url "login" %}"
                            class="pure-menu-link"> <i class="fa fa-login fa-2x" aria-hidden="true"></i>
-                           <span>LSe connecter</span></a>
+                           <span>Login</span></a>
                     {% endif %}
                 </li>
             </ul>
         </div>
-    </div>
-</div>
-</nav>
+    </nav>
 </header>
 
 

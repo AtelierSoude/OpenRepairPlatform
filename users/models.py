@@ -14,6 +14,9 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.mail import send_mail
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.contrib.auth.models import BaseUserManager
+import logging
+
+logger = logging.getLogger(__name__)
 
 class CustomUserManager(BaseUserManager):
 
@@ -104,5 +107,13 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         """
         send_mail(subject, message, from_email, [self.email])
 
-
+    def __iter__(self):
+        for field in self._meta.get_fields():
+            logger.debug(field.__dict__)
+            value = getattr(self, field.name, None)
+            try:
+                field_name = field.verbose_name
+            except:
+                field_name = field.name
+            yield (field_name, value)
 

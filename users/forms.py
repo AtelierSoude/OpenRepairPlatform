@@ -1,9 +1,9 @@
 from address.forms import AddressField
-from django.forms import ModelForm, SelectDateWidget
+from datetime import date
+from django.forms import ModelForm
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 import django.forms.widgets as widgets
-from django import forms
-from datetime import date
+
 
 from .models import CustomUser
 
@@ -45,13 +45,23 @@ class UserForm(ModelForm):
         fields = ['email', 'first_name', 'last_name', 'phone_number',
                   'street_address', 'birth_date', 'avatar_img', 'bio']
         widgets = {
+<<<<<<< HEAD
             'birth_date': SelectDateWidget(years=range(1900, date.today().year + 1)),
+=======
+            'birth_date': widgets.SelectDateWidget(years=range(1900, date.today().year + 1)),
+>>>>>>> master
 
             # TODO: possible to switch to a jquery datepicker once the localization
             # issue is fixed (see the user profile form, and base.html
             #
             # 'birth_date': forms.DateInput(attrs={'class':'datepicker'}),
+<<<<<<< HEAD
             'email': widgets.EmailInput(),
             # 'phone_number': widgets.
+=======
+
+            'email': widgets.EmailInput(attrs={'type':'email'}),
+            'phone_number': widgets.TextInput(attrs={'type':'tel', 'placeholder': '+336012345678'}),
+>>>>>>> master
         }
         localized_fields = ['birth_date']

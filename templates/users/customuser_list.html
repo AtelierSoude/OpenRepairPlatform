@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+    <ul>
+        {% for user in object_list %}
+            <li>
+                <ul>
+                    {% for k,v in user %}
+                        <li>{{ k }}: {{ v }}</li>
+                        </ul>
+                    {% endfor %}
+                {% empty %}
+            <li>No users yet.</li>
+        {% endfor %}
+{% endblock %}

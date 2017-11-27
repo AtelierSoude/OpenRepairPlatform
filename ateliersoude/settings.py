@@ -182,15 +182,15 @@ LOGGING = {
         },
         # TODO remove the 3 configs below and replace them
         # with a single 'quotation' entry
-        'quotation.views': {
+        'users.views': {
             'handlers': ['console'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
         },
-        'quotation.forms': {
+        'users.forms': {
             'handlers': ['console'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
         },
-        'quotation.models': {
+        'users.models': {
             'handlers': ['console'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
         },

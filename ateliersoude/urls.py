@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.conf import settings
 from django.conf.urls import include, url
+from django.conf.urls.static import static
 from django.contrib import admin
 
 from . import views
@@ -44,3 +45,7 @@ if settings.DEBUG:
 admin.site.site_header = 'Atelier Soudé'
 admin.site.index_title = 'Administration'
 admin.site.site_title = 'Atelier Soudé Admin'
+
+# TODO fix this before going to production
+# see https://trello.com/c/fnTkmBRk
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

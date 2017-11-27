@@ -6,6 +6,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 import colored_traceback
+
 colored_traceback.add_hook(always=True)
 
 import os
@@ -160,7 +161,7 @@ STATICFILES_DIRS = [
 # https://github.com/kevin1024/django-npm
 STATICFILES_FINDERS = ['django.contrib.staticfiles.finders.FileSystemFinder',
                        'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-                       'npm.finders.NpmFinder'] # for django-npm
+                       'npm.finders.NpmFinder']  # for django-npm
 
 # LOCKDOWN_ENABLED = False
 # LOCKDOWN_PASSWORDS = ('76j&6wzz#!9fjP7fFQd',)
@@ -181,7 +182,7 @@ LOGGING = {
             'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
         },
         # TODO remove the 3 configs below and replace them
-        # with a single 'quotation' entry
+        # with a single 'usersusers' entry
         'users.views': {
             'handlers': ['console'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
@@ -260,7 +261,7 @@ GOOGLE_API_KEY = "AIzaSyCNZ-rIhY1zyq2LFghBV4x7mUQvtJCOK88"
 
 # npm (https://github.com/kevin1024/django-npm)
 NPM_FILE_PATTERNS = {
-    'purecss': ['build/*.css',],
+    'purecss': ['build/*.css', ],
 }
 NPM_STATIC_FILES_PREFIX = 'npm'
 NPM_ROOT_PATH = BASE_DIR

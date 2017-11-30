@@ -109,7 +109,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def __iter__(self):
         for field in self._meta.get_fields():
-            logger.debug(field.__dict__)
             value = getattr(self, field.name, None)
             try:
                 field_name = field.verbose_name

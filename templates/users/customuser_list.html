@@ -1,14 +1,27 @@
 {% extends 'base.html' %}
 {% block content %}
-    <ul>
+<wrapper class="pure-u-1 pure-g gradient">
+     <section>
         {% for user in object_list %}
-            <li>
-                <ul>
+        <div class="pure-u-lg-1-5 pure-u-1-3 pure-ms-1-2 card">
+            <div class="content">
+                <img src="{{user.avatar}}">
+                    <h2>{{ user.first_name }}{{ user.last_name }}</h2>
+                 <ul class="list-group"> 
+                        <li><i class="fa fa-envelope-o fa-fw" aria-hidden="true">{{ user.email }}</i></li>
                     {% for k,v in user %}
-                        <li>{{ k }}: {{ v }}</li>
-                        </ul>
-                    {% endfor %}
-                {% empty %}
+            
+                     { k }}: {{ v }} 
+                
+                   {% endfor %}
+                </ul>
+            </div>
+                {% empty %}s
             <li>No users yet.</li>
         {% endfor %}
+    </div> 
+    </section>
+</wrapper>
 {% endblock %}
+
+

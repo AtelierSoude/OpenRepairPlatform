@@ -55,7 +55,8 @@ table {
 /* gradients */
 * {
   font: "Dosis", sans-serif;
-  font-family: "Dosis", sans-serif; }
+  font-family: "Dosis", sans-serif;
+  font-size: 14px; }
 
 html, body {
   height: 100%; }
@@ -74,6 +75,11 @@ wrapper {
   background: -moz-linear-gradient(left, #fee56e 0%, #49d3be 100%);
   background: linear-gradient(to left, #fee56e 0%, #49d3be 100%);
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fee56e', endColorstr='#49d3be'); }
+
+.focused {
+  -webkit-box-shadow: 20px 20px 0 rgba(1, 29, 40, 0.8);
+  -moz-box-shadow: 20px 20px 0 rgba(1, 29, 40, 0.8);
+  box-shadow: 20px 20px 0 rgba(1, 29, 40, 0.8); }
 
 section {
   background-color: #fdfdfd;
@@ -165,56 +171,6 @@ a {
   height: 60px;
   margin: 05px; }
 
-.avatar {
-  -moz-border-image: -moz-linear-gradient(left, #fee56e 0%, #49d3be 100%);
-  -webkit-border-image: -webkit-linear-gradient(left, #fee56e 0%, #49d3be 0%);
-  border-image: linear-gradient(to left, #fee56e 0%, #49d3be 100%);
-  border-image-slice: 1;
-  box-sizing: border-box;
-  position: relative;
-  -webkit-transition: all 0.1s ease-in-out;
-  -moz-transition: all 0.1s ease-in-out;
-  -ms-transition: all 0.1s ease-in-out;
-  -o-transition: all 0.1s ease-in-out;
-  transition: all 0.1s ease-in-out;
- /*
-&:before {
-     position:absolute;
-     content:"";
-     width:100%;
-     height:105%;
-     background-image: $gradient;
-     top:0%;
-     left:0%;
-     z-index:-1;
-     border-radius:$radius;
-     }    */
-  border-width: 2px;
-  border-color: #49d3be;
-  -webkit-border-radius: 0.5em;
-  -moz-border-radius: 0.5em;
-  border-radius: 0.5em;
-  border-style: solid;
-  -webkit-box-shadow: 20px 20px 0 rgba(1, 29, 40, 0.8);
-  -moz-box-shadow: 20px 20px 0 rgba(1, 29, 40, 0.8);
-  box-shadow: 20px 20px 0 rgba(1, 29, 40, 0.8); }
-  .avatar img {
-    height: auto;
-    width: 100%; }
-  .avatar span {
-    text-align: left;
-    display: inline-block;
-    width: 100%;
-    padding: 0.5em;
-    line-height: 25px;
-    color: #b9b9b9; }
-    .avatar span:after {
-      content: "";
-      display: block;
-      width: 100%;
-      background-color: #fee56e;
-      height: 1px; }
-
 .avatar-cover {
   position: relative;
   top: -100px; }
@@ -251,7 +207,7 @@ a {
 .sticky {
   position: -webkit-sticky;
   position: sticky;
-  top: 50; }
+  top: 0; }
 
 p.error {
   color: #FFF;
@@ -265,6 +221,28 @@ p.error {
   -moz-border-radius: 0.5em;
   border-radius: 0.5em;
   border-style: solid; }
+
+.list-group {
+  text-align: left; }
+  .list-group li {
+    display: inline-block;
+    width: 100%;
+    line-height: 42px; }
+    .list-group li:after {
+      content: "";
+      display: block;
+      width: 100%;
+      background-color: #b9b9b9;
+      height: 1px; }
+    .list-group li i {
+      padding-left: 1em;
+      padding-right: 1em; }
+    .list-group li a {
+      text-decoration: none; }
+
+.sticky {
+  position: sticky;
+  top: 0; }
 
 .error {
   color: #ff5959; }
@@ -550,5 +528,58 @@ form.pure-form .bar {
     position: #49d3be;
     transition: 200ms ease all;
     left: 0%; }
+
+.card {
+  -moz-border-image: -moz-linear-gradient(left, #fee56e 0%, #49d3be 100%);
+  -webkit-border-image: -webkit-linear-gradient(left, #fee56e 0%, #49d3be 0%);
+  border-image: linear-gradient(to left, #fee56e 0%, #49d3be 100%);
+  border-image-slice: 1;
+  box-sizing: border-box;
+  position: relative;
+  -webkit-transition: all 0.1s ease-in-out;
+  -moz-transition: all 0.1s ease-in-out;
+  -ms-transition: all 0.1s ease-in-out;
+  -o-transition: all 0.1s ease-in-out;
+  transition: all 0.1s ease-in-out;
+ /*
+&:before {
+     position:absolute;
+     content:"";
+     width:100%;
+     height:105%;
+     background-image: $gradient;
+     top:0%;
+     left:0%;
+     z-index:-1;
+     border-radius:$radius;
+     }    */
+  border-width: 2px;
+  border-color: #49d3be;
+  -webkit-border-radius: 0.5em;
+  -moz-border-radius: 0.5em;
+  border-radius: 0.5em;
+  border-style: solid; }
+  @media only screen and (max-width: 1023px) {
+    .card {
+      top: -10px; } }
+  .card img {
+    height: auto;
+    width: 100%; }
+  .card .content {
+    width: 100%; }
+  .card span {
+    font-family: "Dosis", sans-serif;
+    text-align: left;
+    display: inline-block;
+    width: 100%;
+    padding: 0.5em;
+    line-height: 25px;
+    color: #b9b9b9; }
+    .card span:after {
+      content: "";
+      display: block;
+      width: 100%;
+      background-color: #fee56e;
+      height: 1px; }
 
 /*# sourceMappingURL=ateliersoude.css.map */

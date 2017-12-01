@@ -90,9 +90,9 @@
                 </li>
                 <li class="pure-menu-item">
                     {% if user.is_authenticated %}
-                        <a href="{% url "user_profile" %}"
+                        <a href="{% url "user_list" %}"
                            class="pure-menu-link"> <i class="fa fa-users fa-2x" aria-hidden="true"></i>
-                           <span>My accompte</span></a>
+                           <span>Utilisateurs</span></a>
                     {% else %}
                         <a href="{% url "login" %}"
                            class="pure-menu-link"> <i class="fa fa-login fa-2x" aria-hidden="true"></i>

@@ -1,25 +1,59 @@
 {% extends 'base.html' %}
 {% block content %}
-<wrapper class="pure-u-1 pure-g gradient">
-     <section>
-        {% for user in object_list %}
-        <div class="pure-u-lg-1-5 pure-u-1-3 pure-ms-1-2 card">
-            <div class="content">
-                <img src="{{user.avatar}}">
-                    <h2>{{ user.first_name }}{{ user.last_name }}</h2>
-                 <ul class="list-group"> 
-                        <li><i class="fa fa-envelope-o fa-fw" aria-hidden="true">{{ user.email }}</i></li>
-                    {% for k,v in user %}
-            
-                     { k }}: {{ v }} 
-                
-                   {% endfor %}
+<wrapper class="pure-u-1 pure-g">
+
+        <form class="principal_search">
+                <input class="searchTerm" placeholder="Enter your search term ..." /><input class="searchButton" type="submit" />
+        </form>
+              <div class="cover-picture pure-u-1 gradient align-right">
+                    <div class="tags">
+                       <div class="tag pure-u-3-5">Consoles de jeux
+                            <i class="fa fa-lg fa-close" aria-hidden="true"></i>
+                       </div>
+                    </div>
+                </div>
+        <div class="pure-u-1 align-left">
+            <nav class="pure-u-1 sub_nav">
+                <ul class="pure-u-1">
+                    <li class="pure-u-1-5"><h3><a>Participants</a></h3></li>
                 </ul>
-            </div>
-                {% empty %}s
-            <li>No users yet.</li>
+            </nav>
+        </div>
+    <section  class="bordered pure-u-1-5">
+<button class="view_in_table pure-button">Table view</button>
+<button class="view_in_card pure-button">Card view</button>
+
+<script>
+$(function() {                       
+    $(".view_in_table").click(function() {  
+      $('.card').addClass("table_view");     
+    });
+    $(".view_in_card").click(function() {  
+      $('.card').removeClass("table_view");     
+    });
+
+  });</script>
+
+    </section>
+    <section class="pure-u-2-3">
+        {% for user in object_list %}
+      <div class="pure-u-lg-1-4 pure-u-1-3 pure-ms-1 card bordered">
+        <a href="userprofile/"> <div class="content">
+                <img src="https://d1ulmmr4d4i8j4.cloudfront.net/static/images/avatars/User/ifixit/avatar-1.large">
+                    <h3>{{ user.first_name }}{{ user.last_name }}</h3>
+                 <ul class="list-group"> 
+                        <li><i class="fa fa-envelope-o fa-fw" aria-hidden="true"></i>{{ user.email }}</li>
+                        {% if user.staff_status is True %}
+                          <li><i class="fa fa-envelope-o fa-fw" aria-hidden="true"></i>Bénévole</li>
+                        {% endif %}
+                    </div>  
+                 </ul>
+             </a>
+        </div>
+                {% empty %}
+            <div>No users yet.</div>    
         {% endfor %}
-    </div> 
+
     </section>
 </wrapper>
 {% endblock %}

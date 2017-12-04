@@ -18,42 +18,50 @@ export POSTGRES_USER=ateliersoude
 export POSTGRES_PASSWORD=ateliersoude
 
 function rebuild_db() {
-    docker network create --driver bridge ateliersoude
-    docker build deployment/docker-db/ --tag ateliersoude-postgres
-    docker stop ateliersoude-postgres
-    docker rm -f ateliersoude-postgres
-    docker run --name ateliersoude-postgres --env POSTGRES_PASSWORD=ateliersoude \
-        --env POSTGRES_USER=ateliersoude --network ateliersoude \
-        --restart unless-stopped --detach ateliersoude-postgres
+    docker network create \
+        --driver bridge \
+        ateliersoude-$USER
+    docker build deployment/docker-db/ \
+        --tag ateliersoude-postgres-$USER
+    docker stop ateliersoude-postgres-$USER
+    docker rm -f ateliersoude-postgres-$USER
+    docker run --name ateliersoude-postgres-$USER \
+        --env POSTGRES_PASSWORD=ateliersoude \
+        --env POSTGRES_USER=ateliersoude \
+        --network ateliersoude-$USER \
+        --restart unless-stopped \
+        --detach \
+        ateliersoude-postgres-$USER
     echo "resting a bit..."
     sleep 10
 }
 
 function rebuild_app() {
-    docker build deployment/docker-app/ --tag ateliersoude-django-app
-    docker stop ateliersoude-django
-    docker rm -f ateliersoude-django
+    docker build deployment/docker-app/ \
+        --tag ateliersoude-django-app-$USER
+    docker stop ateliersoude-django-$USER
+    docker rm -f ateliersoude-django-$USER
 }
 
 function start_gunicorn() {
-    docker run --name ateliersoude-django \
+    docker run --name ateliersoude-django-$USER \
         --volume $DIR:/ateliersoude \
-        --network ateliersoude \
+        --network ateliersoude-$USER \
         --restart unless-stopped \
         --publish ${PORT:-8000}:8000 \
         --env LOGLEVEL=${LOGLEVEL:-INFO} \
         --detach \
-        ateliersoude-django-app
+        ateliersoude-django-app-$USER
     }
 
 function start_dev_server() {
-    docker run --name ateliersoude-django \
+    docker run --name ateliersoude-django-$USER \
         --env DJANGO_DEBUG=1 \
         --tty --interactive \
         --volume $DIR:/ateliersoude \
-        --network ateliersoude \
+        --network ateliersoude-$USER \
         --publish ${PORT:-8001}:8001 \
-        ateliersoude-django-app
+        ateliersoude-django-app-$USER
 }
 
 
@@ -86,10 +94,11 @@ case "${ACTION}" in
     *)
         cat <<EOF
 $0 : Specify a command:
-    - rebuild_db (gunicorn + static files + postgres)
+    - rebuild_db (postgres)
     - rebuild (gunicorn + static files)
-    - reload (gunicorn)
-    - debug (launch dev server and keep a tty, no need to collectstatic)
+    - reload (gunicorn, update for code changes, faster)
+    - dev (launch dev server and keep a terminal open, static changes instantly visible)
+Note that at first launch a rebuild_db is needed
 EOF
         exit 1
         ;;

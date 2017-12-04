@@ -11,6 +11,8 @@ colored_traceback.add_hook(always=True)
 
 import os
 
+POSTGRES_DB=os.environ["POSTGRES_DB"]
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -107,7 +109,7 @@ DATABASES = {
         'NAME': 'ateliersoude',
         'USER': 'ateliersoude',
         'PASSWORD': 'ateliersoude',
-        'HOST': 'ateliersoude-postgres',
+        'HOST': POSTGRES_DB,
         'PORT': '5432',
     }
 }

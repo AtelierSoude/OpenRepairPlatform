@@ -61,6 +61,7 @@ function start_dev_server() {
         --volume $DIR:/ateliersoude \
         --network ateliersoude-$USER \
         --publish ${PORT:-8001}:8001 \
+        --env LOGLEVEL=${LOGLEVEL:-INFO} \
         ateliersoude-django-app-$USER
 }
 
@@ -93,7 +94,7 @@ case "${ACTION}" in
         ;;
     *)
         cat <<EOF
-$0 : Specify a command:
+$0 <action> [<port> [<loglevel>]]: Specify an action:
     - rebuild_db (postgres)
     - rebuild (gunicorn + static files)
     - reload (gunicorn, update for code changes, faster)

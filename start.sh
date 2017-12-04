@@ -70,8 +70,7 @@ function start_dev_server() {
 
 function get_ports() {
     echo "************** external ports used by the docker container **************"
-    docker port ateliersoude-django
-    echo `tput setaf 2`"Gunicorn main server: http://localhost:`docker port ateliersoude-django | grep 8000 | cut -d: -f2`"`tput sgr0`
+    echo `tput setaf 2`"Gunicorn main server: http://localhost:`docker port ateliersoude-django-$USER | head -1 | cut -d: -f2`/"`tput sgr0`
     echo "*************************************************************************"
 }
 

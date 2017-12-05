@@ -4,7 +4,7 @@
 
 cd /ateliersoude/
 
-if ! [ -e /bootstrap_done ]; then
+if ! [[ -e /bootstrap_done ]]; then
     echo '\e[1;32m'"--- bootstrapping the application ---"'\e[0m'
     python3 manage.py makemigrations || exit 1
     python3 manage.py migrate --noinput || exit 1
@@ -17,7 +17,7 @@ fi
 touch /bootstrap_done
 
 # run dev server...
-if [ "$DJANGO_DEBUG" = "1" ]; then
+if [[ "$DJANGO_DEBUG" = "1" ]]; then
     ./manage.py runserver 0.0.0.0:8001
 
 # ...or run gunicorn server

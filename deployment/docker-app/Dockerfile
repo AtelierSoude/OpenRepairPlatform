@@ -19,4 +19,4 @@ RUN pip install -r /ateliersoude/requirements.txt
 EXPOSE 8000
 # for manual runserver and ipdb
 EXPOSE 8001
-CMD sh /ateliersoude/bootstrap.sh
+CMD bash /ateliersoude/bootstrap.sh

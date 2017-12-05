@@ -17,6 +17,7 @@ from django.conf import settings
 from django.conf.urls import include, url
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.views.static import serve
 
 from . import views
 
@@ -48,4 +49,14 @@ admin.site.site_title = 'Atelier Soudé Admin'
 
 # TODO fix this before going to production
 # see https://trello.com/c/fnTkmBRk
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# works for the dev server (returns an empty list on gunicorn + whitenoise)
+if settings.DEVELOPMENT:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+# and this works for gunicorn
+if settings.DEVELOPMENT:
+    urlpatterns += [
+        url(r'^media/(?P<path>.*)$', serve, {
+            'document_root': settings.MEDIA_ROOT,
+        }),
+    ]

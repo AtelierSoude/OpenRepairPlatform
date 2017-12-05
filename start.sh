@@ -51,6 +51,7 @@ function start_gunicorn() {
         --publish ${PORT:-8000}:8000 \
         --env LOGLEVEL=${LOGLEVEL:-INFO} \
         --env POSTGRES_DB=ateliersoude-postgres-$USER \
+        --env DEVELOPMENT=1 \
         --detach \
         ateliersoude-django-app-$USER
     }
@@ -64,6 +65,7 @@ function start_dev_server() {
         --publish ${PORT:-8001}:8001 \
         --env LOGLEVEL=${LOGLEVEL:-INFO} \
         --env POSTGRES_DB=ateliersoude-postgres-$USER \
+        --env DEVELOPMENT=1 \
         ateliersoude-django-app-$USER
 }
 

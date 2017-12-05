@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load avatar_tags %}
 {% block content %}
     <wrapper class="pure-u-1 pure-g">
         <section class="pure-u-11-12 pure-g">
@@ -17,7 +18,16 @@
                             {{ field }} {{ field.errors }}
                             <label>{{ field.label }}</label>
                         </div>
+
                     {% endfor %}
+
+                    {# TODO: avatar handling needs to go in a modal and refresh the page when closed #}
+                    {% avatar user %}
+                    <a href="javascript:window.open('{% url 'avatar_change' %}','_blank','titlebar=no,status=no,menubar=no,location=no,height=500,width=400,left=200,top=200')">Change
+                        your avatar</a>
+                    <a href="javascript:window.open('{% url 'avatar_delete' %}','_blank','titlebar=no,status=no,menubar=no,location=no,height=500,width=400,left=200,top=200')">Delete
+                        your avatar</a>
+
                     <div class="pure-controls pure-u-1">
                         <button type="submit"
                                 class="pure-button pure-button-primary"

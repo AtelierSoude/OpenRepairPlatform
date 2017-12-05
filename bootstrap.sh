@@ -18,7 +18,7 @@ touch /bootstrap_done
 
 # run dev server...
 if [ "$DJANGO_DEBUG" = "1" ]; then
-    ./manage.py runserver --insecure 0.0.0.0:8001
+    ./manage.py runserver 0.0.0.0:8001
 
 # ...or run gunicorn server
 else

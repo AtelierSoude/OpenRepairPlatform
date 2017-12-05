@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     # 'axes',
     'django.contrib.messages',
+    'whitenoise.runserver_nostatic', # http://whitenoise.evans.io/en/stable/django.html
     'django.contrib.staticfiles',
     'users',
     'django_tables2',
@@ -164,6 +165,13 @@ STATICFILES_DIRS = [
 STATICFILES_FINDERS = ['django.contrib.staticfiles.finders.FileSystemFinder',
                        'django.contrib.staticfiles.finders.AppDirectoriesFinder',
                        'npm.finders.NpmFinder']  # for django-npm
+
+# TODO move to a CDN or a different server for media files in production
+# See https://trello.com/c/fnTkmBRk
+# also see urls.py in the ateliersoude dir, for the setting used during dev
+MEDIA_URL = '/media/'
+MEDIA_ROOT = '/tmp/media/'
+
 
 # LOCKDOWN_ENABLED = False
 # LOCKDOWN_PASSWORDS = ('76j&6wzz#!9fjP7fFQd',)

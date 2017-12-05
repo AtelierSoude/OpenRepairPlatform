@@ -92,7 +92,7 @@ case "${ACTION}" in
         start_dev_server
         ;;
     "reload")
-        docker exec -ti ateliersoude-django /bin/bash -c 'kill -HUP `pgrep -f gunicorn:\ master` 2>/dev/null'
+        docker exec -ti ateliersoude-django-$USER /bin/bash -c 'kill -HUP `pgrep -f gunicorn:\ master` 2>/dev/null'
         if [ "$?" -eq 0 ]; then echo OK; else echo FAIL; fi
         ;;
     *)

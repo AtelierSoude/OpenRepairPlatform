@@ -11,6 +11,9 @@ colored_traceback.add_hook(always=True)
 
 import os
 
+POSTGRES_DB=os.environ["POSTGRES_DB"]
+DEVELOPMENT=os.environ["DEVELOPMENT"]
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -26,7 +29,7 @@ SECRET_KEY = 'H/hXAUnb1ZKNGpToim2cg38dxiyHM6b+zB9zozhpTzkP'
 DEBUG = bool(int(os.environ.get('DJANGO_DEBUG', 0)))
 
 # TODO adjust for production
-ALLOWED_HOSTS = ["ns60.amakuru.net", "127.0.0.1", "localhost"]
+ALLOWED_HOSTS = ["dev.atelier-soude.fr", "ns60.amakuru.net", "127.0.0.1", "localhost"]
 
 # for debug toolbar, localhost (through docker and localhost)
 # no wildcards for IPs, possible to use a sort of wildcard for hostnames,
@@ -108,7 +111,7 @@ DATABASES = {
         'NAME': 'ateliersoude',
         'USER': 'ateliersoude',
         'PASSWORD': 'ateliersoude',
-        'HOST': 'ateliersoude-postgres',
+        'HOST': POSTGRES_DB,
         'PORT': '5432',
     }
 }

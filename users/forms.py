@@ -42,7 +42,7 @@ class UserForm(ModelForm):
     class Meta:
         model = CustomUser
         fields = ['email', 'first_name', 'last_name', 'phone_number',
-                  'street_address', 'birth_date', 'bio']
+                  'street_address', 'birth_date', 'gender', 'bio']
         widgets = {
             'birth_date': widgets.SelectDateWidget(years=range(1900, date.today().year + 1)),
 

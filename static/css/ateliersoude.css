@@ -194,8 +194,9 @@ a {
   border-style: solid; }
 
 .important-thing {
-  width: 100px;
-  height: 50px;
+  line-height: 80px;
+  font-size: 24px;
+  text-transform: uppercase;
   background-color: #f5f5f5;
   font-family: "Bree Serif"; }
   .important-thing:after {
@@ -204,6 +205,10 @@ a {
     width: 100%;
     background-color: #fee56e;
     height: 5px; }
+
+.home_section {
+  height: 400px;
+  padding-top: 100px; }
 
 .primary-background {
   background-color: #fff; }
@@ -238,6 +243,8 @@ a {
       text-align: center;
       box-sizing: content-box;
       position: relative; }
+      .principal-nav ul li a i {
+        color: #FFF; }
       .principal-nav ul li a span {
         position: absolute;
         -webkit-transition: all, 0.1s, ease-in-out 0.2s ease-in-out;
@@ -249,7 +256,6 @@ a {
         display: inline-block;
         padding-left: 0.5em;
         padding-right: 0.5em;
-        color: #02415a;
         z-index: -1; }
       .principal-nav ul li a:hover {
         color: #02415a;
@@ -369,11 +375,24 @@ p.error {
 .home-picture {
   overflow: hidden;
   height: 600px;
-  background: linear-gradient(to left, rgba(254, 229, 110, 0.2) 40%, rgba(53, 189, 166, 0.9) 60%), url("http://atelier-soude.fr/template/atelier-soude-comprendre.jpg");
-  background-size: cover; }
+  background-size: cover;
+  background: url("../img/fond-home-01.png"), linear-gradient(to left, #011d28 0%, #02415a 50%); }
   .home-picture section {
     height: 500px;
-    color: #FFF; }
+    color: #FFF !important; }
+  .home-picture h1 {
+    color: #FFF !important; }
+
+.secondary-home-picture {
+  overflow: hidden;
+  height: 300px;
+  background: linear-gradient(to left, rgba(254, 229, 110, 0.6) 0%, rgba(53, 189, 166, 0.3) 40%), url("http://atelier-soude.fr/template/democratisation-reparation.jpg");
+  background-size: cover; }
+  .secondary-home-picture section {
+    height: 300px; }
+    .secondary-home-picture section h1, .secondary-home-picture section h2, .secondary-home-picture section span {
+      text-align: center;
+      color: #FFF !important; }
 
 .home-topic {
   margin-top: 100px; }
@@ -387,7 +406,7 @@ p.error {
   background-size: cover;
   /* just make it look a bit better ;) */ }
   [class*="bg__"]:nth-child(2n) {
-    box-shadow: inset 0 0 1em #111; }
+    box-shadow: inset 0 0 1em rgba(20, 20, 20, 0.39); }
 
 button.pure-button.rounded {
   line-height: 27px;
@@ -826,10 +845,10 @@ form.pure-form .bar {
     color: inherit;
     text-decoration: none; }
   .card.big_view h3 {
-    font-size: 14px;
+    font-size: 18px;
     line-height: inherit;
     vertical-align: middle;
-    padding-left: 1em; }
+    padding-left: 0px; }
   .card.big_view * {
     display: table-row; }
   .card.big_view h3, .card.big_view h2 {
@@ -848,14 +867,16 @@ form.pure-form .bar {
     width: 80%;
     padding: 1em; }
   .card.big_view .description {
-    float: left; }
+    float: left;
+    width: 80%;
+    margin-top: 2em; }
   .card.big_view .list-group {
+    width: 100%;
     text-align: left;
     display: table-row;
     float: left;
     margin-top: 1em;
-    vertical-align: middle;
-    width: auto; }
+    vertical-align: middle; }
     .card.big_view .list-group li {
       padding-left: 0px;
       display: table-cell;
@@ -865,7 +886,8 @@ form.pure-form .bar {
       border-bottom: none !important; }
       .card.big_view .list-group li i {
         display: initial;
-        padding-left: 0px; }
+        padding-left: 0px;
+        color: #fee56e; }
       .card.big_view .list-group li a {
         text-decoration: underline; }
 
@@ -907,10 +929,10 @@ form.pure-form .bar {
 
 .principal_search {
   /* position: fixed; */
-  width: 100%;
-  background: #35bda6;
+  background: rgba(255, 255, 255, 0.8);
   box-sizing: content-box;
-  position: relative; }
+  position: relative;
+  margin-bottom: 2em; }
   .principal_search:before {
     position: absolute;
     top: 0;
@@ -925,7 +947,7 @@ form.pure-form .bar {
     color: #FFF;
     -webkit-font-smoothing: subpixel-antialiased; }
   .principal_search:hover, .principal_search:active, .principal_search:focus {
-    background: rgba(1, 29, 40, 0.2);
+    background: #fff;
     color: #011d28; }
     .principal_search:hover:before, .principal_search:active:before, .principal_search:focus:before {
       background: #fee56e; }

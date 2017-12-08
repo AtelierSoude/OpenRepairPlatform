@@ -2,25 +2,12 @@
 {% block content %}
 <wrapper class="pure-u-1 pure-g">
 
-              <div class="cover-picture pure-u-1 gradient align-right bg__parallax">
-                    <div class="tags">
-                       <div class="tag pure-u-3-5">Consoles de jeux
-                            <i class="fa fa-lg fa-close" aria-hidden="true"></i>
-                       </div>
-                    </div>
-                </div>
-        <div class="pure-u-1 align-left">
-            <nav class="pure-u-1 sub_nav">
-                <ul class="pure-u-2-3">
-                    <li class="pure-u-1-5"><h3><a>Participants</a></h3></li>
-                </ul>
-                <button class="pure-button pure-button-primary pure-u-1-12" style="margin:10px"><i class="fa fa-plus fa-w" aria-hidden="true"></i>
-                    Add member</button>
-            </nav>
-        </div>
-    <section  class="bordered primary-background pure-u-1-5">
-<button class="view_in_table pure-button">Table view</button>
-<button class="view_in_card pure-button">Card view</button>
+           
+    <section  class="bordered secondary-background pure-u-1">
+            <form class="principal_search pure-u-10-12">
+                    <input class="searchTerm" placeholder="Enter your search term ..." /><input class="searchButton" type="submit" />
+            </form>
+
 
 <script>
 $(function() {                       
@@ -33,18 +20,35 @@ $(function() {
 
   });</script>
 
+
+ 
+    <div class="important-thing pure-u-1-4 primary-background">&nbsp;300 membres&nbsp;</div>
+    
+    <div class="important-thing pure-u-1-4 primary-background">&nbsp;50 bénévoles&nbsp;</div>
+    
+    <div class="important-thing pure-u-1-4 primary-background">&nbsp;+33/jour&nbsp;</div>
+
     </section>
-    <section class="pure-u-2-3 pure-g">
+            <div class="pure-u-1 align-left primary-background"> 
+            <nav class="pure-u-1 sub_nav">
+                    <ul class="pure-u-2-3">
+                        <li class="pure-u-1-5"><h3><a>Participants</a></h3></li>
+                    </ul>
+                    <button class="view_in_table pure-button">Table view</button>
+                    <button class="view_in_card pure-button">Card view</button>
+                </nav>
+            </div>
+            <section class="pure-u-3-5 pure-g">                    
         {% for user in object_list %}
       <div class="pure-u-xl-1-4 pure-u-md-1-2 pure-sm-1 card bordered">
-    
+    <a href="userprofile">
             <div class="content">
-                <img src="https://d1ulmmr4d4i8j4.cloudfront.net/static/images/avatars/User/ifixit/avatar-1.large">
+                    <img src="https://scontent-cdt1-1.xx.fbcdn.net/v/t1.0-1/p160x160/13179232_10209225972426299_887149271437459878_n.jpg?oh=687c82698fbca52fdc9abc5c82e70abe&oe=5A96738A">
                     <h3>{{ user.first_name }}{{ user.last_name }}</h3>
 
                     <ul class="list-group">
                             <li><i class="fa fa-certificate fa-fw" aria-hidden="true"></i>&nbsp; Participant </li>
-                            <li><i class="fa fa-clock-o fa-fw" aria-hidden="true"></i>&nbsp; Depuis le 10/11/2017</a></li>
+                            <li><i class="fa fa-clock-o fa-fw" aria-hidden="true"></i>&nbsp; Depuis le 10/11/2017</li>
                 
                         <li><i class="fa fa-envelope-o fa-fw" aria-hidden="true"></i>&nbsp; {{ user.email }}</li>
                         {% if user.staff_status %}
@@ -67,7 +71,7 @@ $(function() {
 
                 </div>
              
-        </div>
+            </a> </div>
                 {% empty %}
             <div>No users yet.</div>    
         {% endfor %}

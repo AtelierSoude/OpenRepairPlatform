@@ -1,14 +1,21 @@
+
 {% extends 'base.html' %}
 {% block content %}
-<wrapper class="">
-<div class="home-picture pure-u-1 align-left bg__parallax">
-    <section class="pure-u-1-3 home-topic">
-        
-        <h1 class=""> l'Atelier Soudé</h1>
-        <h2>Association de réparations participative</h2>
-        <span>Apprenez à réparer vos appareils électriques et électroniques</span>
-    </br>
-        <button class="pure-button pure-button-primary">Inscrivrez-vous</button>
+<wrapper class="secondary-background">
+<div class="home-picture pure-u-1 align-center gradient bg__parallax">
+    <section class="home_section pure-u-10-12">
+          <img src="/static/img/logo_ateliersoude.svg" style="width:150px">
+        <h1>L'Atelier Soudé</h1>
+        <h3>Que voulez-vous réparer ?</h3>
+        <form class="principal_search pure-u-10-12">
+            <input class="searchTerm" placeholder="Enter your search term ..." /><input class="searchButton" type="submit" />
+        </form>
+    
+        <div class="important-thing pure-u-1-4 primary-background">&nbsp;3 lieux&nbsp;</div>
+    
+        <div class="important-thing pure-u-1-4 primary-background">&nbsp;500 réparations&nbsp;</div>
+    
+        <div class="important-thing pure-u-1-4 primary-background">&nbsp;200 permanences&nbsp;</div>
     </section>
 </div>
 <div class="pure-u-1">
@@ -20,60 +27,39 @@
     </ul>
 </div>
 
-<section class="secondary-background pure-u-1">
-    <h1>Que voulez-vous réparer ?</h1>
-    <form class="principal_search">
-        <input class="searchTerm" placeholder="Enter your search term ..." /><input class="searchButton" type="submit" />
-    </form>
 
-    
-</section>
 
-<div class="secondary-background pure-u-1-2">
-
+<div class="secondary-home-picture pure-u-1 align-center">
+    <section class="pure-u-1-3 home-topic">
+        
+        <h1>Réparations collectives</h1>
+        <span>Apprenez à réparer vos appareils électriques et électroniques</span>
+    </br>
+    </section>
 </div>
 
 
+<section class="pure-u-11-12 align-center">
 
-<section class="primary-background pure-u-11-12 align-center">
-        <h1>Quelles sont les activités ?</h1>
-
+    <h2>Participez aux animations</h2>
         <div class="card pure-u-1 big_view card bordered">
 
                 <img src="http://atelier-soude.fr/template/democratisation-reparation.jpg">
           <div class="content">
-                    <h2>Réparations collectives</h2>
+                    <h3>Réparations collectives</h3>
                     <div class="important-thing">100 ateliers</div>
                     <div class="description">
                             <p>Co-réparer c'est apprendre ensemble, Lorem, ipsum dolor sit amet consectetur adipisicing elit. Vel aut tempore sit sunt officia eligendi voluptate repellat maxime debitis id iusto itaque vitae, qui dolorem pariatur! Error laborum a quis?</p>
                         </div>
                  <ul class="list-group"> 
                         <li><i class="fa fa-envelope-o fa-fw" aria-hidden="true"></i>gege.roro@atelier-soude.fr</li>
-                 </ul>
-                 <button class="pure-button primary-button">En savoir plus</button>
+               </ul>
             </div>
-
         </div>
-
-        <div class="card pure-u-1 big_view card bordered">
-                
-                                <img src="http://atelier-soude.fr/template/democratisation-reparation.jpg">
-                          <div class="content">
-                                    <h2>Réparations collectives</h2>
-                                    <div class="important-thing">100 ateliers</div>
-                                    <div class="description">
-                                            <p>Co-réparer c'est apprendre ensemble, Lorem, ipsum dolor sit amet consectetur adipisicing elit. Vel aut tempore sit sunt officia eligendi voluptate repellat maxime debitis id iusto itaque vitae, qui dolorem pariatur! Error laborum a quis?</p>
-                                        </div>
-                                 <ul class="list-group"> 
-                                        <li><i class="fa fa-envelope-o fa-fw" aria-hidden="true"></i>gege.roro@atelier-soude.fr</li>
-                                 </ul>
-                                 <button class="pure-button primary-button">En savoir plus</button>
-                            </div>
-                
-                        </div>
-                        
-  
+        <button class="pure-button primary-button">Participer</button>
+        
 </section>
+
 
 <section class="secondary-background pure-u-1">
     <h2>Nos prochaines dates</h2>

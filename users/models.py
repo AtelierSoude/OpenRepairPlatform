@@ -18,6 +18,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 class CustomUserManager(BaseUserManager):
 
     def _create_user(self, email, password,
@@ -45,7 +46,16 @@ class CustomUserManager(BaseUserManager):
         return self._create_user(email, password, True, True,
                                  **extra_fields)
 
+
 class CustomUser(AbstractBaseUser, PermissionsMixin):
+    GENDER_MALE = 'm'
+    GENDER_FEMALE = 'f'
+    GENDER_OTHER = 'o'
+    GENDERS = (
+        (GENDER_MALE, _('Male')),
+        (GENDER_FEMALE, _('Female')),
+        (GENDER_OTHER, _('Other')),
+    )
     """
     A fully featured User model with admin-compliant permissions that uses
     a full-length email field as the username.
@@ -56,11 +66,13 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(_('first name'), max_length=30, blank=True)
     last_name = models.CharField(_('last name'), max_length=30, blank=True)
     is_staff = models.BooleanField(_('staff status'), default=False,
-        help_text=_('Designates whether the user can log into this admin '
-                    'site.'))
+                                   help_text=_(
+                                       'Designates whether the user can log into this admin '
+                                       'site.'))
     is_active = models.BooleanField(_('active'), default=True,
-        help_text=_('Designates whether this user should be treated as '
-                    'active. Unselect this instead of deleting accounts.'))
+                                    help_text=_(
+                                        'Designates whether this user should be treated as '
+                                        'active. Unselect this instead of deleting accounts.'))
     date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
 
     # https://github.com/stefanfoulis/django-phonenumber-field
@@ -70,6 +82,10 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     street_address = AddressField(_("street address"), blank=True, null=True)
 
     birth_date = models.DateField(_("date of birth"), blank=True, null=True)
+
+    # null is True because gender is none of our business
+    # TODO maybe better put an explicit value and set a default, like 'n'
+    gender = models.CharField(max_length=1, choices=GENDERS, null=True )
 
     # http://django-avatar.readthedocs.io/en/latest/
     avatar_img = AvatarField(_("avatar"), blank=True, null=True)
@@ -87,8 +103,10 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         verbose_name = _('user')
         verbose_name_plural = _('users')
 
+
     def get_absolute_url(self):
         return "/users/%s/" % urlquote(self.email)
+
 
     def get_full_name(self):
         """
@@ -97,15 +115,18 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         full_name = '%s %s' % (self.first_name, self.last_name)
         return full_name.strip()
 
+
     def get_short_name(self):
         "Returns the short name for the user."
         return self.first_name
+
 
     def email_user(self, subject, message, from_email=None):
         """
         Sends an email to this User.
         """
         send_mail(subject, message, from_email, [self.email])
+
 
     def __iter__(self):
         for field in self._meta.get_fields():

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% for event in object_list %}
+        <li>
+            <ul>
+                {{ event.name }}
+                <li>{{ event.type }}</li>
+                <li>{{ event.starts_at }}</li>
+                <li>{{ event.location }}</li>
+                <li>{{ event.available_seats }}</li>
+                <li>{{ event.published }}</li>
+            </ul>
+            {% empty %}
+        <li>No events yet.</li>
+    {% endfor %}
+{% endblock %}

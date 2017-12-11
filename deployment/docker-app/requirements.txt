@@ -47,3 +47,5 @@ django-crispy-forms
 django-grappelli
 # for ImageField
 Pillow
+# autoslug for places, events and organizations
+django-autoslug

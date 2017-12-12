@@ -47,6 +47,7 @@ APPEND_SLASH = True
 # Application definition
 
 INSTALLED_APPS = [
+    'datetimepicker',
     'grappelli',
     'django.contrib.admin',
     'django.contrib.admindocs',

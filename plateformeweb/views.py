@@ -5,7 +5,7 @@ from .models import *
 from django.urls import reverse_lazy
 from django.utils import timezone
 from logging import getLogger
-import os
+from datetimepicker.widgets import DateTimePicker
 
 logger = getLogger(__name__)
 
@@ -124,7 +124,13 @@ class EventFormView():
             form_class = self.get_form_class()
         form = super().get_form(form_class)
         for field in ("starts_at", "ends_at", "publish_at"):
-            form.fields[field].widget.attrs.update({"class": "datepicker"})
+            form.fields[field].widget=DateTimePicker(
+                options={
+                    'format': '%Y-%m-%d %H:%M',
+                    'lang': self.request.LANGUAGE_CODE[:2],
+                    'step': 15,
+                }
+            )
         return form
 
     def get_success_url(self):

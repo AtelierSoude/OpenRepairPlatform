@@ -49,3 +49,4 @@ django-grappelli
 Pillow
 # autoslug for places, events and organizations
 django-autoslug
+git+https://github.com/beda-software/django-datetimepicker.git

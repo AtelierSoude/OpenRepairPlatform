@@ -1,9 +1,6 @@
 {% extends 'base.html' %}
-{% load staticfiles %}
-{% load fontawesome %}
-{% load avatar_tags %} 
 {% block content %}
-
+<wrapper class="pure-u-1 pure-g">
 
            
     <section  class="bordered secondary-background pure-u-1">
@@ -20,10 +17,7 @@ $(function() {
     $(".view_in_card").click(function() {  
       $('.card').removeClass("table_view");     
     });
-    $(".view_in_larger").click(function() {  
-      $('.card').addClass("big_view");     
-    });
-   
+
   });</script>
 
 
@@ -42,16 +36,16 @@ $(function() {
                     </ul>
                     <button class="view_in_table pure-button">Table view</button>
                     <button class="view_in_card pure-button">Card view</button>
-                    <button class="view_in_larger pure-button">Large view</button>
                 </nav>
             </div>
             <section class="pure-u-3-5 pure-g">                    
         {% for user in object_list %}
       <div class="pure-u-xl-1-4 pure-u-md-1-2 pure-sm-1 card bordered">
     <a href="userprofile">
-            <img src="https://scontent-cdt1-1.xx.fbcdn.net/v/t1.0-1/p160x160/13179232_10209225972426299_887149271437459878_n.jpg?oh=687c82698fbca52fdc9abc5c82e70abe&oe=5A96738A">            
             <div class="content">
+                    <img src="https://scontent-cdt1-1.xx.fbcdn.net/v/t1.0-1/p160x160/13179232_10209225972426299_887149271437459878_n.jpg?oh=687c82698fbca52fdc9abc5c82e70abe&oe=5A96738A">
                     <h3>{{ user.first_name }}{{ user.last_name }}</h3>
+
                     <ul class="list-group">
                             <li><i class="fa fa-certificate fa-fw" aria-hidden="true"></i>&nbsp; Participant </li>
                             <li><i class="fa fa-clock-o fa-fw" aria-hidden="true"></i>&nbsp; Depuis le 10/11/2017</li>
@@ -67,10 +61,13 @@ $(function() {
                             <input type="text" placeholder="cotisation">
                             </div> 
                 </form>
-                {% if request.user.is_authenticated and request.user.is_staff %}
-                 <button class="pure-button rounded button">{% fontawesome_icon 'edit' large=True %}
+
+                 <button class="pure-button rounded button"><i class="fa fa-check" aria-hidden="true"></i>
                  </button>
-                 {% endif %}
+                      
+
+                 <button class="pure-button rounded button-error"><i class="fa fa-times" aria-hidden="true"></i>
+                 </button> 
 
                 </div>
              
@@ -80,7 +77,7 @@ $(function() {
         {% endfor %}
 
     </section>
-
+</wrapper>
 {% endblock %}
 
 

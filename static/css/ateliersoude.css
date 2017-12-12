@@ -173,9 +173,9 @@ a {
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='rgba(254, 229, 110, 0.2)', endColorstr='#35bda6'); }
 
 .focused {
-  -webkit-box-shadow: 20px 20px 0 rgba(1, 29, 40, 0.8);
-  -moz-box-shadow: 20px 20px 0 rgba(1, 29, 40, 0.8);
-  box-shadow: 20px 20px 0 rgba(1, 29, 40, 0.8); }
+  -webkit-box-shadow: 5px 5px 0 rgba(1, 29, 40, 0.4);
+  -moz-box-shadow: 5px 5px 0 rgba(1, 29, 40, 0.4);
+  box-shadow: 5px 5px 0 rgba(1, 29, 40, 0.4); }
 
 .bordered {
   border-width: 1px;
@@ -198,7 +198,7 @@ a {
   font-size: 24px;
   text-transform: uppercase;
   background-color: #f5f5f5;
-  font-family: "Bree Serif"; }
+  font-family: "Bree Serif" !important; }
   .important-thing:after {
     content: "";
     display: block;
@@ -755,6 +755,40 @@ form.pure-form .bar {
     transition: 200ms ease all;
     left: 0%; }
 
+.card {
+  margin: 10px;
+  border-width: 1px;
+  border-color: #e7e7e7;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  border-style: solid;
+  background-color: #fff;
+  -webkit-transition: all, 0.1s, ease-in-out 0.2s ease-in-out;
+  -moz-transition: all, 0.1s, ease-in-out 0.2s ease-in-out;
+  -ms-transition: all, 0.1s, ease-in-out 0.2s ease-in-out;
+  -o-transition: all, 0.1s, ease-in-out 0.2s ease-in-out;
+  transition: all, 0.1s, ease-in-out 0.2s ease-in-out; }
+  .card a {
+    color: inherit;
+    text-decoration: none; }
+  .card img {
+    height: auto;
+    width: 80%;
+    margin-top: 10px; }
+  .card .content {
+    width: 100%; }
+  .card:hover {
+    position: relative;
+    top: -5px;
+    left: -5px;
+    -webkit-box-shadow: 5px 5px 0 rgba(1, 29, 40, 0.8);
+    -moz-box-shadow: 5px 5px 0 rgba(1, 29, 40, 0.8);
+    box-shadow: 5px 5px 0 rgba(1, 29, 40, 0.8); }
+  .card button, .card input {
+    float: right;
+    margin: 5px; }
+
 .card.table_view {
   width: 100%;
   display: table;
@@ -788,12 +822,12 @@ form.pure-form .bar {
     padding-left: 1em; }
   .card.table_view img {
     display: table-cell;
-    height: 50px;
-    width: auto;
-    margin-top: 0px; }
+    height: 60px;
+    width: 60px;
+    margin-top: 0px;
+    float: left; }
   .card.table_view .content {
-    widows: 80%;
-    width: 100%;
+    width: calc(100% - 60px);
     display: table; }
   .card.table_view .list-group {
     text-align: left;
@@ -834,11 +868,7 @@ form.pure-form .bar {
   border-style: solid;
   border-image: none;
   text-align: left;
-  line-height: 10px;
-  /*   button, input,form {
-      display: table-cell;
-      
-        } */ }
+  line-height: 10px; }
   .card.big_view:nth-child(even) {
     background-color: #fff; }
   .card.big_view a {
@@ -849,8 +879,6 @@ form.pure-form .bar {
     line-height: inherit;
     vertical-align: middle;
     padding-left: 0px; }
-  .card.big_view * {
-    display: table-row; }
   .card.big_view h3, .card.big_view h2 {
     display: block;
     float: left; }
@@ -865,11 +893,13 @@ form.pure-form .bar {
   .card.big_view .content {
     float: left;
     width: 80%;
-    padding: 1em; }
+    padding: 1em;
+    display: table-row; }
   .card.big_view .description {
     float: left;
     width: 80%;
-    margin-top: 2em; }
+    margin-top: 2em;
+    display: table-row; }
   .card.big_view .list-group {
     width: 100%;
     text-align: left;
@@ -881,6 +911,7 @@ form.pure-form .bar {
       padding-left: 0px;
       display: table-cell;
       border: none;
+      width: auto;
       box-sizing: border-box;
       line-height: 30px !important;
       border-bottom: none !important; }
@@ -890,42 +921,6 @@ form.pure-form .bar {
         color: #fee56e; }
       .card.big_view .list-group li a {
         text-decoration: underline; }
-
-.card {
-  margin: 10px;
-  /* @include mq("tablet-wide", $type: max) {top:-10px}; */
-  /* @include gradient(border, $secondary-color, $primary-color); */
-  border-width: 1px;
-  border-color: #e7e7e7;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-  border-style: solid;
-  background-color: #fff;
-  -webkit-transition: all, 0.1s, ease-in-out 0.2s ease-in-out;
-  -moz-transition: all, 0.1s, ease-in-out 0.2s ease-in-out;
-  -ms-transition: all, 0.1s, ease-in-out 0.2s ease-in-out;
-  -o-transition: all, 0.1s, ease-in-out 0.2s ease-in-out;
-  transition: all, 0.1s, ease-in-out 0.2s ease-in-out; }
-  .card a {
-    color: inherit;
-    text-decoration: none; }
-  .card img {
-    height: auto;
-    width: 80%;
-    margin-top: 10px; }
-  .card .content {
-    width: 100%; }
-  .card:hover {
-    position: relative;
-    left: -10px;
-    z-index: 2;
-    -webkit-box-shadow: 10px 10px 0 rgba(1, 29, 40, 0.8);
-    -moz-box-shadow: 10px 10px 0 rgba(1, 29, 40, 0.8);
-    box-shadow: 10px 10px 0 rgba(1, 29, 40, 0.8); }
-  .card button, .card input {
-    float: right;
-    margin: 5px; }
 
 .principal_search {
   /* position: fixed; */

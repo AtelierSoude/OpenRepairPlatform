@@ -201,7 +201,7 @@ class Event(models.Model):
 class PublishedEventManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(published=True).filter(
-            published_at__lte=timezone.now())
+            publish_at__lte=timezone.now())
 
 
 class PublishedEvent(Event):

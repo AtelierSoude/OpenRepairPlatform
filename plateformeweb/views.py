@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.views.generic import DetailView, ListView, FormView, CreateView, \
     UpdateView
 from .models import *
-from django.urls import reverse
+from django.urls import reverse_lazy
 from django.utils import timezone
 from logging import getLogger
 import os
@@ -42,7 +42,7 @@ class OrganizationFormView():
     fields = ["name", "active"]
 
     def get_success_url(self):
-        return reverse('organization_detail',
+        return reverse_lazy('organization_detail',
                        args=(self.object.pk, self.object.slug,))
 
 
@@ -79,7 +79,7 @@ class PlaceFormView():
     fields = ["name", "description", "type", "address", "picture"]
 
     def get_success_url(self):
-        return reverse('place_detail', args=(self.object.pk, self.object.slug,))
+        return reverse_lazy('place_detail', args=(self.object.pk, self.object.slug,))
 
 
 class PlaceCreateView(PlaceFormView, CreateView):
@@ -128,7 +128,7 @@ class EventFormView():
         return form
 
     def get_success_url(self):
-        return reverse('event_detail', args=(self.object.pk, self.object.slug,))
+        return reverse_lazy('event_detail', args=(self.object.pk, self.object.slug,))
 
 
 class EventCreateView(EventFormView, CreateView):
@@ -136,4 +136,5 @@ class EventCreateView(EventFormView, CreateView):
 
 
 class EventEditView(EventFormView, UpdateView):
-    pass
+    queryset = Event.objects
+

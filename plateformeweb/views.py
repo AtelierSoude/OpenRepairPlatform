@@ -115,8 +115,10 @@ class EventFormView():
     fields = ["title", "type", "starts_at", "ends_at", "available_seats",
               "attendees", "organizers", "location", "publish_at", "published"]
 
-    # datepicker in create view:
-    #   https://stackoverflow.com/questions/21405895/datepickerwidget-in-createview
+    # date picker from
+    #   https://xdsoft.net/jqplugins/datetimepicker/
+    # installed as a django app by
+    #   https://github.com/beda-software/django-datetimepicker
     # fix get_form:
     #   https://github.com/tomwalker/django_quiz/issues/71
     def get_form(self, form_class=None):
@@ -124,9 +126,12 @@ class EventFormView():
             form_class = self.get_form_class()
         form = super().get_form(form_class)
         for field in ("starts_at", "ends_at", "publish_at"):
-            form.fields[field].widget=DateTimePicker(
+            form.fields[field].widget = DateTimePicker(
                 options={
                     'format': '%Y-%m-%d %H:%M',
+                    # todo: i18n not working yet, needs to add a static JS
+                    # file for translations ?
+                    # see https://xdsoft.net/jqplugins/datetimepicker/
                     'lang': self.request.LANGUAGE_CODE[:2],
                     'step': 15,
                 }

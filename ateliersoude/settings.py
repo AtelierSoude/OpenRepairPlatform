@@ -34,13 +34,7 @@ ALLOWED_HOSTS = ["dev.atelier-soude.fr", "ns60.amakuru.net", "127.0.0.1", "local
 # for debug toolbar, localhost (through docker and localhost)
 # no wildcards for IPs, possible to use a sort of wildcard for hostnames,
 # like ".office.internal.tld"
-# ALSO SEE https://stackoverflow.com/a/45624773
-INTERNAL_IPS = ['127.0.0.1', ]
-import socket
-import os
-# tricks to have debug toolbar when developing with docker
-ip = socket.gethostbyname(socket.gethostname())
-INTERNAL_IPS += [ip[:-1] + '1']
+INTERNAL_IPS = ["172.19.0.1", "127.0.0.1", "localhost"]
 
 APPEND_SLASH = True
 

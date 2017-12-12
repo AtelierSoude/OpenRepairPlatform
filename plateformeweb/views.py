@@ -43,7 +43,7 @@ class OrganizationFormView():
 
     def get_success_url(self):
         return reverse_lazy('organization_detail',
-                       args=(self.object.pk, self.object.slug,))
+                            args=(self.object.pk, self.object.slug,))
 
 
 class OrganizationCreateView(OrganizationFormView, CreateView):
@@ -79,7 +79,8 @@ class PlaceFormView():
     fields = ["name", "description", "type", "address", "picture"]
 
     def get_success_url(self):
-        return reverse_lazy('place_detail', args=(self.object.pk, self.object.slug,))
+        return reverse_lazy('place_detail',
+                            args=(self.object.pk, self.object.slug,))
 
 
 class PlaceCreateView(PlaceFormView, CreateView):
@@ -139,7 +140,8 @@ class EventFormView():
         return form
 
     def get_success_url(self):
-        return reverse_lazy('event_detail', args=(self.object.pk, self.object.slug,))
+        return reverse_lazy('event_detail',
+                            args=(self.object.pk, self.object.slug,))
 
 
 class EventCreateView(EventFormView, CreateView):
@@ -148,4 +150,3 @@ class EventCreateView(EventFormView, CreateView):
 
 class EventEditView(EventFormView, UpdateView):
     queryset = Event.objects
-

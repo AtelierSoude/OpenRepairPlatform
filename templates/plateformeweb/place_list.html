@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% for organization in object_list %}
+        <li>
+            <ul>
+                <li>{{ organization.name }}</li>
+                <li>{{ organization.is_active }}</li>
+            </ul>
+            {% empty %}
+        <li>No organizations yet.</li>
+    {% endfor %}
+{% endblock %}

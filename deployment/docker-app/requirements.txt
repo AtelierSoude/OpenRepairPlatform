@@ -45,3 +45,7 @@ django-npm
 django-crispy-forms
 # better admin
 django-grappelli
+# for ImageField
+Pillow
+# autoslug for places, events and organizations
+django-autoslug

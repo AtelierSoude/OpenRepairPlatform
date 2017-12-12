@@ -14,6 +14,6 @@ urlpatterns = [
     url(r'^place/(?P<pk>[0-9]+)/edit/$', views.PlaceEditView.as_view(), name='place_edit'),
     url(r'^event/$', views.EventListView.as_view(), name='event_list'),
     url(r'^event/create/$', views.EventCreateView.as_view(), name='event_create'),
-    url(r'^event/(?P<pk>[0-9]+)/(?P<slug>[-\w]+)/$', views.EventView.as_view(), name='event_detail'),
     url(r'^event/(?P<pk>[0-9]+)/edit/$', views.EventEditView.as_view(), name='event_edit'),
+    url(r'^event/(?P<pk>[0-9]+)/(?P<slug>[-\w]+)/$', views.EventView.as_view(), name='event_detail'),
 ]

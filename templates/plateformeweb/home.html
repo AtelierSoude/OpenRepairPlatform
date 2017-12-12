@@ -1,5 +1,8 @@
 
+
 {% extends 'base.html' %}
+
+
 {% block content %}
 <div class="secondary-background">
 <div class="home-picture pure-u-1 align-center gradient bg__parallax">
@@ -59,37 +62,13 @@
         <button class="pure-button primary-button">Participer</button>
         
 </section>
-
+{{events}}
 
 <section class="secondary-background pure-u-1">
     <h2>Nos prochaines dates</h2>
-    <div class="pure-u-lg-1-6 pure-u-1-4 pure-ms-1 card bordered">
-  
-          <div class="content">
-              <img src="https://d1ulmmr4d4i8j4.cloudfront.net/static/images/avatars/User/ifixit/avatar-1.large">
-                  <h3>Gérard Robert</h3>
-               <ul class="list-group"> 
-                      <li><i class="fa fa-envelope-o fa-fw" aria-hidden="true"></i>gege.roro@atelier-soude.fr</li>
-                     
-               </ul>
-              
-              <form class="pure-form">
-                      <div class="pure-control-group">
-                          <input type="text" placeholder="cotisation">
-                          </div> 
-              </form>
-
-               <button class="pure-button rounded button"><i class="fa fa-check" aria-hidden="true"></i>
-               </button>
-                    
-
-               <button class="pure-button rounded button-error"><i class="fa fa-times" aria-hidden="true"></i>
-               </button> 
-
-              </div>
-           
-      </div>
-           
+    {% include "plateformeweb/event_list.html" with object_list=events %}
+    
+   
 </section>
 </div>
 {% endblock %}

@@ -1,53 +1,13 @@
-{% extends 'base.html' %}
+{% extends 'list_view.html' %}
+
 {% load staticfiles %}
 {% load fontawesome %}
 {% load avatar_tags %} 
-{% block content %}
 
-
-           
-    <section  class="bordered secondary-background pure-u-1">
-            <form class="principal_search pure-u-10-12">
-                    <input class="searchTerm" placeholder="Enter your search term ..." /><input class="searchButton" type="submit" />
-            </form>
-
-
-<script>
-$(function() {                       
-    $(".view_in_table").click(function() {  
-      $('.card').addClass("table_view");     
-    });
-    $(".view_in_card").click(function() {  
-      $('.card').removeClass("table_view");     
-    });
-    $(".view_in_larger").click(function() {  
-      $('.card').addClass("big_view");     
-    });
-   
-  });</script>
-
-
- 
-    <div class="important-thing pure-u-1-4 primary-background">&nbsp;300 membres&nbsp;</div>
-    
-    <div class="important-thing pure-u-1-4 primary-background">&nbsp;50 bénévoles&nbsp;</div>
-    
-    <div class="important-thing pure-u-1-4 primary-background">&nbsp;+33/jour&nbsp;</div>
-
-    </section>
-            <div class="pure-u-1 align-left primary-background"> 
-            <nav class="pure-u-1 sub_nav">
-                    <ul class="pure-u-2-3">
-                        <li class="pure-u-1-5"><h3><a>Participants</a></h3></li>
-                    </ul>
-                    <button class="view_in_table pure-button">Table view</button>
-                    <button class="view_in_card pure-button">Card view</button>
-                    <button class="view_in_larger pure-button">Large view</button>
-                </nav>
-            </div>
-            <section class="pure-u-3-5 pure-g">                    
-        {% for user in object_list %}
-      <div class="pure-u-xl-1-4 pure-u-md-1-2 pure-sm-1 card bordered">
+{% block list %}
+                 
+{% for user in object_list %}
+<div class="pure-u-xl-1-4 pure-u-md-1-2 pure-sm-1 card bordered">
     <a href="userprofile">
             <img src="https://scontent-cdt1-1.xx.fbcdn.net/v/t1.0-1/p160x160/13179232_10209225972426299_887149271437459878_n.jpg?oh=687c82698fbca52fdc9abc5c82e70abe&oe=5A96738A">            
             <div class="content">
@@ -78,8 +38,6 @@ $(function() {
                 {% empty %}
             <div>No users yet.</div>    
         {% endfor %}
-
-    </section>
 
 {% endblock %}
 

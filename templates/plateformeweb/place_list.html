@@ -1,12 +1,33 @@
-{% extends 'base.html' %}
-{% block content %}
-    {% for organization in object_list %}
-        <li>
-            <ul>
-                <li>{{ organization.name }}</li>
-                <li>{{ organization.is_active }}</li>
-            </ul>
-            {% empty %}
-        <li>No organizations yet.</li>
+{% extends 'list_view.html' %}
+
+{% load staticfiles %}
+{% load fontawesome %}
+{% load avatar_tags %} 
+
+{% block list %}
+
+    {% for place in object_list %}
+    {{place.all.count}}
+
+    <div class="card pure-u-1 big_view card bordered">
+            
+                    <img src="../media/{{ place.picture }}">
+                      <div class="content">
+                                <h3>{{place.name}}</h3>
+                                <div class="important-thing">100 ateliers</div>
+                                <div class="description">
+                                        <p>{{place.description}}</p>
+                                    </div>
+                             <ul class="list-group"> 
+                                    <li>
+                                            {% fontawesome_icon 'map-marker' %}
+                                            {{ place.address }}
+                                    </li>    
+                           </ul>
+                        </div>
+                    </div>
+        {% empty %}
+                    <div>No places yet.</div>
     {% endfor %}
+    </section>
 {% endblock %}

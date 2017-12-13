@@ -3,35 +3,59 @@
 {% load fontawesome %}
 {% load avatar_tags %} 
 
-{% block content %}
+{% block list %}
+
+
+<script>
+        $(function() {         
+        
+        $(".get_more").click(function() {  
+            $(this).parents('.card').addClass("big_view");     
+        });      
+        
+     
+        });</script>
+
+
 {% for event in object_list %}
-
-      <div class="pure-u-xl-1-4 pure-u-md-1-2 pure-sm-1 card bordered">
-    <a href="userprofile">
-            <img src="https://scontent-cdt1-1.xx.fbcdn.net/v/t1.0-1/p160x160/13179232_10209225972426299_887149271437459878_n.jpg?oh=687c82698fbca52fdc9abc5c82e70abe&oe=5A96738A">            
-            <div class="content">
-                    <h3> {{ event.name }}</h3>
-                    
+<div class="pure-u-xl-1-4 pure-u-md-1-2 pure-sm-1 card bordered">
+    <img src="https://scontent-cdt1-1.xx.fbcdn.net/v/t1.0-1/p160x160/13179232_10209225972426299_887149271437459878_n.jpg?oh=687c82698fbca52fdc9abc5c82e70abe&oe=5A96738A">            
+        <div class="content">
+            <h3>{{ event.title }}</h3>
                     <ul class="list-group">
-                        <li>{{ event.location }}</li>
-                        <li>{{ event.published }}</li>
-                            <li><i class="fa fa-certificate fa-fw" aria-hidden="true"></i>{{ event.starts_at }} </li>
-                            <li><i class="fa fa-clock-o fa-fw" aria-hidden="true"></i>{{ event.available_seats }}</li>
-                
-                        <li><i class="fa fa-envelope-o fa-fw" aria-hidden="true"></i>&nbsp; {{ event.location }}</li>
-                       
-                 </ul>
-                
+                        <li>{% fontawesome_icon 'clock-o' %} {{ event.starts_at }}</li>
+                        <li>{% fontawesome_icon 'user-plus' %} 
+                            {% if event.available_seats == 0 %}
+                            <span class="error">No more places</span>
+                            {% else %}
+                            {{ event.available_seats }} places
+                            {% endif %}
+                        </li>
+                        <li>
+                            {% fontawesome_icon 'map-marker' %}
+                            <a href="{% url 'place_detail' event.location.id event.location.slug %}">
+                            {{ event.location }}</a>
+                        </li>    
+                    </ul>
+                   
                 {% if request.user.is_authenticated and request.user.is_staff %}
-                 <button class="pure-button rounded button">{% fontawesome_icon 'edit' large=True %}
+                 <button class="pure-button rounded button">{% fontawesome_icon 'edit' large=True %}      
+                {% endif %}
                  </button>
-                 {% endif %}
+                 <button class="pure-button button get_more">
+                        {% if event.available_seats == 0 %}
+                        On queue
+                        {% else %}
+                        En savoir plus
+                        {% endif %}
+                </button>
+            </div>
+        </div>
 
-                </div>
-             
-            </a> </div>
-                {% empty %}
-            <div>No event yet.</div>    
+        {% empty %}
+        <div>
+            No event yet.
+        </div>    
         
   {% endfor %}
   {% endblock %}

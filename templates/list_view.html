@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+{% load fontawesome %}
+{% load avatar_tags %} 
+{% block content %}
+
+<section  class="bordered secondary-background pure-u-1">
+        <form class="principal_search pure-u-10-12">
+                <input class="searchTerm" placeholder="Enter your search term ..." /><input class="searchButton" type="submit" />
+        </form>
+
+
+<script>
+$(function() {         
+
+$(".get_more").click(function() {  
+  $('.card').addClass("big_view");     
+});      
+
+$(".view_in_table").click(function() {  
+  $('.card').addClass("table_view");     
+});
+$(".view_in_card").click(function() {  
+  $('.card').removeClass("table_view");     
+});
+$(".view_in_larger").click(function() {  
+  $('.card').addClass("big_view");     
+});
+
+});</script>
+
+
+
+<div class="important-thing pure-u-1-4 primary-background">&nbsp;300 membres&nbsp;</div>
+
+<div class="important-thing pure-u-1-4 primary-background">&nbsp;50 bénévoles&nbsp;</div>
+
+<div class="important-thing pure-u-1-4 primary-background">&nbsp;+33/jour&nbsp;</div>
+
+</section>
+<div class="pure-u-1 align-left primary-background"> 
+                <nav class="pure-u-1 pure-button-group collapsed" role="group">
+                        <button class="view_in_table pure-button">Table view</button>
+                        <button class="view_in_card pure-button pure-button-active">Card view</button>
+                        <button class="view_in_larger pure-button">Large view</button>
+                </nav>
+        </div>
+        <section class="pure-u-3-5 pure-g">     
+{% block list %}
+{% endblock %}
+</section>
+
+{% endblock %}

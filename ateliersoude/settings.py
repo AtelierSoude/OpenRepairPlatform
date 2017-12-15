@@ -272,7 +272,8 @@ GOOGLE_API_KEY = "AIzaSyCNZ-rIhY1zyq2LFghBV4x7mUQvtJCOK88"
 
 # npm (https://github.com/kevin1024/django-npm)
 NPM_FILE_PATTERNS = {
-    'purecss': ['build/*.css', ],
+    'purecss': ['build/*.js', 'build/*.css'],
+    'stickyfilljs': ['dist/*.js', 'dist/*.css'],
 }
 NPM_STATIC_FILES_PREFIX = 'npm'
 NPM_ROOT_PATH = BASE_DIR

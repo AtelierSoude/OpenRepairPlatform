@@ -14,6 +14,7 @@ def user_profile(request):
                           'user_form': UserForm(instance=request.user,
                                                 label_suffix="",
                                                 auto_id="field_id_%")})
+
     else:
         user_form = UserForm(request.POST,
                              instance=CustomUser.objects.get(id=request.user.id))
@@ -23,6 +24,10 @@ def user_profile(request):
                       'users/user_profile.html',
                       {'user_form': user_form})
 
+        events = PublishedEvent.objects.filter(
+        starts_at__gte=timezone.now()).order_by('starts_at')[:10]
+    context = {"events": events}
+    
 
 def list_users(request):
     if request.method == 'GET':

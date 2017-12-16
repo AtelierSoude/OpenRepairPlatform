@@ -8,27 +8,30 @@
                  
 {% for user in object_list %}
 <div class="pure-u-xl-1-4 pure-u-md-1-2 pure-sm-1 card bordered">
-    <a href="userprofile">
+   
             <img src="https://scontent-cdt1-1.xx.fbcdn.net/v/t1.0-1/p160x160/13179232_10209225972426299_887149271437459878_n.jpg?oh=687c82698fbca52fdc9abc5c82e70abe&oe=5A96738A">            
             <div class="content">
                     <h3>{{ user.first_name }}{{ user.last_name }}</h3>
                     <ul class="list-group">
-                            <li><i class="fa fa-certificate fa-fw" aria-hidden="true"></i>&nbsp; Participant </li>
-                            <li><i class="fa fa-clock-o fa-fw" aria-hidden="true"></i>&nbsp; Depuis le 10/11/2017</li>
-                
-                        <li><i class="fa fa-envelope-o fa-fw" aria-hidden="true"></i>&nbsp; {{ user.email }}</li>
+                            <li>{% fontawesome_icon 'certificate'%} Participant </li>
+                            <li>{% fontawesome_icon 'clock-o' %} Depuis le 10/11/2017</li>
+                            <li>{% fontawesome_icon 'envelope-o' %}{{ user.email }}</li>
                         {% if user.staff_status %}
-                          <li><i class="fa fa-envelope-o fa-fw" aria-hidden="true"></i>&nbsp; Bénévole</li>
+                          <li>{% fontawesome_icon 'envelope-o' %} Bénévole</li>
                         {% endif %}
                  </ul>
                 
                 <form class="pure-form pure-u-1">
                         <div class="pure-control-group">
                             <input type="text" placeholder="cotisation">
-                            </div> 
+                        </div> 
                 </form>
                 {% if request.user.is_authenticated and request.user.is_staff %}
-                 <button class="pure-button rounded button">{% fontawesome_icon 'edit' large=True %}
+                 <button class="pure-button rounded button  button-appear">
+                        <a href="{% url 'user_profile' %}">  {% fontawesome_icon 'edit' large=True %} </a>
+                 </button>
+                 <button class="pure-button rounded button">
+                        <a href="{% url 'user_profile' %}">  {% fontawesome_icon 'check-square-o' large=True %} </a>
                  </button>
                  {% endif %}
 

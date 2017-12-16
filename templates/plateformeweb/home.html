@@ -5,7 +5,18 @@
 
 {% block content %}
 <div class="secondary-background">
-<div class="home-picture pure-u-1 align-center gradient bg__parallax">
+    
+        <nav class="pure-u-1">
+                <ul class="pure-u-1 nav-home">
+                    <li class="pure-u-1-5"><a href="#home-topic-1">Réparations collectives</a></li>
+                    <li class="pure-u-1-5"><a href="#home-topic-2">Ateliers éducatifs<a></li>
+                    <li class="pure-u-1-5"><a href="#home-topic-3">Projets</a></li>
+                    <li class="pure-u-1-5"><a href="#home-topic-4">Philosophie</a></li>
+                    <li class="pure-u-1-5"><a href="#home-topic-5">Contacts</a></li>
+                </ul>
+            </nav>
+
+<div class="home-picture pure-u-1 align-center gradient">
 
     <section class="home_section pure-u-10-12">
           <img src="/static/img/logo_ateliersoude.svg" style="width:150px">
@@ -15,45 +26,35 @@
             <input class="searchTerm" placeholder="Enter your search term ..." /><input class="searchButton" type="submit" />
         </form>
     
-        <div class="important-thing pure-u-1-4 primary-background">&nbsp;3 lieux&nbsp;</div>
+        <div class="important-thing pure-u-xl-1-4 pure-u-md-1-3 pure-u-sm-1 primary-background">&nbsp;3 lieux&nbsp;</div>
     
-        <div class="important-thing pure-u-1-4 primary-background">&nbsp;500 réparations&nbsp;</div>
+        <div class="important-thing pure-u-xl-1-4 pure-u-md-1-3 pure-u-sm-1 primary-background">&nbsp;500 réparations&nbsp;</div>
     
-        <div class="important-thing pure-u-1-4 primary-background">&nbsp;200 permanences&nbsp;</div>
+        <div class="important-thing pure-u-xl-1-4 pure-u-md-1-3 pure-u-sm-1 primary-background">&nbsp;200 permanences&nbsp;</div>
     </section>
 </div>
-<div class="pure-u-1">
-    <ul class="pure-u-1 nav-home">
-        <li class="pure-u-1-5"><a>Réparations collectives</a></li>
-        <li class="pure-u-1-5"><a>Ateliers éducatifs<a></li>
-        <li class="pure-u-1-5"><a>Projets</a></li>
-        <li class="pure-u-1-5"><a>Philosophie</a></li>
-        <li class="pure-u-1-5"><a>Contacts</a></li>
-    </ul>
-</div>
 
-<section class="pure-u-3-5 pure-g">  
-    
-    
+
+<section class="pure-xl-3-5 pure-u-md-11-12 pure-u-sm-1">  
     
         <h2>Nos prochaines dates</h2>   
-            {% include "plateformeweb/event_list.html" with object_list=events %}
+            {% include "plateformeweb/event_list.html" with object_list=events  %}
     </section>
 
 
-<div class="secondary-home-picture pure-u-1 align-center">
-    <section class="pure-u-1-3 home-topic">
-        
-        <h1>Réparations collectives</h1>
-        <span>Apprenez à réparer vos appareils électriques et électroniques</span>
-    </br>
-    </section>
+<div class="secondary-home-picture pure-u-1 align-center   bg__parallax">
 </div>
 
 
-<section class="pure-u-11-12 align-center">
+<section class="pure-u-1 align-center home-topic soft-gradient " id="home-topic-1">
 
-    <h2>Réappropriation par l'action</h2>
+    <div class="pure-u-xl-1-3 pure-u-md-1 pure-sm-1">
+       <img src="http://atelier-soude.fr/template/icones/atelier-soude-reparation.svg">
+        <h1>Réparations collectives</h1>
+        <span>Apprenez à réparer vos appareils électriques et électroniques</span>
+    </div>  
+
+    <div class="pure-u-xl-1-3 pure-u-md-1 pure-sm-1">  
 <p class="align-left">
         
         La réparation par tous et pour tous! Téléphone portable, ordinateur, petit électroménager, autant d’objets électroniques et électriques qui tombent facilement en panne...
@@ -62,9 +63,40 @@
         L’Atelier Soudé propose à chacun de pouvoir reprendre "possession" de ses appareils électroniques. Petits et grands sont guidés vers l'auto-réparation afin de devenir autonomes et de mieux comprendre les mécanismes et les enjeux technologiques.
         
         La démocratisation passe également par la documentation: l'Atelier Soudé facilite l'accès aux tutoriels et aux réparations, et l'objectif est de mettre sur pied une plateforme complète permettant à la fois de suivre vos réparations, de signaler vos venues, et de visualiser votre montée en compétence!</p>
+        <button class="pure-button pure-button-primary pure-u-md-1-2 pure-u-sm-1">En savoir +</button>
+     </div>  
+
+   
+<section class="pure-xl-3-5 pure-u-md-11-12 pure-u-sm-1">  
         
+            <h2>Nos prochaines dates</h2>   
+                {% include "plateformeweb/event_list.html" with object_list=events   %}
+</section>
+    
+    
 </section>
 
+<section class="pure-u-1 align-center home-topic" id="home-topic-2">
+    
+        <div class="pure-u-xl-1-3 pure-u-md-1 pure-sm-1">  
+    <p class="align-left">
+            
+            La réparation par tous et pour tous! Téléphone portable, ordinateur, petit électroménager, autant d’objets électroniques et électriques qui tombent facilement en panne...
+            Depuis quelques années, une distance se creuse entre l'utilisateur et l'objet. Il est temps de se réapproprier nos outils.
+            
+            L’Atelier Soudé propose à chacun de pouvoir reprendre "possession" de ses appareils électroniques. Petits et grands sont guidés vers l'auto-réparation afin de devenir autonomes et de mieux comprendre les mécanismes et les enjeux technologiques.
+            
+            La démocratisation passe également par la documentation: l'Atelier Soudé facilite l'accès aux tutoriels et aux réparations, et l'objectif est de mettre sur pied une plateforme complète permettant à la fois de suivre vos réparations, de signaler vos venues, et de visualiser votre montée en compétence!</p>
+            <button class="pure-button pure-button-primary pure-u-md-1-2 pure-u-sm-1">En savoir +</button>
+         </div>  
+
+        <div class="pure-u-xl-1-3 pure-u-md-1 pure-sm-1">
+            <img src="http://atelier-soude.fr/template/icones/atelier-soude-reparation.svg">
+             <h1>Réparations collectives</h1>
+             <span>Apprenez à réparer vos appareils électriques et électroniques</span>
+         </div>  
+        
+    </section>
 
 </div>
 {% endblock %}

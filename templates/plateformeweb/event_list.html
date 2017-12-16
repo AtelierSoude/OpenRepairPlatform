@@ -18,7 +18,7 @@
 
 
 {% for event in object_list %}
-<div class="pure-u-xl-1-4 pure-u-md-1-2 pure-sm-1 card bordered">
+<div class="pure-u-xl-1-4 pure-u-md-1-2 pure-sm-1 card table_view bordered">
     <img src="https://scontent-cdt1-1.xx.fbcdn.net/v/t1.0-1/p160x160/13179232_10209225972426299_887149271437459878_n.jpg?oh=687c82698fbca52fdc9abc5c82e70abe&oe=5A96738A">            
         <div class="content">
             <h3>{{ event.title }}</h3>
@@ -39,16 +39,17 @@
                     </ul>
                    
                 {% if request.user.is_authenticated and request.user.is_staff %}
-                 <button class="pure-button rounded button">{% fontawesome_icon 'edit' large=True %}      
+                 <button class="pure-button rounded button button-appear">{% fontawesome_icon 'edit' large=True %}      
                 {% endif %}
                  </button>
-                 <button class="pure-button button get_more">
+               
                         {% if event.available_seats == 0 %}
-                        On queue
+                       
+                        <button class="pure-button button button-error">{% fontawesome_icon 'list-ol' %}  Be on queue  </button>
                         {% else %}
-                        En savoir plus
+                        <button class="pure-button button"> {% fontawesome_icon 'plus' %}  Book now   </button>
                         {% endif %}
-                </button>
+           
             </div>
         </div>
 

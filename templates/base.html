@@ -46,12 +46,12 @@
        src="https://code.jquery.com/jquery-3.1.1.min.js"
        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
        crossorigin="anonymous"></script>
-     <script src="{% static "npm/semantic/dist/semantic.min.js" %}"></script>          
+     <script src="{% static "npm/semantic-ui/dist/semantic.min.js" %}"></script>          
 
      
 {#    <link rel="stylesheet"#}
 {#          href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">#}
-{#  <link rel="stylesheet" href="{% static "npm/semantic/dist/semantic.min.css" %}">#}
+ <link rel="stylesheet" href="{% static "npm/semantic-ui/dist/semantic.min.css" %}">
 
 {#    <script src="https://cdnjs.cloudflare.com/ajax/libs/datepicker/0.6.4/i18n/datepicker.fr-FR.min.js"#}
 {#            integrity="sha256-LfRC4/3bBAGT8y5dQmQSzKtY+5dfIkCvwyNj9UhgMP8="#}
@@ -65,53 +65,42 @@
 
 </head>
 <body>
-{% if user.is_authenticated %}
-    <div style="position: fixed;top: 1%;right: 1%; z-index: 1">
+
+<header>
+    
+<nav class="ui top fixed menu inverted stackable labeled-icon">
+        
+    {#  logo #}
+        <div class="pure-u-1">
+                <a href="{% url "homepage" %}"><img class="logo pure-img"
+                 src="{% static 'img/logo_ateliersoude.svg' %}">
+                 </a>
+        </div>
+    {# menu #}
+                <a href="#" class="pure-menu-link item">
+                        {% fontawesome_icon 'calendar-o' %}Calendar
+                </a>
+                <a href="{% url "place_list" %}" class="item">
+                    {% fontawesome_icon 'home' %}Places 
+                </a>
+                {% if user.is_authenticated %}
+                <a href="{% url "user_list" %}" class="item">
+                       {% fontawesome_icon 'users' %}Users
+                </a>
+                {% else %}
+                <a href="{% url "login" %}" class="item">  
+                        {% fontawesome_icon 'login' %}Login
+                </a>
+                {% endif %}
+                {% if user.is_authenticated %}
+         <div style="position: fixed;top: 1%;right: 1%; z-index: 1">
         <a href="{% url 'logout' %}"
            title="Logout">{% fontawesome_icon 'sign-out' color='grey' large=True %}</a>
     </div>
 {% endif %}
 
-<header>
-    
-<nav class="principal-nav">
-<div class="pure-g">
-    {#  logo #}
-    <div class="pure-u-1">
-            <a href="{% url "homepage" %}"><img class="logo pure-img"
-             src="{% static 'img/logo_ateliersoude.svg' %}">
-             </a>
-    </div>
-    {# menu #}
-    <div class="pure-u-1-1">
-        <div class="pure-menu custom-restricted-width">
-            <ul class="pure-menu-list">
-                <li class="pure-menu-item">
-                    <a href="#" class="pure-menu-link">
-                     <i class="fa fa-calendar-o fa-2x" aria-hidden="true"></i>
-                     <span>Calendrier</span>
-                    </a>
-                </li>
-                <li class="pure-menu-item">
-                    <a href="{% url "place_list" %}" class="pure-menu-link">
-                        <i class="fa fa-home fa-2x" aria-hidden="true"></i>
-                        <span>Lieux</span>
-                    </a>
-                </li>
-                <li class="pure-menu-item">
-                    {% if user.is_authenticated %}
-                        <a href="{% url "user_list" %}"
-                           class="pure-menu-link"> <i class="fa fa-users fa-2x" aria-hidden="true"></i>
-                           <span>Utilisateurs</span></a>
-                    {% else %}
-                        <a href="{% url "login" %}"
-                           class="pure-menu-link"> <i class="fa fa-login fa-2x" aria-hidden="true"></i>
-                           <span>Login</span></a>
-                    {% endif %}
-                </li>
-            </ul>
-        </div>
-    </nav>
+</nav>
+
 </header>
 
 <wrapper class="pure-u-1 pure-g">

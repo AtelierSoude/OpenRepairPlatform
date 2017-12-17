@@ -5,14 +5,18 @@
 {% load avatar_tags %} 
 
 {% block list %}
-                 
+            
 {% for user in object_list %}
-<div class="pure-u-xl-1-4 pure-u-md-1-2 pure-sm-1 card bordered">
-   
-            <img src="https://scontent-cdt1-1.xx.fbcdn.net/v/t1.0-1/p160x160/13179232_10209225972426299_887149271437459878_n.jpg?oh=687c82698fbca52fdc9abc5c82e70abe&oe=5A96738A">            
-            <div class="content">
-                    <h3>{{ user.first_name }}{{ user.last_name }}</h3>
-                    <ul class="list-group">
+
+<div class="card ui bordered">
+    <div class="content">
+
+                <img class="ui image" src="https://scontent-cdt1-1.xx.fbcdn.net/v/t1.0-1/p160x160/13179232_10209225972426299_887149271437459878_n.jpg?oh=687c82698fbca52fdc9abc5c82e70abe&oe=5A96738A">            
+
+                <h3 class="header">{{ user.first_name }}{{ user.last_name }}</h3>
+                 
+                <div class="extra-content">
+                        <ul class="list-group">
                             <li>{% fontawesome_icon 'certificate'%} Participant </li>
                             <li>{% fontawesome_icon 'clock-o' %} Depuis le 10/11/2017</li>
                             <li>{% fontawesome_icon 'envelope-o' %}{{ user.email }}</li>
@@ -20,12 +24,8 @@
                           <li>{% fontawesome_icon 'envelope-o' %} Bénévole</li>
                         {% endif %}
                  </ul>
-                
-                <form class="pure-form pure-u-1">
-                        <div class="pure-control-group">
-                            <input type="text" placeholder="cotisation">
-                        </div> 
-                </form>
+                </div>
+   
                 {% if request.user.is_authenticated and request.user.is_staff %}
                  <button class="pure-button rounded button  button-appear">
                         <a href="{% url 'user_profile' %}">  {% fontawesome_icon 'edit' large=True %} </a>
@@ -35,9 +35,11 @@
                  </button>
                  {% endif %}
 
-                </div>
+                 
+    </div>
              
-            </a> </div>
+</div>
+     
                 {% empty %}
             <div>No users yet.</div>    
         {% endfor %}

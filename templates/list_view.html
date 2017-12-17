@@ -31,22 +31,62 @@ $(".view_in_larger").click(function() {
 });</script>
 
 
+<div class="ui statistics">
+    <div class="statistic">
+      <div class="value">
+        200
+      </div>
+      <div class="label">
+        Members
+      </div>
+    </div>
+    <div class="statistic">
+      <div class="value">
+        31,200
+      </div>
+      <div class="label">
+        Views
+      </div>
+    </div>
+    <div class="statistic">
+      <div class="value">
+        22
+      </div>
+      <div class="label">
+        Volonteers
+      </div>
+    </div>
+  </div>
 
-<div class="important-thing pure-u-1-4 primary-background">&nbsp;300 membres&nbsp;</div>
-
-<div class="important-thing pure-u-1-4 primary-background">&nbsp;50 bénévoles&nbsp;</div>
-
-<div class="important-thing pure-u-1-4 primary-background">&nbsp;+33/jour&nbsp;</div>
 
 </section>
-<div class="pure-u-1 align-left primary-background"> 
-                <nav class="pure-u-1 pure-button-group collapsed" role="group">
+
+
+                <nav class="pure-button-group collapsed" role="group">
                         <button class="view_in_table pure-button">Table view</button>
                         <button class="view_in_card pure-button pure-button-active">Card view</button>
                         <button class="view_in_larger pure-button">Large view</button>
                 </nav>
-        </div>
-        <section class="pure-xl-3-5 pure-u-md-3-5 pure-u-sm-11-12">     
+
+
+  <button class="ui basic green button" onclick="$('.fullscreen.modal').modal('show');">
+    {% fontawesome_icon 'plus' %}
+  </button>
+
+  <div class="ui modal fullscreen">
+    <div class="header">Create user</div>
+    <div class="content">
+    </div>
+    <div class="actions">
+
+      <div class="ui error deny button">Cancel</div>
+      <div class="ui primary positive button">Approve</div>
+    </div>
+  </div>
+
+</div>
+
+<section class="pure-u-1 ui cards">     
 {% block list %}
 {% endblock %}
 </section>

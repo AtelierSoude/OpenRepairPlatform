@@ -78,10 +78,9 @@ body {
   background: linear-gradient(to bottom, #f5f5f5 0, #fff 900px) no-repeat; }
 
 wrapper {
+  margin-top: 70px;
   text-align: center;
   font-family: "Roboto Mono";
-  margin-left: 70px;
-  width: calc(100% - 70px) !important;
   overflow-x: hidden;
   display: block; }
 
@@ -112,6 +111,9 @@ h1 {
   text-transform: uppercase;
   margin-bottom: 1em;
   font-weight: normal; }
+
+.big_title {
+  font-size: 3em; }
 
 h2 {
   font-size: 22px;
@@ -155,10 +157,8 @@ a {
   display: flex;
   flex-direction: row; }
 
-.sticky {
-  position: -webkit-sticky;
-  position: sticky;
-  top: 0; }
+.ui.fixed.sticky {
+  margin-top: 80px !important; }
 
 .gradient {
   background: -webkit-linear-gradient(left, #fee56e 0%, #35bda6 0%);
@@ -205,6 +205,9 @@ a {
     width: 100%;
     background-color: #fee56e;
     height: 5px; }
+
+.important-thing.statistic .value {
+  font-size: 1.5em !important; }
 
 .home_section {
   height: 400px;
@@ -331,7 +334,7 @@ p.error {
 
 .object-profile {
   position: relative;
-  top: -200px; }
+  top: -50px; }
 
 .object-content {
   position: relative;
@@ -343,14 +346,21 @@ p.error {
   top: -100px;
   background-position: -00px; }
 
+.list .header, .list .image {
+  display: inline-block !important;
+  float: left; }
+
+.description {
+  display: inline-block !important; }
+
 .list-group {
-  text-align: left; }
+  text-align: left;
+  display: inline-block; }
   .list-group li {
     display: inline-block;
-    width: 100%;
+    float: left;
     font-size: 0.8em;
-    line-height: 28px;
-    border-bottom: 1px solid #e7e7e7; }
+    line-height: 28px; }
     .list-group li i {
       padding-left: 1em;
       padding-right: 1em;
@@ -405,10 +415,10 @@ p.error {
     max-width: 100px;
     margin-bottom: 2em; }
   .home-topic h1, .home-topic h2, .home-topic span, .home-topic p {
-    color: #FFF; }
-  .home-topic:nth-child(even) {
+    color: #083342; }
+  .home-topic:nth-child(2) {
     background-color: #fee56e; }
-    .home-topic:nth-child(even) h1, .home-topic:nth-child(even) h2, .home-topic:nth-child(even) span, .home-topic:nth-child(even) p {
+    .home-topic:nth-child(2) h1, .home-topic:nth-child(2) h2, .home-topic:nth-child(2) span, .home-topic:nth-child(2) p {
       color: #083342; }
 
 [class*="bg__"] {
@@ -757,7 +767,7 @@ form.pure-form .bar {
     width: 80%;
     margin-top: 10px; }
   .card .content {
-    width: 100%; }
+    padding: 0px !important; }
   .card .button-appear {
     position: absolute;
     top: 5px;
@@ -930,14 +940,14 @@ form.pure-form .bar {
   background: rgba(255, 255, 255, 0.8);
   box-sizing: content-box;
   position: relative;
-  margin-bottom: 2em; }
+  margin-bottom: 2em;
+  width: auto !important; }
   .principal_search:before {
     position: absolute;
     top: 0;
     right: 0;
     width: 60px;
-    height: 60px;
-    line-height: 60px;
+    line-height: 45px;
     font-family: 'FontAwesome';
     content: '\f002';
     background: #083342;
@@ -953,8 +963,7 @@ form.pure-form .bar {
 .searchTerm {
   width: 100%;
   color: #083342;
-  padding: 4px;
-  height: 40px;
+  line-height: 50px;
   outline: none; }
 
 .searchButton {
@@ -962,7 +971,7 @@ form.pure-form .bar {
   top: 0;
   right: 0;
   width: 40px;
-  height: 40px;
+  height: 50px;
   opacity: 0;
   cursor: pointer; }
 

@@ -5,34 +5,56 @@
 {% load avatar_tags %} 
 {% block content %}
 
-<section  class="bordered secondary-background pure-u-1">
-        <form class="principal_search pure-u-10-12">
-                <input class="searchTerm" placeholder="Enter your search term ..." /><input class="searchButton" type="submit" />
-        </form>
+<section  class="bordered secondary-background row">
+ 
+
+    <div class="ui small breadcrumb row align-left">
+        <a class="section">Home</a>
+        {% fontawesome_icon 'chevron-right' %}
+        <a class="section">Users</a>
+    </br>
+    </div>
+
 
 
 <script>
-$(function() {         
-
-$(".get_more").click(function() {  
-  $('.card').addClass("big_view");     
-});      
+$(function() {     
+  $('.ui.dropdown').dropdown();    
 
 $(".view_in_table").click(function() {  
-  $('.card').addClass("table_view");     
+  $('.card').addClass("item");  
+  $('.item').removeClass('card');
+  $('.cards').addClass("celled").addClass("list");  
+  $('.celled').removeClass('cards');
+  $('.image').addClass("avatar");
 });
+
 $(".view_in_card").click(function() {  
-  $('.card').removeClass("table_view");     
+  $('.item').addClass("card");     
 });
 $(".view_in_larger").click(function() {  
-  $('.card').addClass("big_view");     
+  $('.card').addClass("item");  
+  $('.cards').addClass("celled").addClass("list");  
+  $('.image').addClass("avatar");     
 });
 
 });</script>
 
 
-<div class="ui statistics">
-    <div class="statistic">
+<div class="row">
+<h1 class="big_title header">{% block title %} {% endblock %}</h1>
+</div>
+
+<select class="ui fluid search dropdown principal_search" multiple="">
+    <option value="">State</option>
+    <option value="AL">Bénévole</option>
+    <option value="AK">Clément</option>
+    <option value="AZ">Atelier Soudé</option>
+    <option value="AR">Lyon</option>
+  </select>
+
+<div class="ui statistics center row grid equal width stackable">
+    <div class="statistic important-thing column">
       <div class="value">
         200
       </div>
@@ -40,7 +62,7 @@ $(".view_in_larger").click(function() {
         Members
       </div>
     </div>
-    <div class="statistic">
+    <div class="statistic important-thing column">
       <div class="value">
         31,200
       </div>
@@ -48,7 +70,7 @@ $(".view_in_larger").click(function() {
         Views
       </div>
     </div>
-    <div class="statistic">
+    <div class="statistic important-thing column">
       <div class="value">
         22
       </div>
@@ -56,39 +78,43 @@ $(".view_in_larger").click(function() {
         Volonteers
       </div>
     </div>
-  </div>
+</div>
 
+
+  <button class="ui basic validate button right" onclick="$('.fullscreen.modal').modal('show');">
+      {% fontawesome_icon 'plus' %} add
+    </button>
+
+    <div class="ui modal fullscreen">
+        <div class="header">Create user</div>
+        <div class="content">
+        </div>
+        <div class="actions">
+    
+          <div class="ui error deny button">Cancel</div>
+          <div class="ui primary positive button">Approve</div>
+        </div>
+      </div>
+
+      
+
+      <nav class="pure-button-group collapsed" role="group">
+          <button class="view_in_table pure-button">Table view</button>
+          <button class="view_in_card pure-button pure-button-active">Card view</button>
+          <button class="view_in_larger pure-button">Large view</button>
+    </nav>
+    
+
+    
 
 </section>
 
 
-                <nav class="pure-button-group collapsed" role="group">
-                        <button class="view_in_table pure-button">Table view</button>
-                        <button class="view_in_card pure-button pure-button-active">Card view</button>
-                        <button class="view_in_larger pure-button">Large view</button>
-                </nav>
-
-
-  <button class="ui basic green button" onclick="$('.fullscreen.modal').modal('show');">
-    {% fontawesome_icon 'plus' %}
-  </button>
-
-  <div class="ui modal fullscreen">
-    <div class="header">Create user</div>
-    <div class="content">
-    </div>
-    <div class="actions">
-
-      <div class="ui error deny button">Cancel</div>
-      <div class="ui primary positive button">Approve</div>
-    </div>
-  </div>
 
 </div>
 
-<section class="pure-u-1 ui cards">     
 {% block list %}
 {% endblock %}
-</section>
+
 
 {% endblock %}

@@ -71,21 +71,23 @@
 <nav class="ui top fixed menu inverted stackable labeled-icon">
         
     {#  logo #}
-        <div class="pure-u-1">
+        <div>
                 <a href="{% url "homepage" %}"><img class="logo pure-img"
                  src="{% static 'img/logo_ateliersoude.svg' %}">
                  </a>
         </div>
     {# menu #}
-                <a href="#" class="pure-menu-link item">
-                        {% fontawesome_icon 'calendar-o' %}Calendar
+                <a href="{% url "homepage" %}" class="item">
+                        {% fontawesome_icon 'home' %}Home
                 </a>
-                <a href="{% url "place_list" %}" class="item">
-                    {% fontawesome_icon 'home' %}Places 
-                </a>
+                <a class="item" onclick="$('.ui.labeled.icon.sidebar').sidebar('toggle');">
+                        {% fontawesome_icon 'users' %}Involve
+                 </a>
                 {% if user.is_authenticated %}
-                <a href="{% url "user_list" %}" class="item">
-                       {% fontawesome_icon 'users' %}Users
+                <a href="{% url "user_profile" %}" class="item right">
+                     {{ user.first_name }}
+                   <div class="avatar ui image"> {% avatar user %} </div> 
+                   
                 </a>
                 {% else %}
                 <a href="{% url "login" %}" class="item">  
@@ -101,6 +103,19 @@
 
 </nav>
 
+<div class="ui left demo vertical inverted sidebar labeled icon menu">
+        <a href="{% url "event_list" %}" class="item">
+                {% fontawesome_icon 'calendar-o' large=True %}Calendar
+        </a>
+        <a href="{% url "place_list" %}" class="item">
+            {% fontawesome_icon 'home' large=True %}Places 
+        </a>
+        <a href="{% url "user_list" %}" class="item">
+                {% fontawesome_icon 'users' large=True %}Users
+         </a>
+      </div>
+
+      
 </header>
 
 <wrapper class="pure-u-1 pure-g">

@@ -6,6 +6,7 @@ from django.urls import reverse_lazy
 from django.utils import timezone
 from logging import getLogger
 from datetimepicker.widgets import DateTimePicker
+from rules.contrib.views import PermissionRequiredMixin
 
 logger = getLogger(__name__)
 
@@ -46,15 +47,15 @@ class OrganizationFormView():
                             args=(self.object.pk, self.object.slug,))
 
 
-class OrganizationCreateView(OrganizationFormView, CreateView):
-    pass
+class OrganizationCreateView(PermissionRequiredMixin, OrganizationFormView, CreateView):
+    permission_required = 'plateformeweb.create_organization'
 
 
-class OrganizationEditView(OrganizationFormView, UpdateView):
-    pass
+class OrganizationEditView(PermissionRequiredMixin, OrganizationFormView, UpdateView):
+    permission_required = 'plateformeweb.edit_organization'
 
 
-# ------
+# --- Places ---
 
 class PlaceView(DetailView):
     model = Place
@@ -83,15 +84,21 @@ class PlaceFormView():
                             args=(self.object.pk, self.object.slug,))
 
 
-class PlaceCreateView(PlaceFormView, CreateView):
-    pass
+class PlaceCreateView(PermissionRequiredMixin, PlaceFormView, CreateView):
+    permission_required = 'plateformeweb.create_place'
+
+    # set owner to current user on creation
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        obj.owner = self.request.user
+        return super().form_valid(form)
 
 
-class PlaceEditView(PlaceFormView, UpdateView):
-    pass
+class PlaceEditView(PermissionRequiredMixin, PlaceFormView, UpdateView):
+    permission_required = 'plateformeweb.edit_place'
 
 
-# ------
+# --- Events ---
 
 class EventView(DetailView):
     model = Event
@@ -144,9 +151,16 @@ class EventFormView():
                             args=(self.object.pk, self.object.slug,))
 
 
-class EventCreateView(EventFormView, CreateView):
-    pass
+class EventCreateView(PermissionRequiredMixin, EventFormView, CreateView):
+    permission_required = 'plateformeweb.create_event'
+
+    # set owner to current user on creation
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        obj.owner = self.request.user
+        return super().form_valid(form)
 
 
-class EventEditView(EventFormView, UpdateView):
+class EventEditView(PermissionRequiredMixin, EventFormView, UpdateView):
+    permission_required = 'plateformeweb.edit_event'
     queryset = Event.objects

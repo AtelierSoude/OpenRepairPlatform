@@ -47,6 +47,8 @@ APPEND_SLASH = True
 # Application definition
 
 INSTALLED_APPS = [
+    # django rules autodiscover rules.py files
+    'rules.apps.AutodiscoverRulesConfig',
     'datetimepicker',
     'grappelli',
     'django.contrib.admin',
@@ -295,3 +297,9 @@ NPM_FILE_PATTERNS = {
 }
 NPM_STATIC_FILES_PREFIX = 'npm'
 NPM_ROOT_PATH = BASE_DIR
+
+# for django rules
+AUTHENTICATION_BACKENDS = (
+    'rules.permissions.ObjectPermissionBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)

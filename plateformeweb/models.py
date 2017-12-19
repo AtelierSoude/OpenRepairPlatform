@@ -13,6 +13,7 @@ class Organization(models.Model):
     name = models.CharField(max_length=100, null=False,
                             blank=False,
                             verbose_name=_("Organization name"))
+    owner = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True)
     active = models.BooleanField(verbose_name=_('Active'))
     slug = AutoSlugField(populate_from='name', unique=True, default='')
     created_at = models.DateTimeField(auto_now_add=True)
@@ -34,14 +35,14 @@ class OrganizationPerson(models.Model):
         (ADMIN, _('Admin')),
     )
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
-    member = models.ForeignKey(settings.AUTH_USER_MODEL,
-                               on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                               on_delete=models.CASCADE, db_index=True)
     role = models.SmallIntegerField(
         choices=MEMBER_TYPES,
         default=VISITOR, )
 
     class Meta:
-        unique_together = ('organization', 'member', 'role')
+        unique_together = ('organization', 'user', 'role')
 
 
 # --- visitor ---
@@ -123,6 +124,9 @@ class Place(models.Model):
     name = models.CharField(max_length=100, null=False,
                             blank=False,
                             verbose_name=_("Name"))
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
+    owner = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True)
+
     description = models.TextField(verbose_name=_("Description"), null=False,
                                    default='')
     type = models.CharField(max_length=2, verbose_name=_('Type'),
@@ -161,6 +165,8 @@ class Event(models.Model):
                              null=False,
                              blank=False,
                              default="")
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
+    owner = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True)
     published = models.BooleanField(verbose_name=_("Published"), null=False,
                                     default=False)
     publish_at = models.DateTimeField(

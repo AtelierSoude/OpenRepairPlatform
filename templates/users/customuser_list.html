@@ -1,14 +1,54 @@
-{% extends 'base.html' %}
-{% block content %}
-    <ul>
-        {% for user in object_list %}
-            <li>
-                <ul>
-                    {% for k,v in user %}
-                        <li>{{ k }}: {{ v }}</li>
+{% extends 'list_view.html' %}
+
+{% load staticfiles %}
+{% load fontawesome %}
+{% load avatar_tags %} 
+
+{% block title  %} Users {% endblock %}
+
+{% block list %}
+<section class=" secondary-background row ui cards five stackable middle aligned divided "> 
+{% for user in object_list %}
+
+<div class="card ui bordered item">
+
+        <div class="image ui">{% avatar user %}</div>
+        
+    <div class="content text_align left">
+            {% autoescape on %}
+                <h3 class="header">{{ user.first_name|capfirst }}{{ user.last_name|capfirst}}</h3>
+                 
+                <div class="extra-content description">
+                        <ul class="list-group">
+                       
+                            <li>{% fontawesome_icon 'certificate'%} 
+                                {% if user.is_staff %}
+                                Volonteer
+                                {% else %}
+                                Member
+                                {% endif %}
+                                     </li>
+                            <li>{% fontawesome_icon 'clock-o' %} {{ user.date_joined}}</li>
+                            <li>{% fontawesome_icon 'envelope-o' %}{{ user.email }}</li>
                         </ul>
-                    {% endfor %}
+                </div> 
+            {% endautoescape %}   
+    </div>
+
+    {% if request.user.is_authenticated and request.user.is_staff %}
+    <button class="pure-button rounded button  button-appear">
+           <a href="{% url 'user_profile' %}">  {% fontawesome_icon 'edit' large=True %} </a>
+    </button>
+    <button class="ui basic validate button right">
+            {% fontawesome_icon 'info' %} details
+          </button>
+    {% endif %}      
+</div>
+     
                 {% empty %}
-            <li>No users yet.</li>
+            <div>No users yet.</div>    
         {% endfor %}
+</section>
 {% endblock %}
+
+

@@ -34,13 +34,22 @@ ALLOWED_HOSTS = ["dev.atelier-soude.fr", "ns60.amakuru.net", "127.0.0.1", "local
 # for debug toolbar, localhost (through docker and localhost)
 # no wildcards for IPs, possible to use a sort of wildcard for hostnames,
 # like ".office.internal.tld"
-INTERNAL_IPS = ["172.19.0.1", "127.0.0.1", "localhost"]
+# ALSO SEE https://stackoverflow.com/a/45624773
+INTERNAL_IPS = ['127.0.0.1', ]
+import socket
+import os
+# tricks to have debug toolbar when developing with docker
+ip = socket.gethostbyname(socket.gethostname())
+INTERNAL_IPS += [ip[:-1] + '1']
 
 APPEND_SLASH = True
 
 # Application definition
 
 INSTALLED_APPS = [
+    # django rules autodiscover rules.py files
+    'rules.apps.AutodiscoverRulesConfig',
+    'datetimepicker',
     'grappelli',
     'django.contrib.admin',
     'django.contrib.admindocs',
@@ -206,6 +215,18 @@ LOGGING = {
             'handlers': ['console'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
         },
+        'plateformeweb.views': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
+        },
+        'plateformeweb.forms': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
+        },
+        'plateformeweb.models': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
+        },
         # log DB queries, only works when DEBUG is True in
         # the global configuration
         # 'django.db.backends': {
@@ -274,6 +295,13 @@ GOOGLE_API_KEY = "AIzaSyCNZ-rIhY1zyq2LFghBV4x7mUQvtJCOK88"
 NPM_FILE_PATTERNS = {
     'purecss': ['build/*.js', 'build/*.css'],
     'stickyfilljs': ['dist/*.js', 'dist/*.css'],
+    'semantic-ui': ['dist/*'],
 }
 NPM_STATIC_FILES_PREFIX = 'npm'
 NPM_ROOT_PATH = BASE_DIR
+
+# for django rules
+AUTHENTICATION_BACKENDS = (
+    'rules.permissions.ObjectPermissionBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)

@@ -1,17 +1,76 @@
 {% extends 'base.html' %}
-{% load avatar_tags %}
+
+{% load staticfiles %}
+{% load fontawesome %}
+{% load avatar_tags %} 
+
 {% block content %}
-    <wrapper class="pure-u-1 pure-g">
-        <section class="pure-u-11-12 pure-g">
-            <form method="POST" class="pure-form pure-form-stacked" action="">
-                <fieldset>
-                    {% csrf_token %}
-                    {% if user_form.errors %}
-                        <p class="error">Please correct the error(s) below:</p>
-                        {#                        {{ user_form.errors }}#}
-                    {% endif %}
+
+<script>
+  $(function() {  $('.ui.sticky').sticky({
+    context: '#form'
+  })
+;});
+</script>
+<div class="cover-picture pure-u-1 gradient align-right bg__parallax">
+    <div class="user-bio pure-u-3-5 ">
+        <i class="fa fa-quote-left fa-2x fa-pull-left" aria-hidden="true"></i>
+        <span>Je suis un réparateur de génie. J'aime vraiment montrer aux autres que je sais tout faire et je déteste partager mes connaissances</span>
+        <i class="fa fa-quote-right fa-2x fa-pull-right" aria-hidden="true"></i>
+    </div>
+    <div class="tags">
+       <div class="tag pure-u-3-5">Consoles de jeux
+            <i class="fa fa-lg fa-close" aria-hidden="true"></i>
+       </div>
+    </div>
+</div>
+
+
+
+<div class=" ui object-profile grid stackable">
+
+<section class="four wide column sticky">     
+    <div class="ui card bordered sticky ">
+               {% avatar user class="image ui"%}
+        <div class="content text_align left">
+            <h3 class="header">{{ user.first_name }}{{ user.last_name }}</h3>
+                <div class="extra-content description">
+                            <ul class="list-group">
+                                <li>{% fontawesome_icon 'certificate'%} Participant </li>
+                                <li>{% fontawesome_icon 'clock-o' %} Depuis le 10/11/2017</li>
+                                <li>{% fontawesome_icon 'envelope-o' %}{{ user.email }}</li>
+                            {% if user.staff_status %}
+                              <li>{% fontawesome_icon 'envelope-o' %} Bénévole</li>
+                            {% endif %}
+                     </ul>
+                </div>    
+        </div>
+    </div>
+</section>  
+
+<section class="twelve wide column">
+    <div class="ui top attached tabular menu">
+                <div class="active item">Informations</div>
+                <div class="item">Participations</div>
+                <div class="item">Réparations</div>
+
+
+    </div>
+        
+    <div class="ui bottom attached active tab segment">
+
+        <form method="POST" class="pure-form pure-form-stacked ui form" action="" id="form">
+            <fieldset>
+                {% csrf_token %}
+                {% if user_form.errors %}
+                    <p class="error">Please correct the error(s) below:</p>
+                    {#{{ user_form.errors }}#}
+                {% endif %}
+        
+            
                     {% for field in user_form %}
-                        <div class="pure-control-group group pure-u-1-3">
+
+                        <div class="pure-control-group group">
                             {% if field.help_text %}
                                 <span class="pure-form-message-inline">{{ field.help_text|safe }}</span>
                             {% endif %}
@@ -21,6 +80,7 @@
 
                     {% endfor %}
 
+        
                     {# TODO: avatar handling needs to go in a modal and refresh the page when closed #}
                     {% avatar user %}
                     <a href="javascript:window.open('{% url 'avatar_change' %}','_blank','titlebar=no,status=no,menubar=no,location=no,height=500,width=400,left=200,top=200')">Change
@@ -28,14 +88,40 @@
                     <a href="javascript:window.open('{% url 'avatar_delete' %}','_blank','titlebar=no,status=no,menubar=no,location=no,height=500,width=400,left=200,top=200')">Delete
                         your avatar</a>
 
-                    <div class="pure-controls pure-u-1">
-                        <button type="submit"
-                                class="pure-button pure-button-primary"
-                                name="action">Save
-                        </button>
-                    </div>
-                </fieldset>
-            </form>
-        </section>
-    </wrapper>
+                
+                <div class="pure-controls pure-u-1 button-xlarge">
+                    <button type="submit" class="pure-button pure-button-primary"
+                            name="action">Save
+                    </button>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</section>
+</div>
+
+
+
+<script>
+
+ $(document).ready(function(){ 
+       $('.avatar-cover').Stickyfill(); 
+       });
+</script>
+
+{#    TODO: the tag LANGUAGE is available everywhere (set in base.html), under #}
+{#    the form 'fr' or 'en', but the jquery datepicker requires a locale: fr-FR #}
+{#    for instance; need to find a way to translate#}
+
+{#    <script>#}
+{#        $(function () {#}
+{#            $(".datepicker").datepicker({#}
+{#                changeMonth: true,#}
+{#                changeYear: true,#}
+{#                yearRange: "1900:2012",#}
+{#                // You can put more options here.#}
+{#            });#}
+{#            $.datepicker.regional['fr-FR'];#}
+{#        });#}
+{#    </script>#}
 {% endblock %}

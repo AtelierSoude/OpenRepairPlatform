@@ -33,7 +33,7 @@ urlpatterns = [
     url(r'^avatar/', include('avatar.urls')),
 ]
 
-# DEBUG toolbar if DEBUG is true in the environment (see ../skinjay/settings.py)
+# DEBUG toolbar if DEBUG is true in the environment
 if settings.DEBUG:
     import debug_toolbar
 

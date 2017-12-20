@@ -142,5 +142,4 @@ fabric.properties
 ateliersoude.iml
 .idea/
 bootstrap_done
-node_modules/purecss
-node_modules/stickyfilljs
+node_modules/*

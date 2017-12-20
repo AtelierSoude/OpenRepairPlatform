@@ -1,5 +1,6 @@
-{% extends 'base.html' %}
-{% block content %}
+{% extends 'list_view.html' %}
+
+{% block list %}
     {% for organization in object_list %}
         <li>
             <ul>
@@ -9,4 +10,4 @@
             {% empty %}
         <li>No organizations yet.</li>
     {% endfor %}
-{% endblock %}
+{% endblock list %}

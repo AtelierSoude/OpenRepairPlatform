@@ -1,3 +1,139 @@
 {% extends 'base.html' %}
+
+
 {% block content %}
+    <div class="secondary-background">
+
+        <div class="home-picture row align-center gradient">
+
+            <section class="home_section row">
+                <img src="/static/img/logo_ateliersoude.svg"
+                     style="width:150px">
+                <h1>L'Atelier Soudé</h1>
+                <h3>Que voulez-vous réparer ?</h3>
+                <form class="principal_search row">
+                    <input class="searchTerm"
+                           placeholder="Enter your search term ..."/><input
+                        class="searchButton" type="submit"/>
+                </form>
+
+                <div class="important-thing pure-u-xl-1-4 pure-u-md-1-3 pure-u-sm-1 primary-background">
+                    &nbsp;3 lieux&nbsp;
+                </div>
+
+                <div class="important-thing pure-u-xl-1-4 pure-u-md-1-3 pure-u-sm-1 primary-background">
+                    &nbsp;500 réparations&nbsp;
+                </div>
+
+                <div class="important-thing pure-u-xl-1-4 pure-u-md-1-3 pure-u-sm-1 primary-background">
+                    &nbsp;200 permanences&nbsp;
+                </div>
+            </section>
+
+        </div>
+
+        <nav class="row">
+            <ul class="ui five column grid nav-home stackable">
+                <li class="wide column"><a href="#home-topic-1">Réparations
+                    collectives</a></li>
+                <li class="wide column"><a href="#home-topic-2">Ateliers
+                    éducatifs</a></li>
+                <li class="wide column"><a href="#home-topic-3">Projets</a></li>
+                <li class="wide column"><a href="#home-topic-4">Philosophie</a>
+                </li>
+                <li class="wide column"><a href="#home-topic-5">Contacts</a>
+                </li>
+            </ul>
+        </nav>
+
+
+        <section class="row gutter">
+
+            <h2>Nos prochaines dates</h2>
+            {% include "plateformeweb/event_list.html" with object_list=events %}
+        </section>
+
+
+        <div class="secondary-home-picture row align-center bg__parallax">
+        </div>
+
+
+        <section
+                class="ui row three column centered grid stackable align-center home-topic gradient "
+                id="home-topic-1">
+
+            <div class="column">
+                <img src="http://atelier-soude.fr/template/icones/atelier-soude-reparation.svg">
+                <h1>Réparations collectives</h1>
+                <span>Apprenez à réparer vos appareils électriques et électroniques</span>
+            </div>
+
+            <div class="column">
+                <p class="align-left">
+
+                    La réparation par tous et pour tous! Téléphone portable,
+                    ordinateur, petit électroménager, autant d’objets
+                    électroniques et électriques qui tombent facilement en
+                    panne...
+                    Depuis quelques années, une distance se creuse entre
+                    l'utilisateur et l'objet. Il est temps de se réapproprier
+                    nos outils.
+
+                    L’Atelier Soudé propose à chacun de pouvoir reprendre
+                    "possession" de ses appareils électroniques. Petits et
+                    grands sont guidés vers l'auto-réparation afin de devenir
+                    autonomes et de mieux comprendre les mécanismes et les
+                    enjeux technologiques.
+
+                    La démocratisation passe également par la documentation:
+                    l'Atelier Soudé facilite l'accès aux tutoriels et aux
+                    réparations, et l'objectif est de mettre sur pied une
+                    plateforme complète permettant à la fois de suivre vos
+                    réparations, de signaler vos venues, et de visualiser votre
+                    montée en compétence!</p>
+                <button class="ui button basic primary">En savoir +</button>
+            </div>
+
+        </section>
+
+        <section
+                class="ui row three column centered grid stackable align-center home-topic"
+                id="home-topic-2">
+
+
+            <div class="column">
+                <p class="align-left">
+
+                    La réparation par tous et pour tous! Téléphone portable,
+                    ordinateur, petit électroménager, autant d’objets
+                    électroniques et électriques qui tombent facilement en
+                    panne...
+                    Depuis quelques années, une distance se creuse entre
+                    l'utilisateur et l'objet. Il est temps de se réapproprier
+                    nos outils.
+
+                    L’Atelier Soudé propose à chacun de pouvoir reprendre
+                    "possession" de ses appareils électroniques. Petits et
+                    grands sont guidés vers l'auto-réparation afin de devenir
+                    autonomes et de mieux comprendre les mécanismes et les
+                    enjeux technologiques.
+
+                    La démocratisation passe également par la documentation:
+                    l'Atelier Soudé facilite l'accès aux tutoriels et aux
+                    réparations, et l'objectif est de mettre sur pied une
+                    plateforme complète permettant à la fois de suivre vos
+                    réparations, de signaler vos venues, et de visualiser votre
+                    montée en compétence!</p>
+                <button class="ui button basic primary">En savoir +</button>
+            </div>
+
+            <div class="column">
+                <img src="http://atelier-soude.fr/template/icones/atelier-soude-reparation.svg">
+                <h1>Réparations collectives</h1>
+                <span>Apprenez à réparer vos appareils électriques et électroniques</span>
+            </div>
+
+        </section>
+
+    </div>
 {% endblock %}

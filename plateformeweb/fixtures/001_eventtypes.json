@@ -1,0 +1,16 @@
+[
+  {
+    "model": "plateformeweb.eventtype",
+    "pk": 1,
+    "fields": {
+      "name": "Atelier r\u00e9paration"
+    }
+  },
+  {
+    "model": "plateformeweb.eventtype",
+    "pk": 2,
+    "fields": {
+      "name": "Install Party"
+    }
+  }
+]

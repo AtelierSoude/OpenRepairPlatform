@@ -38,6 +38,7 @@ class CustomUserChangeForm(UserChangeForm):
                           'street_address', 'birth_date', 'avatar_img', 'bio']
 
 # works OK
+
 class UserForm(ModelForm):
     class Meta:
         model = CustomUser

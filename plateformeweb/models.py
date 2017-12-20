@@ -36,7 +36,7 @@ class OrganizationPerson(models.Model):
     )
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
-                               on_delete=models.CASCADE, db_index=True)
+                             on_delete=models.CASCADE, db_index=True)
     role = models.SmallIntegerField(
         choices=MEMBER_TYPES,
         default=VISITOR, )
@@ -124,7 +124,8 @@ class Place(models.Model):
     name = models.CharField(max_length=100, null=False,
                             blank=False,
                             verbose_name=_("Name"))
-    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE,
+                                     null=False)
     owner = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True)
 
     description = models.TextField(verbose_name=_("Description"), null=False,
@@ -165,7 +166,8 @@ class Event(models.Model):
                              null=False,
                              blank=False,
                              default="")
-    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE,
+                                     null=False)
     owner = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True)
     published = models.BooleanField(verbose_name=_("Published"), null=False,
                                     default=False)

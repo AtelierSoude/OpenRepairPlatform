@@ -23,7 +23,7 @@ def is_org_whatever_for_object(user, obj, org_member_class):
                 "object is neither an organization, nor has an organization "
                 "field",
                 obj)
-        if org_member_class.objects.filter(member=user).filter(
+        if org_member_class.objects.filter(user=user).filter(
                 organization=org).exists():
             return True
         return False

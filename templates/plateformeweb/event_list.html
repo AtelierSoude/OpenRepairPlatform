@@ -1,67 +1,76 @@
+{% extends 'list_view.html' %}
 
 {% load staticfiles %}
 {% load fontawesome %}
-{% load avatar_tags %} 
+{% load avatar_tags %}
 
 {% block list %}
 
-<script>
-        $(function() {         
-        
-        $(".get_more").click(function() {  
-            $(this).parents('.card').addClass("big_view");     
-        });      
-        
-     
+    <script>
+        $(function () {
+
+            $(".get_more").click(function () {
+                $(this).parents('.card').addClass("big_view");
+            });
+
+
         });</script>
 
-{% block title  %} Events {% endblock %}
+    {% block title %} Events {% endblock %}
 
-{% for event in object_list %}
-<div class="ui card bordered item">
-    {% autoescape on %}
-        <div class="content">
-                <img class="ui image" src="https://scontent-cdt1-1.xx.fbcdn.net/v/t1.0-1/p160x160/13179232_10209225972426299_887149271437459878_n.jpg?oh=687c82698fbca52fdc9abc5c82e70abe&oe=5A96738A">            
-            <h3 class="header">{{ event.title }}</h3>
-            <span class="meta">{{ event.type }}</span>
+    {% for event in object_list %}
+        <div class="ui card bordered item">
+            {% autoescape on %}
+                <div class="content">
+                    <img class="ui image"
+                         src="https://scontent-cdt1-1.xx.fbcdn.net/v/t1.0-1/p160x160/13179232_10209225972426299_887149271437459878_n.jpg?oh=687c82698fbca52fdc9abc5c82e70abe&oe=5A96738A">
+                    <h3 class="header">{{ event.title }}</h3>
+                    <span class="meta">{{ event.type }}</span>
                     <ul class="list-group">
                         <li>{% fontawesome_icon 'clock-o' %} {{ event.starts_at }}</li>
-                        <li>{% fontawesome_icon 'user-plus' %} 
+                        <li>{% fontawesome_icon 'user-plus' %}
                             {% if event.available_seats == 0 %}
-                            <span class="error">No more places</span>
+                                <span class="error">No more places</span>
                             {% else %}
-                            {{ event.available_seats }} places
+                                {{ event.available_seats }} places
                             {% endif %}
                         </li>
                         <li>
                             {% fontawesome_icon 'map-marker' %}
                             <a href="{% url 'place_detail' event.location.id event.location.slug %}">
-                            {{ event.location }}</a>
-                        </li>    
+                                {{ event.location }}</a>
+                        </li>
                     </ul>
-                   
-                {% if request.user.is_authenticated and request.user.is_staff %}
-                 <button class="pure-button rounded button button-appear">{% fontawesome_icon 'edit' large=True %}  
-                         
-                {% endif %}
-                 </button>
-               
-                        {% if event.available_seats <= 0 %}
-                       
-                        <div class="ui bottom attached button warning-button" tabindex="0"> {% fontawesome_icon 'list-ol' %}  Be on queue </div>
-                        {% else %}
-                        
-                        <div class="ui bottom attached basic button" tabindex="0">{% fontawesome_icon 'plus' %} Book Now</div>
-                        {% endif %}
-           
-            </div>
-        {% endautoescape %}
- </div>
 
-        {% empty %}
+                    {% if request.user.is_authenticated and request.user.is_staff %}
+                        <button class="pure-button rounded button button-appear">
+                        {% fontawesome_icon 'edit' large=True %}
+
+                    {% endif %}
+                    </button>
+
+                    {% if event.available_seats <= 0 %}
+
+                        <div class="ui bottom attached button warning-button"
+                             tabindex="0"> {% fontawesome_icon 'list-ol' %} Be
+                            on queue
+                        </div>
+                    {% else %}
+
+                        <div class="ui bottom attached basic button"
+                             tabindex="0">{% fontawesome_icon 'plus' %} Book Now
+                        </div>
+                    {% endif %}
+
+                </div>
+            {% endautoescape %}
+        </div>
+
+    {% empty %}
         <div>
             No event yet.
-        </div>    
-        
-  {% endfor %}
-  {% endblock %}
+        </div>
+
+    {% endfor %}
+
+{% endblock list %}

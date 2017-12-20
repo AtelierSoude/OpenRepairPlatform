@@ -295,7 +295,7 @@ GOOGLE_API_KEY = "AIzaSyCNZ-rIhY1zyq2LFghBV4x7mUQvtJCOK88"
 NPM_FILE_PATTERNS = {
     'purecss': ['build/*.js', 'build/*.css'],
     'stickyfilljs': ['dist/*.js', 'dist/*.css'],
-    'semantic-ui': ['dist/*.js', 'dist/*.css'],
+    'semantic-ui': ['dist/*'],
 }
 NPM_STATIC_FILES_PREFIX = 'npm'
 NPM_ROOT_PATH = BASE_DIR

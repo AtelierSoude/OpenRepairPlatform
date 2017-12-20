@@ -1,5 +1,7 @@
 from django.conf.urls import url
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     url(r'^$', views.homepage, name="homepage"),
@@ -16,4 +18,5 @@ urlpatterns = [
     url(r'^event/create/$', views.EventCreateView.as_view(), name='event_create'),
     url(r'^event/(?P<pk>[0-9]+)/edit/$', views.EventEditView.as_view(), name='event_edit'),
     url(r'^event/(?P<pk>[0-9]+)/(?P<slug>[-\w]+)/$', views.EventView.as_view(), name='event_detail'),
+    
 ]

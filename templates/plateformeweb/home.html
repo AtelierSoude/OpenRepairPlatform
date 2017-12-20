@@ -1,95 +1,97 @@
 
+
 {% extends 'base.html' %}
+
+
 {% block content %}
-<wrapper class="secondary-background">
-<div class="home-picture pure-u-1 align-center gradient bg__parallax">
-    <section class="home_section pure-u-10-12">
+<div class="secondary-background">
+
+<div class="home-picture row align-center gradient">
+
+    <section class="home_section row">
           <img src="/static/img/logo_ateliersoude.svg" style="width:150px">
         <h1>L'Atelier Soudé</h1>
         <h3>Que voulez-vous réparer ?</h3>
-        <form class="principal_search pure-u-10-12">
+        <form class="principal_search row">
             <input class="searchTerm" placeholder="Enter your search term ..." /><input class="searchButton" type="submit" />
         </form>
     
-        <div class="important-thing pure-u-1-4 primary-background">&nbsp;3 lieux&nbsp;</div>
+        <div class="important-thing pure-u-xl-1-4 pure-u-md-1-3 pure-u-sm-1 primary-background">&nbsp;3 lieux&nbsp;</div>
     
-        <div class="important-thing pure-u-1-4 primary-background">&nbsp;500 réparations&nbsp;</div>
+        <div class="important-thing pure-u-xl-1-4 pure-u-md-1-3 pure-u-sm-1 primary-background">&nbsp;500 réparations&nbsp;</div>
     
-        <div class="important-thing pure-u-1-4 primary-background">&nbsp;200 permanences&nbsp;</div>
+        <div class="important-thing pure-u-xl-1-4 pure-u-md-1-3 pure-u-sm-1 primary-background">&nbsp;200 permanences&nbsp;</div>
     </section>
-</div>
-<div class="pure-u-1">
-    <ul class="pure-u-1 nav-home">
-        <li class="pure-u-1-4"><a>Réparations collectives</a></li>
-        <li class="pure-u-1-4"><a>Ateliers éducatifs<a></li>
-        <li class="pure-u-1-4"><a>Permanences</a></li>
-        <li class="pure-u-1-4"><a>Contacts</a></li>
-    </ul>
+
 </div>
 
+<nav class="row">
+        <ul class="ui five column grid nav-home stackable">
+            <li class="wide column"><a href="#home-topic-1">Réparations collectives</a></li>
+            <li class="wide column"><a href="#home-topic-2">Ateliers éducatifs</a></li>
+            <li class="wide column"><a href="#home-topic-3">Projets</a></li>
+            <li class="wide column"><a href="#home-topic-4">Philosophie</a></li>
+            <li class="wide column"><a href="#home-topic-5">Contacts</a></li>
+        </ul>
+    </nav>
 
 
-<div class="secondary-home-picture pure-u-1 align-center">
-    <section class="pure-u-1-3 home-topic">
-        
+
+<section class="row gutter">  
+    
+        <h2>Nos prochaines dates</h2>   
+            {% include "plateformeweb/event_list.html" with object_list=events  %}
+    </section>
+
+
+<div class="secondary-home-picture row align-center bg__parallax">
+</div>
+
+
+<section class="ui row three column centered grid stackable align-center home-topic gradient " id="home-topic-1">
+
+    <div class="column">
+       <img src="http://atelier-soude.fr/template/icones/atelier-soude-reparation.svg">
         <h1>Réparations collectives</h1>
         <span>Apprenez à réparer vos appareils électriques et électroniques</span>
-    </br>
-    </section>
-</div>
+    </div>  
 
-
-<section class="pure-u-11-12 align-center">
-
-    <h2>Participez aux animations</h2>
-        <div class="card pure-u-1 big_view card bordered">
-
-                <img src="http://atelier-soude.fr/template/democratisation-reparation.jpg">
-          <div class="content">
-                    <h3>Réparations collectives</h3>
-                    <div class="important-thing">100 ateliers</div>
-                    <div class="description">
-                            <p>Co-réparer c'est apprendre ensemble, Lorem, ipsum dolor sit amet consectetur adipisicing elit. Vel aut tempore sit sunt officia eligendi voluptate repellat maxime debitis id iusto itaque vitae, qui dolorem pariatur! Error laborum a quis?</p>
-                        </div>
-                 <ul class="list-group"> 
-                        <li><i class="fa fa-envelope-o fa-fw" aria-hidden="true"></i>gege.roro@atelier-soude.fr</li>
-               </ul>
-            </div>
-        </div>
-        <button class="pure-button primary-button">Participer</button>
+    <div class="column">  
+<p class="align-left">
         
+        La réparation par tous et pour tous! Téléphone portable, ordinateur, petit électroménager, autant d’objets électroniques et électriques qui tombent facilement en panne...
+        Depuis quelques années, une distance se creuse entre l'utilisateur et l'objet. Il est temps de se réapproprier nos outils.
+        
+        L’Atelier Soudé propose à chacun de pouvoir reprendre "possession" de ses appareils électroniques. Petits et grands sont guidés vers l'auto-réparation afin de devenir autonomes et de mieux comprendre les mécanismes et les enjeux technologiques.
+        
+        La démocratisation passe également par la documentation: l'Atelier Soudé facilite l'accès aux tutoriels et aux réparations, et l'objectif est de mettre sur pied une plateforme complète permettant à la fois de suivre vos réparations, de signaler vos venues, et de visualiser votre montée en compétence!</p>
+        <button class="ui button basic primary">En savoir +</button>
+     </div>  
+    
 </section>
 
+<section class="ui row three column centered grid stackable align-center home-topic" id="home-topic-2">
 
-<section class="secondary-background pure-u-1">
-    <h2>Nos prochaines dates</h2>
-    <div class="pure-u-lg-1-6 pure-u-1-4 pure-ms-1 card bordered">
-  
-          <div class="content">
-              <img src="https://d1ulmmr4d4i8j4.cloudfront.net/static/images/avatars/User/ifixit/avatar-1.large">
-                  <h3>Gérard Robert</h3>
-               <ul class="list-group"> 
-                      <li><i class="fa fa-envelope-o fa-fw" aria-hidden="true"></i>gege.roro@atelier-soude.fr</li>
-                     
-               </ul>
-              
-              <form class="pure-form">
-                      <div class="pure-control-group">
-                          <input type="text" placeholder="cotisation">
-                          </div> 
-              </form>
+    
+        <div class="column">  
+    <p class="align-left">
+            
+            La réparation par tous et pour tous! Téléphone portable, ordinateur, petit électroménager, autant d’objets électroniques et électriques qui tombent facilement en panne...
+            Depuis quelques années, une distance se creuse entre l'utilisateur et l'objet. Il est temps de se réapproprier nos outils.
+            
+            L’Atelier Soudé propose à chacun de pouvoir reprendre "possession" de ses appareils électroniques. Petits et grands sont guidés vers l'auto-réparation afin de devenir autonomes et de mieux comprendre les mécanismes et les enjeux technologiques.
+            
+            La démocratisation passe également par la documentation: l'Atelier Soudé facilite l'accès aux tutoriels et aux réparations, et l'objectif est de mettre sur pied une plateforme complète permettant à la fois de suivre vos réparations, de signaler vos venues, et de visualiser votre montée en compétence!</p>
+            <button class="ui button basic primary">En savoir +</button>
+         </div>  
 
-               <button class="pure-button rounded button"><i class="fa fa-check" aria-hidden="true"></i>
-               </button>
-                    
+        <div class="column">
+            <img src="http://atelier-soude.fr/template/icones/atelier-soude-reparation.svg">
+             <h1>Réparations collectives</h1>
+             <span>Apprenez à réparer vos appareils électriques et électroniques</span>
+         </div>  
+        
+    </section>
 
-               <button class="pure-button rounded button-error"><i class="fa fa-times" aria-hidden="true"></i>
-               </button> 
-
-              </div>
-           
-      </div>
-           
-</section>
-</wrapper>
+</div>
 {% endblock %}

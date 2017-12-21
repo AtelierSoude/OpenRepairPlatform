@@ -48,11 +48,13 @@ class OrganizationFormView():
                             args=(self.object.pk, self.object.slug,))
 
 
-class OrganizationCreateView(PermissionRequiredMixin, OrganizationFormView, CreateView):
+class OrganizationCreateView(PermissionRequiredMixin, OrganizationFormView,
+                             CreateView):
     permission_required = 'plateformeweb.create_organization'
 
 
-class OrganizationEditView(PermissionRequiredMixin, OrganizationFormView, UpdateView):
+class OrganizationEditView(PermissionRequiredMixin, OrganizationFormView,
+                           UpdateView):
     permission_required = 'plateformeweb.edit_organization'
 
 
@@ -79,7 +81,8 @@ class PlaceListView(ListView):
 
 class PlaceFormView():
     model = Place
-    fields = ["name", "description", "type", "address", "picture"]
+    fields = ["name", "description", "type", "address", "picture",
+              "organization"]
 
     def get_success_url(self):
         return reverse_lazy('place_detail',
@@ -124,7 +127,8 @@ class EventListView(ListView):
 class EventFormView():
     model = Event
     fields = ["title", "type", "starts_at", "ends_at", "available_seats",
-              "attendees", "organizers", "location", "publish_at", "published"]
+              "attendees", "organizers", "location", "publish_at", "published",
+              "organization"]
 
     # date picker from
     #   https://xdsoft.net/jqplugins/datetimepicker/

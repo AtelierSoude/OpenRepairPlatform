@@ -16,7 +16,6 @@ from users.models import CustomUser
 # les variables de templates donnent accès au queryset (lazy evaluation, donc
 # pas de requête si pas d'affichage), exemple:
 
-# <h1>
 #     <ul>
 #         {% for item in my_events_attending %}
 #             <li>{{ item.title }}</li>
@@ -27,7 +26,6 @@ from users.models import CustomUser
 #             <li>{{ item.title }}</li>
 #         {% endfor %}
 #     </ul>
-# </h1>
 
 def user_data(request):
     if isinstance(request.user, AnonymousUser) or request.user is None:

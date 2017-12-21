@@ -3,6 +3,8 @@ from django.utils.timezone import now
 from .models import Event, PublishedEvent
 from users.models import CustomUser
 
+# See https://stackoverflow.com/a/28533875
+
 # NOTE requiert plateformeweb.context_processors.user_data dans les context
 # processors de settings.py
 

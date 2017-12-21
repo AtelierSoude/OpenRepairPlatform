@@ -35,8 +35,8 @@ def user_data(request):
     events_attending = PublishedEvent.objects.all().filter(
         attendees=request.user).filter(
         ends_at__gte=now())
-    events_organize = Event.objects.all().filter(
+    events_organizing = Event.objects.all().filter(
         organizers=request.user).filter(
         ends_at__gte=now())
     return {'my_events_attending': events_attending,
-            'my_events_organizing': events_organize}
+            'my_events_organizing': events_organizing}

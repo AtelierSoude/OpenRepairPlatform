@@ -4,36 +4,24 @@
 {% load fontawesome %}
 {% load avatar_tags %}
 
+
+{% block add %} {{ block.super }}  
+{% endblock add %}
+
+{% block breadcrumbs %} {{ block.super }} Places {% endblock breadcrumbs %}
+{% block title %} {{ block.super }} Places {% endblock title %}
+
 {% block list %}
-    <section
-            class="secondary-background row ui items stackable middle aligned divided ">
-        {% for place in object_list %}
-            {{ place.all.count }}
-
-            <div class="item ui bordered primary-background">
-
-                <img class="image" src="../media/{{ place.picture }}">
-                <div class="content align-left">
-                    <h3 class="header">{{ place.name }}</h3>
-                    </br>
-                    <span class="header">{{ place.type }}</span>
-                    </br>
-                    <div class="description">
-                        <p>{{ place.description }}</p>
-                    </div>
-                    <ul class="list-group extra">
-                        <li>
-                            {% fontawesome_icon 'map-marker' %}
-                            {{ place.address }}
-                        </li>
-                    </ul>
-                </div>
-                <div class="extra">
-                    <button class="ui button floated right">More ...</button>
-                </div>
-            </div>
-        {% empty %}
-            <div>No places yet.</div>
-        {% endfor %}
-    </section>
+<section class="secondary-background row ui items stackable middle aligned divided ">
+    {% for place in object_list %}
+    {% include "plateformeweb/place.html" with class="item" %}
+    {% empty %}
+    <div>No places yet.</div>    
+  
+  {% endfor %}
+  </section>
 {% endblock list %}
+
+
+
+ 

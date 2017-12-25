@@ -1,0 +1,63 @@
+
+
+{% load staticfiles %}
+{% load fontawesome %}
+{% load avatar_tags %}
+
+{% block list %}
+        <div class="ui bordered {{class}}">
+            {% autoescape on %}
+                <div class="content">
+                    <img class="ui image"
+                         src="https://scontent-cdt1-1.xx.fbcdn.net/v/t1.0-1/p160x160/13179232_10209225972426299_887149271437459878_n.jpg?oh=687c82698fbca52fdc9abc5c82e70abe&oe=5A96738A">
+                    <h3 class="header">{{ event.title }}</h3>
+                    <span class="meta">{{ event.type }}</span>
+                    <ul class="list-group">
+                        <li>{% fontawesome_icon 'clock-o' %} {{ event.starts_at }}</li>
+                        <li>{% fontawesome_icon 'user-plus' %}
+                            {% if event.available_seats == 0 %}
+                                <span class="error">No more places</span>
+                            {% else %}
+                                {{ event.available_seats }} places
+                            {% endif %}
+                        </li>
+                        <li>
+                            {% fontawesome_icon 'map-marker' %}
+                            <a href="{% url 'place_detail' event.location.id event.location.slug %}">
+                                {{ event.location }}</a>
+                        </li>
+                    </ul>
+
+                    {% if request.user.is_authenticated and request.user.is_staff %}
+                        <button class="pure-button rounded button button-appear">
+                        {% fontawesome_icon 'edit' large=True %}
+
+                    {% endif %}
+                    </button>
+
+                    {% if event.available_seats <= 0 %}
+
+                        <div class="ui bottom attached button warning-button"
+                             tabindex="0"> {% fontawesome_icon 'list-ol' %} Be
+                            on queue
+                        </div>
+                    {% else %}
+
+                        <div class="ui bottom attached basic button"
+                             tabindex="0">
+                             <a href="{% url 'event_detail' event.id event.slug %}">
+                                    {% fontawesome_icon 'plus' %} Book Now</a>
+                        </div>
+                    {% endif %}
+
+                    {% if event.title == my_events_attending.title %}
+                    <div class="ui bottom attached basic button"
+                    tabindex="0">{% fontawesome_icon 'plus' %} cancel
+               </div>
+                    {% endif %}
+
+
+                </div>
+            {% endautoescape %}
+        </div>
+{% endblock list %}

@@ -27,25 +27,10 @@
 
 
 
-<div class=" ui object-profile grid stackable">
+<div class="ui object-profile grid stackable">
 
 <section class="four wide column sticky">     
-    <div class="ui card bordered sticky ">
-               {% avatar user class="image ui"%}
-        <div class="content text_align left">
-            <h3 class="header">{{ user.first_name }}{{ user.last_name }}</h3>
-                <div class="extra-content description">
-                            <ul class="list-group">
-                                <li>{% fontawesome_icon 'certificate'%} Participant </li>
-                                <li>{% fontawesome_icon 'clock-o' %} Depuis le 10/11/2017</li>
-                                <li>{% fontawesome_icon 'envelope-o' %}{{ user.email }}</li>
-                            {% if user.staff_status %}
-                              <li>{% fontawesome_icon 'envelope-o' %} Bénévole</li>
-                            {% endif %}
-                     </ul>
-                </div>    
-        </div>
-    </div>
+   {% include "users/user.html" %}
 </section>  
 
 <section class="twelve wide column">
@@ -57,7 +42,15 @@
 
     </div>
         
-    <div class="ui bottom attached active tab segment">
+<div class="ui bottom attached active tab segment">
+
+        <h3> My events that I organize </h3>
+<section class="ui grid four cards stackable divided centered">
+{% for event in my_events_organizing %}
+ {% include "plateformeweb/event.html" with class="card" %}
+{% endfor %}
+</section>
+
 
         <form method="POST" class="pure-form pure-form-stacked ui form" action="" id="form">
             <fieldset>

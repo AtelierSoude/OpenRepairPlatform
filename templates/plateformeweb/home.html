@@ -1,36 +1,55 @@
 {% extends 'base.html' %}
+{% load staticfiles %}
+{% load fontawesome %}
+{% load avatar_tags %} 
 
 
 {% block content %}
-    <div class="secondary-background">
 
-        <div class="home-picture row align-center gradient">
+<div class="secondary-background">
 
-            <section class="home_section row">
-                <img src="/static/img/logo_ateliersoude.svg"
-                     style="width:150px">
-                <h1>L'Atelier Soudé</h1>
-                <h3>Que voulez-vous réparer ?</h3>
-                <form class="principal_search row">
-                    <input class="searchTerm"
-                           placeholder="Enter your search term ..."/><input
-                        class="searchButton" type="submit"/>
-                </form>
+    <div class="home-picture row align-center gradient">
 
-                <div class="important-thing pure-u-xl-1-4 pure-u-md-1-3 pure-u-sm-1 primary-background">
-                    &nbsp;3 lieux&nbsp;
+        <section class="home_section row">
+           
+        {% if user.is_authenticated %}
+
+            <div class="ui grid stackable">
+
+                <div class="four wide column"> 
+                    <h3>Ma prochaine réservation</h3>
+                {% for event in my_events_attending %}
+                    {% include "plateformeweb/event.html" with class="card" %}
+                {% endfor %}
                 </div>
 
-                <div class="important-thing pure-u-xl-1-4 pure-u-md-1-3 pure-u-sm-1 primary-background">
-                    &nbsp;500 réparations&nbsp;
+                <div class="ten wide column"> 
+                    {% avatar user %}
+                    <h1>{{request.user.first_name}}</h1>
                 </div>
 
-                <div class="important-thing pure-u-xl-1-4 pure-u-md-1-3 pure-u-sm-1 primary-background">
-                    &nbsp;200 permanences&nbsp;
-                </div>
-            </section>
+            </div>
 
+        {% else %}
+
+        <img src="/static/img/logo_ateliersoude.svg" style="width:150px">
+        <h1>L'Atelier Soudé</h1>
+        <div class="important-thing pure-u-xl-1-4 pure-u-md-1-3 pure-u-sm-1 primary-background">
+                &nbsp;3 lieux&nbsp;
         </div>
+
+        <div class="important-thing pure-u-xl-1-4 pure-u-md-1-3 pure-u-sm-1 primary-background">
+                &nbsp;500 réparations&nbsp;
+        </div>
+
+        <div class="important-thing pure-u-xl-1-4 pure-u-md-1-3 pure-u-sm-1 primary-background">
+                &nbsp;200 permanences&nbsp;
+        </div>
+
+        {% endif %}
+
+        </section>
+    </div>
 
         <nav class="row">
             <ul class="ui five column grid nav-home stackable">
@@ -46,12 +65,12 @@
             </ul>
         </nav>
 
-
-        <section class="row gutter">
-
-            <h2>Nos prochaines dates</h2>
-            {% include "plateformeweb/event_list.html" with object_list=events %}
-        </section>
+<h2>Nos prochaines dates</h2>
+    <section class="ui row gutter grid items ">
+        {% for event in last_events %}
+            {% include "plateformeweb/event.html" with class="item" %}
+        {% endfor %}
+    </section>
 
 
         <div class="secondary-home-picture row align-center bg__parallax">

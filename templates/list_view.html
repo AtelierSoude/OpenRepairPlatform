@@ -12,7 +12,7 @@
         <div class="ui small breadcrumb row align-left">
             <a class="section">Home</a>
             {% fontawesome_icon 'chevron-right' %}
-            <a class="section">Users</a>
+            <a class="section">{% block breadcrumbs %}{% endblock breadcrumbs %}</a>
             </br>
         </div>
 
@@ -87,8 +87,10 @@
         </button>
 
         <div class="ui modal fullscreen">
-            <div class="header">Create user</div>
+            <div class="header">Create</div>
             <div class="content">
+                {% block add %}
+                {% endblock %}
             </div>
             <div class="actions">
 

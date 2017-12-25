@@ -118,7 +118,7 @@ class EventListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["list_type"] = "place"
+        context["list_type"] = "event"
         return context
 
 

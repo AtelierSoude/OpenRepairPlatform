@@ -211,7 +211,7 @@ a {
 
 .home_section {
   height: 400px;
-  padding-top: 100px; }
+  padding-top: 50px; }
 
 .primary-background {
   background-color: #fff; }
@@ -391,7 +391,7 @@ p.error {
   .home-picture section {
     height: 500px;
     color: #FFF !important; }
-  .home-picture h1 {
+  .home-picture h1, .home-picture h2, .home-picture h3 {
     color: #FFF !important; }
 
 .secondary-home-picture {

@@ -1,54 +1,23 @@
+
 {% extends 'list_view.html' %}
 
 {% load staticfiles %}
 {% load fontawesome %}
-{% load avatar_tags %} 
+{% load avatar_tags %}
 
-{% block title  %} Users {% endblock %}
+{% block breadcrumbs %} {{ block.super }} Users {% endblock breadcrumbs %}
+{% block title %} {{ block.super }} Users {% endblock title %}
 
 {% block list %}
-<section class=" secondary-background row ui cards five stackable middle aligned divided "> 
+<section class="ui grid five cards stackable divided centered">
 {% for user in object_list %}
+  {% include "users/user.html" with class="card" %}
 
-<div class="card ui bordered item">
+  {% empty %}
+  <div>No users yet.</div>    
+{% endfor %}
 
-        <div class="image ui">{% avatar user %}</div>
-        
-    <div class="content text_align left">
-            {% autoescape on %}
-                <h3 class="header">{{ user.first_name|capfirst }}{{ user.last_name|capfirst}}</h3>
-                 
-                <div class="extra-content description">
-                        <ul class="list-group">
-                       
-                            <li>{% fontawesome_icon 'certificate'%} 
-                                {% if user.is_staff %}
-                                Volonteer
-                                {% else %}
-                                Member
-                                {% endif %}
-                                     </li>
-                            <li>{% fontawesome_icon 'clock-o' %} {{ user.date_joined}}</li>
-                            <li>{% fontawesome_icon 'envelope-o' %}{{ user.email }}</li>
-                        </ul>
-                </div> 
-            {% endautoescape %}   
-    </div>
-
-    {% if request.user.is_authenticated and request.user.is_staff %}
-    <button class="pure-button rounded button  button-appear">
-           <a href="{% url 'user_profile' %}">  {% fontawesome_icon 'edit' large=True %} </a>
-    </button>
-    <button class="ui basic validate button right">
-            {% fontawesome_icon 'info' %} details
-          </button>
-    {% endif %}      
-</div>
-     
-                {% empty %}
-            <div>No users yet.</div>    
-        {% endfor %}
 </section>
-{% endblock %}
+{% endblock list %}
 
 

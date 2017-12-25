@@ -1,6 +1,6 @@
 from django.contrib.auth.models import AnonymousUser
 from django.utils.timezone import now
-from plateformeweb.models import Event, PublishedEvent
+from plateformeweb.models import Event, PublishedEvent, Place
 from users.models import CustomUser
 
 
@@ -32,6 +32,7 @@ from users.models import CustomUser
 # https://docs.djangoproject.com/en/1.11/topics/db/queries/#spanning-multi-valued-relationships
 # for the filter() call
 
+
 def user_data(request):
     if isinstance(request.user, AnonymousUser) or request.user is None:
         return {}
@@ -41,3 +42,8 @@ def user_data(request):
         organizers=request.user, ends_at__gte=now())
     return {'my_events_attending': events_attending,
             'my_events_organizing': events_organizing}
+
+def last_events(request):
+    events = PublishedEvent.objects.all().filter(
+        starts_at__gte=now()).order_by('starts_at')[:4]
+    return {'last_events': events}

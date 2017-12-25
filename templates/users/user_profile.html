@@ -1,120 +1,63 @@
-{% extends 'base.html' %}
+
+
+{% extends 'detail_view.html' %}
 
 {% load staticfiles %}
 {% load fontawesome %}
-{% load avatar_tags %} 
-
-{% block content %}
-
-<script>
-  $(function() {  $('.ui.sticky').sticky({
-    context: '#form'
-  })
-;});
-</script>
-<div class="cover-picture pure-u-1 gradient align-right bg__parallax">
-    <div class="user-bio pure-u-3-5 ">
-        <i class="fa fa-quote-left fa-2x fa-pull-left" aria-hidden="true"></i>
-        <span>Je suis un réparateur de génie. J'aime vraiment montrer aux autres que je sais tout faire et je déteste partager mes connaissances</span>
-        <i class="fa fa-quote-right fa-2x fa-pull-right" aria-hidden="true"></i>
-    </div>
-    <div class="tags">
-       <div class="tag pure-u-3-5">Consoles de jeux
-            <i class="fa fa-lg fa-close" aria-hidden="true"></i>
-       </div>
-    </div>
-</div>
+{% load avatar_tags %}
 
 
-
-<div class="ui object-profile grid stackable">
-
-<section class="four wide column sticky">     
-   {% include "users/user.html" %}
-</section>  
-
-<section class="twelve wide column">
-    <div class="ui top attached tabular menu">
-                <div class="active item">Informations</div>
-                <div class="item">Participations</div>
-                <div class="item">Réparations</div>
+{% block context %}
+{% include "users/user.html" with class="card" %}
+{% endblock context %} 
 
 
-    </div>
-        
-<div class="ui bottom attached active tab segment">
+{% block detail %}
 
-        <h3> My events that I organize </h3>
-<section class="ui grid four cards stackable divided centered">
+<h3> My events that I organize </h3>
+<section class="ui cards stackable divided centered">
 {% for event in my_events_organizing %}
  {% include "plateformeweb/event.html" with class="card" %}
 {% endfor %}
 </section>
 
-
         <form method="POST" class="pure-form pure-form-stacked ui form" action="" id="form">
-            <fieldset>
-                {% csrf_token %}
-                {% if user_form.errors %}
-                    <p class="error">Please correct the error(s) below:</p>
-                    {#{{ user_form.errors }}#}
-                {% endif %}
-        
+                <fieldset>
+                    {% csrf_token %}
+                    {% if user_form.errors %}
+                        <p class="error">Please correct the error(s) below:</p>
+                        {#{{ user_form.errors }}#}
+                    {% endif %}
             
-                    {% for field in user_form %}
-
-                        <div class="pure-control-group group">
-                            {% if field.help_text %}
-                                <span class="pure-form-message-inline">{{ field.help_text|safe }}</span>
-                            {% endif %}
-                            {{ field }} {{ field.errors }}
-                            <label>{{ field.label }}</label>
-                        </div>
-
-                    {% endfor %}
-
-        
-                    {# TODO: avatar handling needs to go in a modal and refresh the page when closed #}
-                    {% avatar user %}
-                    <a href="javascript:window.open('{% url 'avatar_change' %}','_blank','titlebar=no,status=no,menubar=no,location=no,height=500,width=400,left=200,top=200')">Change
-                        your avatar</a>
-                    <a href="javascript:window.open('{% url 'avatar_delete' %}','_blank','titlebar=no,status=no,menubar=no,location=no,height=500,width=400,left=200,top=200')">Delete
-                        your avatar</a>
-
                 
-                <div class="pure-controls pure-u-1 button-xlarge">
-                    <button type="submit" class="pure-button pure-button-primary"
-                            name="action">Save
-                    </button>
-                </div>
-            </fieldset>
-        </form>
-    </div>
-</section>
-</div>
+                        {% for field in user_form %}
+    
+                            <div class="pure-control-group group">
+                                {% if field.help_text %}
+                                    <span class="pure-form-message-inline">{{ field.help_text|safe }}</span>
+                                {% endif %}
+                                {{ field }} {{ field.errors }}
+                                <label>{{ field.label }}</label>
+                            </div>
+    
+                        {% endfor %}
+    
+            
+                        {# TODO: avatar handling needs to go in a modal and refresh the page when closed #}
+                        {% avatar user %}
+                        <a href="javascript:window.open('{% url 'avatar_change' %}','_blank','titlebar=no,status=no,menubar=no,location=no,height=500,width=400,left=200,top=200')">Change
+                            your avatar</a>
+                        <a href="javascript:window.open('{% url 'avatar_delete' %}','_blank','titlebar=no,status=no,menubar=no,location=no,height=500,width=400,left=200,top=200')">Delete
+                            your avatar</a>
+    
+                    
+                    <div class="pure-controls pure-u-1 button-xlarge">
+                        <button type="submit" class="pure-button pure-button-primary"
+                                name="action">Save
+                        </button>
+                    </div>
+                </fieldset>
+            </form>
 
-
-
-<script>
-
- $(document).ready(function(){ 
-       $('.avatar-cover').Stickyfill(); 
-       });
-</script>
-
-{#    TODO: the tag LANGUAGE is available everywhere (set in base.html), under #}
-{#    the form 'fr' or 'en', but the jquery datepicker requires a locale: fr-FR #}
-{#    for instance; need to find a way to translate#}
-
-{#    <script>#}
-{#        $(function () {#}
-{#            $(".datepicker").datepicker({#}
-{#                changeMonth: true,#}
-{#                changeYear: true,#}
-{#                yearRange: "1900:2012",#}
-{#                // You can put more options here.#}
-{#            });#}
-{#            $.datepicker.regional['fr-FR'];#}
-{#        });#}
-{#    </script>#}
-{% endblock %}
+{% endblock detail %}
+      

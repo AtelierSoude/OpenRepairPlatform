@@ -5,7 +5,7 @@
 {% load avatar_tags %}
 
 {% block list %}
-<div class="item ui bordered {{class}}">
+<div class="item ui bordered {{class}} primary-background">
 
     <img class="image" src="../media/{{ place.picture }}">
     <div class="content align-left">
@@ -24,7 +24,10 @@
         </ul>
     </div>
     <div class="extra">
-        <button class="ui button floated right">More ...</button>
+    
+            <a class="ui button floated right" href="{% url 'place_detail' place.id place.slug %}">
+               More ...</a>
+       
     </div>
 </div>
 {% endblock %}

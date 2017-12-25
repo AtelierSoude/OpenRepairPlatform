@@ -10,9 +10,12 @@
 {% block breadcrumbs %} {{ block.super }} Events {% endblock breadcrumbs %}
 {% block title %} {{ block.super }} Events {% endblock title %}
 
+{{ event.all.count }}
+
+
 {% block list %}
 <section class="ui grid five cards stackable divided centered">
-        
+
 {% for event in object_list %}
 
   {% include "plateformeweb/event.html" with class="card" %}

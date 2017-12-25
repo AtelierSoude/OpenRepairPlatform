@@ -1,23 +1,22 @@
-{% extends 'base.html' %}
+{% extends 'detail_view.html' %}
+
 {% load staticfiles %}
 {% load fontawesome %}
 {% load avatar_tags %}
 
-{% block content %}
 
-<div class="ui row grid centered stackable">   
-    <div class="four wide column primary-background aligned divided">
+{% block context %}
     {% include "plateformeweb/event.html" with class="card" %}
-    </div>      
-    <section class="ui primary-background ten wide column cards items list five stackable middle aligned divided"> 
-       
-      <h3> Participants :  {{ event.attendees.all.count }} </h3>
+{% endblock context %} 
+
+
+
+{% block detail %}
+
+      <h3 class="row"> Participants :  {{ event.attendees.all.count }} </h3>
 
         {% for user in event.attendees.all %}
             {% include "users/user.html" with class="item" %}
         {% endfor %}
-    </section>
-</div>  
-
+{% endblock detail %}
       
-{% endblock %}

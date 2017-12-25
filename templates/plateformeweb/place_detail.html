@@ -1,5 +1,15 @@
-{% extends 'base.html' %}
+{% extends 'detail_view.html' %}
 
-{% block content %}
+{% load staticfiles %}
+{% load fontawesome %}
+{% load avatar_tags %}
 
-{% endblock %}
+
+{% block context %}
+    {% include "plateformeweb/place.html" with class="card" %}
+{% endblock context %} 
+
+{% block detail %}
+      <h3> Event takes place in </h3>
+{% endblock detail %}
+      

@@ -5,14 +5,15 @@ https://docs.djangoproject.com/en/1.11/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 """
+import os
+import socket
+import re
 import colored_traceback
 
 colored_traceback.add_hook(always=True)
 
-import os
-
-POSTGRES_DB=os.environ["POSTGRES_DB"]
-DEVELOPMENT=os.environ["DEVELOPMENT"]
+POSTGRES_DB = os.environ["POSTGRES_DB"]
+DEVELOPMENT = os.environ["DEVELOPMENT"]
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -36,11 +37,9 @@ ALLOWED_HOSTS = ["dev.atelier-soude.fr", "ns60.amakuru.net", "127.0.0.1", "local
 # like ".office.internal.tld"
 # ALSO SEE https://stackoverflow.com/a/45624773
 INTERNAL_IPS = ['127.0.0.1', ]
-import socket
-import os
 # tricks to have debug toolbar when developing with docker
-ip = socket.gethostbyname(socket.gethostname())
-INTERNAL_IPS += [ip[:-1] + '1']
+IP = socket.gethostbyname(socket.gethostname())
+INTERNAL_IPS += [re.sub(r"[0-9]+$", "1", IP)]
 
 APPEND_SLASH = True
 
@@ -75,7 +74,8 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'debug_toolbar.middleware.DebugToolbarMiddleware',  # put it first unless it breaks other middleware
+    # put the following line first, unless it breaks other middleware
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',

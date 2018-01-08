@@ -63,12 +63,16 @@
     {% if user_form %}{{ user_form.media }}{% endif %}
     {% if form %}{{ form.media }}{% endif %}
 
+
+
+
 </head>
 <body>
 
 <header>
-    
-<nav class="ui top fixed menu inverted stackable labeled-icon">
+
+
+<nav class="ui top fixed menu inverted stackable labeled-icon principal-menu" >
         
     {#  logo #}
         <div>
@@ -80,7 +84,7 @@
                 <a href="{% url "homepage" %}" class="item">
                         {% fontawesome_icon 'home' %}Home
                 </a>
-                <a class="item" onclick="$('.ui.labeled.icon.sidebar').sidebar('toggle');">
+                <a class="item" onclick="$('#navbar').sidebar('toggle').sidebar('setting', 'transition', 'overlay');">
                         {% fontawesome_icon 'users' %}Involve
                  </a>
                 {% if user.is_authenticated %}
@@ -91,7 +95,7 @@
                 </a>
                 {% else %}
                 <a href="{% url "login" %}" class="item">  
-                        {% fontawesome_icon 'login' %}Login
+                        {% fontawesome_icon 'login' %} Login
                 </a>
                 {% endif %}
                 {% if user.is_authenticated %}
@@ -103,7 +107,7 @@
 
 </nav>
 
-<div class="ui left demo vertical inverted sidebar labeled icon menu">
+<div class="ui left vertical inverted sidebar labeled icon menu" id="navbar">
         <a href="{% url "event_list" %}" class="item">
                 {% fontawesome_icon 'calendar-o' large=True %}Calendar
         </a>

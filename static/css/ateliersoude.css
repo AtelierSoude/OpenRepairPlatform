@@ -81,7 +81,6 @@ wrapper {
   margin-top: 70px;
   text-align: center;
   font-family: "Roboto Mono";
-  overflow-x: hidden;
   display: block; }
 
 section {
@@ -193,11 +192,13 @@ a {
   border-radius: 5px;
   border-style: solid; }
 
+.primary-color-background {
+  background-color: #35bda6; }
+
 .important-thing {
   line-height: 2.25em;
   font-size: 1.5em;
   text-transform: uppercase;
-  background-color: #f5f5f5;
   font-family: "Bree Serif" !important; }
   .important-thing:after {
     content: "";
@@ -358,9 +359,10 @@ p.error {
   display: inline-block; }
   .list-group li {
     display: inline-block;
-    float: left;
+    text-align: left;
     font-size: 0.8em;
-    line-height: 28px; }
+    line-height: 28px;
+    clear: both; }
     .list-group li i {
       padding-left: 1em;
       padding-right: 1em;
@@ -385,9 +387,11 @@ p.error {
 
 .home-picture {
   overflow: hidden;
-  height: 600px;
+  height: 480px;
   background-size: cover;
-  background: url("../img/fond-home-01.png"), linear-gradient(to left, #083342 0%, #0e566f 50%); }
+  background-repeat: no-repeat;
+  background-position: bottom;
+  background-image: url("../img/fonhome2-01.png"); }
   .home-picture section {
     height: 500px;
     color: #FFF !important; }
@@ -420,6 +424,9 @@ p.error {
     background-color: #fee56e; }
     .home-topic:nth-child(2) h1, .home-topic:nth-child(2) h2, .home-topic:nth-child(2) span, .home-topic:nth-child(2) p {
       color: #083342; }
+
+nav.principal-menu {
+  background-color: #083342 !important; }
 
 [class*="bg__"] {
   /* fix background */

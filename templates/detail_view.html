@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+{% load fontawesome %}
+{% load avatar_tags %}
+
+{% block content %}
+<script>
+        $(function() {  $('.ui.sticky').sticky({
+          context: '#detail'
+        })
+      ;});
+</script>
+
+<div class="cover-picture pure-u-1 gradient align-right bg__parallax">
+
+</div>
+
+<div class="ui object-profile row grid centered center stackable">   
+
+    <div class="ui four wide column aligned divided ">
+       {% block context %}
+       {% endblock context %}
+    </div>   
+
+<div class="ui eleven wide column">
+        <div class="ui top attached tabular menu">
+        {% block tabs %}
+        
+        {% endblock tabs %}
+        </div>
+            
+<div class="ui bottom attached active tab segment">
+    
+    <section class="ui grid four items stackable divided centered" id="detail">
+    {% block detail %}
+    {% endblock detail %}
+    </section>
+</div>
+</div>
+</div>
+ 
+    
+          
+{% endblock %}

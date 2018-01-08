@@ -54,30 +54,33 @@
         </select>
 
         <div class="ui statistics center row grid equal width stackable">
+           
+            {% block statistics %}
             <div class="statistic important-thing column">
                 <div class="value">
-                    200
+                    {{first_value}}
                 </div>
                 <div class="label">
-                    Members
+                    {{first_label}}
                 </div>
             </div>
             <div class="statistic important-thing column">
                 <div class="value">
-                    31,200
+                    {{second_value}}
                 </div>
                 <div class="label">
-                    Views
+                    {{second_label}}
                 </div>
             </div>
             <div class="statistic important-thing column">
                 <div class="value">
-                    22
+                    {{third_value}}
                 </div>
                 <div class="label">
-                    Volonteers
+                    {{third_label}}
                 </div>
             </div>
+            {% endblock statistics %}
         </div>
 
 
@@ -99,14 +102,6 @@
             </div>
         </div>
 
-
-        <nav class="pure-button-group collapsed" role="group">
-            <button class="view_in_table pure-button">Table view</button>
-            <button class="view_in_card pure-button pure-button-active">Card
-                view
-            </button>
-            <button class="view_in_larger pure-button">Large view</button>
-        </nav>
 
 
     </section>

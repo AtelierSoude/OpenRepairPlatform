@@ -4,19 +4,29 @@
 {% load fontawesome %}
 {% load avatar_tags %}
 
-{% block add %} {{ block.super }}  
+{% block add %} 
+{% include "plateformeweb/event_form.html" %}
+
 {% endblock add %}
 
 {% block breadcrumbs %} {{ block.super }} Events {% endblock breadcrumbs %}
 {% block title %} {{ block.super }} Events {% endblock title %}
 
-{{ event.all.count }}
 
+{% block statistics %}
+
+
+  {% with first_value=event_list.all.count first_label='events' second_value=event_list.all.attendees.count second_label='participations' third_value=event_list.type.all.count third_label='types' %}
+  {{block.super}}
+  {% endwith %}
+
+{% endblock statistics %}
 
 {% block list %}
 <section class="ui grid five cards stackable divided centered">
 
 {% for event in object_list %}
+{% ifchanged %}<h2>{{ event.starts_at|date:"F" }}</h2>{% endifchanged %}
 
   {% include "plateformeweb/event.html" with class="card" %}
   {% empty %}

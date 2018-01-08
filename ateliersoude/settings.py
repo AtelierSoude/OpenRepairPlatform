@@ -106,6 +106,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'plateformeweb.context_processors.user_data',
                 'plateformeweb.context_processors.last_events',
+            
           
             ],
         },

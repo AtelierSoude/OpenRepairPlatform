@@ -5,11 +5,23 @@
 {% load avatar_tags %}
 
 
-{% block add %} {{ block.super }}  
+{% block add %} 
+{{ block.super }}  
 {% endblock add %}
 
 {% block breadcrumbs %} {{ block.super }} Places {% endblock breadcrumbs %}
 {% block title %} {{ block.super }} Places {% endblock title %}
+
+
+{% block statistics %}
+
+
+  {% with first_value=place_list.all.count first_label='places' second_value='' second_label='events' third_value='' third_label='?' %}
+  {{block.super}}
+  {% endwith %}
+
+{% endblock statistics %}
+
 
 {% block list %}
 <section class="secondary-background row ui items stackable middle aligned divided ">

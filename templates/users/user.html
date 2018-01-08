@@ -8,12 +8,14 @@
 
 
 
-<div class="ui bordered primary-background {{class}}">
+<div class="ui bordered primary-background sticky {{class}}">
 
-        <div class="image ui avatar centered">{% avatar user %}</div>
+        <div class="image ui centered
+        {% if class == 'item' %} avatar {% endif %}
+        ">{% avatar user %}</div>
         
     <div class="content text_align left">
-            {% autoescape on %}
+         
                 <h3 class="header">{{ user.first_name|capfirst }}{{ user.last_name|capfirst}}</h3>
                  
                 <div class="extra-content description">
@@ -30,15 +32,12 @@
                             <li>{% fontawesome_icon 'envelope-o' %}{{ user.email }}</li>
                         </ul>
                 </div> 
-            {% endautoescape %}   
+           
     </div>
 
     {% if request.user.is_authenticated and request.user.is_staff %}
-    <button class="pure-button rounded button  button-appear">
-           <a href="{% url 'user_profile' %}">  {% fontawesome_icon 'edit' large=True %} </a>
-    </button>
     <button class="ui basic validate button right">
-            {% fontawesome_icon 'info' %} details
+        <a href="{% url 'user_profile' %}"> {% fontawesome_icon 'info' %} details </a>
           </button>
     {% endif %}      
 </div>

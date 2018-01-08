@@ -38,10 +38,14 @@ def user_data(request):
         return {}
     events_attending = PublishedEvent.objects.all().filter(
         attendees=request.user, ends_at__gte=now())
+    last_event_attending = PublishedEvent.objects.all().filter(
+        attendees=request.user, ends_at__gte=now()).order_by('starts_at')[:1]
     events_organizing = Event.objects.all().filter(
         organizers=request.user, ends_at__gte=now())
     return {'my_events_attending': events_attending,
+            'my_last_event_attending': last_event_attending,
             'my_events_organizing': events_organizing}
+
 
 def last_events(request):
     events = PublishedEvent.objects.all().filter(

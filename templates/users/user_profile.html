@@ -11,17 +11,29 @@
 {% include "users/user.html" with class="card" %}
 {% endblock context %} 
 
+{% block tabs %}
+<div class="active item"><a href="#tab1">Participations</a></div>
+<div class="item"><a href="#tab2">Informations</a></div>
+<div class="item"><a href="#tab3">Reparations</a></div>
+{% endblock tabs %}
 
 {% block detail %}
 
-<h3> My events that I organize </h3>
-<section class="ui cards stackable divided centered">
+
+<section class="ui row gutter grid bordered items divided list" id="tab1">
+    <h3> Events that I organize </h3>
 {% for event in my_events_organizing %}
- {% include "plateformeweb/event.html" with class="card" %}
+ {% include "plateformeweb/event.html" with class="item" %}
 {% endfor %}
+
+    <h3> Events that I've book </h3>
+    {% for event in my_events_attending %}
+    {% include "plateformeweb/event.html" with class="item" %}
+    {% endfor %}
+
 </section>
 
-        <form method="POST" class="pure-form pure-form-stacked ui form" action="" id="form">
+        <form method="POST" class="pure-form form" action="" id="tab2">
                 <fieldset>
                     {% csrf_token %}
                     {% if user_form.errors %}
@@ -32,7 +44,7 @@
                 
                         {% for field in user_form %}
     
-                            <div class="pure-control-group group">
+                            <div class=" group">
                                 {% if field.help_text %}
                                     <span class="pure-form-message-inline">{{ field.help_text|safe }}</span>
                                 {% endif %}

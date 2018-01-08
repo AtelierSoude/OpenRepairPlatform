@@ -5,11 +5,12 @@
 {% load avatar_tags %}
 
 {% block list %}
-        <div class="ui primary-background bordered {{class}}">
-            {% autoescape on %}
+        <div class="ui bordered celled {{class}}">
+           
                 <div class="content">
-                    <img class="ui image "
-                         src="http://www.rue89lyon.fr/wp-content/uploads/2016/04/atelier-soude-8-514x342.jpg">
+                    <img class="ui image centered
+                    {% if class == 'item' %} avatar {% endif %}"
+                    src="http://www.rue89lyon.fr/wp-content/uploads/2016/04/atelier-soude-8-514x342.jpg">
                     <h3 class="header">{{ event.title }}</h3>
                     <span class="meta">{{ event.type }}</span>
                     <ul class="list-group">
@@ -24,40 +25,55 @@
                         <li>
                             {% fontawesome_icon 'map-marker' %}
                             <a href="{% url 'place_detail' event.location.id event.location.slug %}">
-                                {{ event.location }}</a>
+                                
+                                {{ event.location|truncatechars:35 }}
+                            
+                            </a>
                         </li>
                     </ul>
 
-                    {% if request.user.is_authenticated and request.user.is_staff %}
-                        <button class="pure-button rounded button button-appear">
-                        {% fontawesome_icon 'edit' large=True %}
+                    {% if request.user.is_authenticated and event in my_events_organizing %}
+                        <button class="ui button negative basic rounded pure-button button-error primary-background button-appear">
+                        {% fontawesome_icon 'trash' large=True %}
 
                     {% endif %}
                     </button>
 
-                    {% if event.available_seats <= 0 %}
+                   
 
-                        <div class="ui bottom attached button warning-button"
-                             tabindex="0"> {% fontawesome_icon 'list-ol' %} Be
-                            on queue
+
+                    <div class="ui labeled button basic" tabindex="0">
+                        <div class="ui basic button">
+                        <a href="{% url 'event_detail' event.id event.slug %}">
+                                {% if event in my_events_attending %}
+                                {% fontawesome_icon 'delete' %}
+                                Cancel
+                                    {% else %}
+                                    {% if event.available_seats <= 0 %}
+                                    {% fontawesome_icon 'list-ol' %}
+                                    call wait
+                                    {% else %}
+                                    {% fontawesome_icon 'ticket' %}
+                                    book now
+                                    {% endif %}
+                                {% endif %}
+                        </a>
+
                         </div>
-                    {% else %}
+                        <a class="ui secondary left pointing label" 
+                        href="{% url 'event_detail' event.id event.slug %}">
+                                {{ event.available_seats }} 
+                                {% if event.available_seats <= 0 %}
+                                waiters
+                                {% else %}
+                                seats
+                                {% endif %}
+                        </a>
+                      </div>
 
-                        <div class="ui bottom attached basic button"
-                             tabindex="0">
-                             <a href="{% url 'event_detail' event.id event.slug %}">
-                                    {% fontawesome_icon 'plus' %} Book Now</a>
-                        </div>
-                    {% endif %}
-
-                    {% if event.title == my_events_attending.title %}
-                    <div class="ui bottom attached basic button"
-                    tabindex="0">{% fontawesome_icon 'plus' %} cancel
-               </div>
-                    {% endif %}
 
 
                 </div>
-            {% endautoescape %}
+          
         </div>
 {% endblock list %}

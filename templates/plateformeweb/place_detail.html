@@ -10,6 +10,9 @@
 {% endblock context %} 
 
 {% block detail %}
-      <h3> Event takes place in </h3>
+      <h3> Event takes place in : {{ place.event_set.all.count }} </h3>
+{% for event in place.event_set.all %}
+    {% include "plateformeweb/event.html" with class="item" %}
+{% endfor %}
 {% endblock detail %}
       

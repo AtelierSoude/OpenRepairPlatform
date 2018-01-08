@@ -4,6 +4,7 @@
 {% load avatar_tags %} 
 
 
+
 {% block content %}
 
 <div class="secondary-background">
@@ -12,29 +13,29 @@
 
         <section class="home_section row">
            
-        {% if user.is_authenticated %}
-
-            <div class="ui grid stackable">
-
-                <div class="four wide column"> 
-                    <h3>Ma prochaine réservation</h3>
-                {% for event in my_events_attending %}
-                    {% include "plateformeweb/event.html" with class="card" %}
-                {% endfor %}
-                </div>
-
-                <div class="ten wide column"> 
-                    {% avatar user %}
-                    <h1>{{request.user.first_name}}</h1>
-                </div>
-
-            </div>
-
-        {% else %}
-
-        <img src="/static/img/logo_ateliersoude.svg" style="width:150px">
+       
+    
         <h1>L'Atelier Soudé</h1>
-        <div class="important-thing pure-u-xl-1-4 pure-u-md-1-3 pure-u-sm-1 primary-background">
+
+        <span>Prenez simplement rendez-vous pour réparer vos appareil</span>
+
+<section class="row">
+        <select class="ui fluid search dropdown principal_search" multiple="">
+                <option value="">Smartphone</option>
+                <option value="AL">Lyon 7</option>
+                <option value="AK">lundi prochain</option>
+                <option value="AZ">Atelier Soudé</option>
+                <option value="AR">Lyon</option>
+        </select>
+
+<script>
+        $(function () {
+            $('.principal_search').dropdown();
+        });
+</script>
+
+</section>  
+       <!-- <div class="important-thing pure-u-xl-1-4 pure-u-md-1-3 pure-u-sm-1 primary-background">
                 &nbsp;3 lieux&nbsp;
         </div>
 
@@ -45,8 +46,8 @@
         <div class="important-thing pure-u-xl-1-4 pure-u-md-1-3 pure-u-sm-1 primary-background">
                 &nbsp;200 permanences&nbsp;
         </div>
-
-        {% endif %}
+    -->
+  
 
         </section>
     </div>
@@ -65,18 +66,103 @@
             </ul>
         </nav>
 
-<h2>Nos prochaines dates</h2>
-    <section class="ui row gutter grid items ">
+<section class="row">
+
+        {% if user.is_authenticated %}
+
+        <div class="ui grid stackable">
+
+            <div class="four wide column"> 
+                
+            
+            {% for event in my_last_event_attending %}
+            <h3>Ma prochaine réservation</h3>
+                {% include "plateformeweb/event.html" with class="card" %}
+            {% endfor %}
+            </div>
+
+            <div class="ten wide column"> 
+                {% avatar user %}
+                <h1>{{request.user.first_name}}</h1>
+            </div>
+
+        </div>
+
+    {% else %}
+        <h1> Découvrez l'association </h1>
+    <div class="ui row three column centered grid stackable align-center">
+       
+        <div class="ui column center">
+            <h3>lutter</h3>
+            <p>J'achète moins de neuf et participe à la lutte contre 
+                l'obsolescence, programmée ou non.</p>
+        </div>
+         
+        <div class="ui column center">
+            <h3>apprendre</h3>
+            <p>Même pas peur... J'apprends à connaître mon appareil, 
+                et finalement ce n'est pas sorcier !</p>
+            </div>
+
+            
+        <div class="ui column center">
+            <h3>réparer</h3>
+            <p>Animateurs, outils et pièces d'occasions sont à ma 
+                disposition pour une réparation économique !</p>
+        </div>
+    </div>
+    {% endif %}
+
+</section>
+
+<section class="primary-color-background">
+        <div class="ui statistics center row grid equal width stackable">
+           
+            
+                <div class="statistic important-thing column">
+                    <div class="value">
+                       3
+                    </div>
+                    <div class="label">
+                      lieux
+                    </div>
+                </div>
+                <div class="statistic important-thing column">
+                    <div class="value">
+                       200
+                    </div>
+                    <div class="label">
+                       ateliers
+                    </div>
+                </div>
+                <div class="statistic important-thing column">
+                    <div class="value">
+                       2000
+                    </div>
+                    <div class="label">
+                       réparations
+                    </div>
+                </div>
+            
+            </div>
+</section>
+
+
+<h1 class="row">Prochaines dates </h1>
+
+    <section class="ui row gutter grid bordered cards divided ">
+       
+
         {% for event in last_events %}
-            {% include "plateformeweb/event.html" with class="item" %}
+            {% include "plateformeweb/event.html" with class="card" %}
         {% endfor %}
     </section>
 
 
-        <div class="secondary-home-picture row align-center bg__parallax">
-        </div>
+       <!--  <div class="secondary-home-picture row align-center bg__parallax">
+        </div> -->
 
-
+<!--
         <section
                 class="ui row three column centered grid stackable align-center home-topic gradient "
                 id="home-topic-1">
@@ -153,6 +239,8 @@
             </div>
 
         </section>
+
+    -->
 
     </div>
 {% endblock %}

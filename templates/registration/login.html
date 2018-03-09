@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="pure-u-1-1 gradient">
-<section class="pure-u-2-5 primary-background">
-        <div class="avatar pure-u-1-3"><img src="../../static/img/avatar.png"></div>
+<div class="">
+<section class="">
+        <div class="avatar"><img src="../../static/img/avatar.png"></div>
 
     {% if form.errors %}
         <p>Your username and password didn't match. Please try again.</p>
@@ -31,7 +31,7 @@
         </div>
 
         <div class="pure-controls">
-            <input type="submit" class="pure-button pure-button-primary" value="login"/>
+            <input type="submit" class="" value="login"/>
             <input type="hidden" name="next" value="{{ next }}"/>
         </div>
     </form>

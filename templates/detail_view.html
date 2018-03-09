@@ -5,39 +5,38 @@
 {% load avatar_tags %}
 
 {% block content %}
-<script>
-        $(function() {  $('.ui.sticky').sticky({
-          context: '#detail'
-        })
-      ;});
-</script>
 
-<div class="cover-picture pure-u-1 gradient align-right bg__parallax">
+    <!-- breadcrumb -->
 
-</div>
+<nav aria-label="breadcrumb row">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="../../../">Home</a></li>
+              <li class="breadcrumb-item"><a href="../../">List </a></li>
+              <li class="breadcrumb-item active" aria-current="page">
+                  {% block breadcrumbs %}{% endblock breadcrumbs %}
+              </li>
+            </ol>
+</nav>
 
-<div class="ui object-profile row grid centered center stackable">   
 
-    <div class="ui four wide column aligned divided ">
-       {% block context %}
-       {% endblock context %}
-    </div>   
+<div class="row">  
 
-<div class="ui eleven wide column">
-        <div class="ui top attached tabular menu">
-        {% block tabs %}
-        
-        {% endblock tabs %}
-        </div>
-            
-<div class="ui bottom attached active tab segment">
-    
-    <section class="ui grid four items stackable divided centered" id="detail">
-    {% block detail %}
-    {% endblock detail %}
-    </section>
-</div>
-</div>
+    <!-- what is about -->
+        <div class="col-sm col-lg-3">
+        {% block context %}
+        {% endblock context %}
+        </div>   
+
+    <div class="col-sm col-lg">
+
+    <!-- details about -->
+            <section class="" id="detail">
+            {% block detail %}
+            {% endblock detail %}
+            </section>
+
+    </div>
+
 </div>
  
     

@@ -11,20 +11,22 @@
 
 {% block statistics %}
 
-
   {% with first_value=user_list.all.count first_label='members' second_value=user_list.is_staff.all.count second_label='volonteers' third_value='' third_label='up to date' %}
   {{block.super}}
   {% endwith %}
 
 {% endblock statistics %}
 
+
 {% block list %}
-<section class="ui grid cards stackable divided centered">
+<section class="row card-group">
 
 {% for user in object_list %}
 
+<!-- make difference with volonteer or not --> 
 {% ifchanged %}<h3>{{ user.is_staff }}</h3>{% endifchanged %}
-  {% include "users/user.html" with class="card" %}
+
+  {% include "users/user.html" %}
 
   {% empty %}
   <div>No users yet.</div>    

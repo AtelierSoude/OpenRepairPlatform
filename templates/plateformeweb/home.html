@@ -4,84 +4,31 @@
 {% load avatar_tags %} 
 
 
-
 {% block content %}
 
 <div class="secondary-background">
 
-    <div class="home-picture row align-center gradient">
-
-        <section class="home_section row">
-           
-       
-    
-        <h1>L'Atelier Soudé</h1>
-
-        <span>Prenez simplement rendez-vous pour réparer vos appareil</span>
-
-<section class="row">
-        <select class="ui fluid search dropdown principal_search" multiple="">
-                <option value="">Smartphone</option>
-                <option value="AL">Lyon 7</option>
-                <option value="AK">lundi prochain</option>
-                <option value="AZ">Atelier Soudé</option>
-                <option value="AR">Lyon</option>
-        </select>
-
-<script>
-        $(function () {
-            $('.principal_search').dropdown();
-        });
-</script>
-
-</section>  
-       <!-- <div class="important-thing pure-u-xl-1-4 pure-u-md-1-3 pure-u-sm-1 primary-background">
-                &nbsp;3 lieux&nbsp;
-        </div>
-
-        <div class="important-thing pure-u-xl-1-4 pure-u-md-1-3 pure-u-sm-1 primary-background">
-                &nbsp;500 réparations&nbsp;
-        </div>
-
-        <div class="important-thing pure-u-xl-1-4 pure-u-md-1-3 pure-u-sm-1 primary-background">
-                &nbsp;200 permanences&nbsp;
-        </div>
-    -->
-  
-
+        <section class="">
+            <h1>L'Atelier Soudé</h1>
+            <span>Prenez simplement rendez-vous pour réparer vos appareil</span>
         </section>
-    </div>
 
-        <nav class="row">
-            <ul class="ui five column grid nav-home stackable">
-                <li class="wide column"><a href="#home-topic-1">Réparations
-                    collectives</a></li>
-                <li class="wide column"><a href="#home-topic-2">Ateliers
-                    éducatifs</a></li>
-                <li class="wide column"><a href="#home-topic-3">Projets</a></li>
-                <li class="wide column"><a href="#home-topic-4">Philosophie</a>
-                </li>
-                <li class="wide column"><a href="#home-topic-5">Contacts</a>
-                </li>
-            </ul>
-        </nav>
 
-<section class="row">
+    <section class="">
 
-        {% if user.is_authenticated %}
+    <!-- Change home when user is logged -->
 
-        <div class="ui grid stackable">
+    {% if user.is_authenticated %}
+        <div class="">
 
-            <div class="four wide column"> 
-                
-            
-            {% for event in my_last_event_attending %}
-            <h3>Ma prochaine réservation</h3>
-                {% include "plateformeweb/event.html" with class="card" %}
-            {% endfor %}
+             <div class="card-group row"> 
+                {% for event in my_last_event_attending %}
+                    <h3>Ma prochaine réservation</h3>
+                    {% include "plateformeweb/event.html" %}
+                {% endfor %}
             </div>
 
-            <div class="ten wide column"> 
+            <div class=""> 
                 {% avatar user %}
                 <h1>{{request.user.first_name}}</h1>
             </div>
@@ -89,158 +36,49 @@
         </div>
 
     {% else %}
-        <h1> Découvrez l'association </h1>
-    <div class="ui row three column centered grid stackable align-center">
+
+    <!-- About -->
+
+    <h1> Découvrez la plateforme </h1>
+
+    <div class="row">
        
-        <div class="ui column center">
+        <div class="col-lg-3">
             <h3>lutter</h3>
             <p>J'achète moins de neuf et participe à la lutte contre 
                 l'obsolescence, programmée ou non.</p>
         </div>
-         
-        <div class="ui column center">
+
+        <div class="col-lg-3">
             <h3>apprendre</h3>
             <p>Même pas peur... J'apprends à connaître mon appareil, 
                 et finalement ce n'est pas sorcier !</p>
             </div>
 
-            
-        <div class="ui column center">
+        <div class="col-lg-3">
             <h3>réparer</h3>
             <p>Animateurs, outils et pièces d'occasions sont à ma 
                 disposition pour une réparation économique !</p>
         </div>
+
     </div>
+
     {% endif %}
 
-</section>
-
-<section class="primary-color-background">
-        <div class="ui statistics center row grid equal width stackable">
-           
-            
-                <div class="statistic important-thing column">
-                    <div class="value">
-                       3
-                    </div>
-                    <div class="label">
-                      lieux
-                    </div>
-                </div>
-                <div class="statistic important-thing column">
-                    <div class="value">
-                       200
-                    </div>
-                    <div class="label">
-                       ateliers
-                    </div>
-                </div>
-                <div class="statistic important-thing column">
-                    <div class="value">
-                       2000
-                    </div>
-                    <div class="label">
-                       réparations
-                    </div>
-                </div>
-            
-            </div>
-</section>
-
-
-<h1 class="row">Prochaines dates </h1>
-
-    <section class="ui row gutter grid bordered cards divided ">
-       
-
-        {% for event in last_events %}
-            {% include "plateformeweb/event.html" with class="card" %}
-        {% endfor %}
     </section>
 
+    <!-- Last events -->
 
-       <!--  <div class="secondary-home-picture row align-center bg__parallax">
-        </div> -->
+    <h1> Prochaines dates </h1>
 
-<!--
-        <section
-                class="ui row three column centered grid stackable align-center home-topic gradient "
-                id="home-topic-1">
-
-            <div class="column">
-                <img src="http://atelier-soude.fr/template/icones/atelier-soude-reparation.svg">
-                <h1>Réparations collectives</h1>
-                <span>Apprenez à réparer vos appareils électriques et électroniques</span>
-            </div>
-
-            <div class="column">
-                <p class="align-left">
-
-                    La réparation par tous et pour tous! Téléphone portable,
-                    ordinateur, petit électroménager, autant d’objets
-                    électroniques et électriques qui tombent facilement en
-                    panne...
-                    Depuis quelques années, une distance se creuse entre
-                    l'utilisateur et l'objet. Il est temps de se réapproprier
-                    nos outils.
-
-                    L’Atelier Soudé propose à chacun de pouvoir reprendre
-                    "possession" de ses appareils électroniques. Petits et
-                    grands sont guidés vers l'auto-réparation afin de devenir
-                    autonomes et de mieux comprendre les mécanismes et les
-                    enjeux technologiques.
-
-                    La démocratisation passe également par la documentation:
-                    l'Atelier Soudé facilite l'accès aux tutoriels et aux
-                    réparations, et l'objectif est de mettre sur pied une
-                    plateforme complète permettant à la fois de suivre vos
-                    réparations, de signaler vos venues, et de visualiser votre
-                    montée en compétence!</p>
-                <button class="ui button basic primary">En savoir +</button>
-            </div>
+        <section class="row card-group">
+        
+            {% for event in last_events %}
+                {% include "plateformeweb/event.html" %}
+            {% endfor %}
 
         </section>
 
-        <section
-                class="ui row three column centered grid stackable align-center home-topic"
-                id="home-topic-2">
 
-
-            <div class="column">
-                <p class="align-left">
-
-                    La réparation par tous et pour tous! Téléphone portable,
-                    ordinateur, petit électroménager, autant d’objets
-                    électroniques et électriques qui tombent facilement en
-                    panne...
-                    Depuis quelques années, une distance se creuse entre
-                    l'utilisateur et l'objet. Il est temps de se réapproprier
-                    nos outils.
-
-                    L’Atelier Soudé propose à chacun de pouvoir reprendre
-                    "possession" de ses appareils électroniques. Petits et
-                    grands sont guidés vers l'auto-réparation afin de devenir
-                    autonomes et de mieux comprendre les mécanismes et les
-                    enjeux technologiques.
-
-                    La démocratisation passe également par la documentation:
-                    l'Atelier Soudé facilite l'accès aux tutoriels et aux
-                    réparations, et l'objectif est de mettre sur pied une
-                    plateforme complète permettant à la fois de suivre vos
-                    réparations, de signaler vos venues, et de visualiser votre
-                    montée en compétence!</p>
-                <button class="ui button basic primary">En savoir +</button>
-            </div>
-
-            <div class="column">
-                <img src="http://atelier-soude.fr/template/icones/atelier-soude-reparation.svg">
-                <h1>Réparations collectives</h1>
-                <span>Apprenez à réparer vos appareils électriques et électroniques</span>
-            </div>
-
-        </section>
-
-    -->
-
-    </div>
+</div>
 {% endblock %}

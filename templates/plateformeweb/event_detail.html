@@ -4,33 +4,29 @@
 {% load fontawesome %}
 {% load avatar_tags %}
 
+{% block breadcrumbs %} {{ block.super }} {{ event.title }} {% endblock breadcrumbs %}
 
 {% block context %}
     {% include "plateformeweb/event.html" with class="card" %}
 {% endblock context %}
 
-{% block tabs %}
-<div class="active item"><a href="#tab1">Attendees</a></div>
-<div class="item"><a href="#tab2">Informations</a></div>
-<div class="item"><a href="#tab3">Reparations</a></div>
-{% endblock tabs %}
 
 {% block detail %}
-<section class="ui row grid items divided list" id="tab1">
+<section class="col-lg container">
 
-        <h3 class="row"> Organizers : </h3>
+    <h3 class="row"> Organizers :  {{ event.organizers.all.count }} </h3>
 
         {% for user in event.organizers.all %}
             {% include "users/user.html" with class="card" %}
         {% endfor %}
 
-      <h3 class="row"> Participants :  {{ event.attendees.all.count }} </h3>
+    <h3 class="row"> Participants :  {{ event.attendees.all.count }} </h3>
 
         {% for user in event.attendees.all %}
             {% include "users/user.html" with class="item" %}
         {% endfor %}
 
-      <h3 class="row"> Informations : </h3>
+    <h3 class="row"> Informations : </h3>
       
 </section>
 {% endblock detail %}

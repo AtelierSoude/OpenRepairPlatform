@@ -5,29 +5,22 @@
 {% load avatar_tags %}
 
 {% block list %}
-<div class="item ui bordered {{class}} primary-background">
-    
-    <img class="image" src="../media/{{ place.picture }}">
-    <div class="content align-left">
-        <h3 class="header">{{ place.name }}</h3>
-        </br>
-        <span class="header">{{ place.type }}</span>
-        </br>
-        <div class="description">
-            <p>{{ place.description }}</p>
+
+<div class="card">
+        <div class="card-body">
+            <img class="" src="../media/{{ place.picture }}">
+            <h5 class="card-title">{{ place.name }}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">{{ place.type }}</h6>
+            <p class="card-text">{{ place.description }}</p>
+            <ul class="list-group list-group-flush">
+                 <li>
+                    {% fontawesome_icon 'map-marker' %}
+                    {{ place.address }}
+                </li>
+            </ul>
+            <a class="card-link" href="{% url 'place_detail' place.id place.slug %}">
+            More ...</a>
         </div>
-        <ul class="list-group extra">
-            <li>
-                {% fontawesome_icon 'map-marker' %}
-                {{ place.address }}
-            </li>
-        </ul>
-    </div>
-    <div class="extra">
-    
-            <a class="ui button floated right" href="{% url 'place_detail' place.id place.slug %}">
-               More ...</a>
-       
-    </div>
-</div>
+      </div>
+
 {% endblock %}

@@ -1,46 +1,56 @@
 
 
+
 {% load staticfiles %}
 {% load fontawesome %}
-{% load avatar_tags %} 
+{% load avatar_tags %}
 
 {% block list %}
 
+<!-- a user card -->
 
+<div class="card border-dark">
 
-<div class="ui bordered primary-background sticky {{class}}">
-
-        <div class="image ui centered
-        {% if class == 'item' %} avatar {% endif %}
-        ">{% avatar user %}</div>
-        
-    <div class="content text_align left">
-         
-                <h3 class="header">{{ user.first_name|capfirst }}{{ user.last_name|capfirst}}</h3>
-                 
-                <div class="extra-content description">
-                        <ul class="list-group">
-                       
-                            <li>{% fontawesome_icon 'certificate'%} 
-                                {% if user.is_staff %}
-                                Volonteer
-                                {% else %}
-                                Member
-                                {% endif %}
-                                     </li>
-                            <li>{% fontawesome_icon 'clock-o' %} {{ user.date_joined}}</li>
-                            <li>{% fontawesome_icon 'envelope-o' %}{{ user.email }}</li>
-                        </ul>
-                </div> 
-           
+    <div class="card-header">
+                {% if user.is_staff %}
+                Volonteer
+                {% else %}
+                Member
+                {% endif %}
     </div>
 
-    {% if request.user.is_authenticated and request.user.is_staff %}
-    <button class="ui basic validate button right">
-        <a href="{% url 'user_profile' %}"> {% fontawesome_icon 'info' %} details </a>
-          </button>
-    {% endif %}      
-</div>
-     
+    <div class="card-img-top {% if class == 'item' %} avatar {% endif %}">{% avatar user %}</div>
 
-{% endblock %}
+    <div class="card-body">
+          <h5 class="card-title">{{ user.first_name|capfirst }}{{ user.last_name|capfirst}}</h5>
+          <p class="card-text">Le meilleur réparateur de tous les temps</p>
+          
+          <!-- about -->
+
+           <ul class="list-group list-group-flush">
+
+                <li class="list-group-item d-flex justify-content-between align-items-left">
+                    <small>{% fontawesome_icon 'clock-o' %} {{ user.date_joined}}</small>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-left">
+                    <small>{% fontawesome_icon 'envelope-o' %}{{ user.email }}</small>
+                </li>
+
+            </ul>
+
+        <!-- delete if request user is organizer -->
+
+        {% if request.user.is_authenticated and request.user.is_staff %}
+            <a href="#" class="card-link">Supprimer</a>
+            {% fontawesome_icon 'trash' large=True %}
+        {% endif %}
+
+         <!-- link to user profil (to do) -->
+       
+            <a class="card-link" href="{% url 'user_profile' %}"> {% fontawesome_icon 'info' %} details </a>  
+       
+    </div>
+
+</div>
+
+{% endblock list %}

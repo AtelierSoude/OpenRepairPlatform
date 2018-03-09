@@ -5,75 +5,68 @@
 {% load avatar_tags %}
 
 {% block list %}
-        <div class="ui bordered celled {{class}}">
-           
-                <div class="content">
-                    <img class="ui image centered
-                    {% if class == 'item' %} avatar {% endif %}"
-                    src="http://www.rue89lyon.fr/wp-content/uploads/2016/04/atelier-soude-8-514x342.jpg">
-                    <h3 class="header">{{ event.title }}</h3>
-                    <span class="meta">{{ event.type }}</span>
-                    <ul class="list-group">
-                        <li>{% fontawesome_icon 'clock-o' %} {{ event.starts_at }}</li>
-                        <li>{% fontawesome_icon 'user-plus' %}
-                            {% if event.available_seats == 0 %}
-                                <span class="error">No more places</span>
-                            {% else %}
-                                {{ event.available_seats }} places
-                            {% endif %}
-                        </li>
-                        <li>
-                            {% fontawesome_icon 'map-marker' %}
-                            <a href="{% url 'place_detail' event.location.id event.location.slug %}">
-                                
-                                {{ event.location|truncatechars:35 }}
-                            
-                            </a>
-                        </li>
-                    </ul>
 
-                    {% if request.user.is_authenticated and event in my_events_organizing %}
-                        <button class="ui button negative basic rounded pure-button button-error primary-background button-appear">
-                        {% fontawesome_icon 'trash' large=True %}
+<!-- a event card -->
 
-                    {% endif %}
-                    </button>
-
-                   
-
-
-                    <div class="ui labeled button basic" tabindex="0">
-                        <div class="ui basic button">
-                        <a href="{% url 'event_detail' event.id event.slug %}">
-                                {% if event in my_events_attending %}
-                                {% fontawesome_icon 'delete' %}
-                                Cancel
-                                    {% else %}
-                                    {% if event.available_seats <= 0 %}
-                                    {% fontawesome_icon 'list-ol' %}
-                                    call wait
-                                    {% else %}
-                                    {% fontawesome_icon 'ticket' %}
-                                    book now
-                                    {% endif %}
-                                {% endif %}
-                        </a>
-
-                        </div>
-                        <a class="ui secondary left pointing label" 
-                        href="{% url 'event_detail' event.id event.slug %}">
-                                {{ event.available_seats }} 
-                                {% if event.available_seats <= 0 %}
-                                waiters
-                                {% else %}
-                                seats
-                                {% endif %}
-                        </a>
-                      </div>
-
-
-
-                </div>
+<div class="card border-dark">
+        <div class="card-header">{{event.type}}</div>
+        <img class="card-img-top" src="http://www.rue89lyon.fr/wp-content/uploads/2016/04/atelier-soude-8-514x342.jpg" alt="">
+        <div class="card-body">
+          <h5 class="card-title">{{event.title}}</h5>
+          <p class="card-text">atelier de réparation avec Gérard</p>
           
-        </div>
+          <!-- about -->
+
+           <ul class="list-group list-group-flush">
+
+                <li class="list-group-item d-flex justify-content-between align-items-left">
+                    <small>{% fontawesome_icon 'clock-o' %} {{ event.starts_at }}</small>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-left">
+                    {% fontawesome_icon 'user-plus' %}
+                    <small>Places</small>
+                    {% if event.available_seats == 0 %}
+                            <span class="badge badge-warning badge-pill">0</span>
+                    {% else %}
+                            <span class="badge badge-primary badge-pill">{{ event.available_seats }}</span>
+                    {% endif %}
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-left">
+                    {% fontawesome_icon 'map-marker' %}
+                    <a href="{% url 'place_detail' event.location.id event.location.slug %}">
+                        <small>{{ event.location|truncatechars:35 }}</small>
+                    </a>
+                </li>
+
+            </ul>
+
+        <!-- book -->
+
+            <a href="{% url 'event_detail' event.id event.slug %}" class="card-link">
+                    {% if event in my_events_attending %}
+                    {% fontawesome_icon 'delete' %}
+                    Annuler la réservation
+                        {% else %}
+                        {% if event.available_seats <= 0 %}
+                        {% fontawesome_icon 'list-ol' %}
+                        Liste d'attente
+                        {% else %}
+                        {% fontawesome_icon 'ticket' %}
+                        Réserver
+                        {% endif %}
+                    {% endif %}
+            </a>
+        
+        <!-- delete if user is organizer -->
+
+        {% if request.user.is_authenticated and event in my_events_organizing %}
+            <a href="#" class="card-link">Supprimer</a>
+            {% fontawesome_icon 'trash' large=True %}
+        {% endif %}
+        
+        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+</div>
+
+</div>
+
 {% endblock list %}

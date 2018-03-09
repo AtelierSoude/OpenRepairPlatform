@@ -6,13 +6,13 @@
 
 
 {% block context %}
-    {% include "plateformeweb/place.html" with class="card" %}
+    {% include "plateformeweb/place.html" %}
 {% endblock context %} 
 
 {% block detail %}
       <h3> Event takes place in : {{ place.event_set.all.count }} </h3>
 {% for event in place.event_set.all %}
-    {% include "plateformeweb/event.html" with class="item" %}
+    {% include "plateformeweb/event.html" %}
 {% endfor %}
 {% endblock detail %}
       

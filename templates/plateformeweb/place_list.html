@@ -24,9 +24,9 @@
 
 
 {% block list %}
-<section class="secondary-background row ui items stackable middle aligned divided ">
+<section class="row">
     {% for place in object_list %}
-    {% include "plateformeweb/place.html" with class="item" %}
+    {% include "plateformeweb/place.html" %}
     {% empty %}
     <div>No places yet.</div>    
   

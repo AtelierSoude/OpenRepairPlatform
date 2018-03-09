@@ -7,69 +7,76 @@
 {% load avatar_tags %}
 
 
+<!-- who is -->
 {% block context %}
-{% include "users/user.html" with class="card" %}
+
+<div class="col container">
+
+    <div class="row">
+    {% include "users/user.html" %}
+    </div>
+
+    <form method="POST" class="row pure-u form" action="">
+            <fieldset>
+                {% csrf_token %}
+                {% if user_form.errors %}
+                    <p class="error">Please correct the error(s) below:</p>
+                    {#{{ user_form.errors }}#}
+                {% endif %}
+        
+            
+                    {% for field in user_form %}
+
+                        <div class=" group">
+                            {% if field.help_text %}
+                                <span class="pure-form-message-inline">{{ field.help_text|safe }}</span>
+                            {% endif %}
+                            {{ field }} {{ field.errors }}
+                            <label>{{ field.label }}</label>
+                        </div>
+
+                    {% endfor %}
+
+        
+                    {# TODO: avatar handling needs to go in a modal and refresh the page when closed #}
+                    {% avatar user %}
+                    <a href="javascript:window.open('{% url 'avatar_change' %}','_blank','titlebar=no,status=no,menubar=no,location=no,height=500,width=400,left=200,top=200')">Change
+                        your avatar</a>
+                    <a href="javascript:window.open('{% url 'avatar_delete' %}','_blank','titlebar=no,status=no,menubar=no,location=no,height=500,width=400,left=200,top=200')">Delete
+                        your avatar</a>
+
+                
+                <div class="pure-controls pure-u-1 button-xlarge">
+                    <button type="submit" class="pure-button pure-button-primary"
+                            name="action">Save
+                    </button>
+                </div>
+            </fieldset>
+        </form>
+
+</div>
+
 {% endblock context %} 
 
-{% block tabs %}
-<div class="active item"><a href="#tab1">Participations</a></div>
-<div class="item"><a href="#tab2">Informations</a></div>
-<div class="item"><a href="#tab3">Reparations</a></div>
-{% endblock tabs %}
-
+<!-- details about -->
 {% block detail %}
 
+<section class="col-lg container">
 
-<section class="ui row gutter grid bordered items divided list" id="tab1">
-    <h3> Events that I organize </h3>
+    <h3 class="row"> Events that I organize </h3>
 {% for event in my_events_organizing %}
- {% include "plateformeweb/event.html" with class="item" %}
+ {% include "plateformeweb/event.html" %}
 {% endfor %}
 
-    <h3> Events that I've book </h3>
+    <h3 class="row"> Events that I've book </h3>
     {% for event in my_events_attending %}
-    {% include "plateformeweb/event.html" with class="item" %}
+    {% include "plateformeweb/event.html" %}
     {% endfor %}
 
 </section>
 
-        <form method="POST" class="pure-form form" action="" id="tab2">
-                <fieldset>
-                    {% csrf_token %}
-                    {% if user_form.errors %}
-                        <p class="error">Please correct the error(s) below:</p>
-                        {#{{ user_form.errors }}#}
-                    {% endif %}
-            
-                
-                        {% for field in user_form %}
-    
-                            <div class=" group">
-                                {% if field.help_text %}
-                                    <span class="pure-form-message-inline">{{ field.help_text|safe }}</span>
-                                {% endif %}
-                                {{ field }} {{ field.errors }}
-                                <label>{{ field.label }}</label>
-                            </div>
-    
-                        {% endfor %}
-    
-            
-                        {# TODO: avatar handling needs to go in a modal and refresh the page when closed #}
-                        {% avatar user %}
-                        <a href="javascript:window.open('{% url 'avatar_change' %}','_blank','titlebar=no,status=no,menubar=no,location=no,height=500,width=400,left=200,top=200')">Change
-                            your avatar</a>
-                        <a href="javascript:window.open('{% url 'avatar_delete' %}','_blank','titlebar=no,status=no,menubar=no,location=no,height=500,width=400,left=200,top=200')">Delete
-                            your avatar</a>
-    
-                    
-                    <div class="pure-controls pure-u-1 button-xlarge">
-                        <button type="submit" class="pure-button pure-button-primary"
-                                name="action">Save
-                        </button>
-                    </div>
-                </fieldset>
-            </form>
+<!-- form for changing my informations --> 
 
+      
 {% endblock detail %}
       

@@ -18,7 +18,9 @@
     {#    <link rel="stylesheet" href="{% static "css/normalize.css" %}">#}
     {#    <link rel="stylesheet" href="{% static "css/skeleton.css" %}">#}
 
-    <link rel="stylesheet" href="{% static "npm/purecss/build/pure-min.css" %}">
+    {# <link rel="stylesheet" href="{% static "npm/purecss/build/pure-min.css" %}"> #}
+
+
     <!--[if lte IE 8]>
         <link rel="stylesheet" href={% static "npm/purecss/build/grids-responsive-old-ie-min.css" %}>
     <![endif]-->
@@ -27,6 +29,13 @@
           href={% static "npm/purecss/build/grids-responsive-min.css" %}>
     <!--<![endif]-->
     <!-- Favicon –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+
+
+    <!-- boostrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+     integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" 
+     crossorigin="anonymous">
+
 
     <!-- Fontawesome –––––––––––––––––––––––––––––––––––––––––––––––––– -->
     {% fontawesome_stylesheet %}
@@ -46,7 +55,8 @@
        src="https://code.jquery.com/jquery-3.1.1.min.js"
        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
        crossorigin="anonymous"></script>
-     <script src="{% static "npm/semantic-ui/dist/semantic.min.js" %}"></script>          
+       {#   <script src="{% static "npm/semantic-ui/dist/semantic.min.js" %}"></script>   #}   
+
 
      
 {#    <link rel="stylesheet"#}
@@ -58,7 +68,7 @@
 {#            crossorigin="anonymous"></script>#}
 
     <!-- keep last -->
-    <link rel="stylesheet" href="{% static "css/ateliersoude.css" %}">
+    {#   <link rel="stylesheet" href="{% static "css/ateliersoude.css" %}"> #}
 
     {% if user_form %}{{ user_form.media }}{% endif %}
     {% if form %}{{ form.media }}{% endif %}
@@ -67,63 +77,80 @@
 
 
 </head>
-<body>
+<body class="container col-lg">
+    <div class="row">
+    
+        <header class="col-sm-1 bg-dark">
 
-<header>
+            <nav class="nav-side-menu">
+                    
+                            <!-- Logo --> 
+                    <div class="brand">
+                            <a href="{% url "homepage" %}"><img class="logo"
+                            src="{% static 'img/logo_ateliersoude.svg' %}">
+                            </a>
+                    </div>
 
+                        <!-- Menu --> 
+                
+                        <ul class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">
+                            <li class="nav-item">
+                                <a href="{% url "homepage" %}">
+                                {% fontawesome_icon 'home' %}Home
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url "event_list" %}">
+                                {% fontawesome_icon 'calendar-o' large=True %}Calendar
+                                </a>
+                            <li class="nav-item"> 
+                                <a href="{% url "place_list" %}">
+                                {% fontawesome_icon 'home' large=True %}Places 
+                                </a>
+                            <li class="nav-item">
+                                <a href="{% url "user_list" %}">
+                                {% fontawesome_icon 'users' large=True %}Users
+                                </a>
+                            </li>
+                        </ul>
+                
+                            <!-- User --> 
 
-<nav class="ui top fixed menu inverted stackable labeled-icon principal-menu" >
-        
-    {#  logo #}
-        <div>
-                <a href="{% url "homepage" %}"><img class="logo pure-img"
-                 src="{% static 'img/logo_ateliersoude.svg' %}">
-                 </a>
-        </div>
-    {# menu #}
-                <a href="{% url "homepage" %}" class="item">
-                        {% fontawesome_icon 'home' %}Home
-                </a>
-                <a class="item" onclick="$('#navbar').sidebar('toggle').sidebar('setting', 'transition', 'overlay');">
-                        {% fontawesome_icon 'users' %}Involve
-                 </a>
-                {% if user.is_authenticated %}
-                <a href="{% url "user_profile" %}" class="item right">
-                     {{ user.first_name }}
-                   <div class="avatar ui image"> {% avatar user %} </div> 
-                   
-                </a>
-                {% else %}
-                <a href="{% url "login" %}" class="item">  
-                        {% fontawesome_icon 'login' %} Login
-                </a>
-                {% endif %}
-                {% if user.is_authenticated %}
-         <div style="position: fixed;top: 1%;right: 1%; z-index: 1">
-        <a href="{% url 'logout' %}"
-           title="Logout">{% fontawesome_icon 'sign-out' color='grey' large=True %}</a>
+                            {% if user.is_authenticated %}
+
+                            <a href="{% url "user_profile" %}" class="right">
+                            {{ user.first_name }}
+                            <div class=""> {% avatar user %}</div> 
+                            </a>
+
+                            {% else %}
+                            <a href="{% url "login" %}">  
+                            {% fontawesome_icon 'login' %} Login
+                            </a>
+
+                            {% endif %}
+
+                            <!-- logOut --> 
+
+                            {% if user.is_authenticated %}
+                            <div style="position: fixed;top: 1%;right: 1%; z-index: 1">
+                                <a href="{% url 'logout' %}" title="Logout">
+                                    {% fontawesome_icon 'sign-out' color='grey' large=True %}
+                                </a>
+                            </div>
+                            {% endif %}
+
+            </nav>
+
+        </header>
+
+        <wrapper class="container col-lg col-sm">
+        {% block content %}
+        {% endblock %}
+        </wrapper>
+
     </div>
-{% endif %}
 
-</nav>
-
-<div class="ui left vertical inverted sidebar labeled icon menu" id="navbar">
-        <a href="{% url "event_list" %}" class="item">
-                {% fontawesome_icon 'calendar-o' large=True %}Calendar
-        </a>
-        <a href="{% url "place_list" %}" class="item">
-            {% fontawesome_icon 'home' large=True %}Places 
-        </a>
-        <a href="{% url "user_list" %}" class="item">
-                {% fontawesome_icon 'users' large=True %}Users
-         </a>
-      </div>
-
-      
-</header>
-
-<wrapper class="pure-u-1 pure-g">
-{% block content %}{% endblock %}
-</wrapper>
 </body>
+
 </html>

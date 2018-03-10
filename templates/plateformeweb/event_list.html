@@ -22,7 +22,7 @@
 {% endblock statistics %}
 
 {% block list %}
-<section class="card-group row">
+<section class="row">
 
 {% for event in object_list %}
 {% ifchanged %}<h2>{{ event.starts_at|date:"F" }}</h2>{% endifchanged %}

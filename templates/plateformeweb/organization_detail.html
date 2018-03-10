@@ -1,4 +1,39 @@
-{% extends 'base.html' %}
-{% block content %}
+{% extends 'detail_view.html' %}
 
-{% endblock %}
+{% load staticfiles %}
+{% load fontawesome %}
+{% load avatar_tags %}
+
+
+{% block context %}
+{{ organization.name }}
+{{ organization.owner }}
+{% endblock context %} 
+
+{% block detail %}
+
+<section class="col-lg">
+        <h3 class="row"> Nombre adhérents : {{ organization.organizationperson_set.all.count }} </h3>
+{% for organizationperson in organization.organizationperson_set.all %}
+    {% with user=organizationperson.user %}
+        {% include "users/user.html" %}
+    {% endwith %}
+{% endfor %}
+</section>
+
+<section class="col-lg-2">
+    <h3 class="row">Lieux</h3>
+{% for place in organization.place_set.all %}
+    {% include "plateformeweb/place.html" %}
+{% endfor %}
+</section>
+
+
+<section class="col-lg">
+        <h3 class="row"> Event takes place in : {{ organization.event_set.all.count }} </h3>
+{% for event in organization.event_set.all %}
+    {% include "plateformeweb/event.html" %}
+{% endfor %}
+</section>
+{% endblock detail %}
+      

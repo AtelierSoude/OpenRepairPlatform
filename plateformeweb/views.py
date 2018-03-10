@@ -18,6 +18,7 @@ def homepage(request):
     return render(request, 'plateformeweb/home.html', context)
 
 
+
 # TODO move all this in separate apps?
 
 class OrganizationView(DetailView):
@@ -26,7 +27,7 @@ class OrganizationView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
-
+        
 
 class OrganizationListView(ListView):
     model = Organization

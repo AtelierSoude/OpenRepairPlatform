@@ -21,7 +21,7 @@
     {% if user.is_authenticated %}
         <div class="">
 
-             <div class="card-group row"> 
+             <div class="row"> 
                 {% for event in my_last_event_attending %}
                     <h3>Ma prochaine réservation</h3>
                     {% include "plateformeweb/event.html" %}
@@ -71,7 +71,7 @@
 
     <h1> Prochaines dates </h1>
 
-        <section class="row card-group">
+        <section class="row">
         
             {% for event in last_events %}
                 {% include "plateformeweb/event.html" %}

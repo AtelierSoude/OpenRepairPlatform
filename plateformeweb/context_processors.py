@@ -1,6 +1,6 @@
 from django.contrib.auth.models import AnonymousUser
 from django.utils.timezone import now
-from plateformeweb.models import Event, PublishedEvent, Place
+from plateformeweb.models import Event, PublishedEvent, Place, Organization, OrganizationPerson
 from users.models import CustomUser
 
 
@@ -51,3 +51,7 @@ def last_events(request):
     events = PublishedEvent.objects.all().filter(
         starts_at__gte=now()).order_by('starts_at')[:4]
     return {'last_events': events}
+
+def user_in_organization(request):
+    users = OrganizationPerson.objects.all()
+    return {'user_in_organization' : users}

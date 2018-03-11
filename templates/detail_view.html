@@ -15,10 +15,10 @@
 
 {% block content %}
 {% render_breadcrumbs %}
-<div class="row">  
+<div class="rcontainer">  
 
     <!-- what is about -->
-        <div class="col-sm col-lg-3 card">
+        <div class="col-sm col-lg-3">
         {% block context %}
         {% endblock context %}
         </div>   
@@ -26,10 +26,10 @@
     <div class="col-sm col-lg">
 
     <!-- details about -->
-            <section class="col-lg row" id="detail">
+     <section class="col-lg row" id="detail">
             {% block detail %}
             {% endblock detail %}
-            </section>
+        </section>
 
     </div>
 

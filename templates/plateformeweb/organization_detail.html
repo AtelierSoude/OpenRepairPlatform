@@ -11,7 +11,6 @@
 {% endwith %}
 {% endblock %}
 
-<div class="col">
 
 {% block context %}
     {% include "plateformeweb/organization.html" %}
@@ -21,18 +20,18 @@
 
 
 <section class="col-lg">
+        <h3 class="row">Lieux</h3>
+    {% for place in organization.place_set.all %}
+        {% include "plateformeweb/place.html" %}
+    {% endfor %}
+    </section>
+
+<section class="col-lg">
         <h3 class="row"> Nombre adhérents : {{ organization.organizationperson_set.all.count }} </h3>
 {% for organizationperson in organization.organizationperson_set.all %}
     {% with user=organizationperson.user %}
         {% include "users/user.html" %}
     {% endwith %}
-{% endfor %}
-</section>
-
-<section class="col-lg">
-    <h3 class="row">Lieux</h3>
-{% for place in organization.place_set.all %}
-    {% include "plateformeweb/place.html" %}
 {% endfor %}
 </section>
 

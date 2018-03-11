@@ -140,10 +140,14 @@
                             <!-- logOut --> 
 
                             {% if user.is_authenticated %}
-                            <div style="position: fixed;top: 1%;right: 1%; z-index: 1">
-                                <a href="{% url 'logout' %}" title="Logout">
-                                    {% fontawesome_icon 'sign-out' color='grey' large=True %}
-                                </a>
+                            <div class="text-white bg-dark" style="right: 1%; top:1%; position:fixed; z-index: 1; width:100px; height:100px">
+                                <a style="line-height:50px;" href="{% url 'event_create' %}" title="create event">
+                                        {% fontawesome_icon 'calendar-o' color='white' large=True %}
+                                        ajouter
+                                    </a>
+                                    <a href="{% url 'logout' %}" title="Logout">
+                                            {% fontawesome_icon 'sign-out' color='grey' large=True %}
+                                        </a>
                             </div>
                             {% endif %}
 
@@ -151,7 +155,7 @@
 
         </header>
 
-        <wrapper class="container col-lg col-sm">
+        <wrapper class="container col-lg col-sm bg-light">
         
 
                 {% block breadcrumbs %}

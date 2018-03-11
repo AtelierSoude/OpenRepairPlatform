@@ -14,7 +14,6 @@
 
 {% block title %} {{ block.super }} Events {% endblock title %}
 
-
 {% block statistics %}
 
   {% with first_value=event_list.all.count first_label='events' second_value=event_list.all.attendees.count second_label='participations' third_value=event_list.type.all.count third_label='types' %}
@@ -24,6 +23,8 @@
 {% endblock statistics %}
 
 {% block list %}
+
+
 <section class="row">
 
 {% for event in object_list %}

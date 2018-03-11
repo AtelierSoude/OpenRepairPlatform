@@ -1,5 +1,19 @@
 
-{% block content %}
+{% extends 'form_view.html' %}
+
+{% load staticfiles %}
+{% load fontawesome %}
+{% load avatar_tags %}
+{% load django_bootstrap_breadcrumbs %}
+
+
+{% block breadcrumbs %}
+{% with type="event" list_view="event_list" view="event_create" %}
+    {{ block.super }}
+{% endwith %}
+{% endblock %}
+
+{% block form %}
 
     <h1>Create event</h1>
 

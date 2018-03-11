@@ -3,7 +3,13 @@
 {% load staticfiles %}
 {% load fontawesome %}
 {% load avatar_tags %}
+{% load django_bootstrap_breadcrumbs %}
 
+{% block breadcrumbs %}
+{% with type="places" list_view="place_list" detail_name=place.name %}
+   {{ block.super }}
+{% endwith %}
+{% endblock %}
 
 {% block context %}
     {% include "plateformeweb/place.html" %}

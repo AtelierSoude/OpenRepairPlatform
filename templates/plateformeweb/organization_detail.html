@@ -3,14 +3,22 @@
 {% load staticfiles %}
 {% load fontawesome %}
 {% load avatar_tags %}
+{% load django_bootstrap_breadcrumbs %}
 
+{% block breadcrumbs %}
+{% with type="organisations" list_view="organization_list" detail_name=organization.name %}
+   {{ block.super }}
+{% endwith %}
+{% endblock %}
+
+<div class="col">
 
 {% block context %}
-{{ organization.name }}
-{{ organization.owner }}
+    {% include "plateformeweb/organization.html" %}
 {% endblock context %} 
 
 {% block detail %}
+
 
 <section class="col-lg">
         <h3 class="row"> Nombre adhérents : {{ organization.organizationperson_set.all.count }} </h3>
@@ -21,7 +29,7 @@
 {% endfor %}
 </section>
 
-<section class="col-lg-2">
+<section class="col-lg">
     <h3 class="row">Lieux</h3>
 {% for place in organization.place_set.all %}
     {% include "plateformeweb/place.html" %}
@@ -35,5 +43,6 @@
     {% include "plateformeweb/event.html" %}
 {% endfor %}
 </section>
+
 {% endblock detail %}
-      
+

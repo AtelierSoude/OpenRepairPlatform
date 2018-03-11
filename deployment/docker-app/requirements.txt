@@ -52,3 +52,5 @@ django-autoslug
 git+https://github.com/beda-software/django-datetimepicker.git
 # django-rules
 rules
+# breakcumbs 
+django_bootstrap_breadcrumbs

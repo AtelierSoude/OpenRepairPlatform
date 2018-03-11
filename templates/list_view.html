@@ -3,21 +3,19 @@
 {% load staticfiles %}
 {% load fontawesome %}
 {% load avatar_tags %}
+{% load django_bootstrap_breadcrumbs %}
+
+{% block breadcrumbs %}
+{{block.super}}
+{% breadcrumb type view %}
+{% endblock %}
 
 {% block content %}
 
     <section class="container">
 
         <!-- breadcrumb -->
-
-        <nav aria-label="breadcrumb row">
-                    <ol class="breadcrumb">
-                      <li class="breadcrumb-item"><a href="../">Home</a></li>
-                      <li class="breadcrumb-item active" aria-current="page">
-                          {% block breadcrumbs %}{% endblock breadcrumbs %}
-                      </li>
-                    </ol>
-        </nav>
+        {{ block.super }}
 
         <div class="row">
             <h1 class="">{% block title %} {% endblock %}</h1>
@@ -60,6 +58,7 @@
 
 
     {% block list %}
+
     {% endblock %}
 
 {% endblock %}

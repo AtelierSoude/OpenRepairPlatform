@@ -3,26 +3,22 @@
 {% load staticfiles %}
 {% load fontawesome %}
 {% load avatar_tags %}
-
-{% block content %}
+{% load django_bootstrap_breadcrumbs %}
 
     <!-- breadcrumb -->
-
-<nav aria-label="breadcrumb row">
-            <ol class="breadcrumb">
-              <li class="breadcrumb-item"><a href="../../../">Home</a></li>
-              <li class="breadcrumb-item"><a href="../../">List </a></li>
-              <li class="breadcrumb-item active" aria-current="page">
-                  {% block breadcrumbs %}{% endblock breadcrumbs %}
-              </li>
-            </ol>
-</nav>
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb type list_view %}
+    {% breadcrumb detail_name detail_view %}
+{% endblock %}
 
 
+{% block content %}
+{% render_breadcrumbs %}
 <div class="row">  
 
     <!-- what is about -->
-        <div class="col-sm col-lg-3">
+        <div class="col-sm col-lg-3 card">
         {% block context %}
         {% endblock context %}
         </div>   

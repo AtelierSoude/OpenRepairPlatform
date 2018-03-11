@@ -1,6 +1,8 @@
 {% load staticfiles %}
 {% load fontawesome %}
 {% load avatar_tags %}
+{% load django_bootstrap_breadcrumbs %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,7 +20,7 @@
     {#    <link rel="stylesheet" href="{% static "css/normalize.css" %}">#}
     {#    <link rel="stylesheet" href="{% static "css/skeleton.css" %}">#}
 
-    {# <link rel="stylesheet" href="{% static "npm/purecss/build/pure-min.css" %}"> #}
+   {# <link rel="stylesheet" href="{% static "npm/purecss/build/pure-min.css" %}"> #}
 
 
     <!--[if lte IE 8]>
@@ -68,7 +70,7 @@
 {#            crossorigin="anonymous"></script>#}
 
     <!-- keep last -->
-    {#   <link rel="stylesheet" href="{% static "css/ateliersoude.css" %}"> #}
+    {#        <link rel="stylesheet" href="{% static "css/ateliersoude.css" %}"> #}
 
     {% if user_form %}{{ user_form.media }}{% endif %}
     {% if form %}{{ form.media }}{% endif %}
@@ -112,6 +114,11 @@
                                 {% fontawesome_icon 'users' large=True %}Users
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a href="{% url "organization_list" %}">
+                                {% fontawesome_icon 'screen' large=True %}Organisations
+                                </a>
+                                </li>
                         </ul>
                 
                             <!-- User --> 
@@ -145,7 +152,16 @@
         </header>
 
         <wrapper class="container col-lg col-sm">
+        
+
+                {% block breadcrumbs %}
+                    {% clear_breadcrumbs %}
+                    {% breadcrumb "Home" "/" %}
+                {% endblock %}
+                
+
         {% block content %}
+        {% render_breadcrumbs %}
         {% endblock %}
         </wrapper>
 

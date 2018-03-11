@@ -1,0 +1,22 @@
+{% load staticfiles %}
+{% load fontawesome %}
+{% load avatar_tags %}
+
+
+{% block list %}
+
+<div class="card">
+            <h5 class="card-title card-header">{{ organization.name }}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">{{ organization.is_active }}</h6>
+        <div class="card-body">
+            <ul class="list-group list-group-flush">
+                    <li>{{ organization.organizationperson_set.all.count }} participants </li> 
+                    <li>{{ organization.event_set.all.count }} évènements </li> 
+                    <li>{{ organization.place_set.all.count }} lieux </li> 
+            </ul>
+            <a class="card-link" href="{% url 'organization_detail' organization.id organization.slug %}">
+            More ...</a>
+        </div>
+      </div>
+
+{% endblock %}

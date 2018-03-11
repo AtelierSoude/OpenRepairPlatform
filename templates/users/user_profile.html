@@ -27,7 +27,7 @@
             
                     {% for field in user_form %}
 
-                        <div class=" group">
+                        <div class="group">
                             {% if field.help_text %}
                                 <span class="pure-form-message-inline">{{ field.help_text|safe }}</span>
                             {% endif %}
@@ -75,8 +75,45 @@
 
 </section>
 
-<!-- form for changing my informations --> 
+        <form method="POST" class="pure-form form" action="" id="tab2">
+                <fieldset>
+                    {% csrf_token %}
+                    {% if user_form.errors %}
+                        <p class="error">Please correct the error(s) below:</p>
+                        {#{{ user_form.errors }}#}
+                    {% endif %}
+            
+    
 
-      
+
+                        {% for field in user_form %}
+    
+                            <div class=" group">
+                                {% if field.help_text %}
+                                    <span class="pure-form-message-inline">{{ field.help_text|safe }}</span>
+                                {% endif %}
+                                {{ field }} {{ field.errors }}
+                                <label>{{ field.label }}</label>
+                            </div>
+    
+                        {% endfor %}
+    
+            
+                        {# TODO: avatar handling needs to go in a modal and refresh the page when closed #}
+                        {% avatar user %}
+                        <a href="javascript:window.open('{% url 'avatar_change' %}','_blank','titlebar=no,status=no,menubar=no,location=no,height=500,width=400,left=200,top=200')">Change
+                            your avatar</a>
+                        <a href="javascript:window.open('{% url 'avatar_delete' %}','_blank','titlebar=no,status=no,menubar=no,location=no,height=500,width=400,left=200,top=200')">Delete
+                            your avatar</a>
+    
+                    
+                    <div class="pure-controls pure-u-1 button-xlarge">
+                        <button type="submit" class="pure-button pure-button-primary"
+                                name="action">Save
+                        </button>
+                    </div>
+                </fieldset>
+            </form>
+
 {% endblock detail %}
       

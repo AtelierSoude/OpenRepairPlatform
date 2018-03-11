@@ -4,7 +4,13 @@
 {% load fontawesome %}
 {% load avatar_tags %}
 
-{% block breadcrumbs %} {{ block.super }} {{ event.title }} {% endblock breadcrumbs %}
+{% load django_bootstrap_breadcrumbs %}
+
+{% block breadcrumbs %}
+{% with type="events" list_view="event_list" detail_name=event.title %}
+   {{ block.super }}
+{% endwith %}
+{% endblock %}
 
 {% block context %}
     {% include "plateformeweb/event.html" with class="card" %}

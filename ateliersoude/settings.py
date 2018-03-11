@@ -72,6 +72,7 @@ INSTALLED_APPS = [
     'address',
     'avatar',
     'crispy_forms',
+    'django_bootstrap_breadcrumbs',
 ]
 
 MIDDLEWARE = [

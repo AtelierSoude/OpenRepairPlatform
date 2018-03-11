@@ -3,13 +3,15 @@
 {% load staticfiles %}
 {% load fontawesome %}
 {% load avatar_tags %}
+{% load django_bootstrap_breadcrumbs %}
 
-{% block add %} 
-{% include "plateformeweb/event_form.html" %}
 
-{% endblock add %}
+{% block breadcrumbs %}
+{% with type="events" view="event_list" %}
+    {{ block.super }}
+{% endwith %}
+{% endblock %}
 
-{% block breadcrumbs %} {{ block.super }} Events {% endblock breadcrumbs %}
 {% block title %} {{ block.super }} Events {% endblock title %}
 
 

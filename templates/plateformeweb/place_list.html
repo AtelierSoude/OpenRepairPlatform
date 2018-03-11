@@ -3,18 +3,19 @@
 {% load staticfiles %}
 {% load fontawesome %}
 {% load avatar_tags %}
+{% load django_bootstrap_breadcrumbs %}
+
+{% block breadcrumbs %}
+{% with type="place" view="place_list" %}
+    {{ block.super }}
+{% endwith %}
+{% endblock %}
 
 
-{% block add %} 
-{{ block.super }}  
-{% endblock add %}
-
-{% block breadcrumbs %} {{ block.super }} Places {% endblock breadcrumbs %}
 {% block title %} {{ block.super }} Places {% endblock title %}
 
 
 {% block statistics %}
-
 
   {% with first_value=place_list.all.count first_label='places' second_value='' second_label='events' third_value='' third_label='?' %}
   {{block.super}}

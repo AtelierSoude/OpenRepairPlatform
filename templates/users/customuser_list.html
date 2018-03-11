@@ -4,8 +4,16 @@
 {% load staticfiles %}
 {% load fontawesome %}
 {% load avatar_tags %}
+{% load django_bootstrap_breadcrumbs %}
 
-{% block breadcrumbs %} {{ block.super }} Users {% endblock breadcrumbs %}
+{% block breadcrumbs %}
+{% with type="utilisateurs" view="user_list" %}
+    {{ block.super }}
+{% endwith %}
+{% endblock %}
+
+
+
 {% block title %} {{ block.super }} Users {% endblock title %}
 
 

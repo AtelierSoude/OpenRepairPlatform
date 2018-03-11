@@ -1,13 +1,41 @@
+
 {% extends 'list_view.html' %}
 
+{% load staticfiles %}
+{% load fontawesome %}
+{% load avatar_tags %}
+{% load django_bootstrap_breadcrumbs %}
+
+{% block breadcrumbs %}
+{% with type="organisations" view="organization_list" %}
+    {{ block.super }}
+{% endwith %}
+{% endblock %}
+
+
+{% block title %} {{ block.super }} organisations {% endblock title %}
+
+
+{% block statistics %}
+
+  {% with first_value=organization_list.all.count first_label='organisations' second_value='' second_label='events' third_value='' third_label='?' %}
+  {{block.super}}
+  {% endwith %}
+
+{% endblock statistics %}
+
+
 {% block list %}
+<section class="row">
     {% for organization in object_list %}
-        <li>
-            <ul>
-                <li>{{ organization.name }}</li>
-                <li>{{ organization.is_active }}</li>
-            </ul>
-            {% empty %}
-        <li>No organizations yet.</li>
-    {% endfor %}
+    {% include "plateformeweb/organization.html" %}
+    {% empty %}
+    <div>No organizations yet.</div>    
+  
+  {% endfor %}
+  </section>
 {% endblock list %}
+
+
+
+ 

@@ -20,6 +20,12 @@
            <ul class="list-group list-group-flush">
 
                 <li class="list-group-item d-flex justify-content-between align-items-left">
+                        <a href="{% url 'organization_detail' event.organization.id event.organization.slug %}">
+                        <small>à {{ event.organization }}</small>
+                    </a></small>
+                    </li>
+
+                <li class="list-group-item d-flex justify-content-between align-items-left">
                     <small>{% fontawesome_icon 'clock-o' %} {{ event.starts_at }}</small>
                 </li>
                 <li class="list-group-item d-flex justify-content-between align-items-left">

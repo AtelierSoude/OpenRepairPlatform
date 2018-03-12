@@ -18,21 +18,21 @@
 
 
 {% block detail %}
-<section class="col-lg container">
+<section class="">
 
-    <h3 class="row"> Organizers :  {{ event.organizers.all.count }} </h3>
+    <h3 class=""> Organizers :  {{ event.organizers.all.count }} </h3>
 
         {% for user in event.organizers.all %}
             {% include "users/user.html" with class="card" %}
         {% endfor %}
 
-    <h3 class="row"> Participants :  {{ event.attendees.all.count }} </h3>
+    <h3 class=""> Participants :  {{ event.attendees.all.count }} </h3>
 
         {% for user in event.attendees.all %}
             {% include "users/user.html" with class="item" %}
         {% endfor %}
 
-    <h3 class="row"> Informations : </h3>
+    <h3 class=""> Informations : </h3>
       
 </section>
 {% endblock detail %}

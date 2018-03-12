@@ -21,14 +21,14 @@
     {% if user.is_authenticated %}
         <div class="">
 
-             <div class="row"> 
+             <div > 
                 {% for event in my_last_event_attending %}
                     <h3>Ma prochaine réservation</h3>
                     {% include "plateformeweb/event.html" %}
                 {% endfor %}
             </div>
 
-            <div class=""> 
+            <div > 
                 {% avatar user %}
                 <h1>{{request.user.first_name}}</h1>
             </div>
@@ -41,21 +41,21 @@
 
     <h1> Découvrez la plateforme </h1>
 
-    <div class="row">
+    <div >
        
-        <div class="col-lg-3">
+        <div>
             <h3>lutter</h3>
             <p>J'achète moins de neuf et participe à la lutte contre 
                 l'obsolescence, programmée ou non.</p>
         </div>
 
-        <div class="col-lg-3">
+        <div>
             <h3>apprendre</h3>
             <p>Même pas peur... J'apprends à connaître mon appareil, 
                 et finalement ce n'est pas sorcier !</p>
             </div>
 
-        <div class="col-lg-3">
+        <div>
             <h3>réparer</h3>
             <p>Animateurs, outils et pièces d'occasions sont à ma 
                 disposition pour une réparation économique !</p>
@@ -71,7 +71,7 @@
 
     <h1> Prochaines dates </h1>
 
-        <section class="row">
+        <section class="">
         
             {% for event in last_events %}
                 {% include "plateformeweb/event.html" %}

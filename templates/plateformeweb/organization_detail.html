@@ -19,15 +19,15 @@
 {% block detail %}
 
 
-<section class="col-lg">
-        <h3 class="row">Lieux</h3>
+<section class="">
+        <h3 class="">Lieux</h3>
     {% for place in organization.place_set.all %}
         {% include "plateformeweb/place.html" %}
     {% endfor %}
     </section>
 
-<section class="col-lg">
-        <h3 class="row"> Nombre adhérents : {{ organization.organizationperson_set.all.count }} </h3>
+<section class="">
+        <h3 class=""> Nombre adhérents : {{ organization.organizationperson_set.all.count }} </h3>
 {% for organizationperson in organization.organizationperson_set.all %}
     {% with user=organizationperson.user %}
         {% include "users/user.html" %}
@@ -36,8 +36,8 @@
 </section>
 
 
-<section class="col-lg">
-        <h3 class="row"> Event takes place in : {{ organization.event_set.all.count }} </h3>
+<section class="">
+        <h3 class=""> Event takes place in : {{ organization.event_set.all.count }} </h3>
 {% for event in organization.event_set.all %}
     {% include "plateformeweb/event.html" %}
 {% endfor %}

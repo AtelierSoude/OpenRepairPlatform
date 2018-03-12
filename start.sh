@@ -10,6 +10,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ACTION="$1"
 PORT="$2"
 LOGLEVEL="$3"
+USERLOWER="$(tr [A-Z] [a-z] <<< "$USER")"
 
 # todo make this be loaded on container startup from docker secrets
 # this is used by the build script to set the super user login and pass for the postgres db
@@ -20,59 +21,59 @@ export POSTGRES_PASSWORD=ateliersoude
 function rebuild_db() {
     docker network create \
         --driver bridge \
-        ateliersoude-$USER
+        ateliersoude-$USERLOWER
     docker build deployment/docker-db/ \
-        --tag ateliersoude-postgres-$USER
-    docker stop ateliersoude-postgres-$USER
-    docker rm -f ateliersoude-postgres-$USER
-    docker run --name ateliersoude-postgres-$USER \
+        --tag ateliersoude-postgres-$USERLOWER
+    docker stop ateliersoude-postgres-$USERLOWER
+    docker rm -f ateliersoude-postgres-$USERLOWER
+    docker run --name ateliersoude-postgres-$USERLOWER \
         --env POSTGRES_PASSWORD=ateliersoude \
         --env POSTGRES_USER=ateliersoude \
-        --network ateliersoude-$USER \
+        --network ateliersoude-$USERLOWER \
         --restart unless-stopped \
         --detach \
-        ateliersoude-postgres-$USER
+        ateliersoude-postgres-$USERLOWER
     echo "resting a bit..."
     sleep 10
 }
 
 function rebuild_app() {
     docker build deployment/docker-app/ \
-        --tag ateliersoude-django-app-$USER
-    docker stop ateliersoude-django-$USER
-    docker rm -f ateliersoude-django-$USER
+        --tag ateliersoude-django-app-$USERLOWER
+    docker stop ateliersoude-django-$USERLOWER
+    docker rm -f ateliersoude-django-$USERLOWER
 }
 
 function start_gunicorn() {
-    docker run --name ateliersoude-django-$USER \
+    docker run --name ateliersoude-django-$USERLOWER \
         --volume $DIR:/ateliersoude \
-        --network ateliersoude-$USER \
+        --network ateliersoude-$USERLOWER \
         --restart unless-stopped \
         --publish ${PORT:-8000}:8000 \
         --env LOGLEVEL=${LOGLEVEL:-INFO} \
-        --env POSTGRES_DB=ateliersoude-postgres-$USER \
+        --env POSTGRES_DB=ateliersoude-postgres-$USERLOWER \
         --env DEVELOPMENT=1 \
         --detach \
-        ateliersoude-django-app-$USER
+        ateliersoude-django-app-$USERLOWER
     }
 
 function start_dev_server() {
-    docker run --name ateliersoude-django-$USER \
+    docker run --name ateliersoude-django-$USERLOWER \
         --env DJANGO_DEBUG=1 \
         --tty --interactive \
         --volume $DIR:/ateliersoude \
-        --network ateliersoude-$USER \
+        --network ateliersoude-$USERLOWER \
         --publish ${PORT:-8001}:8001 \
         --env LOGLEVEL=${LOGLEVEL:-INFO} \
-        --env POSTGRES_DB=ateliersoude-postgres-$USER \
+        --env POSTGRES_DB=ateliersoude-postgres-$USERLOWER \
         --env DEVELOPMENT=1 \
-        ateliersoude-django-app-$USER
+        ateliersoude-django-app-$USERLOWER
 }
 
 
 function get_ports() {
     echo "************** external ports used by the docker container **************"
-    echo `tput setaf 2`"Gunicorn main server: http://localhost:`docker port ateliersoude-django-$USER | head -1 | cut -d: -f2`/"`tput sgr0`
+    echo `tput setaf 2`"Gunicorn main server: http://localhost:`docker port ateliersoude-django-$USERLOWER | head -1 | cut -d: -f2`/"`tput sgr0`
     echo "*************************************************************************"
 }
 
@@ -92,7 +93,7 @@ case "${ACTION}" in
         start_dev_server
         ;;
     "reload")
-        docker exec -ti ateliersoude-django-$USER /bin/bash -c 'kill -HUP `pgrep -f gunicorn:\ master` 2>/dev/null'
+        docker exec -ti ateliersoude-django-$USERLOWER /bin/bash -c 'kill -HUP `pgrep -f gunicorn:\ master` 2>/dev/null'
         if [[ "$?" -eq 0 ]]; then echo OK; else echo FAIL; fi
         ;;
     *)

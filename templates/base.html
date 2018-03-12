@@ -57,13 +57,11 @@
        src="https://code.jquery.com/jquery-3.1.1.min.js"
        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
        crossorigin="anonymous"></script>
-       {#   <script src="{% static "npm/semantic-ui/dist/semantic.min.js" %}"></script>   #}   
 
 
      
 {#    <link rel="stylesheet"#}
 {#          href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">#}
- <link rel="stylesheet" href="{% static "npm/semantic-ui/dist/semantic.min.css" %}">
 
 {#    <script src="https://cdnjs.cloudflare.com/ajax/libs/datepicker/0.6.4/i18n/datepicker.fr-FR.min.js"#}
 {#            integrity="sha256-LfRC4/3bBAGT8y5dQmQSzKtY+5dfIkCvwyNj9UhgMP8="#}
@@ -144,7 +142,11 @@
                                 <a style="line-height:50px;" href="{% url 'event_create' %}" title="create event">
                                         {% fontawesome_icon 'calendar-o' color='white' large=True %}
                                         ajouter
-                                    </a>
+                                    </a><br>
+                                    <a style="line-height:50px;" href="{% url 'place_create' %}" title="create place">
+                                            {% fontawesome_icon 'map-marker' color='white' large=True %}
+                                            ajouter
+                                        </a>
                                     <a href="{% url 'logout' %}" title="Logout">
                                             {% fontawesome_icon 'sign-out' color='grey' large=True %}
                                         </a>
@@ -155,7 +157,7 @@
 
         </header>
 
-        <wrapper class="container col-lg col-sm bg-light">
+        <wrapper class="container col-lg col-sm bg-light pt-3">
         
 
                 {% block breadcrumbs %}
@@ -163,10 +165,12 @@
                     {% breadcrumb "Home" "/" %}
                 {% endblock %}
                 
-
+           
+        
         {% block content %}
         {% render_breadcrumbs %}
         {% endblock %}
+
         </wrapper>
 
     </div>

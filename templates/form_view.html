@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+{% load fontawesome %}
+{% load avatar_tags %}
+{% load django_bootstrap_breadcrumbs %}
+
+    <!-- breadcrumb -->
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb type list_view %}
+    {% breadcrumb "add" view %}
+{% endblock %}
+
+{% block content %}
+{% render_breadcrumbs %}
+<div class="container">  
+
+    <!-- form -->
+        <div class="col-sm col-lg">
+        {% block form %}
+        {% endblock form %}
+        </div>   
+
+</div>
+          
+{% endblock %}

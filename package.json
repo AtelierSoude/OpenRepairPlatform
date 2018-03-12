@@ -12,7 +12,6 @@
   },
   "dependencies": {
     "purecss": "^1.0.0",
-    "semantic-ui": "^2.2.13",
     "stickyfilljs": "^2.0.3"
   },
   "author": "",

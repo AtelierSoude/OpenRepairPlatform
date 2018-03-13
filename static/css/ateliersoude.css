@@ -1,52 +1,63 @@
-/*Reset*/
+/*******************************
+************* Reset ************
+*********************************/
 * {
   margin: 0 !important;
   padding: 0 !important;
 }
 
-/* éléments généraux */
+/*******************************
+******* éléments généraux *******
+*********************************/
+body {
+    background-color: #F4F3F0;
+}
+a {
+  text-decoration: none !important;
+}
+a:hover{
+  text-decoration-style: none !important;
+}
 .content-page {
   position: absolute;
   left: 100px;
 }
 
+/*******************************
+*********** Menu ***************
+*********************************/
 
-/*Menu*/
+/*Nabvar horizontal*/
 .top-bar {
+  position: relative;
   width: 100% !important;
   height: 50px;
-  display: inline-block;
 }
 .top-bar img {
-  width: 35px;
-  height: 35px;
+  width: 20px;
+  height: 20px;
   border-radius: 90px;
 }
-.top-bar ul li {
-  margin-right: 20px !important;
-}
+
+/*Style sur icons, liens*/
 .brand {
   border-bottom: 0.5px solid #a8a8a8;
 }
-.fa-user-circle-o, .dropdown-toggle {
+.fa-user-circle-o, .fa-calendar, .fa-map-marker, .dropdown-toggle {
   margin-top: 0px;
   text-decoration: none;
   color: #A9A9A9;
 }
-.dropdown-toggle {
-  font-size: 1.5em;
+.fa-user-circle-o:hover, .fa-calendar:hover, .fa-map-marker:hover, .dropdown-toggle:hover {
+  text-decoration: none !important;
+  color: #212120 !important;
 }
-.fa-user-circle-o:hover, .dropdown-toggle:hover {
-  text-decoration: none;
-  color: #212120;
+/* Menu déroulant (flèche bas sur navbar horizontal)*/
+.dropdown-menu {
+  width: 30px;
+  margin-left: 105px !important;
 }
-.nav-side-menu:hover {
-  width: 180px;
-}
-.main {
-    margin-left: 220px;
-    padding: 15px;
-}
+/*navbar vertical*/
 .nav-side-menu {
   overflow: auto;
   background-color: #212120;
@@ -65,6 +76,9 @@
   text-align: center;
   font-size: 14px;
 }
+.nav-side-menu:hover {
+  width: 180px;
+}
 .nav-side-menu .toggle-btn {
   display: none;
 }
@@ -78,19 +92,6 @@
   visibility: visible !important;
   white-space:nowrap;
 }
-/*
-    .collapsed{
-       .arrow:before{
-                 font-family: FontAwesome;
-                 content: "\f053";
-                 display: inline-block;
-                 padding-left:10px;
-                 padding-right: 10px;
-                 vertical-align: middle;
-                 float:right;
-            }
-     }
-*/
 .nav-side-menu ul :not(collapsed) .arrow:before,
 .nav-side-menu li :not(collapsed) .arrow:before {
   font-family: FontAwesome;
@@ -137,6 +138,9 @@
 .nav-side-menu li a:hover {
     color: #FFFFFF;
 }
+/*******************************************
+Media queries, ajustement selon taille écran 
+********************************************/
 @media (max-width: 767px) {
     .main {
         margin-left: 0 !important;
@@ -179,9 +183,7 @@
   @media all and (max-width: 900px)
 {
   .dropdown-menu  {
-    position: absolute;
-    top: 20;
-    left: -110px;
+    margin-left: 310px;
   }
 }
   @media all and (max-width: 500px)

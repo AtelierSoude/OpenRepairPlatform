@@ -69,18 +69,14 @@
 {#            crossorigin="anonymous"></script>#}
 
     <!-- keep last -->
-           <link rel="stylesheet" href="{% static "css/ateliersoude.css" %}">
+    <link rel="stylesheet" href="{% static "css/ateliersoude.css" %}">
 
     {% if user_form %}{{ user_form.media }}{% endif %}
     {% if form %}{{ form.media }}{% endif %}
 
 
-
-
 </head>
-<body >
-    
-       <!--  -->
+<body>
 
 <header>
 <div class="nav-side-menu">
@@ -110,60 +106,53 @@
             </ul>
      </div>
 </div>
-<div class="top-bar">
-     
 
-<!-- A grey horizontal navbar that becomes vertical on small screens -->
-<nav class="navbar d-flex justify-content-end">
 
-  <!-- Links -->
-  <ul class="navbar-nav navbar-expand pt-2">
-     {% if user.is_authenticated %}
-    <li class="nav-item">
-      <a class="nav-link" href="{% url "user_profile" %}">{{ user.first_name }}{% avatar user %}</a>
-    </li>
-    {% else %}
-    <li class="nav-item">
-      <a class="nav-link" href="{% url "login" %}">{% fontawesome_icon 'login' %}</a>
-    </li>
-    {% endif %}
+<div class="container-fluid top-bar d-flex justify-content-end">
+  <nav class="navbar ">
     {% if user.is_authenticated %}
-    <li class="nav-item">
-      <a class="nav-link" href="{% url 'event_create' %}" title="create event">{% fontawesome_icon 'calendar-o' color='white'  %} ajouter</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="{% url 'place_create' %}" title="create place">{% fontawesome_icon 'map-marker' color='white'  %} ajouter</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="{% url 'logout' %}" title="Logout">{% fontawesome_icon 'sign-out' color='grey'   %}</a>
-    </li>
+      <div class="navbar-brand"><a class="nav-link mr-3" href="{% url "user_profile" %}">{% avatar user %}{{ user.first_name }}</a></div>
+    {% else %}
+      <div class="navbar-brand" ><a class="nav-link mr-3" href="{% url "login" %}"><i class="fa fa-user-circle-o fa-2x"></i></a></div>
     {% endif %}
-  </ul>
+    
+    {% if user.is_authenticated %}
+      <div class="navbar-brand" ><a class="nav-link mr-3" href="{% url 'event_create' %}" title="create event"><i class="fa fa-calendar fa-lg"></i><i class="fa fa-plus-circle fa-xs"></i></a></div>
 
-</nav>
+      <div class="navbar-brand" ><a class="nav-link mr-3" href="{% url 'place_create' %}" title="create place"><i class="fa fa-map-marker fa-lg"></i><i class="fa fa-plus-circle fa-xs"></i></a></div>
+
+      <div class="navbar-brand" ><a class="nav-link mr-3" href="{% url "user_profile" %}"><i class="fa fa-user-circle-o fa-2x"></i></a></div>
+    <!-- Menu dropdown -->
+    <div class="navbar-brand arrow-login ">
+        <a class="nav-link mr-3 dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class=""></i></a>
+        <div class="dropdown-menu " aria-labelledby="navbarDropdownMenuLink">
+          <a class="dropdown-item" href="#">...</a>
+          <a class="dropdown-item" href="#">...</a>
+          <a class="dropdown-item" href="#">...</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">...</a>
+          <a class="nav-link" href="{% url 'logout' %}" title="Logout">Déconnexion</a>
+        </div>
+    </div>
+     {% endif %}
+  </nav>
 </div>
   <hr>
 </header>
 
-        <wrapper class="content-page">
-        
+<wrapper class="content-page">
+  {% block breadcrumbs %}
+    {% clear_breadcrumbs %}
+    {% breadcrumb "Home" "/" %}
+  {% endblock %}
+                   
+  {% block content %}
+  {% render_breadcrumbs %}
+  {% endblock %}
+</wrapper>
 
-                {% block breadcrumbs %}
-                    {% clear_breadcrumbs %}
-                    {% breadcrumb "Home" "/" %}
-                {% endblock %}
-                
-           
-        
-        {% block content %}
-        {% render_breadcrumbs %}
-        {% endblock %}
-
-        </wrapper>
-
-    </div>
-
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<!-- Script & librairy-->    
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
 </body>
 

@@ -5,16 +5,40 @@
 {% load avatar_tags %}
 {% load django_bootstrap_breadcrumbs %}
 
-    <!-- breadcrumb -->
+
+<!-- breadcrumb -->
 {% block breadcrumbs %}
-    {{ block.super }}
-    {% breadcrumb type list_view %}
-    {% breadcrumb "add" view %}
-{% endblock %}
+
+{{ block.super }}
+{% if request.path == "/edit" %}
+{% breadcrumb "edit" "" %}
+{% else %}
+{% breadcrumb "add" view %}
+{% endif %}
+{% breadcrumb type list_view %}
+
+{% endblock breadcrumbs %}
+
 
 {% block content %}
 {% render_breadcrumbs %}
 <div class="container">  
+
+
+<!-- title -->
+
+<h1>
+     
+        {% if request.path == "/edit" %}
+        Edit
+        {% else %}
+        Create
+        {% endif %}
+        
+        {% block title %}
+        {% endblock title %}
+</h1>
+
 
     <!-- form -->
         <div class="col-sm col-lg">

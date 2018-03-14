@@ -15,21 +15,21 @@
 
 {% block content %}
 {% render_breadcrumbs %}
-<div class="container">  
+<div class="row">  
 
     <!-- what is about -->
-        <div class="col-sm col-lg-3">
+    <div class=" col-ms col-lg-2">
         {% block context %}
         {% endblock context %}
-        </div>   
+    </div>   
 
-    <div class="col-sm col-lg">
+    <div class="col-ms col-lg-10">
 
     <!-- details about -->
-     <section class="col-lg row" id="detail">
+     <section class="col-lg row">
             {% block detail %}
             {% endblock detail %}
-        </section>
+    </section>
 
     </div>
 

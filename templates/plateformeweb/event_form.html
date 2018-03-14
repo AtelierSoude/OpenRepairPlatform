@@ -6,16 +6,15 @@
 {% load avatar_tags %}
 {% load django_bootstrap_breadcrumbs %}
 
-
 {% block breadcrumbs %}
 {% with type="event" list_view="event_list" view="event_create" %}
     {{ block.super }}
 {% endwith %}
 {% endblock %}
 
-{% block form %}
+{% block title %} {{ block.super }} event {% endblock title %}
 
-    <h1>Create event</h1>
+{% block form %}
 
     <form action="" method="post" enctype="multipart/form-data"
           class="pure-form">{% csrf_token %}

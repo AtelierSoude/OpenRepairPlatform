@@ -20,7 +20,8 @@ a:hover{
 }
 .content-page {
   position: absolute;
-  left: 100px;
+  left: 50px; 
+  width: calc(100% - 50px);
 }
 
 /*******************************

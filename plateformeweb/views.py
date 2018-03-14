@@ -57,6 +57,7 @@ class OrganizationCreateView(PermissionRequiredMixin, OrganizationFormView,
 class OrganizationEditView(PermissionRequiredMixin, OrganizationFormView,
                            UpdateView):
     permission_required = 'plateformeweb.edit_organization'
+    queryset = Organization.objects
 
 
 # --- Places ---
@@ -102,6 +103,7 @@ class PlaceCreateView(PermissionRequiredMixin, PlaceFormView, CreateView):
 
 class PlaceEditView(PermissionRequiredMixin, PlaceFormView, UpdateView):
     permission_required = 'plateformeweb.edit_place'
+    queryset = Place.objects
 
 
 # --- Events ---

@@ -13,6 +13,7 @@
 
 {% block context %}
     {% include "plateformeweb/place.html" %}
+    <a href="{% url 'place_edit' place.id %}" class="card-link">edit</a>
 {% endblock context %} 
 
 {% block detail %}

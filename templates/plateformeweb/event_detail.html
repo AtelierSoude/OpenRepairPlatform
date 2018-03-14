@@ -14,6 +14,7 @@
 
 {% block context %}
     {% include "plateformeweb/event.html" with class="card" %}
+    <a href="{% url 'event_edit' event.id %}" class="card-link">edit</a>
 {% endblock context %}
 
 

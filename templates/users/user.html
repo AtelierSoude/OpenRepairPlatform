@@ -8,49 +8,39 @@
 {% block list %}
 
 <!-- a user card -->
+<div class="{{class}}">
+    <div class="card mr-5">
+        <div class="card-img-top pt-2 pl-2 {% if class == 'item' %} avatar {% endif %}">
+            {% avatar user %}
+        </div>
+            <div class="name-status">
+              <h5>{{ user.first_name|capfirst }}{{ user.last_name|capfirst}}</h5>    
+             
+              {% if user.is_staff %}
+                    Volonteer
+                    {% else %}
+                    Member
+                    {% endif %}
+            </div>
+            <div class="card-body">
+                <ul>
+                    <li>{% fontawesome_icon 'clock-o' %} {{ user.date_joined}}</li>
+                    <li>{% fontawesome_icon 'envelope-o' %}{{ user.email }}</li>
+                </ul>
+            </div>
 
-<div class="card border">
+             <div class="card-footer d-flex justify-content-end">
+        
+        {% if request.user.is_authenticated and request.user.is_staff %}  
 
-    <div class="card-header">
-                {% if user.is_staff %}
-                Volonteer
-                {% else %}
-                Member
-                {% endif %}
-    </div>
-
-    <div class="card-img-top {% if class == 'item' %} avatar {% endif %}">{% avatar user %}</div>
-
-    <div class="card-body">
-          <h5 class="card-title">{{ user.first_name|capfirst }}{{ user.last_name|capfirst}}</h5>
-          <p class="card-text">Le meilleur réparateur de tous les temps</p>
-          
-          <!-- about -->
-
-           <ul class="list-group list-group-flush">
-
-                <li class="list-group-item d-flex justify-content-between align-items-left">
-                    <small>{% fontawesome_icon 'clock-o' %} {{ user.date_joined}}</small>
-                </li>
-                <li class="list-group-item d-flex justify-content-between align-items-left">
-                    <small>{% fontawesome_icon 'envelope-o' %}{{ user.email }}</small>
-                </li>
-
-            </ul>
-
-        <!-- delete if request user is organizer -->
-
-        {% if request.user.is_authenticated and request.user.is_staff %}
-            <a href="#" class="card-link">Supprimer</a>
-            {% fontawesome_icon 'trash' large=True %}
+       
+            <a href="#" class="card-link"><i class="fa fa-trash 2-xs pt-1"></i>supprimer</a>
+                
         {% endif %}
-
-         <!-- link to user profil (to do) -->
-       
-            <a class="card-link" href="{% url 'user_profile' %}"> {% fontawesome_icon 'info' %} details </a>  
-       
+             <!-- link to user profil (to do) -->
+            <a class="card-link" href="{% url 'user_profile' %}">&nbsp<i class="fa fa-info-circle  2-xs pt-1"></i></a>
+        </div>
     </div>
-
 </div>
 
 {% endblock list %}

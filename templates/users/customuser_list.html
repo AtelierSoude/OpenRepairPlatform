@@ -27,21 +27,35 @@
 
 
 {% block list %}
-<section class="row card-group">
+
+<section class="container-fluid">
+<div class="row ml-4">
 
 {% for user in object_list %}
-
-<!-- make difference with volonteer or not --> 
-{% ifchanged %}<h3>{{ user.is_staff }}</h3>{% endifchanged %}
-
-  {% include "users/user.html" %}
-
-  {% empty %}
-  <div>No users yet.</div>    
-
+		{% include "users/user.html" with class="my-3 col-sm-6 col-md-4" %}
+	<!-- {% empty %}
+  <div>No users yet.</div>   --> 
 {% endfor %}
 
+
+</div>
 </section>
+
+		
 {% endblock list %}
+
+
+<!-- <div class="row">
+	<div class="col-md-4">
+		<p>balazkek^</p>
+	</div>
+	<div class="col-md-4">
+		<p>balazkek^</p>
+	</div>
+	<div class="col-md-4">
+		<p>balazkek^</p>
+	</div>
+</div> -->
+
 
 

@@ -195,3 +195,47 @@ Media queries, ajustement selon taille écran
 }
 
 
+/*******************************
+********* user card ************
+*********************************/
+.user-card {
+
+}
+.card{
+
+  box-shadow: 4px 4px 8px gray;
+}
+.card ul li {
+  list-style-type: none;
+  /*margin-left: 10px !important;*/
+}
+.card img{
+  border-radius: 90%;
+}
+.card .fa, .card a {
+  text-decoration: none;
+  color: #A9A9A9;
+}
+
+.card .fa:hover, .card a:hover {
+  text-decoration: none !important;
+  color: #212120 !important;
+}
+.name-status{
+  position: relative;
+  top: -70px;
+  left: 25%;
+  font-size: 1em;
+}
+
+.card-body{
+  position: absolute;
+  top: 100px;
+  font-size: 12px;
+}
+
+
+
+
+
+

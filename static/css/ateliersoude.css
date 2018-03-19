@@ -193,23 +193,21 @@ Media queries, ajustement selon taille écran
     display: none;
   }
 }
-
-
+/********************************
+************ card ***************
+*********************************/
+.card {
+  box-shadow: 4px 4px 8px gray;
+}
 /*******************************
 ********* user card ************
 *********************************/
-.user-card {
 
-}
-.card{
-
-  box-shadow: 4px 4px 8px gray;
-}
 .card ul li {
   list-style-type: none;
   /*margin-left: 10px !important;*/
 }
-.card img{
+.card-user img{
   border-radius: 90%;
 }
 .card .fa, .card a {
@@ -234,7 +232,37 @@ Media queries, ajustement selon taille écran
   font-size: 12px;
 }
 
-
+/*******************************
+********* event card ************
+*********************************/
+.event-card-title{
+  background-color: #3d3d3c;
+  color: #fff;
+}
+/* .card-event h5{
+  background-color:#ffefa0;
+} */
+.card-event .badge{
+  padding: 1.5px !important;
+}
+.card-event .fa-clock-o {
+  color: forestgreen !important;
+}
+.card-event h3 {
+  padding: 5px !important;
+  font-size: 1.4em;
+}
+.card-event .hour-event{
+  color: grey;
+  font-size: 0.6em;
+}
+.square-date{
+  background-color: #6139a8;
+  color: #fff;
+  height: 100%;
+  font-weight: bold;
+  font-size: 2.3em;
+}
 
 
 

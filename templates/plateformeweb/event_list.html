@@ -25,21 +25,19 @@
 {% block list %}
 
 
-<section class="row">
+<section class="container-fluid">
 
-<div class="col-lg-6">
+<div class="row ml-4 py-2">
 {% for event in object_list %}
-{% ifchanged %}<h2>{{ event.starts_at|date:"F" }}</h2>{% endifchanged %}
+<!-- {% ifchanged %}<h2>{{ event.starts_at|date:"F" }}</h2>{% endifchanged %} -->
 
-  {% include "plateformeweb/event.html" with class="card" %}
+  {% include "plateformeweb/event.html" with class="my-3 col-sm-6 col-md-4 col-lg-3" %}
   {% empty %}
   <div>No events yet.</div>    
 {% endfor %}
 </div>
 
-<div class="col-lg-6">
-Carte
-</div>
+
 
 </section>
 {% endblock list %}

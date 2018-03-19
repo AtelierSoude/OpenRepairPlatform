@@ -5,28 +5,36 @@
 {% load avatar_tags %}
 
 {% block list %}
-
-<!-- a event card -->
-
-<div class="card border">
-        <div class="card-header">{{event.type}}</div>
-        <div class="card-body">
-          <h5 class="card-title">{{event.title}}</h5>
+<div class="{{class}} card-event">
+    <div class="card mr-5">
+<div class="event-card-title text-center">{{event.type}}</div>
+<div class="row">
+    <div class="col-3">
+        <!-- <img class="card-img-top img-fluid" src="{% static "img/event-card.jpg" %}" alt="Card image cap"> -->
+        <!-- <i class="fa fa-clock-o"></i> -->
+        <div class="square-date text-center align-middle">
+            {{ event.starts_at|date:"d" }}<br>
+            {{ event.starts_at|date:"M" }}<br>
+        </div>
+    </div>
+    <div class="col-9 pl-1">
+         <div class="">
+          <p>{{event.title}}</p>
           
           <!-- about -->
 
            <ul class="list-group list-group-flush">
 
-                <li class="list-group-item d-flex justify-content-between align-items-left">
+                <li class="list-group-item">
                         <a href="{% url 'organization_detail' event.organization.id event.organization.slug %}">
                         <small>à {{ event.organization }}</small>
-                    </a></small>
+                    </a></small> : <span class="hour-event text-center">{{ event.starts_at|date:"H:i:s" }}</span>
                     </li>
 
-                <li class="list-group-item d-flex justify-content-between align-items-left">
-                    <small>{% fontawesome_icon 'clock-o' %} {{ event.starts_at }}</small>
+                <li class="list-group-item">
+                    <!-- <small>{% fontawesome_icon 'clock-o' %} {{ event.starts_at }}</small> -->
                 </li>
-                <li class="list-group-item d-flex justify-content-between align-items-left">
+                <li class="list-group-item">
                     {% fontawesome_icon 'user-plus' %}
                     <small>Places</small>
                     {% if event.available_seats == 0 %}
@@ -35,10 +43,10 @@
                             <span class="badge badge-primary badge-pill">{{ event.available_seats }}</span>
                     {% endif %}
                 </li>
-                <li class="list-group-item d-flex justify-content-between align-items-left">
+                <li class="list-group-item">
                     {% fontawesome_icon 'map-marker' %}
                     <a href="{% url 'place_detail' event.location.id event.location.slug %}">
-                        <small>{{ event.location|truncatechars:35 }}</small>
+                        <small>{{ event.location|truncatechars:25 }}</small>
                     </a>
                 </li>
 
@@ -68,9 +76,11 @@
             {% fontawesome_icon 'trash' large=True %}
         {% endif %}
         
-        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+    </div>
+</div>    
 </div>
 
+</div>
 </div>
 
 {% endblock list %}

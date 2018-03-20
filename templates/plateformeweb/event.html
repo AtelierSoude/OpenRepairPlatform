@@ -28,7 +28,7 @@
                 <li class="list-group-item">
                         <a href="{% url 'organization_detail' event.organization.id event.organization.slug %}">
                         <small>à {{ event.organization }}</small>
-                    </a></small> : <span class="hour-event text-center">{{ event.starts_at|date:"H:i:s" }}</span>
+                    </a></small> - <span class="hour-event text-center">{{ event.starts_at|date:"H:i:s" }}</span>
                     </li>
 
                 <li class="list-group-item">

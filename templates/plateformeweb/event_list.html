@@ -31,7 +31,7 @@
 {% for event in object_list %}
 <!-- {% ifchanged %}<h2>{{ event.starts_at|date:"F" }}</h2>{% endifchanged %} -->
 
-  {% include "plateformeweb/event.html" with class="my-3 mx-3 col-sm-6 col-md-4 col-lg-3" %}
+  {% include "plateformeweb/event.html" with class="my-3 col-sm-6 col-md-4" %}
   {% empty %}
   <div>No events yet.</div>    
 {% endfor %}

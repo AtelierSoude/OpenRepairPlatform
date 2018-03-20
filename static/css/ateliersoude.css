@@ -235,9 +235,6 @@ Media queries, ajustement selon taille écran
 /*******************************
 ********* event card ************
 *********************************/
-.card-event .card{
-  min-width: 400px !important;
-}
 .event-card-title{
   background-color: #3d3d3c;
   color: #fff;

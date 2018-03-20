@@ -116,11 +116,12 @@
       <div class="navbar-brand" ><a class="nav-link mr-3" href="{% url "login" %}"><i class="fa fa-user-circle-o fa-2x"></i></a></div>
     {% endif %}
     
-    {% if user.is_authenticated %}
+    {% if user.is_superuser %}
       <div class="navbar-brand" ><a class="nav-link mr-3" href="{% url 'event_create' %}" title="create event"><i class="fa fa-calendar fa-lg"></i><i class="fa fa-plus-circle fa-xs"></i></a></div>
 
       <div class="navbar-brand" ><a class="nav-link mr-3" href="{% url 'place_create' %}" title="create place"><i class="fa fa-map-marker fa-lg"></i><i class="fa fa-plus-circle fa-xs"></i></a></div>
-
+    {% endif %}
+    {% if user.is_authenticated %}
       <div class="navbar-brand" ><a class="nav-link mr-3" href="{% url "user_profile" %}"><i class="fa fa-user-circle-o fa-2x"></i></a></div>
     <!-- Menu dropdown -->
     <div class="navbar-brand arrow-login ">

@@ -267,23 +267,96 @@ Media queries, ajustement selon taille écran
 ************* Forms *************
 *********************************/
 .form{
-  width: 400px !important;
   padding: 20px !important;
   margin: 10px auto !important;
   border-radius: 5px;
   box-shadow: 2px 2px 5px black;
   background-color: #ededea;
 }
-.form input, .form SELECT, .form textarea{
-  width: 500px;
+
+.form .selectmultiple{
+  margin-bottom: 20px auto !important;
+  font-size: 1.25em !important;
+  padding: 0 0 5px 0 !important;
+  border: none !important;
+  border-bottom: solid 2px #4DB6AC !important;
 }
 .form label{
   padding-top: 10px !important;
 }
+/* btn  */
 .form .btn{
   width: 100px;
   margin-top: 10px !important;
 }
+input[type="submit"] {
+  cursor: pointer;
+  margin: auto;
+  width: 100%;
+  background-color: #4DB6AC;
+  color: #E0F2F1;
+  font-family: 'Noto Sans', sans-serif;
+  font-size: 1.25em;
+  padding: 10px 0;
+  border: solid #009688;
+  border-width: 0 0 4px 0;
+  border-radius: 3px;
+  outline: none;
+}
+input[type="submit"]:hover {
+  background: #26A69A;
+  border: solid #00897B;
+  border-width: 0 0 4px 0;
+}
+input[type="submit"]:active {
+  background: #009688;
+  border: solid transparent;
+  border-width: 0 0 0px 0;
+}
+input[type="text"] {
+  margin-bottom: 20px auto !important;
+  font-size: 1.25em;
+  padding: 0 0 5px 0;
+  color: #004D40;
+  background-color: transparent;
+  border: none;
+  border-bottom: solid 2px #4DB6AC;
+}
+/* Create event card */
+#div_id_title input[type="text"], #div_id_name input[type="text"] {
+  margin-bottom: 20px auto !important;
+  font-size: 1.25em;
+  padding: 0 0 5px 0;
+  color: #004D40;
+  background-color: #fff;
+  border: none;
+}
+select:focus,
+textarea:focus,
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="datetime"]:focus,
+input[type="datetime-local"]:focus,
+input[type="date"]:focus,
+input[type="month"]:focus,
+input[type="time"]:focus,
+input[type="week"]:focus,
+input[type="number"]:focus,
+input[type="email"]:focus,
+input[type="url"]:focus,
+input[type="search"]:focus,
+input[type="tel"]:focus,
+input[type="color"]:focus,
+.uneditable-input:focus {   
+  border-color: rgba(0, 77, 64, 0.6);
+  box-shadow: 0 1px 1px rgba(0, 77, 64, 0.75) inset, 0 0 8px rgba(0, 77, 64, 0.6);
+  outline: 0 none;
+}
+
+
+
+
+  
 
 
 

@@ -263,7 +263,27 @@ Media queries, ajustement selon taille écran
   font-weight: bold;
   font-size: 2.3em;
 }
-
+/********************************
+************* Forms *************
+*********************************/
+.form{
+  width: 400px !important;
+  padding: 20px !important;
+  margin: 10px auto !important;
+  border-radius: 5px;
+  box-shadow: 2px 2px 5px black;
+  background-color: #ededea;
+}
+.form input, .form SELECT, .form textarea{
+  width: 500px;
+}
+.form label{
+  padding-top: 10px !important;
+}
+.form .btn{
+  width: 100px;
+  margin-top: 10px !important;
+}
 
 
 

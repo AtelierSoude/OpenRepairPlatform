@@ -176,6 +176,7 @@ STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
 # https://github.com/kevin1024/django-npm
 STATICFILES_FINDERS = ['django.contrib.staticfiles.finders.FileSystemFinder',
                        'django.contrib.staticfiles.finders.AppDirectoriesFinder',

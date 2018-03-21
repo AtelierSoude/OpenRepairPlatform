@@ -1,5 +1,7 @@
 
 {% extends 'form_view.html' %}
+{% load crispy_forms_tags %}
+
 
 {% load staticfiles %}
 {% load fontawesome %}
@@ -15,12 +17,17 @@
 {% block title %} {{ block.super }} event {% endblock title %}
 
 {% block form %}
-
-    <form action="" method="post" enctype="multipart/form-data"
-          class="pure-form">{% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Save" class="pure-u-1-3 pure-button"/>
-    </form>
+<div class="container">
+    <div class="row">
+        <div class="form col-md-6">
+            <form action="" method="post" enctype="multipart/form-data"
+            class="">{% csrf_token %}
+                {{ form|crispy }}
+                <input type="submit" value="Save" class="btn btn-primary"/>
+            </form>
+        </div>
+    </div>
+</div>
 
 
 

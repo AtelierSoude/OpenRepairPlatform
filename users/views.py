@@ -27,7 +27,10 @@ def user_profile(request):
         events = PublishedEvent.objects.filter(
         starts_at__gte=timezone.now()).order_by('starts_at')[:10]
     context = {"events": events}
-    
+
+def detail_user(request):
+    return render(request, 'users/detail_user.html', {})
+
 
 def list_users(request):
     if request.method == 'GET':

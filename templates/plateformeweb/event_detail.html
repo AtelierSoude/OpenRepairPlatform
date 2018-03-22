@@ -13,13 +13,14 @@
 {% endblock %}
 
 {% block context %}
-    {% include "plateformeweb/event.html" with class="card" %}
-    <a href="{% url 'event_edit' event.id %}" class="card-link">edit</a>
-{% endblock context %}
+    <div class="ml-3 pt-3">
+        {% include "plateformeweb/event.html" %}
+    </div>
+    {% endblock context %}
 
 
 {% block detail %}
-<section class="">
+<section class="ml-3 pt-3">
 
     <h3 class=""> Organizers :  {{ event.organizers.all.count }} </h3>
 

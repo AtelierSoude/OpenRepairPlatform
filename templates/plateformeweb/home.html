@@ -71,14 +71,13 @@
 
     <h1> Prochaines dates </h1>
 
-        <section class="">
-        
+        <section class="row ml-4 py-2">
             {% for event in last_events %}
-                {% include "plateformeweb/event.html" %}
+            <div class="my-3 col-sm-6 col-md-4">
+                {% include "plateformeweb/event.html" with class="" %}
+            </div>
             {% endfor %}
-
         </section>
-
 
 </div>
 {% endblock %}

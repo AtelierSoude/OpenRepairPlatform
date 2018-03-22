@@ -13,7 +13,8 @@
 <div class="col container">
 
     <div class="row">
-    {% include "users/user.html" %}
+         {% avatar user %}
+        <h5>{{ user.first_name|capfirst }}{{ user.last_name|capfirst}}</h5>
     </div>
 
     <form method="POST" class="row pure-u form" action="">
@@ -37,13 +38,6 @@
 
                     {% endfor %}
 
-        
-                    {# TODO: avatar handling needs to go in a modal and refresh the page when closed #}
-                    {% avatar user %}
-                    <a href="javascript:window.open('{% url 'avatar_change' %}','_blank','titlebar=no,status=no,menubar=no,location=no,height=500,width=400,left=200,top=200')">Change
-                        your avatar</a>
-                    <a href="javascript:window.open('{% url 'avatar_delete' %}','_blank','titlebar=no,status=no,menubar=no,location=no,height=500,width=400,left=200,top=200')">Delete
-                        your avatar</a>
 
                 
                 <div class="pure-controls pure-u-1 button-xlarge">

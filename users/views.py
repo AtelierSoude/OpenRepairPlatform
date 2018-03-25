@@ -3,7 +3,9 @@ from .forms import CustomUserChangeForm, CustomUserCreationForm, UserForm
 from .models import CustomUser
 from django.views.generic import ListView, FormView, CreateView, DetailView
 from django.contrib.auth.models import PermissionsMixin
-
+from django.http import HttpResponseRedirect
+from django.contrib.auth import authenticate, login
+from django.core.urlresolvers import reverse
 
 # Create your views here.
 
@@ -42,22 +44,27 @@ def list_users(request):
         return
 
 
+## doc : https://stackoverflow.com/questions/26347725/django-custom-user-creation-form
 
-class UserFormView(CustomUserCreationForm, CreateView):
-    model = CustomUser
-    template = 'users/user_form.html'
+def register(request):
 
-    def post(self, request, *args, **kwargs):
-        receive_form = CustomUserCreationForm(request.POST)
-        if receive_form.is_valid():
-            receive_form.save()
-        else:
-            context = {}
-            form = CustomUserCreationForm()
-            context['form'] = form
-            return render(self.template,
-                                  CustomUserCreationForm(request, context))
-        return HttpResponse('OK')
+    form = CustomUserCreationForm(request.POST or None)
+
+    if request.method == 'POST':
+
+        if form.is_valid():
+
+            new_user = form.save()
+            new_user = authenticate(username=form.cleaned_data['email'],
+                                    password=form.cleaned_data['password1'],
+                                    )
+            login(request, new_user)
+            return HttpResponseRedirect(reverse("user_profile"))
+
+
+    return render(request, 'users/user_create.html', {'form': form})
+
+ 
 
 
 

@@ -22,6 +22,19 @@ class CustomUserCreationForm(UserCreationForm):
         model = CustomUser
         fields = ("email",)
 
+    def clean(self):
+
+        cleaned_data = super(CustomUserCreationForm, self).clean()
+
+    def save(self, commit=True):
+
+        user = super(CustomUserCreationForm, self).save(commit=False)
+
+        if commit:
+            user.save()
+
+    
+
 class CustomUserChangeForm(UserChangeForm):
     """A form for updating users. Includes all the fields on
     the user, but replaces the password field with admin's

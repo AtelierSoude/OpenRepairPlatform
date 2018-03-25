@@ -6,6 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
 from address.models import AddressField
 from avatar.models import AvatarField
+from django.urls import reverse
 
 from django.db import models
 from django.utils import timezone
@@ -103,11 +104,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         verbose_name = _('user')
         verbose_name_plural = _('users')
 
-
-    def get_absolute_url(self):
-        return "/users/%s/" % urlquote(self.email)
-
-
     def get_full_name(self):
         """
         Returns the first_name plus the last_name, with a space in between.
@@ -120,6 +116,10 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         "Returns the short name for the user."
         return self.first_name
 
+
+    def get_absolute_url(self):
+       return reverse('user_detail', kwargs={'pk':self.pk})
+      
 
     def email_user(self, subject, message, from_email=None):
         """

@@ -37,8 +37,9 @@
             <a href="#" class="card-link"><i class="fa fa-trash 2-xs pt-1"></i>supprimer</a>
                 
         {% endif %}
-             <!-- link to user profil (to do) -->
-            <a class="card-link" href="{% url 'detail_user' %}">&nbsp<i class="fa fa-info-circle  2-xs pt-1"></i></a>
+             <!-- link to user profil (to do){{ user.get_absolute_url }} -->
+             <a class="card-link" href="{% url 'user_detail' user.pk %}">
+            &nbsp<i class="fa fa-info-circle  2-xs pt-1"></i></a>
         </div>
     </div>
 </div>

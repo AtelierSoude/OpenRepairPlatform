@@ -1,0 +1,11 @@
+{% extends 'detail_view.html' %} 
+{% load staticfiles %} 
+{% load fontawesome %} 
+{% load avatar_tags %} 
+{% block context %}
+
+<div class="row">
+    {% include "users/user.html" with user=target_user %}
+</div>
+
+{% endblock context %} 

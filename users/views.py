@@ -1,10 +1,12 @@
 from django.shortcuts import render, get_list_or_404
 from .forms import CustomUserChangeForm, CustomUserCreationForm, UserForm
 from .models import CustomUser
-from django.views.generic.list import ListView
+from django.views.generic import ListView, FormView, CreateView, DetailView
+from django.contrib.auth.models import PermissionsMixin
 
 
 # Create your views here.
+
 
 
 def user_profile(request):
@@ -27,10 +29,7 @@ def user_profile(request):
         events = PublishedEvent.objects.filter(
         starts_at__gte=timezone.now()).order_by('starts_at')[:10]
     context = {"events": events}
-
-def detail_user(request):
-    return render(request, 'users/detail_user.html', {})
-
+    
 
 def list_users(request):
     if request.method == 'GET':
@@ -43,12 +42,43 @@ def list_users(request):
         return
 
 
-class UserListView(ListView):
 
+class UserFormView(CustomUserCreationForm, CreateView):
+    model = CustomUser
+    template = 'users/user_form.html'
+
+    def post(self, request, *args, **kwargs):
+        receive_form = CustomUserCreationForm(request.POST)
+        if receive_form.is_valid():
+            receive_form.save()
+        else:
+            context = {}
+            form = CustomUserCreationForm()
+            context['form'] = form
+            return render(self.template,
+                                  CustomUserCreationForm(request, context))
+        return HttpResponse('OK')
+
+
+
+class UserDetailView(DetailView):
+    model = CustomUser
+    context_object_name = 'target_user'
+
+    def get_context_data(self, **kwargs):
+       context = super().get_context_data(**kwargs)
+       return context
+
+
+
+class UserListView(ListView):
     model = CustomUser
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["list_type"] = "user"
         return context
+
+
+
 

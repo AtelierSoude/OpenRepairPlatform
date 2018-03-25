@@ -2,10 +2,20 @@
 {% load staticfiles %} 
 {% load fontawesome %} 
 {% load avatar_tags %} 
+
+{% load django_bootstrap_breadcrumbs %}
+
+{% block breadcrumbs %}
+{% with type="users" list_view="../" detail_name=target_user.get_full_name %}
+   {{ block.super }}
+{% endwith %}
+{% endblock %}
+
+
 {% block context %}
 
 <div class="row">
-    {% include "users/user.html" with user=target_user %}
+    {% include "users/user.html" with user=target_user class="col-lg" %}
 </div>
 
 {% endblock context %} 

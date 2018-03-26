@@ -352,8 +352,17 @@ input[type="color"]:focus,
   box-shadow: 0 1px 1px rgba(0, 77, 64, 0.75) inset, 0 0 8px rgba(0, 77, 64, 0.6);
   outline: 0 none;
 }
-
-
+/********************************
+************* Carousel *************
+*********************************/
+.carousel{
+  margin: 10px 0 10px -10px !important;
+}
+@media (max-width: 767px) {
+  .carousel{
+  margin: 10px 0 10px -50px !important;
+  }
+}
 
 
   

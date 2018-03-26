@@ -274,6 +274,14 @@ Media queries, ajustement selon taille écran
   background-color: #ededea;
 }
 
+textarea, input{
+  max-width:100%;
+    min-width:100%;
+    resize:vertical;
+    box-sizing:border-box;
+    margin:auto;
+}
+
 .form .selectmultiple{
   margin-bottom: 20px auto !important;
   font-size: 1.25em !important;

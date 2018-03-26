@@ -111,7 +111,7 @@
 <div class="container-fluid top-bar d-flex justify-content-end">
   <nav class="navbar ">
     {% if user.is_authenticated %}
-      <div class="navbar-brand"><a class="nav-link mr-3" href="{% url "user_profile" %}">{% avatar user %}{{ user.first_name }}</a></div>
+      <div class="navbar-brand"><a class="nav-link mr-3" href="{% url 'user_detail' user.pk %}">{% avatar user %}{{ user.first_name }}</a></div>
     {% else %}
       <div class="navbar-brand" ><a class="nav-link mr-3" href="{% url "login" %}"><i class="fa fa-user-circle-o fa-2x"></i></a></div>
     {% endif %}
@@ -123,14 +123,14 @@
     {% endif %}
 
     {% if user.is_authenticated %}
-      <div class="navbar-brand" ><a class="nav-link mr-3" href="{% url "user_profile" %}"><i class="fa fa-user-circle-o fa-2x"></i></a></div>
+      <div class="navbar-brand" ><a class="nav-link mr-3" href="{% url 'user_detail' user.pk %}"><i class="fa fa-user-circle-o fa-2x"></i></a></div>
     <!-- Menu dropdown -->
     <div class="navbar-brand arrow-login ">
         <a class="nav-link mr-3 dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class=""></i></a>
         <div class="dropdown-menu " aria-labelledby="navbarDropdownMenuLink">
           <a class="dropdown-item" href="#">...</a>
           <a class="dropdown-item" href="{% url 'user_detail' user.pk %}"> voir profil </a>
-          <a class="dropdown-item" href="#">...</a>
+          <a class="dropdown-item" href="{% url "user_profile" %}">Editer profil</a>
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" href="#">...</a>
           <a class="nav-link" href="{% url 'logout' %}" title="Logout">Déconnexion</a>

@@ -21,11 +21,11 @@
                     {% for field in user_form %}
 
                         <div class="group">
+                            <label>{{ field.label }}</label>
                             {% if field.help_text %}
-                                <span class="pure-form-message-inline">{{ field.help_text|safe }}</span>
+                            <span class="pure-form-message-inline">{{ field.help_text|safe }}</span>
                             {% endif %}
                             {{ field }} {{ field.errors }}
-                            <label>{{ field.label }}</label>
                         </div>
 
                     {% endfor %}

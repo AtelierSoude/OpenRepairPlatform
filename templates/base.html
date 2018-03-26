@@ -121,6 +121,7 @@
 
       <div class="navbar-brand" ><a class="nav-link mr-3" href="{% url 'place_create' %}" title="create place"><i class="fa fa-map-marker fa-lg"></i><i class="fa fa-plus-circle fa-xs"></i></a></div>
     {% endif %}
+
     {% if user.is_authenticated %}
       <div class="navbar-brand" ><a class="nav-link mr-3" href="{% url "user_profile" %}"><i class="fa fa-user-circle-o fa-2x"></i></a></div>
     <!-- Menu dropdown -->
@@ -128,7 +129,7 @@
         <a class="nav-link mr-3 dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class=""></i></a>
         <div class="dropdown-menu " aria-labelledby="navbarDropdownMenuLink">
           <a class="dropdown-item" href="#">...</a>
-          <a class="dropdown-item" href="#">...</a>
+          <a class="dropdown-item" href="{% url 'user_detail' user.pk %}"> voir profil </a>
           <a class="dropdown-item" href="#">...</a>
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" href="#">...</a>

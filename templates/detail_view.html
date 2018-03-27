@@ -15,12 +15,20 @@
 
 {% block content %}
 {% render_breadcrumbs %}
-<div class="row">  
+<div class="container-fluid profil-header-bar">
+    <div class="row">
+        <div class="ml-5 header-avatar-bar col-md-4">{% avatar target_user %}{{ target_user.get_full_name|capfirst }}</div>
+        <div class="col-md-8"></div>
+    </div>
+</div>
+
+
+
+<div class="row"> 
 
     <!-- what is about -->
     <div class="col-md-4">
-        {% block context %}
-        {% endblock context %}
+        
     </div>   
 
    

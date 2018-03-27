@@ -19,9 +19,9 @@ a:hover{
   text-decoration-style: none !important;
 }
 .content-page {
-  position: absolute;
-  left: 50px; 
-  width: calc(100% - 50px);
+  /* position: absolute; */
+  /* left: 50px;  */
+  /* width: calc(100% - 50px); */
 }
 
 /*******************************
@@ -361,7 +361,7 @@ input[type="color"]:focus,
   outline: 0 none;
 }
 /********************************
-************* Carousel *************
+********** Carousel *************
 *********************************/
 .carousel{
   margin: 10px 0 10px -10px !important;
@@ -370,6 +370,24 @@ input[type="color"]:focus,
   .carousel{
   margin: 10px 0 10px -50px !important;
   }
+}
+/********************************
+********** detail user **********
+*********************************/
+.profil-header-bar {
+  width: 100% !important;
+  background-color:#3F5C6E;
+  height: 100px;
+  padding: 10px;
+}
+.header-avatar-bar img{
+  width: 100px;
+  height: 100px;
+  margin: 20px 0 0 40px !important;
+  border-radius: 10% !important;
+  background-color: #fff !important;
+  padding: 5px !important;
+  box-shadow: 0px 5px 5px gray;
 }
 
 

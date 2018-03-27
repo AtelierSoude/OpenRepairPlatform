@@ -248,6 +248,26 @@ input[type="color"]:focus,
   color: #fff;
 }
 
+.breadcrumb{
+  font-size: 12px;
+  line-height: 20px;
+  margin-left: 10px !important;
+}
+.breadcrumb{
+  box-shadow: 15px 15px 35px gray !important;
+  background-color: #fff;
+}
+.breadcrumb a{
+  color: black;
+}
+
+.breadcrumb .breadcrumb-item:not(:first-child)::before{
+  font-family: 'fontAwesome';
+  content:"\f04b" !important;
+  font-size: 8px;
+}
+
+
   
 
 

@@ -145,7 +145,7 @@
 <wrapper class="content-page">
   {% block breadcrumbs %}
     {% clear_breadcrumbs %}
-    {% breadcrumb "Home" "/" %}
+    {% breadcrumb "Home" ">" %}
   {% endblock %}
                    
   {% block content %}
@@ -155,6 +155,15 @@
 
 <!-- Script & librairy-->    
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+
+<!-- Modals Script -->
+{% include "fm/modal.html" %}
+<script type="text/javascript">
+    $(function() {
+        $.fm({debug: true});
+    });
+</script>
 
 </body>
 

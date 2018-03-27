@@ -54,3 +54,5 @@ git+https://github.com/beda-software/django-datetimepicker.git
 rules
 # breakcumbs 
 django_bootstrap_breadcrumbs
+# modals 
+django-fm

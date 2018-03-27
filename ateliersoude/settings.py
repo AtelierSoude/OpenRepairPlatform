@@ -72,6 +72,7 @@ INSTALLED_APPS = [
     'address',
     'avatar',
     'crispy_forms',
+    'fm',
     'django_bootstrap_breadcrumbs',
 ]
 
@@ -177,6 +178,8 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
+BREADCRUMBS_TEMPLATE = "django_bootstrap_breadcrumbs/bootstrap4.html"
+
 # https://github.com/kevin1024/django-npm
 STATICFILES_FINDERS = ['django.contrib.staticfiles.finders.FileSystemFinder',
                        'django.contrib.staticfiles.finders.AppDirectoriesFinder',

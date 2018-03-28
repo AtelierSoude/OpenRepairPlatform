@@ -8,6 +8,8 @@ from logging import getLogger
 from datetimepicker.widgets import DateTimePicker
 from rules.contrib.views import PermissionRequiredMixin
 
+from fm.views import AjaxCreateView
+
 logger = getLogger(__name__)
 
 
@@ -161,7 +163,7 @@ class EventFormView():
                             args=(self.object.pk, self.object.slug,))
 
 
-class EventCreateView(PermissionRequiredMixin, EventFormView, CreateView):
+class EventCreateView(PermissionRequiredMixin, EventFormView, AjaxCreateView):
     permission_required = 'plateformeweb.create_event'
 
     # set owner to current user on creation

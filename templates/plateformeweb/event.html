@@ -6,7 +6,10 @@
 
 {% block list %}
 <div class="{{class}} card-event">
-    <div class="card mr-5">
+    <div class="card mr-5
+    {% if event.available_seats <= 0 %}
+    border border-danger
+{% endif %}">
 <div class="event-card-title text-center">{{event.type}}</div>
 <div class="row">
     <div class="col-3">

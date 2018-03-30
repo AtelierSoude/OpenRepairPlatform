@@ -73,6 +73,7 @@ INSTALLED_APPS = [
     'avatar',
     'crispy_forms',
     'django_bootstrap_breadcrumbs',
+    'django_prices',
 ]
 
 MIDDLEWARE = [
@@ -176,8 +177,8 @@ STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
-CRISPY_TEMPLATE_PACK = 'bootstrap3',
-BREADCRUMBS_TEMPLATE = "django_bootstrap_breadcrumbs/bootstrap4.html",
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
+BREADCRUMBS_TEMPLATE = "django_bootstrap_breadcrumbs/bootstrap4.html"
 # https://github.com/kevin1024/django-npm
 STATICFILES_FINDERS = ['django.contrib.staticfiles.finders.FileSystemFinder',
                        'django.contrib.staticfiles.finders.AppDirectoriesFinder',
@@ -302,7 +303,6 @@ GOOGLE_API_KEY = "AIzaSyCNZ-rIhY1zyq2LFghBV4x7mUQvtJCOK88"
 NPM_FILE_PATTERNS = {
     'purecss': ['build/*.js', 'build/*.css'],
     'stickyfilljs': ['dist/*.js', 'dist/*.css'],
-    'semantic-ui': ['dist/*'],
 }
 NPM_STATIC_FILES_PREFIX = 'npm'
 NPM_ROOT_PATH = BASE_DIR

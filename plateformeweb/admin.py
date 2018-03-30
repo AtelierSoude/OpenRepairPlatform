@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Event, EventType, Place, Organization, OrganizationPerson
+from .models import Condition, Event, Activity, Place, Organization, OrganizationPerson
 
 
 class EventAdmin(admin.ModelAdmin):
@@ -8,7 +8,10 @@ class EventAdmin(admin.ModelAdmin):
         'location', 'slug')
     ordering = ('-starts_at',)
 
-class EventTypeAdmin(admin.ModelAdmin):
+class ActivityAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+
+class ConditionAdmin(admin.ModelAdmin):
     list_display = ('name',)
 
 class PlaceAdmin(admin.ModelAdmin):
@@ -25,7 +28,8 @@ class OrganizationPersonAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Event, EventAdmin)
-admin.site.register(EventType, EventTypeAdmin)
+admin.site.register(Condition, ConditionAdmin)
+admin.site.register(Activity, ActivityAdmin)
 admin.site.register(Place, PlaceAdmin)
 admin.site.register(Organization, OrganizationAdmin)
 admin.site.register(OrganizationPerson, OrganizationPersonAdmin)

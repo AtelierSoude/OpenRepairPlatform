@@ -64,6 +64,15 @@ rules.add_perm('plateformeweb.create_organization',
 rules.add_perm('plateformeweb.edit_organization',
                is_org_admin_for_object | rules.is_staff | rules.is_superuser)
 
+#activities
+rules.add_perm('plateformeweb.create_activity',
+               is_org_admin_for_object | rules.is_staff | rules.is_superuser)
+rules.add_perm('plateformeweb.edit_activity',
+               is_owner_for_object | is_org_admin_for_object | rules.is_staff \
+               | rules.is_superuser)
+rules.add_perm('plateformeweb.delete_activity',
+               is_org_admin_for_object | rules.is_staff | rules.is_superuser)
+
 # events
 rules.add_perm('plateformeweb.create_event',
                is_org_admin_for_object | rules.is_staff | rules.is_superuser)

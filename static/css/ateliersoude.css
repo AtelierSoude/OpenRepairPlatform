@@ -2,10 +2,9 @@
 ************* Reset ************
 *********************************/
 * {
-  margin: 0 !important;
+  margin: 0 !important ;
   padding: 0 !important;
-}
-
+ }
 /*******************************
 ******* éléments généraux *******
 *********************************/
@@ -51,7 +50,7 @@ a:hover{
 ************ card ***************
 *********************************/
 .card {
-  box-shadow: 2px 2px 5px gray;
+  box-shadow: 0px 4px 0px #3fdbb4;
 }
 /*******************************
 ********* user card ************
@@ -257,7 +256,6 @@ input[type="color"]:focus,
   margin-left: 10px !important;
 }
 .breadcrumb{
-  box-shadow: 15px 15px 35px gray !important;
   background-color: #fff;
 }
 .breadcrumb a{

@@ -16,10 +16,18 @@
     <a href="{% url 'place_edit' place.id %}" class="card-link">edit</a>
 {% endblock context %} 
 
-{% block detail %}
-      <h3> Event takes place in : {{ place.event_set.all.count }} </h3>
-{% for event in place.event_set.all %}
-    {% include "plateformeweb/event.html" %}
-{% endfor %}
-{% endblock detail %}
+{% block about %}
+
+{% block about1 %}
+
+    {% with about1="Dates dans ce lieux" %}
+    {{ block.super }}
+    {% endwith %}
+        {% for event in place.event_set.all %}
+        {% include "plateformeweb/event.html" %}
+        {% endfor %}
+
+{% endblock about1 %}
+
+{% endblock about %}
       

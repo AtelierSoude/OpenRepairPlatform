@@ -17,32 +17,42 @@
     <a href="{% url 'organization_edit' organization.id %}" class="card-link">edit</a>
 {% endblock context %} 
 
-{% block detail %}
+{% block about %}
 
+{% block about1 %}
 
-<section class="card">
-        <h3 class="card-header">Lieux </h3>
+    {% with about1="Lieux" %}
+    {{ block.super }}
+    {% endwith %}
     {% for place in organization.place_set.all %}
         {% include "plateformeweb/place.html" %}
     {% endfor %}
-    </section>
 
-<section class="card">
-        <h3 class="card-header"> {{ organization.organizationperson_set.all.count }} adhérents </h3>
-{% for organizationperson in organization.organizationperson_set.all %}
+{% endblock about1 %}
+
+{% block about2 %}
+
+    {% with about2="Adhérents" %}
+    {{ block.super }}
+    {% endwith %}
+    {% for organizationperson in organization.organizationperson_set.all %}
     {% with user=organizationperson.user %}
         {% include "users/user.html" %}
     {% endwith %}
 {% endfor %}
-</section>
+        
+{% endblock about2 %}
 
+{% block about3 %}
 
-<section class="card-group card">
-        <h3 class="card-header"> {{ organization.event_set.all.count }} évènements </h3>
-{% for event in organization.event_set.all %}
-    {% include "plateformeweb/event.html" %}
-{% endfor %}
-</section>
+    {% with about3="Dates" %}
+    {{ block.super }}
+    {% endwith %}
+    {% for event in organization.event_set.all %}
+        {% include "plateformeweb/event.html" %}
+    {% endfor %}
 
-{% endblock detail %}
+{% endblock about3 %}
+
+{% endblock about %}
 

@@ -20,18 +20,19 @@
 
 {% endblock context %} 
 
-{% block detail %}
+{% block about %}
 
-<section class="col-lg container">
 
-    <h3 class="row"> Evenements inscris </h3>
+{% block about1 %}
 
-{% for event in target_user.event_set.all %}
- {% include "plateformeweb/event.html" %}
-{% endfor %}
+    {% with about1="Evenements inscrits" %}
+    {{ block.super }}
+    {% endwith %}
+        {% for event in target_user.event_set.all %}
+        {% include "plateformeweb/event.html" with class="card" %}
+        {% endfor %}
 
-</section>
+{% endblock about1 %}
 
-    
-{% endblock detail %}
+{% endblock about %}
       

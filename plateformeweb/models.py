@@ -161,7 +161,7 @@ class Condition(models.Model):
                             null=False,
                             blank=False, default="")
     price = MoneyField(
-        'tarif', currency='BTC', default='5', max_digits=9,
+        'tarif', currency='EUR', default='5', max_digits=9,
         decimal_places=2, blank=True)
     
     def __str__(self):
@@ -180,9 +180,6 @@ class Activity(models.Model):
                             null=False,
                             blank=False, default="")
     picture = models.ImageField(verbose_name=_('Image'), upload_to='activities/')
-    condition = models.ManyToManyField(
-    Condition, related_name='condition_activity', verbose_name=_('Conditions'),
-        blank=True)
 
     def __str__(self):
         return self.name
@@ -200,6 +197,9 @@ class Event(models.Model):
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE,
                                      null=False)
     owner = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True)
+    condition = models.ManyToManyField(
+    Condition, related_name='condition_activity', verbose_name=_('Conditions'),
+        blank=True)
     published = models.BooleanField(verbose_name=_("Published"), null=False,
                                     default=False)
     publish_at = models.DateTimeField(

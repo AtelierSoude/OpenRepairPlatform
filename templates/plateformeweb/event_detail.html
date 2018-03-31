@@ -16,7 +16,10 @@
     <div class="ml-3 pt-3">
         {% include "plateformeweb/event.html" %}
     </div>
-    {% endblock context %}
+    <div class="ml-3 pt-3">
+        {% include "plateformeweb/activity.html" with activity=event.type %}
+        </div>
+{% endblock context %}
 
 
 {% block detail %}

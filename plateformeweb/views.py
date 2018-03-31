@@ -130,7 +130,7 @@ class ActivityListView(ListView):
 
 class ActivityFormView():
     model = Activity
-    fields = ["name", "description", "condition"]
+    fields = ["name", "description"]
 
     def get_form(self, form_class=None):
         if form_class is None:
@@ -185,7 +185,7 @@ class EventFormView():
     model = Event
     fields = ["title", "type", "starts_at", "ends_at", "available_seats",
               "attendees", "organizers", "location", "publish_at", "published",
-              "organization"]
+              "organization", "condition"]
 
     # date picker from
     #   https://xdsoft.net/jqplugins/datetimepicker/

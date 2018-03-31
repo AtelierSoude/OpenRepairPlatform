@@ -10,7 +10,10 @@
     {% if event.available_seats <= 0 %}
     border border-danger
 {% endif %}">
-<div class="event-card-title text-center">{{event.type}}</div>
+<div class="event-card-title text-center">
+     <a href="{% url 'activity_detail' event.type.id event.type.slug %}">
+    {{event.type}}</a>
+</div>
 <div class="row">
     <div class="col-3">
         <!-- <img class="card-img-top img-fluid" src="{% static "img/event-card.jpg" %}" alt="Card image cap"> -->
@@ -36,6 +39,9 @@
 
                 <li class="list-group-item">
                     <!-- <small>{% fontawesome_icon 'clock-o' %} {{ event.starts_at }}</small> -->
+                </li>
+                <li>
+                    {{event.condition}}
                 </li>
                 <li class="list-group-item">
                     {% fontawesome_icon 'user-plus' %}

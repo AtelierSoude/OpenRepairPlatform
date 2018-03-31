@@ -25,7 +25,7 @@
     {{ block.super }}
     {% endwith %}
     {% for place in organization.place_set.all %}
-        {% include "plateformeweb/place.html" %}
+        {% include "plateformeweb/place.html" with class="my-3 col-sm-6 col-md-4" %}
     {% endfor %}
 
 {% endblock about1 %}

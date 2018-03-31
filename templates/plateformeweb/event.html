@@ -5,9 +5,7 @@
 {% load avatar_tags %}
 
 {% block list %}
-<div class="{{class}} card-event">
-    <div class="card mr-5
-    {% if event.available_seats <= 0 %}
+<div class="{{class}} card card-event {% if event.available_seats <= 0 %}
     border border-danger
 {% endif %}">
 <div class="event-card-title text-center">
@@ -98,8 +96,6 @@
         
     </div>
 </div>    
-</div>
-
 </div>
 </div>
 

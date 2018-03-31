@@ -3,7 +3,7 @@
 *********************************/
 * {
   margin: 0 !important ;
-  padding: 0 !important;
+  padding: 0 !important; 
  }
 /*******************************
 ******* éléments généraux *******
@@ -26,6 +26,10 @@ a:hover{
 /*******************************
 *********** Menu ***************
 *********************************/
+
+.navbar {
+  background-color: #083342 !important;
+}
 .navbar ul li a {
   margin-left: 15px !important;
   color: #fff;
@@ -50,8 +54,16 @@ a:hover{
 ************ card ***************
 *********************************/
 .card {
-  box-shadow: 0px 4px 0px #3fdbb4;
+  box-shadow: 0px 4px 0px #35bda6;
+  margin : 15px !important;
 }
+
+
+.card-activity img{
+  width: 100%;
+  height: 100px;
+}
+
 /*******************************
 ********* user card ************
 *********************************/
@@ -90,20 +102,20 @@ a:hover{
 ********* event card ************
 *********************************/
 .event-card-title{
-  background-color: #3d3d3c;
+  background-color: #083342;
   color: #fff;
 }
 /* .card-event h5{
   background-color:#ffefa0;
 } */
 .card-event .badge{
-  padding: 1.5px !important;
+  /* padding: 1.5px !important; */ 
 }
 .card-event .fa-clock-o {
-  color: forestgreen !important;
+  color: #35bda6 !important;
 }
 .card-event h3 {
-  padding: 5px !important;
+ /* padding: 5px !important; */ 
   font-size: 1.4em;
 }
 .card-event .hour-event{
@@ -111,7 +123,7 @@ a:hover{
   font-size: 0.8em;
 }
 .square-date{
-  background-color: #6139a8;
+  background-color: #35bda6;
   color: #fff;
   height: 100%;
   font-weight: bold;
@@ -141,7 +153,7 @@ textarea, input{
   font-size: 1.25em !important;
   padding: 0 0 5px 0 !important;
   border: none !important;
-  border-bottom: solid 2px #4DB6AC !important;
+  border-bottom: solid 2px #35bda6 !important;
 }
 .form label{
   padding-top: 10px !important;
@@ -155,7 +167,7 @@ input[type="submit"] {
   cursor: pointer;
   margin: auto;
   width: 100%;
-  background-color: #4DB6AC;
+  background-color: #35bda6;
   color: #E0F2F1;
   font-family: 'Noto Sans', sans-serif;
   font-size: 1.25em;
@@ -182,7 +194,7 @@ input[type="text"] {
   color: #004D40;
   background-color: transparent;
   border: none;
-  border-bottom: solid 2px #4DB6AC;
+  border-bottom: solid 2px #35bda6;
 }
 /* Create event card */
 #div_id_title input[type="text"], #div_id_name input[type="text"] {
@@ -230,7 +242,7 @@ input[type="color"]:focus,
 *********************************/
 .profil-header-bar {
   width: 100% !important;
-  background-color:#3F5C6E;
+  background-color: #35bda6;
   height: 100px;
   padding: 10px;
 }
@@ -241,7 +253,7 @@ input[type="color"]:focus,
   border-radius: 10% !important;
   background-color: #fff !important;
   padding: 5px !important;
-  box-shadow: 0px 5px 5px gray;
+  box-shadow: 0px 5px 5px #083342;
 }
 .header-avatar-bar span{
   margin-left: 10px !important;
@@ -253,7 +265,7 @@ input[type="color"]:focus,
 .breadcrumb{
   font-size: 12px;
   line-height: 20px;
-  margin-left: 10px !important;
+  padding-left: 10px !important; 
 }
 .breadcrumb{
   background-color: #fff;

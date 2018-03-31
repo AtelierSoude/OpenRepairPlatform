@@ -22,14 +22,13 @@
 
 {% block about %}
 
-
 {% block about1 %}
 
     {% with about1="Evenements inscrits" %}
     {{ block.super }}
     {% endwith %}
         {% for event in target_user.event_set.all %}
-        {% include "plateformeweb/event.html" with class="card" %}
+        {% include "plateformeweb/event.html" %}
         {% endfor %}
 
 {% endblock about1 %}

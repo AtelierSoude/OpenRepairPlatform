@@ -1,0 +1,32 @@
+{% extends 'detail_view.html' %}
+
+{% load staticfiles %}
+{% load fontawesome %}
+{% load avatar_tags %}
+{% load django_bootstrap_breadcrumbs %}
+
+{% block breadcrumbs %}
+{% with type="activity" list_view="activity_list" detail_name=activity.name %}
+   {{ block.super }}
+{% endwith %}
+{% endblock %}
+
+{% block context %}
+    {% include "plateformeweb/activity.html" %}
+    <a href="{% url 'activity_edit' activity.id %}" class="card-link">edit</a>
+{% endblock context %} 
+
+{% block about %}
+
+{% block about1 %}
+
+    {% with about1="Dates" %}
+    {{ block.super }}
+    {% endwith %}
+    {% for event in activity.event_set.all %}
+        {% include "plateformeweb/event.html" %}
+    {% endfor %}
+{% endblock about1 %}
+
+{% endblock about %}
+      

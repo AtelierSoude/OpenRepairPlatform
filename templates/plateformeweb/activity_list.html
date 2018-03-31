@@ -1,0 +1,37 @@
+
+{% extends 'list_view.html' %}
+
+{% load staticfiles %}
+{% load fontawesome %}
+{% load avatar_tags %}
+{% load django_bootstrap_breadcrumbs %}
+
+{% block breadcrumbs %}
+{% with type="activités" view="activity_list" %}
+    {{ block.super }}
+{% endwith %}
+{% endblock %}
+
+
+{% block title %} {{ block.super }} activités {% endblock title %}
+
+
+{% block statistics %}
+
+{% endblock statistics %}
+
+
+{% block list %}
+<section class="">
+    {% for activity in object_list %}
+    {% include "plateformeweb/activity.html" %}
+    {% empty %}
+    <div>No activitys yet.</div>    
+  
+  {% endfor %}
+  </section>
+{% endblock list %}
+
+
+
+ 

@@ -41,7 +41,10 @@
                     <!-- <small>{% fontawesome_icon 'clock-o' %} {{ event.starts_at }}</small> -->
                 </li>
                 <li>
-                    {{event.condition}}
+                    {% for condition in event.condition.all %}
+                    <a> <small>{{condition.resume}}</small> </a>
+                    {% endfor %}
+                   
                 </li>
                 <li class="list-group-item">
                     {% fontawesome_icon 'user-plus' %}

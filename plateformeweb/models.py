@@ -157,6 +157,9 @@ class Condition(models.Model):
     name = models.CharField(verbose_name=_("Condition Type"), max_length=100,
                             null=False,
                             blank=False, default="")
+    resume = models.CharField(verbose_name=_("Condition resume"), max_length=100,
+                            null=False,
+                            blank=False, default="")
     description = models.TextField(verbose_name=_("Condition description"),
                             null=False,
                             blank=False, default="")
@@ -196,10 +199,10 @@ class Event(models.Model):
                              default="")
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE,
                                      null=False)
-    owner = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True)
     condition = models.ManyToManyField(
     Condition, related_name='condition_activity', verbose_name=_('Conditions'),
         blank=True)
+    owner = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True)
     published = models.BooleanField(verbose_name=_("Published"), null=False,
                                     default=False)
     publish_at = models.DateTimeField(

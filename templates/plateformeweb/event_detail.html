@@ -16,26 +16,38 @@
     <div class="ml-3 pt-3">
         {% include "plateformeweb/event.html" %}
     </div>
-    {% endblock context %}
+    <div class="ml-3 pt-3">
+        {% include "plateformeweb/activity.html" with activity=event.type class="my-3 col-sm-6 col-md-4" %}
+    </div>
+{% endblock context %}
 
 
-{% block detail %}
-<section class="ml-3 pt-3">
+{% block about %}
 
-    <h3 class=""> Organizers :  {{ event.organizers.all.count }} </h3>
+{% block about1 %}
 
+    {% with about1="Organisateurs" %}
+    {{ block.super }}
+    {% endwith %}
         {% for user in event.organizers.all %}
-            {% include "users/user.html" with class="card" %}
+        {% include "users/user.html" with class="card" %}
         {% endfor %}
 
-    <h3 class=""> Participants :  {{ event.attendees.all.count }} </h3>
+{% endblock about1 %}
 
+{% block about2 %}
+
+    {% with about2="Participants" %}
+    {{ block.super }}
+    {% endwith %}
         {% for user in event.attendees.all %}
-            {% include "users/user.html" with class="item" %}
+        {% include "users/user.html" with class="card" %}
         {% endfor %}
 
-    <h3 class=""> Informations : </h3>
-      
+{% endblock about2 %}
+
+{% endblock about %}
+       
 </section>
-{% endblock detail %}
+
       

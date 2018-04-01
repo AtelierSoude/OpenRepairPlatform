@@ -108,6 +108,60 @@ class PlaceEditView(PermissionRequiredMixin, PlaceFormView, UpdateView):
     queryset = Place.objects
 
 
+# --- Activity Types --- 
+
+
+class ActivityView(DetailView):
+    model = Activity
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
+
+class ActivityListView(ListView):
+    model = Activity
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["list_type"] = "activity"
+        return context
+
+
+# --- edit ---
+
+class ActivityFormView():
+    model = Activity
+    fields = ["name", "description"]
+
+    def get_form(self, form_class=None):
+        if form_class is None:
+            form_class = self.get_form_class()
+        form = super().get_form(form_class)
+            
+        return form
+
+    def get_success_url(self):
+        return reverse_lazy('activity_detail',
+                            args=(self.object.pk, self.object.slug,))
+
+
+class ActivityCreateView(PermissionRequiredMixin, ActivityFormView, CreateView):
+    permission_required = 'plateformeweb.create_activity'
+
+        # set owner to current user on creation
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        obj.owner = self.request.user
+        return super().form_valid(form)
+
+
+class ActivityEditView(PermissionRequiredMixin, ActivityFormView, UpdateView):
+    permission_required = 'plateformeweb.edit_acivity'
+    queryset = Activity.objects
+
+
+
 # --- Events ---
 
 class EventView(DetailView):
@@ -133,7 +187,7 @@ class EventFormView():
     model = Event
     fields = ["title", "type", "starts_at", "ends_at", "available_seats",
               "attendees", "organizers", "location", "publish_at", "published",
-              "organization"]
+              "organization", "condition"]
 
     # date picker from
     #   https://xdsoft.net/jqplugins/datetimepicker/

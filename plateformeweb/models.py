@@ -5,7 +5,7 @@ from address.models import AddressField
 from users.models import CustomUser
 from django.conf import settings
 from autoslug import AutoSlugField
-
+from django_prices.models import MoneyField, TaxedMoneyField
 
 # ------------------------------------------------------------------------------
 
@@ -150,14 +150,45 @@ class Place(models.Model):
 
 
 # TODO put these definitions in a DB table -more flexible- or in code?
-class EventType(models.Model):
-    name = models.CharField(verbose_name=_("Event type"), max_length=100,
+
+
+#Condition : mettre ailleurs, en test
+class Condition(models.Model):
+    name = models.CharField(verbose_name=_("Condition Type"), max_length=100,
                             null=False,
                             blank=False, default="")
+    resume = models.CharField(verbose_name=_("Condition resume"), max_length=100,
+                            null=False,
+                            blank=False, default="")
+    description = models.TextField(verbose_name=_("Condition description"),
+                            null=False,
+                            blank=False, default="")
+    price = MoneyField(
+        'tarif', currency='EUR', default='5', max_digits=9,
+        decimal_places=2, blank=True)
+    
+    def __str__(self):
+        return self.name
+   
+   
+# EventType is a activity 
+class Activity(models.Model):
+    name = models.CharField(verbose_name=_("Activity type"), max_length=100,
+                            null=False,
+                            blank=False, default="")
+    slug = AutoSlugField(populate_from=('name'), default='',
+                         unique=False)
+    owner = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True)
+    description = models.TextField(verbose_name=_("Activity description"),
+                            null=False,
+                            blank=False, default="")
+    picture = models.ImageField(verbose_name=_('Image'), upload_to='activities/')
 
     def __str__(self):
         return self.name
 
+    
+    
 
 # ------------------------------------------------------------------------------
 
@@ -168,6 +199,9 @@ class Event(models.Model):
                              default="")
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE,
                                      null=False)
+    condition = models.ManyToManyField(
+    Condition, related_name='condition_activity', verbose_name=_('Conditions'),
+        blank=True)
     owner = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True)
     published = models.BooleanField(verbose_name=_("Published"), null=False,
                                     default=False)
@@ -176,7 +210,7 @@ class Event(models.Model):
         null=False,
         blank=False,
         default=timezone.now)
-    type = models.ForeignKey(EventType, on_delete=models.DO_NOTHING)
+    type = models.ForeignKey(Activity, on_delete=models.DO_NOTHING)
     slug = AutoSlugField(populate_from=('title'), default='',
                          unique=True)
     starts_at = models.DateTimeField(verbose_name=_("Start date and time"),

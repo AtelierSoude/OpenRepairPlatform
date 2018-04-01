@@ -6,27 +6,26 @@
 {% load django_bootstrap_breadcrumbs %}
 
 {% block breadcrumbs %}
-{% with type="places" list_view="place_list" detail_name=place.name %}
+{% with type="activity" list_view="activity_list" detail_name=activity.name %}
    {{ block.super }}
 {% endwith %}
 {% endblock %}
 
 {% block context %}
-    {% include "plateformeweb/place.html" %}
-    <a href="{% url 'place_edit' place.id %}" class="card-link">edit</a>
+    {% include "plateformeweb/activity.html" %}
+    <a href="{% url 'activity_edit' activity.id %}" class="card-link">edit</a>
 {% endblock context %} 
 
 {% block about %}
 
 {% block about1 %}
 
-    {% with about1="Dates dans ce lieux" %}
+    {% with about1="Dates" %}
     {{ block.super }}
     {% endwith %}
-        {% for event in place.event_set.all %}
+    {% for event in activity.event_set.all %}
         {% include "plateformeweb/event.html" %}
-        {% endfor %}
-
+    {% endfor %}
 {% endblock about1 %}
 
 {% endblock about %}

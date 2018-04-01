@@ -101,6 +101,12 @@ a:hover{
 /*******************************
 ********* event card ************
 *********************************/
+.card-event {
+   box-shadow: 0px 4px 0px #fee56e;
+}
+.card-place {
+   box-shadow: 0px 4px 0px rgb(255, 89, 89);
+}
 .event-card-title{
   background-color: #083342;
   color: #fff;
@@ -238,13 +244,19 @@ input[type="color"]:focus,
   }
 }
 /********************************
-********** detail user **********
+********** detail views **********
 *********************************/
 .profil-header-bar {
   width: 100% !important;
   background-color: #35bda6;
   height: 100px;
   padding: 10px;
+}
+.profil-header-bar.event{
+  background-color: #fee56e;
+}
+.profil-header-bar.place {
+  background-color: rgb(255, 89, 89);
 }
 .header-avatar-bar img{
   width: 100px;

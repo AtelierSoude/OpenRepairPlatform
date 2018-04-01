@@ -11,6 +11,12 @@
 {% endwith %}
 {% endblock %}
 
+{% block header_ban %}
+    {% with detail_of="place" %}
+    {{ block.super }}
+{% endwith %}
+{% endblock header_ban %}}
+
 {% block context %}
     {% include "plateformeweb/place.html" %}
     <a href="{% url 'place_edit' place.id %}" class="card-link">edit</a>

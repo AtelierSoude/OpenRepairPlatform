@@ -12,6 +12,12 @@
 {% endwith %}
 {% endblock %}
 
+{% block header_ban %}
+    {% with detail_of="event" %}
+    {{ block.super }}
+{% endwith %}
+{% endblock header_ban %}
+
 {% block context %}
     <div class="ml-3 pt-3">
         {% include "plateformeweb/event.html" %}

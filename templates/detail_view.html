@@ -15,7 +15,9 @@
 
 {% block content %}
 {% render_breadcrumbs %}
-<div class="container-fluid profil-header-bar">
+
+{% block header_ban %}
+<div class="container-fluid profil-header-bar {{detail_of}} ">
     <div class="row">
         <div class="ml-5 header-avatar-bar col-md-4">
             {% avatar target_user %}<span>{{ target_user.get_full_name|capfirst }}</span>
@@ -24,9 +26,7 @@
         <div class="col-md-8"></div>
     </div>
 </div>
-
-
-
+{% endblock %}
 <div class="row"> 
 
     <!-- what is about -->

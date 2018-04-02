@@ -10,7 +10,7 @@ from django.forms import ModelForm, ModelMultipleChoiceField, ModelChoiceField, 
 from datetimepicker.widgets import DateTimePicker
 from rules.contrib.views import PermissionRequiredMixin
 
-from fm.views import AjaxCreateView
+from fm.views import AjaxCreateView, AjaxUpdateView
 
 logger = getLogger(__name__)
 
@@ -59,7 +59,7 @@ class OrganizationCreateView(PermissionRequiredMixin, OrganizationFormView,
 
 
 class OrganizationEditView(PermissionRequiredMixin, OrganizationFormView,
-                           UpdateView):
+                           AjaxUpdateView):
     permission_required = 'plateformeweb.edit_organization'
     queryset = Organization.objects
 
@@ -89,6 +89,13 @@ class PlaceFormView():
     model = Place
     fields = ["name", "description", "type", "address", "picture",
               "organization"]
+              
+    def get_form(self, form_class=None):
+        if form_class is None:
+            form_class = self.get_form_class()
+        form = super().get_form(form_class)
+            
+        return form
 
     def get_success_url(self):
         return reverse_lazy('place_detail',
@@ -105,7 +112,7 @@ class PlaceCreateView(PermissionRequiredMixin, PlaceFormView, CreateView):
         return super().form_valid(form)
 
 
-class PlaceEditView(PermissionRequiredMixin, PlaceFormView, UpdateView):
+class PlaceEditView(PermissionRequiredMixin, PlaceFormView, AjaxUpdateView):
     permission_required = 'plateformeweb.edit_place'
     queryset = Place.objects
 
@@ -132,9 +139,9 @@ class ActivityListView(ListView):
 
 # --- edit ---
 
-class ActivityFormView(ModelForm):
+class ActivityFormView():
     model = Activity
-    fields = ["name", "description"]
+    fields = ["name", "description", "picture"]
 
     def get_form(self, form_class=None):
         if form_class is None:
@@ -158,7 +165,7 @@ class ActivityCreateView(PermissionRequiredMixin, ActivityFormView, CreateView):
         return super().form_valid(form)
 
 
-class ActivityEditView(PermissionRequiredMixin, ActivityFormView, UpdateView):
+class ActivityEditView(PermissionRequiredMixin, ActivityFormView, AjaxUpdateView):
     permission_required = 'plateformeweb.edit_acivity'
     queryset = Activity.objects
 
@@ -187,8 +194,8 @@ class EventListView(ListView):
 
 class EventFormView():
     model = Event
-    fields = ["title", "type", "starts_at", "ends_at", "recurrences", "available_seats",
-              "attendees", "organizers", "location", "publish_at", "published",
+    fields = ["title", "type", "starts_at", "ends_at", "available_seats",
+              "attendees", "presents", "organizers", "location", "publish_at", "published",
               "organization", "condition"]
 
     # date picker from
@@ -229,62 +236,8 @@ class EventCreateView(PermissionRequiredMixin, EventFormView, AjaxCreateView):
         return super().form_valid(form)
 
 
-class EventEditView(PermissionRequiredMixin, EventFormView, UpdateView):
+class EventEditView(PermissionRequiredMixin, EventFormView, AjaxUpdateView):
     permission_required = 'plateformeweb.edit_event'
     queryset = Event.objects
 
 
-## Booking system 
-
-
-# Create the form class.
-class EventPresentForm(ModelForm):
-    model = Event
-    fields = ["available_seats", 'attendees', "presents",]   
-
-    def get_form(self, form_class=None):
-        if form_class is None:
-            form_class = self.get_form_class()
-            form = super().get_form(form_class)
-            form.fields['attendees'] = ModelChoiceField(
-                queryset=CustomUser.objects.all()
-                )
-        return form
-        
-  #  def form_valid(self, form):
-  #      return super().form_valid(form)‡
-
-    def get_success_url(self):
-        return reverse_lazy('event_present',
-                            args=(self.object.pk,))
-
-def EventPresentView(request):
-
-    form = EventPresentForm(request.POST or None)
-
-    if request.method == 'POST':
-
-        if form.is_valid():
-
-            attentees = form.cleaned_data['attendees']
-
-            form.save()
-            return HttpResponseRedirect(reverse("event_present"))
-
-
-    return render(request, '', {'form': form})
-
-
-#class EventPresentView(PermissionRequiredMixin, EventPresentForm, UpdateView):
-#    permission_required = 'plateformeweb.edit_event'
-
- #   def form_valid(self, form):
- #       attendees = form.cleaned_data['attendees']
- #       obj = form.save(commit=False)
- #       return super().form_valid(form)
-    
-
-
-    
-
-    

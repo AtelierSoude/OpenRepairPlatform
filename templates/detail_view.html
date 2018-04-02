@@ -17,16 +17,28 @@
 {% render_breadcrumbs %}
 
 {% block header_ban %}
-<div class="container-fluid profil-header-bar {{detail_of}} ">
+<div class="container-fluid profil-header-bar {{object}} ">
     <div class="row">
         <div class="ml-5 header-avatar-bar col-md-4">
             {% avatar target_user %}<span>{{ target_user.get_full_name|capfirst }}</span>
 
         </div>
-        <div class="col-md-8"></div>
+        <div class="col-md-6">
+        </div>
+
+        {% if request.user.is_staff %}  
+        <div class="float-right">
+       
+        {% block edit_link %}
+             {% endblock edit_link %}
+        {% endif %}
+       
+        
+        </div>
     </div>
 </div>
 {% endblock %}
+
 <div class="row"> 
 
     <!-- what is about -->

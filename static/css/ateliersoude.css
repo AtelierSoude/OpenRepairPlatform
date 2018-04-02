@@ -5,6 +5,7 @@
   margin: 0 !important ;
   padding: 0 !important; 
  }
+
 /*******************************
 ******* éléments généraux *******
 *********************************/
@@ -22,7 +23,9 @@ a:hover{
   /* left: 50px;  */
   /* width: calc(100% - 50px); */
 }
-
+.btn {
+  padding: 5px !important;
+}
 /*******************************
 *********** Menu ***************
 *********************************/
@@ -135,16 +138,24 @@ a:hover{
   font-weight: bold;
   font-size: 2.3em;
 }
+
+
+/* modals */ 
+
+.fm-modal .modal-content {
+    margin: auto !important;
+    max-width: 700px !important;
+}
+
 /********************************
 ************* Forms *************
 *********************************/
 .form{
   padding: 20px !important;
   margin: 10px auto !important;
-  border-radius: 5px;
-  box-shadow: 2px 2px 5px black;
-  background-color: #ededea;
+  width: 100%;
 }
+
 
 textarea, input{
   max-width:100%;

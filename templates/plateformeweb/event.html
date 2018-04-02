@@ -79,11 +79,8 @@
             </a>
             
             <!-- Détaits et éditions -->
+            
             <a class="card-link" href="{% url 'event_detail' event.id event.slug %}">&nbsp<i class="fa fa-info-circle  2-xs pt-1">info</i></a>
-            {% if request.user.is_superuser %}
-            <a class="card-link" href="{% url 'event_edit' event.id %}">&nbsp<i class="fa fa-pencil-square-o  2-xs pt-1">Editer</i></a>
-            {% endif %}
-
 
 
         

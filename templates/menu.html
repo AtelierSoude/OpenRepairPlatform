@@ -36,9 +36,16 @@
             </div>
               <div class="navbar navbar-expand-lg navbar-dark bg-dark d-flex justify-content-end">     
                   {% if user.is_superuser %}
-                    <div class="navbar-brand" ><a class="nav-link mr-3 fm-create" href="{% url 'event_create' %}" title="create event" data-fm-head="Create" data-fm-callback="reload"><i class="fa fa-calendar fa-lg"></i><i class="fa fa-plus-circle fa-xs"></i></a></div>
+                    <div class="navbar-brand" >
+                        <a class="nav-link mr-3 fm-create" href="{% url 'event_create' %}" 
+                        title="create event" data-fm-head="Create" data-fm-callback="reload">
+                        <i class="fa fa-calendar fa-lg"></i>
+                        <i class="fa fa-plus-circle fa-xs"></i></a></div>
             
-                    <div class="navbar-brand" ><a class="nav-link mr-3 fm-create" href="{% url 'place_create' %}" title="create place"><i class="fa fa-map-marker fa-lg"></i><i class="fa fa-plus-circle fa-xs"></i></a></div>
+                    <div class="navbar-brand" ><a class="nav-link mr-3 fm-create" href="{% url 'place_create' %}" 
+                        title="create place" data-fm-head="Create" data-fm-callback="reload">
+                        <i class="fa fa-map-marker fa-lg"></i>
+                        <i class="fa fa-plus-circle fa-xs"></i></a></div>
                   {% endif %}
 
                   {% if user.is_authenticated %}

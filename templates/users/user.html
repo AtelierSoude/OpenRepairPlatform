@@ -8,38 +8,34 @@
 {% block list %}
 
 <!-- a user card -->
-<div class="{{class}} card-user">
-    <div class="card mr-5">
-        <div class="card-img-top pt-2 pl-2 {% if class == 'item' %} avatar {% endif %}">
+<div class="{{class}} card-user card ">
+   <div class="row">
+        <div class="col-3 avatar-card-user">
             {% avatar user %}
         </div>
-            <div class="name-status">
-              <h5>{{ user.first_name|capfirst }}{{ user.last_name|capfirst}}</h5>    
-             
-              {% if user.is_staff %}
+
+        <div class="col-9 p-2">           
+              <h5>{{ user.first_name|capfirst }} {{ user.last_name|capfirst}}</h5>   
+                <p class="user-status"> 
+                {% if user.is_staff %} 
                     Volonteer
-                    {% else %}
+                {% else %}
                     Member
-                    {% endif %}
-            </div>
-            <div class="card-body">
+                {% endif %}
+                </p>
                 <ul>
                     <li>{% fontawesome_icon 'clock-o' %} {{ user.date_joined}}</li>
                     <li>{% fontawesome_icon 'envelope-o' %}{{ user.email }}</li>
                 </ul>
-            </div>
-
-             <div class="card-footer d-flex justify-content-end">
-        
-        {% if request.user.is_authenticated and request.user.is_staff %}  
-
-       
-            <a href="#" class="card-link"><i class="fa fa-trash 2-xs pt-1"></i>supprimer</a>
+                <div class="">
+                {% if request.user.is_authenticated and request.user.is_staff %}  
+                <a href="#" class="card-link"><i class="fa fa-trash 2-xs pt-1"></i>supprimer</a>
                 
-        {% endif %}
-             <!-- link to user profil (to do){{ user.get_absolute_url }} -->
-             <a class="card-link" href="{% url 'user_detail' user.pk %}">
-            &nbsp<i class="fa fa-info-circle  2-xs pt-1"></i></a>
+                {% endif %}
+                <!-- link to user profil (to do){{ user.get_absolute_url }} -->
+                <a class="card-link" href="{% url 'user_detail' user.pk %}">
+                &nbsp<i class="fa fa-info-circle  2-xs pt-1"></i>Info</a>
+                </div>
         </div>
     </div>
 </div>

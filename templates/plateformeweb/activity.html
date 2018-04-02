@@ -1,0 +1,20 @@
+{% load staticfiles %}
+{% load fontawesome %}
+{% load avatar_tags %}
+{% load django_bootstrap_breadcrumbs %}
+
+
+
+{% block list %}
+
+<div class="card card-activity {{class}}" id="{{id}}">
+        <div class="card-body">
+            <img class="img-fluid img-place" width="400" src="{{ activity.picture.url }}">
+            <h5 class="card-title">{{ activity.name }}</h5>
+            <p class="card-text">{{ activity.description }}</p>
+            <a class="card-link" href="{% url 'activity_detail' activity.id activity.slug %}">
+            More ...</a>
+        </div>
+      </div>
+
+{% endblock %}

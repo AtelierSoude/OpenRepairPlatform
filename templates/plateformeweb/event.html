@@ -5,9 +5,13 @@
 {% load avatar_tags %}
 
 {% block list %}
-<div class="{{class}} card-event">
-    <div class="card mr-5">
-<div class="event-card-title text-center">{{event.type}}</div>
+<div id="{{event.id}}" class="{{class}} card card-event {% if event.available_seats <= 0 %}
+    border border-danger
+{% endif %}">
+<div class="event-card-title text-center">
+     <a href="{% url 'activity_detail' event.type.id event.type.slug %}">
+    {{event.type}}</a>
+</div>
 <div class="row">
     <div class="col-3">
         <!-- <img class="card-img-top img-fluid" src="{% static "img/event-card.jpg" %}" alt="Card image cap"> -->
@@ -33,6 +37,12 @@
 
                 <li class="list-group-item">
                     <!-- <small>{% fontawesome_icon 'clock-o' %} {{ event.starts_at }}</small> -->
+                </li>
+                <li>
+                    {% for condition in event.condition.all %}
+                    <a> <small>{{condition.resume}}</small> </a>
+                    {% endfor %}
+                   
                 </li>
                 <li class="list-group-item">
                     {% fontawesome_icon 'user-plus' %}
@@ -69,13 +79,9 @@
             </a>
             
             <!-- Détaits et éditions -->
+            
             <a class="card-link" href="{% url 'event_detail' event.id event.slug %}">&nbsp<i class="fa fa-info-circle  2-xs pt-1">info</i></a>
-            {% if request.user.is_superuser %}
-            <a class="card-link" href="{% url 'event_edit' event.id %}">&nbsp<i class="fa fa-pencil-square-o  2-xs pt-1">Editer</i></a>
-            {% endif %}
-
-
-
+           
         
         <!-- delete if user is organizer -->
 
@@ -86,8 +92,6 @@
         
     </div>
 </div>    
-</div>
-
 </div>
 </div>
 

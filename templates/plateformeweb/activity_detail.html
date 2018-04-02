@@ -6,40 +6,40 @@
 {% load django_bootstrap_breadcrumbs %}
 
 {% block breadcrumbs %}
-{% with type="places" list_view="place_list" detail_name=place.name %}
+{% with type="activity" list_view="activity_list" detail_name=activity.name %}
    {{ block.super }}
 {% endwith %}
 {% endblock %}
 
 {% block edit_link %}
-<a class="card-link mr-3 fm-update btn btn-primary" href="{% url 'place_edit' place.id %}"
- data-fm-head="Update" data-fm-callback="reload">&nbsp
-<i class="fa fa-pencil-square-o 2-xs pt-1"></i>
+<a class="card-link mr-3 fm-update btn btn-primary" href="{% url 'activity_edit' activity.id %}"
+ data-fm-head="Update" data-fm-callback="reload" >&nbsp
+<i class="fa fa-pencil-square-o  2-xs pt-1"></i>
 Editer
 </a>
 {% endblock edit_link %}
 
 {% block header_ban %}
-    {% with object="place"%}
+    {% with object="activity" %}
     {{ block.super }}
 {% endwith %}
 {% endblock header_ban %}}
 
 {% block context %}
-    {% include "plateformeweb/place.html" %}
+    {% include "plateformeweb/activity.html" with id=activity.pk %}
+    <a href="{% url 'activity_edit' activity.id %}" class="card-link">edit</a>
 {% endblock context %} 
 
 {% block about %}
 
 {% block about1 %}
 
-    {% with about1="Dates dans ce lieux" %}
+    {% with about1="Dates" %}
     {{ block.super }}
     {% endwith %}
-        {% for event in place.event_set.all %}
+    {% for event in activity.event_set.all %}
         {% include "plateformeweb/event.html" %}
-        {% endfor %}
-
+    {% endfor %}
 {% endblock about1 %}
 
 {% endblock about %}

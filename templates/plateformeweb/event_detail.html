@@ -12,30 +12,69 @@
 {% endwith %}
 {% endblock %}
 
+{% block header_ban %}
+    {% with object="event" %}
+    {{ block.super }}
+{% endwith %}
+{% endblock header_ban %}
+
+
+{% block edit_link %}
+<a class="card-link mr-3 fm-update btn btn-primary" href="{% url 'event_edit' event.id %}"
+ data-fm-head="Update" data-fm-callback="reload">&nbsp
+<i class="fa fa-pencil-square-o 2-xs pt-1"></i>
+Editer
+</a>
+{% endblock edit_link %}
+
+
 {% block context %}
     <div class="ml-3 pt-3">
         {% include "plateformeweb/event.html" %}
     </div>
-    {% endblock context %}
+    <div class="ml-3 pt-3">
+        {% include "plateformeweb/activity.html" with activity=event.type class="my-3 col-sm-6 col-md-4" %}
+    </div>
+{% endblock context %}
 
 
-{% block detail %}
-<section class="ml-3 pt-3">
+{% block about %}
 
-    <h3 class=""> Organizers :  {{ event.organizers.all.count }} </h3>
+{% block about1 %}
 
+    {% with about1="Organisateurs" %}
+    {{ block.super }}
+    {% endwith %}
         {% for user in event.organizers.all %}
-            {% include "users/user.html" with class="card" %}
+        {% include "users/user.html" with class="card" %}
         {% endfor %}
 
-    <h3 class=""> Participants :  {{ event.attendees.all.count }} </h3>
+{% endblock about1 %}
 
+{% block about2 %}
+
+    {% with about2="Réservations" %}
+    {{ block.super }}
+    {% endwith %}
         {% for user in event.attendees.all %}
-            {% include "users/user.html" with class="item" %}
+        {% include "users/user.html" with class="card" %}
         {% endfor %}
 
-    <h3 class=""> Informations : </h3>
-      
+{% endblock about2 %}
+
+{% block about3 %}
+
+    {% with about3="Présents" %}
+    {{ block.super }}
+    {% endwith %}
+        {% for user in event.presents.all %}
+        {% include "users/user.html" with class="card" %}
+        {% endfor %}
+
+{% endblock about3 %}
+
+{% endblock about %}
+       
 </section>
-{% endblock detail %}
+
       

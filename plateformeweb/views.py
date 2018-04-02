@@ -5,8 +5,12 @@ from .models import *
 from django.urls import reverse_lazy
 from django.utils import timezone
 from logging import getLogger
+
+from django.forms import ModelForm, ModelMultipleChoiceField, ModelChoiceField, CheckboxSelectMultiple, MultipleChoiceField
 from datetimepicker.widgets import DateTimePicker
 from rules.contrib.views import PermissionRequiredMixin
+
+from fm.views import AjaxCreateView, AjaxUpdateView
 
 logger = getLogger(__name__)
 
@@ -55,7 +59,7 @@ class OrganizationCreateView(PermissionRequiredMixin, OrganizationFormView,
 
 
 class OrganizationEditView(PermissionRequiredMixin, OrganizationFormView,
-                           UpdateView):
+                           AjaxUpdateView):
     permission_required = 'plateformeweb.edit_organization'
     queryset = Organization.objects
 
@@ -85,6 +89,13 @@ class PlaceFormView():
     model = Place
     fields = ["name", "description", "type", "address", "picture",
               "organization"]
+              
+    def get_form(self, form_class=None):
+        if form_class is None:
+            form_class = self.get_form_class()
+        form = super().get_form(form_class)
+            
+        return form
 
     def get_success_url(self):
         return reverse_lazy('place_detail',
@@ -101,9 +112,63 @@ class PlaceCreateView(PermissionRequiredMixin, PlaceFormView, CreateView):
         return super().form_valid(form)
 
 
-class PlaceEditView(PermissionRequiredMixin, PlaceFormView, UpdateView):
+class PlaceEditView(PermissionRequiredMixin, PlaceFormView, AjaxUpdateView):
     permission_required = 'plateformeweb.edit_place'
     queryset = Place.objects
+
+
+# --- Activity Types --- 
+
+
+class ActivityView(DetailView):
+    model = Activity
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
+
+class ActivityListView(ListView):
+    model = Activity
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["list_type"] = "activity"
+        return context
+
+
+# --- edit ---
+
+class ActivityFormView():
+    model = Activity
+    fields = ["name", "description", "picture"]
+
+    def get_form(self, form_class=None):
+        if form_class is None:
+            form_class = self.get_form_class()
+        form = super().get_form(form_class)
+            
+        return form
+
+    def get_success_url(self):
+        return reverse_lazy('activity_detail',
+                            args=(self.object.pk, self.object.slug,))
+
+
+class ActivityCreateView(PermissionRequiredMixin, ActivityFormView, CreateView):
+    permission_required = 'plateformeweb.create_activity'
+
+        # set owner to current user on creation
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        obj.owner = self.request.user
+        return super().form_valid(form)
+
+
+class ActivityEditView(PermissionRequiredMixin, ActivityFormView, AjaxUpdateView):
+    permission_required = 'plateformeweb.edit_acivity'
+    queryset = Activity.objects
+
 
 
 # --- Events ---
@@ -130,8 +195,8 @@ class EventListView(ListView):
 class EventFormView():
     model = Event
     fields = ["title", "type", "starts_at", "ends_at", "available_seats",
-              "attendees", "organizers", "location", "publish_at", "published",
-              "organization"]
+              "attendees", "presents", "organizers", "location", "publish_at", "published",
+              "organization", "condition"]
 
     # date picker from
     #   https://xdsoft.net/jqplugins/datetimepicker/
@@ -171,6 +236,8 @@ class EventCreateView(PermissionRequiredMixin, EventFormView, CreateView):
         return super().form_valid(form)
 
 
-class EventEditView(PermissionRequiredMixin, EventFormView, UpdateView):
+class EventEditView(PermissionRequiredMixin, EventFormView, AjaxUpdateView):
     permission_required = 'plateformeweb.edit_event'
     queryset = Event.objects
+
+

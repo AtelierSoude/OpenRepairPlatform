@@ -8,12 +8,12 @@
 
 
 {% block breadcrumbs %}
-{% with type="organization" list_view="organization_list" view="organization_create" %}
+{% with type="activity" list_view="activity_list" view="activity_create" %}
     {{ block.super }}
 {% endwith %}
 {% endblock %}
 
-{% block title %} {{ block.super }} organization {% endblock title %}
+{% block title %} {{ block.super }} activity {% endblock title %}
 
 {% block form %}
 
@@ -28,7 +28,6 @@
             </div>
         </div>
     </div>
-
 
 {% endblock %}
  

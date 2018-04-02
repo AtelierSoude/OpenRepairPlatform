@@ -44,6 +44,8 @@
     {% fontawesome_stylesheet %}
 
     <!-- jQuery -->
+
+
     <script src="http://code.jquery.com/jquery-3.2.1.min.js"
             integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
             crossorigin="anonymous"></script>
@@ -52,13 +54,15 @@
 {#            integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="#}
 {#            crossorigin="anonymous"></script>#}
 
-     <script src="{% static "npm/stickyfilljs/dist/stickyfill.min.js" %}"></script>
-       <!-- Semantic ui -->
+     <script src="{% static "npm/stickyfilljs/src/stickyfill.js" %}"></script>
+  
      <script
        src="https://code.jquery.com/jquery-3.1.1.min.js"
        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
        crossorigin="anonymous"></script>
 
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
      
 {#    <link rel="stylesheet"#}
@@ -67,6 +71,7 @@
 {#    <script src="https://cdnjs.cloudflare.com/ajax/libs/datepicker/0.6.4/i18n/datepicker.fr-FR.min.js"#}
 {#            integrity="sha256-LfRC4/3bBAGT8y5dQmQSzKtY+5dfIkCvwyNj9UhgMP8="#}
 {#            crossorigin="anonymous"></script>#}
+
 
     <!-- keep last -->
     <link rel="stylesheet" href="{% static "css/ateliersoude.css" %}">
@@ -77,75 +82,13 @@
 
 </head>
 <body>
+   {% include "./menu.html" %}
 
-<header>
-<div class="nav-side-menu">
-    <div class="brand"> <a href="{% url "homepage" %}"><img src="{% static "img/logo_ateliersoude.svg" %}" width="30px" height="30px"></a></div>
-    <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
-        <div class="menu-list">
-            <ul id="menu-content" class="menu-content collapse out">
-                <li>
-                   <a href="{% url "homepage" %}">{% fontawesome_icon 'home' %}Home</a>
-                </li>
-                
-                <li>
-                   <a href="{% url "event_list" %}">{% fontawesome_icon 'calendar-o' large=True %}Calendar</a>
-                </li>
-
-                 <li>
-                  <a href="{% url "place_list" %}">{% fontawesome_icon 'home' large=True %}Places</a>
-                </li>
-                
-                <li>
-                  <a href="{% url "user_list" %}">{% fontawesome_icon 'users' large=True %}Users</a>
-                </li>
-          
-                <li>
-                    <a href="{% url "organization_list" %}">{% fontawesome_icon 'screen' large=True %}Organisations</a>
-                </li>
-            </ul>
-     </div>
-</div>
-
-
-<div class="container-fluid top-bar d-flex justify-content-end">
-  <nav class="navbar ">
-    {% if user.is_authenticated %}
-      <div class="navbar-brand"><a class="nav-link mr-3" href="{% url 'user_detail' user.pk %}">{% avatar user %}{{ user.first_name }}</a></div>
-    {% else %}
-      <div class="navbar-brand" ><a class="nav-link mr-3" href="{% url "login" %}"><i class="fa fa-user-circle-o fa-2x"></i></a></div>
-    {% endif %}
-    
-    {% if user.is_superuser %}
-      <div class="navbar-brand" ><a class="nav-link mr-3" href="{% url 'event_create' %}" title="create event"><i class="fa fa-calendar fa-lg"></i><i class="fa fa-plus-circle fa-xs"></i></a></div>
-
-      <div class="navbar-brand" ><a class="nav-link mr-3" href="{% url 'place_create' %}" title="create place"><i class="fa fa-map-marker fa-lg"></i><i class="fa fa-plus-circle fa-xs"></i></a></div>
-    {% endif %}
-
-    {% if user.is_authenticated %}
-      <div class="navbar-brand" ><a class="nav-link mr-3" href="{% url 'user_detail' user.pk %}"><i class="fa fa-user-circle-o fa-2x"></i></a></div>
-    <!-- Menu dropdown -->
-    <div class="navbar-brand arrow-login ">
-        <a class="nav-link mr-3 dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class=""></i></a>
-        <div class="dropdown-menu " aria-labelledby="navbarDropdownMenuLink">
-          <a class="dropdown-item" href="#">...</a>
-          <a class="dropdown-item" href="{% url 'user_detail' user.pk %}"> voir profil </a>
-          <a class="dropdown-item" href="{% url "user_profile" %}">Editer profil</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#">...</a>
-          <a class="nav-link" href="{% url 'logout' %}" title="Logout">Déconnexion</a>
-        </div>
-    </div>
-     {% endif %}
-  </nav>
-</div>
-  <hr>
-</header>
-
+   
 <wrapper class="content-page">
   {% block breadcrumbs %}
     {% clear_breadcrumbs %}
-    {% breadcrumb "Home" "/" %}
+    {% breadcrumb "Home" ">" %}
   {% endblock %}
                    
   {% block content %}
@@ -155,6 +98,15 @@
 
 <!-- Script & librairy-->    
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+
+<!-- Modals Script -->
+{% include "fm/modal.html" %}
+<script type="text/javascript">
+    $(function() {
+        $.fm({debug: true});
+    });
+</script>
 
 </body>
 

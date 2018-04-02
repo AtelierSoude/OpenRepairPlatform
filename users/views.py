@@ -7,6 +7,7 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth import authenticate, login
 from django.core.urlresolvers import reverse
 
+
 # Create your views here.
 
 
@@ -63,9 +64,6 @@ def register(request):
 
 
     return render(request, 'users/user_create.html', {'form': form})
-
- 
-
 
 
 class UserDetailView(DetailView):

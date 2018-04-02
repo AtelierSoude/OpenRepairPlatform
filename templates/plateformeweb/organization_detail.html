@@ -11,38 +11,62 @@
 {% endwith %}
 {% endblock %}
 
+{% block edit_link %}
+<a class="card-link mr-3 fm-update btn btn-primary" href="{% url 'organization_edit' organization.id %}"
+ data-fm-head="Update" data-fm-callback="reload">&nbsp
+<i class="fa fa-pencil-square-o  2-xs pt-1"></i>
+Editer
+</a>
+{% endblock edit_link %}
+
+{% block header_ban %}
+    {% with object="organization" %}
+    {{ block.super }}
+{% endwith %}
+{% endblock header_ban %}}
+
 
 {% block context %}
     {% include "plateformeweb/organization.html" %}
     <a href="{% url 'organization_edit' organization.id %}" class="card-link">edit</a>
 {% endblock context %} 
 
-{% block detail %}
+{% block about %}
 
+{% block about1 %}
 
-<section class="card">
-        <h3 class="card-header">Lieux </h3>
+    {% with about1="Lieux" %}
+    {{ block.super }}
+    {% endwith %}
     {% for place in organization.place_set.all %}
-        {% include "plateformeweb/place.html" %}
+        {% include "plateformeweb/place.html" with class="my-3 col-sm-6 col-md-4" %}
     {% endfor %}
-    </section>
 
-<section class="card">
-        <h3 class="card-header"> {{ organization.organizationperson_set.all.count }} adhérents </h3>
-{% for organizationperson in organization.organizationperson_set.all %}
+{% endblock about1 %}
+
+{% block about2 %}
+
+    {% with about2="Adhérents" %}
+    {{ block.super }}
+    {% endwith %}
+    {% for organizationperson in organization.organizationperson_set.all %}
     {% with user=organizationperson.user %}
         {% include "users/user.html" %}
     {% endwith %}
 {% endfor %}
-</section>
+        
+{% endblock about2 %}
 
+{% block about3 %}
 
-<section class="card-group card">
-        <h3 class="card-header"> {{ organization.event_set.all.count }} évènements </h3>
-{% for event in organization.event_set.all %}
-    {% include "plateformeweb/event.html" %}
-{% endfor %}
-</section>
+    {% with about3="Dates" %}
+    {{ block.super }}
+    {% endwith %}
+    {% for event in organization.event_set.all %}
+        {% include "plateformeweb/event.html" %}
+    {% endfor %}
 
-{% endblock detail %}
+{% endblock about3 %}
+
+{% endblock about %}
 

@@ -5,7 +5,7 @@
 {% load avatar_tags %}
 
 {% block list %}
-<div class="{{class}} card card-event {% if event.available_seats <= 0 %}
+<div id="{{event.id}}" class="{{class}} card card-event {% if event.available_seats <= 0 %}
     border border-danger
 {% endif %}">
 <div class="event-card-title text-center">
@@ -81,8 +81,7 @@
             <!-- Détaits et éditions -->
             
             <a class="card-link" href="{% url 'event_detail' event.id event.slug %}">&nbsp<i class="fa fa-info-circle  2-xs pt-1">info</i></a>
-
-
+           
         
         <!-- delete if user is organizer -->
 

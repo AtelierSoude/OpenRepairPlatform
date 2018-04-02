@@ -226,7 +226,7 @@ class EventFormView():
                             args=(self.object.pk, self.object.slug,))
 
 
-class EventCreateView(PermissionRequiredMixin, EventFormView, AjaxCreateView):
+class EventCreateView(PermissionRequiredMixin, EventFormView, CreateView):
     permission_required = 'plateformeweb.create_event'
 
     # set owner to current user on creation

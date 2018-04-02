@@ -1,12 +1,9 @@
-
 {% extends 'form_view.html' %}
-{% load crispy_forms_tags %}
-
-
 {% load staticfiles %}
 {% load fontawesome %}
 {% load avatar_tags %}
 {% load django_bootstrap_breadcrumbs %}
+{% load crispy_forms_tags %}
 
 {% block breadcrumbs %}
 {% with type="event" list_view="event_list" view="event_create" %}
@@ -21,7 +18,7 @@
     <div class="row">
         <div class="form col-md-6">
             <form action="" method="post" enctype="multipart/form-data"
-            class="">
+            class="pure-form">
             {% csrf_token %}
             {{ form|crispy }}
                 <input type="submit" value="Save" class="btn btn-primary"/>

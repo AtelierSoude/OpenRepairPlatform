@@ -21,6 +21,6 @@ urlpatterns = [
     url(r'^event/$', views.EventListView.as_view(), name='event_list'),
     url(r'^event/create/$', views.EventCreateView.as_view(), name='event_create'),
     url(r'^event/(?P<pk>[0-9]+)/edit/$', views.EventEditView.as_view(), name='event_edit'),
+    url(r'^event/(?P<pk>[0-9]+)/presents/$', views.EventPresentView, name='event_present'),
     url(r'^event/(?P<pk>[0-9]+)/(?P<slug>[-\w]+)/$', views.EventView.as_view(), name='event_detail'),
-    
 ]

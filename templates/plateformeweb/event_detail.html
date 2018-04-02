@@ -43,7 +43,7 @@
 
 {% block about2 %}
 
-    {% with about2="Participants" %}
+    {% with about2="Réservations" %}
     {{ block.super }}
     {% endwith %}
         {% for user in event.attendees.all %}
@@ -51,6 +51,17 @@
         {% endfor %}
 
 {% endblock about2 %}
+
+{% block about3 %}
+
+    {% with about3="Présents" %}
+    {{ block.super }}
+    {% endwith %}
+        {% for user in event.presents.all %}
+        {% include "users/user.html" with class="card" %}
+        {% endfor %}
+
+{% endblock about3 %}
 
 {% endblock about %}
        

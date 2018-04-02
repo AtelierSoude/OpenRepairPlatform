@@ -228,6 +228,9 @@ class Event(models.Model):
     attendees = models.ManyToManyField(
         CustomUser, related_name='attendee_user', verbose_name=_('Attendees'),
         blank=True)
+    presents = models.ManyToManyField(
+        CustomUser, related_name='present_user', verbose_name=_('Presents'),
+        blank=True)
     organizers = models.ManyToManyField(
         CustomUser, related_name='organizer_user', verbose_name=_('Organizers'),
         blank=True)
@@ -251,5 +254,6 @@ class PublishedEvent(Event):
 
     class Meta:
         proxy = True
+
 
 # ------------------------------------------------------------------------------

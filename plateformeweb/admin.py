@@ -4,7 +4,7 @@ from .models import Condition, Event, Activity, Place, Organization, Organizatio
 
 class EventAdmin(admin.ModelAdmin):
     list_display = (
-        'title', 'type', 'organization', 'owner', 'published', 'starts_at', 'available_seats',
+        'type', 'organization', 'owner', 'published', 'starts_at', 'available_seats',
         'location', 'slug')
     ordering = ('-starts_at',)
 

@@ -5,37 +5,54 @@
 {% load avatar_tags %}
 
 {% block list %}
-<div id="{{event.id}}" class="{{class}} card card-event {% if event.available_seats <= 0 %}
+<div id="{{event.id}}" class="card card-event {% if event.available_seats <= 0 %}
     border border-danger
 {% endif %}">
-<div class="event-card-title text-center">
-     <a href="{% url 'activity_detail' event.type.id event.type.slug %}">
-    {{event.type}}</a>
-</div>
-<div class="row">
-    <div class="col-3">
-        <!-- <img class="card-img-top img-fluid" src="{% static "img/event-card.jpg" %}" alt="Card image cap"> -->
-        <!-- <i class="fa fa-clock-o"></i> -->
-        <div class="square-date text-center align-middle">
-            {{ event.starts_at|date:"d" }}<br>
-            {{ event.starts_at|date:"M" }}<br>
+<div class="event-card-title text-center row">
+
+        {% if event.title %}
+        {{event.title}}
+        {% else %}
+        <a class="col-lg" href="{% url 'activity_detail' event.type.id event.type.slug %}">
+        {{event.type}}</a>
+        {% endif %}
+
+
+        <div class="float-right mr-2 position-absolute">
+        {% fontawesome_icon 'user-plus' %}
+        {% if event.available_seats == 0 %}
+        <span class="badge badge-warning badge-pill">0</span>
+        {% else %}
+        <span class="badge badge-primary badge-pill">{{ event.available_seats }}</span>
+        {% endif %}
+        <small>Places</small>
         </div>
-    </div>
-    <div class="col-9 pl-1">
+</div>
+
+<div class="{{class}}">
+
+        <div class="text-center align-middle {{img_class}}">
+           <img class="img-fluid img-place" src="{{ event.type.picture.url }}">
+        </div>
+
+    <div class="{{about_class}} pl-1">
          <div class="">
-          <p>{{event.title}}</p>
+         
           
           <!-- about -->
 
            <ul class="list-group list-group-flush">
 
-                <li class="list-group-item">
+                <li class="">
+                    <small>organisé par 
                         <a href="{% url 'organization_detail' event.organization.id event.organization.slug %}">
-                        <small>à {{ event.organization }}</small>
-                    </a></small> - <span class="hour-event text-center">{{ event.starts_at|date:"H:i:s" }}</span>
-                    </li>
+                        {{ event.organization }}
+                    </a></small> 
+                </li>
 
-                <li class="list-group-item">
+            {% if request.resolver_match.url_name != "event_detail" %}
+
+                <li class="">
                     <!-- <small>{% fontawesome_icon 'clock-o' %} {{ event.starts_at }}</small> -->
                 </li>
                 <li>
@@ -44,18 +61,13 @@
                     {% endfor %}
                    
                 </li>
-                <li class="list-group-item">
-                    {% fontawesome_icon 'user-plus' %}
-                    <small>Places</small>
-                    {% if event.available_seats == 0 %}
-                            <span class="badge badge-warning badge-pill">0</span>
-                    {% else %}
-                            <span class="badge badge-primary badge-pill">{{ event.available_seats }}</span>
-                    {% endif %}
+
+                <li class="">
+                    de <span class="hour-event text-center">{{ event.starts_at|date:"H:i" }}</span>
+                    à <span class="hour-event text-center">{{ event.ends_at|date:"H:i" }}</span>
                 </li>
-                <li class="list-group-item">
-                    {% fontawesome_icon 'map-marker' %}
                     <a href="{% url 'place_detail' event.location.id event.location.slug %}">
+                        {% fontawesome_icon 'map-marker' %}
                         <small>{{ event.location|truncatechars:25 }}</small>
                     </a>
                 </li>
@@ -85,12 +97,15 @@
         
         <!-- delete if user is organizer -->
 
-        {% if request.user.is_authenticated and event in my_events_organizing %}
-            <a href="#" class="card-link">Supprimer</a>
-            {% fontawesome_icon 'trash' large=True %}
-        {% endif %}
+            {% if request.user.is_authenticated and event in my_events_organizing %}
+                <a href="#" class="card-link">Supprimer</a>
+                {% fontawesome_icon 'trash' large=True %}
+            {% endif %}
         
+        {% endif %}
+
     </div>
+
 </div>    
 </div>
 </div>

@@ -11,13 +11,22 @@
 {% endwith %}
 {% endblock %}
 
-{% block edit_link %}
-<a class="card-link mr-3 fm-update btn btn-primary" href="{% url 'activity_edit' activity.id %}"
- data-fm-head="Update" data-fm-callback="reload" >&nbsp
-<i class="fa fa-pencil-square-o  2-xs pt-1"></i>
-Editer
-</a>
-{% endblock edit_link %}
+{% block TitleAndEdit %}
+
+
+<h5 class="float-left">
+    {{ activity.name }}
+</h5>
+    
+    {% if request.user.is_staff %} 
+    <a class="card-link mr-3 fm-update btn btn-primary float-right" href="{% url 'activity_edit' activity.id %}"
+     data-fm-head="Update" data-fm-callback="reload">&nbsp
+    <i class="fa fa-pencil-square-o 2-xs pt-1"></i>
+    Editer
+    </a>
+    {% endif %}
+
+{% endblock TitleAndEdit %}
 
 {% block header_ban %}
     {% with object="activity" %}
@@ -27,19 +36,17 @@ Editer
 
 {% block context %}
     {% include "plateformeweb/activity.html" with id=activity.pk %}
-    <a href="{% url 'activity_edit' activity.id %}" class="card-link">edit</a>
 {% endblock context %} 
 
 {% block about %}
 
 {% block about1 %}
-
-    {% with about1="Dates" %}
-    {{ block.super }}
-    {% endwith %}
-    {% for event in activity.event_set.all %}
-        {% include "plateformeweb/event.html" %}
-    {% endfor %}
+{% with about1="Description" %}
+{{ block.super }}
+{% endwith %}
+<p>
+{{activity.description}}
+</p>
 {% endblock about1 %}
 
 {% endblock about %}

@@ -12,28 +12,55 @@
 {% endwith %}
 {% endblock %}
 
-{% block header_ban %}
-    {% with object="event" %}
-    {{ block.super }}
-{% endwith %}
-{% endblock header_ban %}
 
+{% block TitleAndEdit %}
 
-{% block edit_link %}
-<a class="card-link mr-3 fm-update btn btn-primary" href="{% url 'event_edit' event.id %}"
+<h5 class="float-left">
+    {{ event.type }} du {{ event.starts_at|date:"d M" }} à 
+    <a href="{% url 'place_detail' event.location.id event.location.slug %}">
+          {{ event.location.name }}
+    </a>
+</h5>
+
+{% if request.user.is_staff %} 
+<a class="card-link mr-3 fm-update btn btn-primary float-right" href="{% url 'event_edit' event.id %}"
  data-fm-head="Update" data-fm-callback="reload">&nbsp
 <i class="fa fa-pencil-square-o 2-xs pt-1"></i>
 Editer
 </a>
-{% endblock edit_link %}
+{% endif %}
+
+{% endblock TitleAndEdit %}
+
+
+{% block header_ban %}
+    {% with object="event" %}
+    {{ block.super }}
+{% endwith %}
+
+{% endblock header_ban %}
 
 
 {% block context %}
-    <div class="ml-3 pt-3">
-        {% include "plateformeweb/event.html" %}
+
+    <div class="pt-3">
+        {% include "plateformeweb/event.html" with img_class="row" about_class="row" %}
     </div>
-    <div class="ml-3 pt-3">
-        {% include "plateformeweb/activity.html" with activity=event.type class="my-3 col-sm-6 col-md-4" %}
+
+    <div class="m-3 pt-3 p-2 bg-white">
+            <p>
+                {% for condition in event.condition.all %}
+                    {{condition.resume}}
+                {% endfor %}
+                   
+            </p>
+        </div>
+
+    <div class="m-3 pt-3 p-2 bg-white">
+        <p>
+        {{event.type.description|truncatechars:100}}
+        </p>
+        <a href="{% url 'activity_detail' event.type.id event.type.slug %}">En savoir +</a>
     </div>
 {% endblock context %}
 
@@ -46,7 +73,7 @@ Editer
     {{ block.super }}
     {% endwith %}
         {% for user in event.organizers.all %}
-        {% include "users/user.html" with class="card" %}
+        {% include "users/user.html" with class="row" img_class="col-4" content_class="col-8" %}
         {% endfor %}
 
 {% endblock about1 %}
@@ -57,7 +84,7 @@ Editer
     {{ block.super }}
     {% endwith %}
         {% for user in event.attendees.all %}
-        {% include "users/user.html" with class="card" %}
+        {% include "users/user.html" with class="row" img_class="col-4" content_class="col-8" %}
         {% endfor %}
 
 {% endblock about2 %}
@@ -68,7 +95,7 @@ Editer
     {{ block.super }}
     {% endwith %}
         {% for user in event.presents.all %}
-        {% include "users/user.html" with class="card" %}
+        {% include "users/user.html" with class="row" img_class="col-4" content_class="col-8" %}
         {% endfor %}
 
 {% endblock about3 %}

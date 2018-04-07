@@ -194,8 +194,8 @@ class Activity(models.Model):
 
 class Event(models.Model):
     title = models.CharField(verbose_name=_("Title"), max_length=150,
-                             null=False,
-                             blank=False,
+                             null=True,
+                             blank=True,
                              default="")
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE,
                                      null=False)

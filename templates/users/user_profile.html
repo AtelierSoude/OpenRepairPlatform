@@ -5,21 +5,22 @@
 {% load staticfiles %}
 {% load fontawesome %}
 {% load avatar_tags %}
-
+{% load crispy_forms_tags %}
 
 <!-- who is -->
 {% block context %}
 
-<div class="col container">
+<div class="col-lg container">
 
     <div class="row">
-         {% avatar user %}
+         {% avatar request.user %}
         <h5>{{ user.first_name|capfirst }}{{ user.last_name|capfirst}}</h5>
     </div>
 
     <form method="POST" class="row pure-u form" action="">
             <fieldset>
                 {% csrf_token %}
+                {{ form|crispy }}
                 {% if user_form.errors %}
                     <p class="error">Please correct the error(s) below:</p>
                     {#{{ user_form.errors }}#}
@@ -37,7 +38,15 @@
                         </div>
 
                     {% endfor %}
+                    
+                    {# TODO: avatar handling needs to go in a modal and refresh the page when closed #}
+                    {% avatar user %}
+                    <a href="javascript:window.open('{% url 'avatar_change' %}','_blank','titlebar=no,status=no,menubar=no,location=no,height=500,width=400,left=200,top=200')">Change
+                        your avatar</a>
+                    <a href="javascript:window.open('{% url 'avatar_delete' %}','_blank','titlebar=no,status=no,menubar=no,location=no,height=500,width=400,left=200,top=200')">Delete
+                        your avatar</a>
 
+                
 
                 
                 <div class="pure-controls pure-u-1 button-xlarge">
@@ -47,27 +56,8 @@
                 </div>
             </fieldset>
         </form>
+    </div>
 
-</div>
+{% endblock context %}
 
-{% endblock context %} 
 
-<!-- details about -->
-
-<section class="col-lg container">
-
-    <h3 class="row"> Events that I organize </h3>
-{% for event in my_events_organizing %}
- {% include "plateformeweb/event.html" %}
-{% endfor %}
-
-    <h3 class="row"> Events that I've book </h3>
-    {% for event in my_events_attending %}
-    {% include "plateformeweb/event.html" %}
-    {% endfor %}
-
-</section>
-
-    
-{% endblock detail %}
-      

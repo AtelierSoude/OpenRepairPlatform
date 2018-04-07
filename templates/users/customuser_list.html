@@ -32,7 +32,7 @@
 <div class="row ml-4 py-2 d-flex justify-content-center">
 
 {% for user in object_list %}
-		{% include "users/user.html" with class="my-3 col-sm-6 col-md-4" %}
+		{% include "users/user.html" with class="row" img_class="col-3" content_class="col-9" %}
 	<!-- {% empty %}
   <div>No users yet.</div>   --> 
 {% endfor %}

@@ -19,56 +19,46 @@
 {% block header_ban %}
 <div class="container-fluid profil-header-bar {{object}} ">
     <div class="row">
-        <div class="ml-5 header-avatar-bar col-md-4">
-            {% avatar target_user %}<span>{{ target_user.get_full_name|capfirst }}</span>
 
-        </div>
-        <div class="col-md-6">
+        <div class="col-4">
+        </div> 
+       
+        <div class="col-8 header-bar-title">
+        {% block TitleAndEdit %}
+        {% endblock TitleAndEdit %}
         </div>
 
-        {% if request.user.is_staff %}  
-        <div class="float-right">
-       
-        {% block edit_link %}
-             {% endblock edit_link %}
-        {% endif %}
-       
-        
-        </div>
     </div>
 </div>
 {% endblock %}
 
-<div class="row"> 
-
-    <!-- what is about -->
-    <div class="col-md-4">
+<div class="row">
+<section class="col-md-4" style="position: relative; top:-100px"> 
         {% block context %}
         {% endblock context %}
-    </div>   
+</section>   
 
-   
 
     <!-- details about -->
     <section class="col-md-8">
     {% block about %}
   
             {% block about1 %}
-            <h5 class="border-bottom border-gray pb-2 mb-0">{{ about1 }}</h5>
+            <h5 class="border-bottom border-gray pb-2 mb-0 clear">{{ about1 }}</h5>
             {% endblock about1 %}
 
             {% block about2 %}
-            <h5 class="border-bottom border-gray pb-2 mb-0">{{ about2 }}</h5>
+            <h5 class="border-bottom border-gray pb-2 mb-0 clear">{{ about2 }}</h5>
             {% endblock about2 %}
 
             {% block about3 %}
-            <h5 class="border-bottom border-gray pb-2 mb-0">{{ about3 }}</h5>
+            <h5 class="border-bottom border-gray pb-2 mb-0 clear">{{ about3 }}</h5>
             {% endblock about3 %}
    
     {% endblock about %}
     </section>
 
-   
+</div>
 
 </div>
  

@@ -18,40 +18,36 @@
         {{ block.super }}
 
         <div class="row bg-white text-secondary">
-            <h1 class="">{% block title %} {% endblock %}</h1>
+            <div class="col-6">
+            <h1>{% block title %} {% endblock %}</h1>
+            </div>
+            <div class="col-4">
+                    {% block statistics %}
+                        <span>
+                            {{first_value}}
+                        </span>
+                        <span>
+                            {{first_label}}
+                        </span>  
+                        <span>
+                            {{second_value}}
+                        </span>
+                        <span>
+                            {{second_label}}
+                        </span>
+                   
+                        <span>
+                            {{third_value}}
+                        </span>
+                        <span>
+                            {{third_label}}
+                        </span>
+                    {% endblock statistics %}
+                </div>
+
         </div>
 
         <!-- global statistics -->
-
-        <div class="row bg-light">
-           
-            {% block statistics %}
-            <div class="col-lg">
-                <div class="value">
-                    {{first_value}}
-                </div>
-                <div class="label">
-                    {{first_label}}
-                </div>
-            </div>
-            <div class="col-lg">
-                <div class="value">
-                    {{second_value}}
-                </div>
-                <div class="label">
-                    {{second_label}}
-                </div>
-            </div>
-            <div class="col-lg">
-                <div class="value">
-                    {{third_value}}
-                </div>
-                <div class="label">
-                    {{third_label}}
-                </div>
-            </div>
-            {% endblock statistics %}
-        </div>
 
     </section>
 

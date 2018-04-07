@@ -27,14 +27,21 @@
 
 <section class="container-fluid ">
 
-<div class="row ml-4 py-2">
-{% for event in object_list %}
-<!-- {% ifchanged %}<h2>{{ event.starts_at|date:"F" }}</h2>{% endifchanged %} -->
+<div class="col-lg-4 col-sm-1 ml-4 py-2 scrollable">
 
-  {% include "plateformeweb/event.html" with class="my-3 col-sm-6 col-md-4" %}
+{% for event in object_list %}
+
+{% ifchanged %}
+<h3 class="border-bottom row">{{ event.starts_at|date:"d M" }}</h3>
+{% endifchanged %}
+
+  {% include "plateformeweb/event.html" with class="row" img_class="col-md-4" about_class="col-md-8" %}
   {% empty %}
+
   <div>No events yet.</div>    
+
 {% endfor %}
+
 </div>
 
 

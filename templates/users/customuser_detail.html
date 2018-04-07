@@ -15,7 +15,7 @@
 {% block context %}
 
 <div class="row">
-    {% include "users/user.html" with user=target_user class="col-lg" %}
+    {% include "users/user.html" with user=target_user class="" img_class="row" about_class="row" %}
 </div>
 
 {% endblock context %} 
@@ -28,7 +28,7 @@
     {{ block.super }}
     {% endwith %}
         {% for event in target_user.event_set.all %}
-        {% include "plateformeweb/event.html" %}
+        {% include "plateformeweb/event.html" with class="row" img_class="col-md-4" about_class="col-md-8"%}
         {% endfor %}
 
 {% endblock about1 %}

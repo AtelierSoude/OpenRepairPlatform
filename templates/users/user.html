@@ -8,14 +8,20 @@
 {% block list %}
 
 <!-- a user card -->
-<div class="{{class}} card-user card ">
-   <div class="row">
-        <div class="col-3 avatar-card-user">
+<div class="card-user card">
+   <div class="{{class}}">
+        <div class="avatar-card-user {{img_class}} p-2">
             {% avatar user %}
         </div>
 
-        <div class="col-9 p-2">           
-              <h5>{{ user.first_name|capfirst }} {{ user.last_name|capfirst}}</h5>   
+        <div class="{{content_class}} p-2">    
+                   
+            <h5>
+                <a class="card-link" href="{% url 'user_detail' user.pk %}">
+             {{ user.first_name|capfirst }} {{ user.last_name|capfirst}} 
+                </a>
+            </h5>   
+            
                 <p class="user-status"> 
                 {% if user.is_staff %} 
                     Volonteer
@@ -23,19 +29,19 @@
                     Member
                 {% endif %}
                 </p>
-                <ul>
+           <!--     <ul>
                     <li>{% fontawesome_icon 'clock-o' %} {{ user.date_joined}}</li>
                     <li>{% fontawesome_icon 'envelope-o' %}{{ user.email }}</li>
                 </ul>
                 <div class="">
                 {% if request.user.is_authenticated and request.user.is_staff %}  
                 <a href="#" class="card-link"><i class="fa fa-trash 2-xs pt-1"></i>supprimer</a>
-                
-                {% endif %}
-                <!-- link to user profil (to do){{ user.get_absolute_url }} -->
+           
+                {% endif %} 
+            
                 <a class="card-link" href="{% url 'user_detail' user.pk %}">
                 &nbsp<i class="fa fa-info-circle  2-xs pt-1"></i>Info</a>
-                </div>
+                </div> -->
         </div>
     </div>
 </div>

@@ -1,7 +1,7 @@
 /*******************************
 ************* Reset ************
 *********************************/
-* {
+body, html, .container, div, .card, .navbar, a, ul, p {
   margin: 0 !important ;
   padding: 0 !important; 
  }
@@ -23,6 +23,9 @@ a:hover{
   /* left: 50px;  */
   /* width: calc(100% - 50px); */
 }
+.clear{
+  clear: both;
+}
 .btn {
   padding: 5px !important;
 }
@@ -32,6 +35,7 @@ a:hover{
 
 .navbar {
   background-color: #083342 !important;
+  padding: 05px !important;
 }
 .navbar ul li a {
   margin-left: 15px !important;
@@ -56,22 +60,24 @@ a:hover{
 /********************************
 ************ card ***************
 *********************************/
+
+.scrollable {
+  overflow-x: hidden;
+  overflow-y: scroll;
+  max-height: 500px;
+}
 .card {
-  box-shadow: 0px 4px 0px #35bda6;
+ /* box-shadow: 0px 4px 0px #35bda6; */
   margin : 15px !important;
 }
 
-
-.card-activity img{
-  width: 100%;
-  height: 100px;
-}
 
 /*******************************
 ********* user card ************
 *********************************/
 .card-user{
-  max-width:350px !important;
+  max-width:200px !important;
+  float: left;
 }
 .card ul li {
   list-style-type: none;
@@ -82,7 +88,7 @@ a:hover{
 }
 .card .fa, .card a {
   text-decoration: none;
-  color: #A9A9A9;
+  color: #35bda6;
 }
 
 .card .fa:hover, .card a:hover {
@@ -94,11 +100,14 @@ a:hover{
   font-style: italic;
 }
 
+.avatar-card-user {
+text-align: center;
 
-.avatar-card-user{
-  display: flex;
-  align-items: center;
-  justify-content: center;
+}
+
+.avatar-card-user img {
+  height: 50px;
+  width:auto;
 }
 
 /*******************************
@@ -257,6 +266,11 @@ input[type="color"]:focus,
 /********************************
 ********** detail views **********
 *********************************/
+.header-bar-title {
+  position: relative;
+  top: 25px;
+}
+
 .profil-header-bar {
   width: 100% !important;
   background-color: #35bda6;
@@ -270,13 +284,12 @@ input[type="color"]:focus,
   background-color: rgb(255, 89, 89);
 }
 .header-avatar-bar img{
-  width: 100px;
-  height: 100px;
+  height: 300px;
   margin: 20px 0 0 40px !important;
   border-radius: 10% !important;
   background-color: #fff !important;
-  padding: 5px !important;
-  box-shadow: 0px 5px 5px #083342;
+ /* padding: 5px !important; */
+ /* box-shadow: 0px 5px 5px #083342; */
 }
 .header-avatar-bar span{
   margin-left: 10px !important;
@@ -289,6 +302,7 @@ input[type="color"]:focus,
   font-size: 12px;
   line-height: 20px;
   padding-left: 10px !important; 
+  margin-bottom: 0px !important;
 }
 .breadcrumb{
   background-color: #fff;
@@ -306,5 +320,4 @@ input[type="color"]:focus,
 
   
 
-
-
+/* badges */

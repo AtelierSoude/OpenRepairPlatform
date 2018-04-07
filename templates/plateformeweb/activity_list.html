@@ -24,7 +24,7 @@
 {% block list %}
 <section class="">
     {% for activity in object_list %}
-    {% include "plateformeweb/activity.html" %}
+    {% include "plateformeweb/activity.html" with class="row" img_class="col-4" about_class="col-8" %}
     {% empty %}
     <div>No activitys yet.</div>    
   

@@ -1,0 +1,13 @@
+
+{% load staticfiles %}
+{% load fontawesome %}
+{% load avatar_tags %}
+{% load django_bootstrap_breadcrumbs %}
+{% load crispy_forms_tags %}
+
+<p>Etes-vous sur de vouloir participer ?</p>
+<form action="" method="post">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <input type="submit" value="Update" />
+</form>

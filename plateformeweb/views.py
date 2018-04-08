@@ -6,7 +6,7 @@ from django.urls import reverse_lazy
 from django.utils import timezone
 from logging import getLogger
 
-from django.forms import ModelForm, ModelMultipleChoiceField, ModelChoiceField, CheckboxSelectMultiple, MultipleChoiceField
+from django.forms import ModelForm, HiddenInput, ModelMultipleChoiceField, ModelChoiceField, CheckboxSelectMultiple, MultipleChoiceField
 from datetimepicker.widgets import DateTimePicker
 from rules.contrib.views import PermissionRequiredMixin
 
@@ -238,6 +238,33 @@ class EventCreateView(PermissionRequiredMixin, EventFormView, CreateView):
 
 class EventEditView(PermissionRequiredMixin, EventFormView, AjaxUpdateView):
     permission_required = 'plateformeweb.edit_event'
+    queryset = Event.objects
+
+
+# --- booking form for current user ---
+
+
+class BookingFormView():
+    model = Event
+    fields = ["attendees"]
+
+    def get_form(self, form_class=None, **kwargs):
+
+        if form_class is None:
+            form_class = self.get_form_class()
+        form = super().get_form(form_class)
+        form.fields['attendees'] = ModelMultipleChoiceField(
+            required=True,
+            queryset=CustomUser.objects.filter(pk = self.request.user.id),
+            )
+        return form
+
+    def get_success_url(self):
+        return render(request, 'plateformeweb/event_list.html', message="c'est tout bon")
+
+   
+class BookingEditView(BookingFormView, AjaxUpdateView):
+    template_name = 'plateformeweb/booking_form.html'
     queryset = Event.objects
 
 

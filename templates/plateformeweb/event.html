@@ -75,20 +75,25 @@
             </ul>
  
             <!-- book -->
-            <a href="{% url 'event_detail' event.id event.slug %}" class="card-link">
-                    {% if event in my_events_attending %}
+           
+                {% if request.user.is_authenticated and event in my_events_attending %}
+                   
+                    <a class="card-link mr-3 fm-update btn btn-primary float-right" href="{% url 'booking_form' event.id %}"
+                    data-fm-head="Update" data-fm-callback="reload">
                     {% fontawesome_icon 'delete' %}
-                    Annuler la réservation
-                        {% else %}
-                        {% if event.available_seats <= 0 %}
-                        {% fontawesome_icon 'list-ol' %}
-                        Liste d'attente
-                        {% else %}
-                        {% fontawesome_icon 'ticket' %}
-                        Réserver
-                        {% endif %}
-                    {% endif %}
-            </a>
+                   Annuler
+                   </a>
+
+                {% else %}
+
+                    <a class="card-link mr-3 fm-update btn btn-primary float-right" href="{% url 'booking_form' event.id %}"
+                    data-fm-head="Update" data-fm-callback="reload">  
+                    {% fontawesome_icon 'ticket' %}
+                    Réserver
+                    </a>
+
+                {% endif %}
+          
             
             <!-- Détaits et éditions -->
             

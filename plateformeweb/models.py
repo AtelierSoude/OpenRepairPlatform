@@ -6,6 +6,7 @@ from users.models import CustomUser
 from django.conf import settings
 from autoslug import AutoSlugField
 from django_prices.models import MoneyField, TaxedMoneyField
+from django_markdown.models import MarkdownField
 
 # ------------------------------------------------------------------------------
 
@@ -179,7 +180,7 @@ class Activity(models.Model):
     slug = AutoSlugField(populate_from=('name'), default='',
                          unique=False)
     owner = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True)
-    description = models.TextField(verbose_name=_("Activity description"),
+    description =MarkdownField(verbose_name=_("Activity description"),
                             null=False,
                             blank=False, default="")
     picture = models.ImageField(verbose_name=_('Image'), upload_to='activities/')

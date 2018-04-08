@@ -74,7 +74,8 @@ INSTALLED_APPS = [
     'fm',
     'django_bootstrap_breadcrumbs',
     'django_prices',
-]
+    'django_markdown',
+] 
 
 MIDDLEWARE = [
     # put the following line first, unless it breaks other middleware
@@ -191,6 +192,8 @@ STATICFILES_FINDERS = ['django.contrib.staticfiles.finders.FileSystemFinder',
 MEDIA_URL = '/media/'
 MEDIA_ROOT = '/tmp/media/'
 
+##markdown settings##
+MARKDOWN_EDITOR_SKIN = 'simple'
 
 # LOCKDOWN_ENABLED = False
 # LOCKDOWN_PASSWORDS = ('76j&6wzz#!9fjP7fFQd',)

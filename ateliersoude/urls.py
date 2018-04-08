@@ -21,8 +21,10 @@ from django.views.static import serve
 
 from . import views
 
+
 urlpatterns = [
     url(r'^$', views.home),
+    url(r'^markdown/', include( 'django_markdown.urls')),
     url(r'^plateformeweb/', include('plateformeweb.urls')),
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^admin/settings/', include('dbsettings.urls')),

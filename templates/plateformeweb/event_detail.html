@@ -3,6 +3,9 @@
 {% load staticfiles %}
 {% load fontawesome %}
 {% load avatar_tags %}
+{% load django_bootstrap_breadcrumbs %}
+{% load django_markdown django_markdown_static %}
+
 
 {% load django_bootstrap_breadcrumbs %}
 
@@ -58,7 +61,7 @@ Editer
 
     <div class="m-3 pt-3 p-2 bg-white">
         <p>
-        {{event.type.description|truncatechars:100}}
+        {{event.type.description|truncatechars:100|markdown}}
         </p>
         <a href="{% url 'activity_detail' event.type.id event.type.slug %}">En savoir +</a>
     </div>

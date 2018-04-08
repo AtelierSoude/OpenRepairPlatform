@@ -1,7 +1,6 @@
 from django.contrib import admin
 from .models import Condition, Event, Activity, Place, Organization, OrganizationPerson
 
-
 class EventAdmin(admin.ModelAdmin):
     list_display = (
         'type', 'organization', 'owner', 'published', 'starts_at', 'available_seats',

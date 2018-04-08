@@ -58,4 +58,5 @@ django_bootstrap_breadcrumbs
 django-fm
 # price field
 django-prices
-
+#mardown editor 
+django-markdown-app==0.9.3.1

@@ -4,6 +4,7 @@
 {% load fontawesome %}
 {% load avatar_tags %}
 {% load django_bootstrap_breadcrumbs %}
+{% load django_markdown django_markdown_static %}
 
 {% block breadcrumbs %}
 {% with type="activity" list_view="activity_list" detail_name=activity.name %}
@@ -43,9 +44,11 @@
 {% block about1 %}
 {% with about1="Description" %}
 {{ block.super }}
+
+
 {% endwith %}
 <p>
-{{activity.description}}
+{{ activity.description|markdown }}
 </p>
 {% endblock about1 %}
 

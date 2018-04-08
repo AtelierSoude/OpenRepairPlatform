@@ -6,9 +6,12 @@ from django.urls import reverse_lazy
 from django.utils import timezone
 from logging import getLogger
 
-from django.forms import ModelForm, HiddenInput, ModelMultipleChoiceField, ModelChoiceField, CheckboxSelectMultiple, MultipleChoiceField
+from django.forms import ModelForm, CharField, HiddenInput, ModelMultipleChoiceField, ModelChoiceField, CheckboxSelectMultiple, MultipleChoiceField
 from datetimepicker.widgets import DateTimePicker
 from rules.contrib.views import PermissionRequiredMixin
+
+from django_markdown.fields import MarkdownFormField
+from django_markdown.widgets import MarkdownWidget
 
 from fm.views import AjaxCreateView, AjaxUpdateView
 
@@ -147,7 +150,7 @@ class ActivityFormView():
         if form_class is None:
             form_class = self.get_form_class()
         form = super().get_form(form_class)
-            
+        form.fields['description'] = CharField(widget=MarkdownWidget())
         return form
 
     def get_success_url(self):

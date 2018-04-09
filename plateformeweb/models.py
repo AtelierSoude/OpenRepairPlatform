@@ -15,6 +15,9 @@ class Organization(models.Model):
                             blank=False,
                             verbose_name=_("Organization name"))
     owner = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True)
+    description = MarkdownField(verbose_name=_("Activity description"),
+                            null=False,
+                            blank=False, default="")
     active = models.BooleanField(verbose_name=_('Active'))
     slug = AutoSlugField(populate_from='name', unique=True, default='')
     created_at = models.DateTimeField(auto_now_add=True)
@@ -129,9 +132,11 @@ class Place(models.Model):
                                      null=False)
     owner = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True)
 
-    description = models.TextField(verbose_name=_("Description"), null=False,
-                                   default='')
+    description = MarkdownField(verbose_name=_("Activity description"),
+                            null=False,
+                            blank=False, default="")
     type = models.CharField(max_length=2, verbose_name=_('Type'),
+
                             choices=PLACE_TYPES, null=False, default=OTHER)
     slug = AutoSlugField(populate_from='name', default='', unique=True)
     # geolocation is provided by the AddressField

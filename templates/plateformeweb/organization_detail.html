@@ -4,6 +4,7 @@
 {% load fontawesome %}
 {% load avatar_tags %}
 {% load django_bootstrap_breadcrumbs %}
+{% load django_markdown django_markdown_static %}
 
 {% block breadcrumbs %}
 {% with type="organisations" list_view="organization_list" detail_name=organization.name %}
@@ -11,13 +12,22 @@
 {% endwith %}
 {% endblock %}
 
-{% block edit_link %}
-<a class="card-link mr-3 fm-update btn btn-primary" href="{% url 'organization_edit' organization.id %}"
+{% block TitleAndEdit %}
+
+
+<h5 class="float-left">
+    {{ organization.name }}
+</h5>
+    
+    {% if request.user.is_staff %} 
+<a class="card-link mr-3 fm-update btn btn-primary float-right" href="{% url 'organization_edit' organization.id %}"
  data-fm-head="Update" data-fm-callback="reload">&nbsp
-<i class="fa fa-pencil-square-o  2-xs pt-1"></i>
+<i class="fa fa-pencil-square-o 2-xs pt-1"></i>
 Editer
 </a>
-{% endblock edit_link %}
+    {% endif %}
+
+{% endblock TitleAndEdit %}
 
 {% block header_ban %}
     {% with object="organization" %}
@@ -28,31 +38,31 @@ Editer
 
 {% block context %}
     {% include "plateformeweb/organization.html" %}
-    <a href="{% url 'organization_edit' organization.id %}" class="card-link">edit</a>
 {% endblock context %} 
 
 {% block about %}
 
 {% block about1 %}
 
-    {% with about1="Lieux" %}
+    {% with about1="Description" %}
     {{ block.super }}
     {% endwith %}
-    {% for place in organization.place_set.all %}
-        {% include "plateformeweb/place.html" with class="my-3 col-sm-6 col-md-4" %}
-    {% endfor %}
+    {{ organization.description|markdown }}
 
 {% endblock about1 %}
 
 {% block about2 %}
 
-    {% with about2="Adhérents" %}
+    {% with about2="Lieux" %}
     {{ block.super }}
     {% endwith %}
-    {% for organizationperson in organization.organizationperson_set.all %}
+    {% for place in organization.place_set.all %}
+        {% include "plateformeweb/place.html" with class="my-3 col-sm-6 col-md-4" %}
+    {% endfor %}
+   <!-- {% for organizationperson in organization.organizationperson_set.all %}
     {% with user=organizationperson.user %}
         {% include "users/user.html" %}
-    {% endwith %}
+    {% endwith %} -->
 {% endfor %}
         
 {% endblock about2 %}

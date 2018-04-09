@@ -4,6 +4,7 @@
 {% load fontawesome %}
 {% load avatar_tags %}
 {% load django_bootstrap_breadcrumbs %}
+{% load django_markdown django_markdown_static %}
 
 
 
@@ -12,17 +13,21 @@
 <div class="card card-place {{class}}">
         <div class="card-body">
             <img class="img-fluid img-place" src="{{ place.picture.url }}">
-            <h5 class="card-title">{{ place.name }}</h5>
             <h6 class="card-subtitle mb-2 text-muted">{{ place.type }}</h6>
-            <p class="card-text">{{ place.description }}</p>
+
+            {% if request.resolver_match.url_name != "place_detail" %}
+            <h5 class="card-title">{{ place.name }}</h5>
+            <p class="card-text">{{ place.description|markdown  }}</p>
+            <a class="card-link" href="{% url 'place_detail' place.id place.slug %}">
+                    More ...</a>
+            {% endif %}
+
             <ul class="list-group list-group-flush">
                  <li>
                     {% fontawesome_icon 'map-marker' %}
                     {{ place.address }}
                 </li>
             </ul>
-            <a class="card-link" href="{% url 'place_detail' place.id place.slug %}">
-            More ...</a>
         </div>
       </div>
 

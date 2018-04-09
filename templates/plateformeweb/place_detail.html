@@ -5,19 +5,31 @@
 {% load avatar_tags %}
 {% load django_bootstrap_breadcrumbs %}
 
+{% load django_markdown django_markdown_static %}
+
+
 {% block breadcrumbs %}
 {% with type="places" list_view="place_list" detail_name=place.name %}
    {{ block.super }}
 {% endwith %}
 {% endblock %}
 
-{% block edit_link %}
-<a class="card-link mr-3 fm-update btn btn-primary" href="{% url 'place_edit' place.id %}"
+{% block TitleAndEdit %}
+
+
+<h5 class="float-left">
+    {{ place.name }}
+</h5>
+    
+    {% if request.user.is_staff %} 
+<a class="card-link mr-3 fm-update btn btn-primary float-right" href="{% url 'place_edit' place.id %}"
  data-fm-head="Update" data-fm-callback="reload">&nbsp
 <i class="fa fa-pencil-square-o 2-xs pt-1"></i>
 Editer
 </a>
-{% endblock edit_link %}
+    {% endif %}
+
+{% endblock TitleAndEdit %}
 
 {% block header_ban %}
     {% with object="place"%}
@@ -27,20 +39,30 @@ Editer
 
 {% block context %}
     {% include "plateformeweb/place.html" %}
+
 {% endblock context %} 
 
 {% block about %}
 
 {% block about1 %}
 
-    {% with about1="Dates dans ce lieux" %}
+    {% with about1="Description" %}
     {{ block.super }}
     {% endwith %}
-        {% for event in place.event_set.all %}
-        {% include "plateformeweb/event.html" %}
-        {% endfor %}
+    {{ place.description|markdown }}
 
 {% endblock about1 %}
+
+{% block about2 %}
+
+    {% with about2="Dates dans ce lieux" %}
+    {{ block.super }}
+    {% endwith %}
+    {% for event in place.event_set.all %}
+    {% include "plateformeweb/event.html" %}
+    {% endfor %}
+
+{% endblock about2 %}
 
 {% endblock about %}
       

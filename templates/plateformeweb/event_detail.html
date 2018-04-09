@@ -7,8 +7,6 @@
 {% load django_markdown django_markdown_static %}
 
 
-{% load django_bootstrap_breadcrumbs %}
-
 {% block breadcrumbs %}
 {% with type="events" list_view="event_list" detail_name=event.title %}
    {{ block.super }}
@@ -53,9 +51,10 @@ Editer
     <div class="m-3 pt-3 p-2 bg-white">
             <p>
                 {% for condition in event.condition.all %}
+                    <span>
                     {{condition.resume}}
+                    </span></br>
                 {% endfor %}
-                   
             </p>
         </div>
 

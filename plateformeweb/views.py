@@ -49,7 +49,15 @@ class OrganizationListView(ListView):
 
 class OrganizationFormView():
     model = Organization
-    fields = ["name", "active"]
+    fields = ["name", "description", "active"]
+
+    def get_form(self, form_class=None):
+        if form_class is None:
+            form_class = self.get_form_class()
+        form = super().get_form(form_class)
+        form.fields['description'] = CharField(widget=MarkdownWidget())
+        return form
+
 
     def get_success_url(self):
         return reverse_lazy('organization_detail',
@@ -97,7 +105,7 @@ class PlaceFormView():
         if form_class is None:
             form_class = self.get_form_class()
         form = super().get_form(form_class)
-            
+        form.fields['description'] = CharField(widget=MarkdownWidget())
         return form
 
     def get_success_url(self):

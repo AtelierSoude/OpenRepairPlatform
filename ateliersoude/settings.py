@@ -75,6 +75,8 @@ INSTALLED_APPS = [
     'django_bootstrap_breadcrumbs',
     'django_prices',
     'django_markdown',
+    'easy_maps',
+    
 ] 
 
 MIDDLEWARE = [
@@ -302,6 +304,8 @@ DBSETTINGS_USE_CACHE = False
 
 # TODO for the address module; change it!
 GOOGLE_API_KEY = "AIzaSyCNZ-rIhY1zyq2LFghBV4x7mUQvtJCOK88"
+EASY_MAPS_GOOGLE_MAPS_API_KEY = "AIzaSyCNZ-rIhY1zyq2LFghBV4x7mUQvtJCOK88"
+
 
 # npm (https://github.com/kevin1024/django-npm)
 NPM_FILE_PATTERNS = {

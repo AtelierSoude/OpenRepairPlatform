@@ -60,3 +60,5 @@ django-fm
 django-prices
 #mardown editor 
 django-markdown-app==0.9.3.1
+#map marker 
+django-easy-maps

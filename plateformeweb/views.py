@@ -97,6 +97,7 @@ class PlaceListView(ListView):
 # --- edit ---
 
 class PlaceFormView():
+
     model = Place
     fields = ["name", "description", "type", "address", "picture",
               "organization"]

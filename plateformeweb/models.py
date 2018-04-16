@@ -7,6 +7,7 @@ from django.conf import settings
 from autoslug import AutoSlugField
 from django_prices.models import MoneyField, TaxedMoneyField
 from django_markdown.models import MarkdownField
+from easy_maps.widgets import AddressWithMapWidget
 
 # ------------------------------------------------------------------------------
 
@@ -116,6 +117,7 @@ Organization.admins = OrganizationAdminstratorManager()
 
 
 class Place(models.Model):
+    
     # TODO put these definitions in a DB table -more flexible- or in code?
     REPAIRCAFE = 'rc'
     SCHOOL = 'sc'
@@ -132,7 +134,7 @@ class Place(models.Model):
                                      null=False)
     owner = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True)
 
-    description = MarkdownField(verbose_name=_("Activity description"),
+    description = MarkdownField(verbose_name=_("Place description"),
                             null=False,
                             blank=False, default="")
     type = models.CharField(max_length=2, verbose_name=_('Type'),

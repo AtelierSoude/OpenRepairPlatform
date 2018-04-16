@@ -320,4 +320,8 @@ input[type="color"]:focus,
 
   
 
-/* badges */
+/* map */
+.easy-map-googlemap{
+  width: 100% !important;
+  height: 300px !important;
+}

@@ -4,7 +4,7 @@
 {% load fontawesome %}
 {% load avatar_tags %}
 {% load django_bootstrap_breadcrumbs %}
-
+{% load easy_maps_tags %}
 {% load django_markdown django_markdown_static %}
 
 
@@ -27,6 +27,7 @@
 <i class="fa fa-pencil-square-o 2-xs pt-1"></i>
 Editer
 </a>
+
     {% endif %}
 
 {% endblock TitleAndEdit %}
@@ -39,7 +40,7 @@ Editer
 
 {% block context %}
     {% include "plateformeweb/place.html" %}
-
+   <div class="card"> {% easy_map place.address 100 100 15 %} </div>
 {% endblock context %} 
 
 {% block about %}

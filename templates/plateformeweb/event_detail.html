@@ -5,7 +5,7 @@
 {% load avatar_tags %}
 {% load django_bootstrap_breadcrumbs %}
 {% load django_markdown django_markdown_static %}
-
+{% load easy_maps_tags %}
 
 {% block breadcrumbs %}
 {% with type="events" list_view="event_list" detail_name=event.title %}
@@ -64,6 +64,17 @@ Editer
         </p>
         <a href="{% url 'activity_detail' event.type.id event.type.slug %}">En savoir +</a>
     </div>
+
+    <div class="m-3 pt-3 p-2 bg-white"> 
+        <h6>
+            {% fontawesome_icon 'map-marker' %} 
+            <a href="{% url 'place_detail' event.location.id event.location.slug %}">
+                {{ event.location.name }}</a>,
+            {{ event.location.address }}
+        </h6>
+        {% easy_map event.location.address 100 100 15 %} 
+    </div>
+
 {% endblock context %}
 
 

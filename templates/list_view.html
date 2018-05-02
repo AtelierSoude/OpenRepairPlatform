@@ -12,16 +12,16 @@
 
 {% block content %}
 
-    <section class="">
+    <section class="position-sticky sticky-top">
 
         <!-- breadcrumb -->
         {{ block.super }}
 
-        <div class="row bg-white text-secondary">
-            <div class="col-6">
-            <h1>{% block title %} {% endblock %}</h1>
-            </div>
-            <div class="col-4">
+        <div class="bg-white text-secondary">
+   
+            <h1 class="text-center mx-auto"> {% block title %} {% endblock %}</h1>
+
+            <div class="text-center mx-auto">
                     {% block statistics %}
                         <span>
                             {{first_value}}
@@ -44,7 +44,6 @@
                         </span>
                     {% endblock statistics %}
                 </div>
-
         </div>
 
         <!-- global statistics -->

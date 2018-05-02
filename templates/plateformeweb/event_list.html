@@ -8,50 +8,47 @@
 
 
 {% block breadcrumbs %}
-{% with type="events" view="event_list" %}
+  {% with type="events" view="event_list" %}
     {{ block.super }}
-{% endwith %}
+  {% endwith %}
 {% endblock %}
 
-{% block title %} {{ block.super }} Events {% endblock title %}
+{% block title %} 
+  {{ block.super }} 
+  Events 
+{% endblock title %}
 
 {% block statistics %}
-
   {% with first_value=event_list.all.count first_label='events' second_value=event_list.all.attendees.count second_label='participations' third_value=event_list.type.all.count third_label='types' %}
   {{block.super}}
   {% endwith %}
-
 {% endblock statistics %}
 
 {% block list %}
 
-
 <section class="container-fluid row">
 
-<div class="col-lg-4 col-sm-1 ml-4 py-2 scrollable">
+<div class="col-lg-12 col-sm-12 ml-4 py-2">
 
-{% for event in object_list %}
+  {% for event in object_list %}
 
-{% ifchanged %}
-<h3 class="border-bottom row">{{ event.starts_at|date:"d M" }}</h3>
-{% endifchanged %}
+    <div class="float-left col-lg-4 col-md-6 col-sm-1">
 
-  {% include "plateformeweb/event.html" with class="row" img_class="col-md-4" about_class="col-md-8" %}
-  
-  {% empty %}
-  <div>No events yet.</div>    
+    {% ifchanged %}
+      <h3 class="border-bottom">{{ event.starts_at|date:"d M" }}</h3>
+      {% endifchanged %}
 
-{% endfor %}
-</div>
+      {% include "plateformeweb/event.html" with class="row" img_class="col-md-4" about_class="col-md-8 pb-2" %}
+        
+    </div>
 
-  <div class="col-lg-6 col-sm-1 ml-4 py-2">
+    {% empty %}
+    <div>No events yet.</div>  
 
+  {% endfor %}
   </div>
-
   
 </section>
-
-
 
 {% endblock list %}
 

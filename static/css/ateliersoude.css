@@ -18,16 +18,46 @@ a {
 a:hover{
   text-decoration-style: none !important;
 }
-.content-page {
-  /* position: absolute; */
-  /* left: 50px;  */
-  /* width: calc(100% - 50px); */
+
+h1, h2, h3 {
+  color : #083342;
 }
+
+.border-success{
+  border-color: #49d3be !important;
+}
+
 .clear{
   clear: both;
 }
 .btn {
   padding: 5px !important;
+}
+
+.btn-primary {
+  color: #fff;
+  background-color: #fee56e;
+  border-color: #49d3be;
+}
+
+.btn-primary:hover {
+  color: #fff;
+  background-color: #49d3be;
+  border-color: #fee56e;
+}
+
+.checked:before {
+  position: absolute;
+  right: -17px;
+  top: -28px;
+  width: 35px;
+  height: 35px;
+  color: #49d3be;
+  font-size: 40px;
+  content: "\f058";
+  font-family: 'fontAwesome';
+  border-radius: 35px;
+
 }
 /*******************************
 *********** Menu ***************
@@ -67,7 +97,6 @@ a:hover{
   max-height: 500px;
 }
 .card {
- /* box-shadow: 0px 4px 0px #35bda6; */
   margin : 15px !important;
 }
 
@@ -81,7 +110,6 @@ a:hover{
 }
 .card ul li {
   list-style-type: none;
-  /*margin-left: 10px !important;*/
 }
 .card-user img{
   border-radius: 90%;
@@ -104,7 +132,6 @@ a:hover{
 text-align: center;
 
 }
-
 .avatar-card-user img {
   height: 50px;
   width:auto;
@@ -120,20 +147,17 @@ text-align: center;
    box-shadow: 0px 4px 0px rgb(255, 89, 89);
 }
 .event-card-title{
-  background-color: #083342;
+  background-color: #49d3be;
   color: #fff;
 }
-/* .card-event h5{
-  background-color:#ffefa0;
-} */
-.card-event .badge{
-  /* padding: 1.5px !important; */ 
+.event-card-title a{
+  color : #083342;
 }
+
 .card-event .fa-clock-o {
   color: #35bda6 !important;
 }
 .card-event h3 {
- /* padding: 5px !important; */ 
   font-size: 1.4em;
 }
 .card-event .hour-event{
@@ -308,7 +332,7 @@ input[type="color"]:focus,
   background-color: #fff;
 }
 .breadcrumb a{
-  color: black;
+  color: #083342;
 }
 
 .breadcrumb .breadcrumb-item:not(:first-child)::before{
@@ -317,8 +341,6 @@ input[type="color"]:focus,
   font-size: 8px;
 }
 
-
-  
 
 /* map */
 .easy-map-googlemap{

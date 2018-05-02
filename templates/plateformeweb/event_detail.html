@@ -82,7 +82,7 @@ Editer
 
 {% block about1 %}
 
-    {% with about1="Organisateurs" %}
+    {% with about1="Animateur.trice.s" %}
     {{ block.super }}
     {% endwith %}
         {% for user in event.organizers.all %}
@@ -93,25 +93,19 @@ Editer
 
 {% block about2 %}
 
-    {% with about2="Réservations" %}
+    {% with about2="Participant.e.s" %}
     {{ block.super }}
     {% endwith %}
-        {% for user in event.attendees.all %}
-        {% include "users/user.html" with class="row" img_class="col-4" content_class="col-8" %}
-        {% endfor %}
+
+    {% for user in event.presents.all %}
+    {% include "users/user.html" with class="row border border-success checked" img_class="col-12" content_class="col-12 text-center" %}
+    {% endfor %}
+
+    {% for user in event.attendees.all %}
+    {% include "users/user.html" with class="row" img_class="col-12" content_class="col-12 text-center"  %}
+    {% endfor %}
 
 {% endblock about2 %}
-
-{% block about3 %}
-
-    {% with about3="Présents" %}
-    {{ block.super }}
-    {% endwith %}
-        {% for user in event.presents.all %}
-        {% include "users/user.html" with class="row" img_class="col-4" content_class="col-8" %}
-        {% endfor %}
-
-{% endblock about3 %}
 
 {% endblock about %}
        

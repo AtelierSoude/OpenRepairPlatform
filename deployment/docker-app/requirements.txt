@@ -1,5 +1,5 @@
 django<2.0
-psycopg2
+psycopg2-binary
 # tables display for price list
 django-tables2
 # import csv/xls

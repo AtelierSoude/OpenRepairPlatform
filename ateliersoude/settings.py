@@ -192,7 +192,7 @@ STATICFILES_FINDERS = ['django.contrib.staticfiles.finders.FileSystemFinder',
 # See https://trello.com/c/fnTkmBRk
 # also see urls.py in the ateliersoude dir, for the setting used during dev
 MEDIA_URL = '/media/'
-MEDIA_ROOT = '/tmp/media/'
+MEDIA_ROOT = '/ateliersoude/media/'
 
 ##markdown settings##
 MARKDOWN_EDITOR_SKIN = 'simple'

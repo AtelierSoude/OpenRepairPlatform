@@ -35,7 +35,7 @@
 
     <!-- boostrap -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-     integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" 
+     integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
      crossorigin="anonymous">
 
 
@@ -54,8 +54,8 @@
 {#            integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="#}
 {#            crossorigin="anonymous"></script>#}
 
-     <script src="{% static "npm/stickyfilljs/src/stickyfill.js" %}"></script>
-  
+     <script src="{% static "js/stickyfill.js" %}"></script>
+
      <script
        src="https://code.jquery.com/jquery-3.1.1.min.js"
        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
@@ -64,7 +64,7 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
-     
+
 {#    <link rel="stylesheet"#}
 {#          href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">#}
 
@@ -84,19 +84,19 @@
 <body>
    {% include "./menu.html" %}
 
-   
+
 <wrapper class="content-page">
   {% block breadcrumbs %}
     {% clear_breadcrumbs %}
     {% breadcrumb "Home" "/" %}
   {% endblock %}
-                   
+
   {% block content %}
   {% render_breadcrumbs %}
   {% endblock %}
 </wrapper>
 
-<!-- Script & librairy-->    
+<!-- Script & librairy-->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
 

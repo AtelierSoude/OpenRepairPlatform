@@ -10,7 +10,7 @@
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-2 pl-2">
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
-            </button>  
+            </button>
             <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
                 <div class="navbar-brand"> <a href="{% url "homepage" %}"><img src="{% static "img/logo_ateliersoude.svg" %}" width="30px" height="30px"></a></div>
               <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
@@ -34,35 +34,35 @@
                 </li>
               </ul>
             </div>
-              <div class="navbar navbar-expand-lg navbar-dark bg-dark d-flex justify-content-end">     
+              <div class="navbar navbar-expand-lg navbar-dark bg-dark d-flex justify-content-end">
                   {% if user.is_superuser %}
 
                     <div class="navbar-brand" >
-                        <a class="nav-link mr-3" href="{% url 'event_create' %}" 
+                        <a class="nav-link mr-3" href="{% url 'event_create' %}"
                         title="create event">
                         <i class="fa fa-calendar fa-lg"></i>
                         <i class="fa fa-plus-circle fa-xs"></i></a></div>
-            
+
                     <div class="navbar-brand" >
-                        <a class="nav-link mr-3" href="{% url 'place_create' %}" 
+                        <a class="nav-link mr-3" href="{% url 'place_create' %}"
                         title="create place">
                         <i class="fa fa-map-marker fa-lg"></i>
                         <i class="fa fa-plus-circle fa-xs"></i></a></div>
                   {% endif %}
 
                   {% if user.is_authenticated %}
-                    <div class="navbar-brand avatar"><a class="nav-link mr-3" href="{% url 'user_detail' user.pk %}">{% avatar user %} {{ user.first_name }}</a></div>
+                    <div class="navbar-brand avatar"><a class="nav-link mr-3" href="{{ user.get_absolute_url }}">{% avatar user %} {{ user.first_name }}</a></div>
                   {% else %}
                     <div class="navbar-brand" ><a class="nav-link mr-3" href="{% url "login" %}"><i class="fa fa-user-circle-o fa-2x"></i></a></div>
                   {% endif %}
                   {% if user.is_authenticated %}
-              
+
                   <!-- Menu dropdown -->
                   <div class="navbar-brand arrow-login">
                       <a class="nav-link mr-3 dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class=""></i></a>
                       <div class="dropdown-menu " aria-labelledby="navbarDropdownMenuLink">
                         <a class="dropdown-item" href="#">...</a>
-                        <a class="dropdown-item" href="{% url 'user_detail' user.pk %}"> voir profil </a>
+                        <a class="dropdown-item" href="{{ user.get_absolute_url }}"> voir profil </a>
                         <a class="dropdown-item" href="{% url "user_profile" %}">Editer profil</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="#">...</a>
@@ -73,5 +73,5 @@
                 </div>
           </nav>
     </header>
-    
+
 {% endblock %}

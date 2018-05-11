@@ -8,9 +8,8 @@
 
 {% block list %}
 
-<div class="{{class}}" id="{{id}}">
+<div class="{{class}} card" id="">
     
-
         <img class="img-fluid img-place {{img_class}}" src="{{ activity.picture.url }}">
 
         {% if request.resolver_match.url_name != "activity_detail" %}

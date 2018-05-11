@@ -27,7 +27,7 @@
 {% block list %}
 <section class="">
     {% for place in object_list %}
-    {% include "plateformeweb/place.html" %}
+    {% include "plateformeweb/place.html" with class="row" img_class="col-sm-3 col-12" about_class="col-sm-9 col-12" %}
     {% empty %}
     <div>No places yet.</div>    
   

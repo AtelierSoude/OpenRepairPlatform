@@ -14,16 +14,16 @@
             {% avatar user %}
         </div>
 
-        <div class="{{content_class}} p-2">    
-                   
+        <div class="{{content_class}} p-2">
+
             <h5 class="mx-auto col-12">
-                <a class="card-link" href="{% url 'user_detail' user.pk %}">
-             {{ user.first_name|capfirst }} {{ user.last_name|capfirst}} 
+                <a class="card-link" href="{{ user.get_absolute_url }}">
+             {{ user.first_name|capfirst }} {{ user.last_name|capfirst}}
                 </a>
-            </h5>   
-            
-                <p class="user-status"> 
-                {% if user.is_staff %} 
+            </h5>
+
+                <p class="user-status">
+                {% if user.is_staff %}
                     Volonteer
                 {% else %}
                     Member
@@ -34,12 +34,12 @@
                     <li>{% fontawesome_icon 'envelope-o' %}{{ user.email }}</li>
                 </ul>
                 <div class="">
-                {% if request.user.is_authenticated and request.user.is_staff %}  
+                {% if request.user.is_authenticated and request.user.is_staff %}
                 <a href="#" class="card-link"><i class="fa fa-trash 2-xs pt-1"></i>supprimer</a>
-           
-                {% endif %} 
-            
-                <a class="card-link" href="{% url 'user_detail' user.pk %}">
+
+                {% endif %}
+
+                <a class="card-link" href="{{ user.get_absolute_url }}">
                 &nbsp<i class="fa fa-info-circle  2-xs pt-1"></i>Info</a>
                 </div> -->
         </div>

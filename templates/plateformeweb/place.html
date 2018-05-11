@@ -10,25 +10,27 @@
 
 {% block list %}
 
-<div class="card card-place {{class}}">
-        <div class="card-body">
-            <img class="img-fluid img-place" src="{{ place.picture.url }}">
-            <h6 class="card-subtitle mb-2 text-muted">{{ place.type }}</h6>
+<div class="card card-place">
+        <div class="card-body {{class}}">
+            <img class="img-fluid img-place {{img_class}} " src="{{ place.picture.url }}">
+                <div class="{{about_class}}">
+                <h6 class="card-subtitle mb-2 text-muted">{{ place.type }}</h6>
 
-            {% if request.resolver_match.url_name != "place_detail" %}
-            <h5 class="card-title">{{ place.name }}</h5>
-            <p class="card-text">{{ place.description|markdown  }}</p>
-            <a class="card-link" href="{% url 'place_detail' place.id place.slug %}">
-                    More ...</a>
-            {% endif %}
+                {% if request.resolver_match.url_name != "place_detail" %}
+                <h5 class="card-title">{{ place.name }}</h5>
+                <p class="card-text">{{ place.description|markdown  }}</p>
+                <a class="card-link" href="{% url 'place_detail' place.id place.slug %}">
+                        More ...</a>
+                {% endif %}
 
-            <ul class="list-group list-group-flush">
-                 <li>
-                    {% fontawesome_icon 'map-marker' %}
-                    {{ place.address }}
-                </li>
-            </ul>
+                <ul class="list-group list-group-flush">
+                    <li>
+                        {% fontawesome_icon 'map-marker' %}
+                        {{ place.address }}
+                    </li>
+                </ul>
+            </div>
         </div>
-      </div>
+</div>
 
 {% endblock %}

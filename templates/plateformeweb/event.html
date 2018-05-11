@@ -5,7 +5,7 @@
 {% load avatar_tags %}
 
 {% block list %}
-<div id="{{event.id}}" class="card card-event 
+<div id="{{event.id}}" class="{{class}} card card-event 
 {% if event.available_seats <= 0 %}
     border border-danger
 {% endif %}">
@@ -29,13 +29,13 @@
 
     </div>
 
-    <div class="{{class}}">
+    <div class="row">
 
         <div class="text-center align-middle {{img_class}}">
             <img class="img-fluid img-place" src="{{ event.type.picture.url }}">
         </div>
 
-        <div class="{{about_class}} pl-1">
+        <div class="{{about_class}} pl-1 card-body">
             <div class="">
         
             

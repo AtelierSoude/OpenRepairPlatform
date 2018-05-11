@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.core.exceptions import ValidationError
 from django.views.generic import DetailView, ListView, FormView, CreateView, \
     UpdateView
 from .models import *
@@ -34,7 +35,7 @@ class OrganizationView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
-        
+
 
 class OrganizationListView(ListView):
     model = Organization
@@ -101,7 +102,7 @@ class PlaceFormView():
     model = Place
     fields = ["name", "description", "type", "address", "picture",
               "organization"]
-              
+
     def get_form(self, form_class=None):
         if form_class is None:
             form_class = self.get_form_class()
@@ -117,8 +118,19 @@ class PlaceFormView():
 class PlaceCreateView(PermissionRequiredMixin, PlaceFormView, CreateView):
     permission_required = 'plateformeweb.create_place'
 
+    def validate_image(self, image):
+        # Asserts image is smaller than 5MB
+        if image:
+            if image._size > 5 * 1024 * 1024:
+                raise ValidationError("L'image est trop lourde (> 5Mo)")
+            return image
+        else:
+            raise ValidationError("Erreur dans le téléversement du fichier")
+
     # set owner to current user on creation
     def form_valid(self, form):
+        image = form.cleaned_data.get('picture', False)
+        self.validate_image(image)
         obj = form.save(commit=False)
         obj.owner = self.request.user
         return super().form_valid(form)
@@ -128,8 +140,22 @@ class PlaceEditView(PermissionRequiredMixin, PlaceFormView, AjaxUpdateView):
     permission_required = 'plateformeweb.edit_place'
     queryset = Place.objects
 
+    def validate_image(self, image):
+        # Asserts image is smaller than 5MB
+        if image:
+            if image._size > 5 * 1024 * 1024:
+                raise ValidationError("L'image est trop lourde (> 5Mo)")
+            return image
+        else:
+            raise ValidationError("Erreur dans le téléversement du fichier")
 
-# --- Activity Types --- 
+    def form_valid(self, form):
+        image = form.cleaned_data.get('picture', False)
+        self.validate_image(image)
+        return super().form_valid(form)
+
+
+# --- Activity Types ---
 
 
 class ActivityView(DetailView):
@@ -274,9 +300,7 @@ class BookingFormView():
     def get_success_url(self):
         return render(request, 'plateformeweb/event_list.html', message="c'est tout bon")
 
-   
+
 class BookingEditView(BookingFormView, AjaxUpdateView):
     template_name = 'plateformeweb/booking_form.html'
     queryset = Event.objects
-
-

@@ -284,18 +284,33 @@ class EventEditView(PermissionRequiredMixin, EventFormView, AjaxUpdateView):
 
 class BookingFormView():
     model = Event
-    fields = ["attendees"]
-
+    fields = []
     def get_form(self, form_class=None, **kwargs):
 
         if form_class is None:
             form_class = self.get_form_class()
+
         form = super().get_form(form_class)
-        form.fields['attendees'] = ModelMultipleChoiceField(
-            required=True,
-            queryset=CustomUser.objects.filter(pk = self.request.user.id),
-            )
+
+        user_id = self.request.user.id
+        event_id = self.request.resolver_match.kwargs['pk']
+        user = CustomUser.objects.get(pk=user_id)
+        event = Event.objects.get(pk=event_id)
+        attendees = event.attendees.all()
+
+        if form.is_valid():
+            # print("----------------")
+            # print(event.title)
+            # print("----------------")
+
+            if user in attendees:
+                print(attendees)
+                print ("wazaa")
+                event.attendees.remove(user)
+            else:
+                event.attendees.add(user)
         return form
+
 
     def get_success_url(self):
         return render(request, 'plateformeweb/event_list.html', message="c'est tout bon")

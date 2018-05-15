@@ -1,12 +1,13 @@
 from django.shortcuts import render, get_list_or_404
 from .forms import CustomUserChangeForm, CustomUserCreationForm, UserForm
 from .models import CustomUser
+from plateformeweb.models import Event
 from django.views.generic import ListView, FormView, CreateView, DetailView
 from django.contrib.auth.models import PermissionsMixin
 from django.http import HttpResponseRedirect
 from django.contrib.auth import authenticate, login
 from django.core.urlresolvers import reverse
-
+from django.utils.functional import cached_property
 
 # Create your views here.
 
@@ -32,7 +33,7 @@ def user_profile(request):
         events = PublishedEvent.objects.filter(
         starts_at__gte=timezone.now()).order_by('starts_at')[:10]
     context = {"events": events}
-    
+
 
 def list_users(request):
     if request.method == 'GET':
@@ -71,9 +72,12 @@ class UserDetailView(DetailView):
     context_object_name = 'target_user'
 
     def get_context_data(self, **kwargs):
-       context = super().get_context_data(**kwargs)
-       return context
-
+        context = super().get_context_data(**kwargs)
+        # context['attending_events'] = Event.objects.all()
+        user = context['target_user']
+        attendees = Event.objects.filter(attendees=user)
+        context['attending_events'] = attendees
+        return context
 
 
 class UserListView(ListView):
@@ -83,7 +87,3 @@ class UserListView(ListView):
         context = super().get_context_data(**kwargs)
         context["list_type"] = "user"
         return context
-
-
-
-

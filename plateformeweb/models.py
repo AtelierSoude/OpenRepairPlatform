@@ -117,7 +117,7 @@ Organization.admins = OrganizationAdminstratorManager()
 
 
 class Place(models.Model):
-    
+
     # TODO put these definitions in a DB table -more flexible- or in code?
     REPAIRCAFE = 'rc'
     SCHOOL = 'sc'
@@ -174,12 +174,12 @@ class Condition(models.Model):
     price = MoneyField(
         'tarif', currency='EUR', default='5', max_digits=9,
         decimal_places=2, blank=True)
-    
+
     def __str__(self):
         return self.name
-   
-   
-# EventType is a activity 
+
+
+# EventType is a activity
 class Activity(models.Model):
     name = models.CharField(verbose_name=_("Activity type"), max_length=100,
                             null=False,
@@ -195,8 +195,8 @@ class Activity(models.Model):
     def __str__(self):
         return self.name
 
-    
-    
+
+
 
 # ------------------------------------------------------------------------------
 
@@ -248,7 +248,8 @@ class Event(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.title
+        #TODO CHANGE THIS URGENT (kinda)
+        return "PLACEHOLDER TITLE"
 
 
 class PublishedEventManager(models.Manager):

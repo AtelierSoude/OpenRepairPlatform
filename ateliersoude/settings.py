@@ -75,9 +75,10 @@ INSTALLED_APPS = [
     'django_bootstrap_breadcrumbs',
     'django_prices',
     'django_markdown',
+    'post_office',
     'easy_maps',
-    
-] 
+
+]
 
 MIDDLEWARE = [
     # put the following line first, unless it breaks other middleware
@@ -112,8 +113,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'plateformeweb.context_processors.user_data',
                 'plateformeweb.context_processors.last_events',
-                'plateformeweb.context_processors.user_in_organization',    
-          
+                'plateformeweb.context_processors.user_in_organization',
+
             ],
         },
     },
@@ -290,6 +291,7 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'dmorel@amakuru.net'
 EMAIL_HOST_PASSWORD = 'bammyvwcqbuvtdni'
 EMAIL_PORT = 587
+EMAIL_BACKEND = 'post_office.EmailBackend'
 
 # where to go after successful authentication?
 LOGIN_REDIRECT_URL = '/'

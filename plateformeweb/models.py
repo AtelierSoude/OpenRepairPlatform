@@ -231,8 +231,6 @@ class Event(models.Model):
                                    default=timezone.now)
     available_seats = models.IntegerField(verbose_name=_('Available seats'),
                                           null=False, blank=True, default=0)
-    # TODO put organizers and participants in the same through table, with an
-    # extra status column, or not?
     attendees = models.ManyToManyField(
         CustomUser, related_name='attendee_user', verbose_name=_('Attendees'),
         blank=True)
@@ -250,6 +248,14 @@ class Event(models.Model):
     def __str__(self):
         #TODO CHANGE THIS URGENT (kinda)
         return "PLACEHOLDER TITLE"
+
+    def increase_seats(self):
+        self.available_seats += 1
+        self.save()
+
+    def decrease_seats(self):
+        self.available_seats -= 1
+        self.save()
 
 
 class PublishedEventManager(models.Manager):

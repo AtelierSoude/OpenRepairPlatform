@@ -1,11 +1,16 @@
 from django.shortcuts import render
+from django.urls import reverse
+from django.http import JsonResponse
 from django.core.exceptions import ValidationError
 from django.views.generic import DetailView, ListView, FormView, CreateView, \
     UpdateView
 from .models import *
+from itsdangerous import URLSafeSerializer, BadData
+from post_office import mail
 from django.urls import reverse_lazy
 from django.utils import timezone
 from logging import getLogger
+from django.template.loader import render_to_string
 
 from django.forms import ModelForm, CharField, HiddenInput, ModelMultipleChoiceField, ModelChoiceField, CheckboxSelectMultiple, MultipleChoiceField
 from datetimepicker.widgets import DateTimePicker
@@ -208,8 +213,22 @@ class ActivityEditView(PermissionRequiredMixin, ActivityFormView, AjaxUpdateView
     queryset = Activity.objects
 
 
-
 # --- Events ---
+
+def cancel_reservation(request, token):
+    s = URLSafeSerializer('some_secret_key', salt='cancel_reservation')
+    ret = s.loads(token)
+    event_id = ret['event_id']
+    user_id = ret['user_id']
+    event = Event.objects.get(pk=event_id)
+    user = CustomUser.objects.get(pk=user_id)
+    attendees = event.attendees.all()
+    if user in attendees:
+        event.attendees.remove(user)
+        event.available_seats += 1
+        event.save()
+    return JsonResponse(ret)
+
 
 class EventView(DetailView):
     model = Event
@@ -271,7 +290,11 @@ class EventCreateView(PermissionRequiredMixin, EventFormView, CreateView):
     def form_valid(self, form):
         obj = form.save(commit=False)
         obj.owner = self.request.user
+        print(self.request.__dict__)
         return super().form_valid(form)
+
+
+
 
 
 class EventEditView(PermissionRequiredMixin, EventFormView, AjaxUpdateView):
@@ -285,6 +308,7 @@ class EventEditView(PermissionRequiredMixin, EventFormView, AjaxUpdateView):
 class BookingFormView():
     model = Event
     fields = []
+
     def get_form(self, form_class=None, **kwargs):
 
         if form_class is None:
@@ -298,19 +322,61 @@ class BookingFormView():
         event = Event.objects.get(pk=event_id)
         attendees = event.attendees.all()
 
-        if form.is_valid():
-            # print("----------------")
-            # print(event.title)
-            # print("----------------")
+        if user in attendees:
+            event.increase_seats()
+        else:
+            if event.available_seats > 0:
+                event.decrease_seats()
 
+        if form.is_valid():
             if user in attendees:
-                print(attendees)
-                print ("wazaa")
                 event.attendees.remove(user)
             else:
-                event.attendees.add(user)
+                if event.available_seats >= 0:
+                    event.attendees.add(user)
+                    self.send_booking_mail(user_id, event_id, event)
+                else:
+                    raise ValidationError("Trop de gens")
+
         return form
 
+    def send_booking_mail(self, user_id, event_id, event):
+        serial = URLSafeSerializer('some_secret_key',
+                                   salt='cancel_reservation')
+        data = {'event_id': event_id, 'user_id': user_id}
+
+        cancel_token = serial.dumps(data)
+        cancel_url = reverse('cancel_reservation', args=[cancel_token])
+        cancel_url = self.request.build_absolute_uri(cancel_url)
+
+        event_url = reverse('event_detail', args=[event_id, event.slug])
+        event_url = self.request.build_absolute_uri(event_url)
+
+        place = event.location_id
+        place = Place.objects.get(pk=place).name
+
+        datetime = event.starts_at
+        date = datetime.strftime("%d/%m/%Y")
+        time = datetime.strftime("%H:%M")
+
+        params = {'cancel_url': cancel_url,
+                  'event_url': event_url,
+                  'date': date,
+                  'time': time,
+                  'place': place}
+
+        msg_plain = render_to_string('mail/relance.html',
+                                    params)
+        msg_html = render_to_string('mail/relance.html',
+                                    params)
+
+        mail.send(
+            ['bastien.versini@gmail.com'],
+            'debugsoude@gmail.com',
+            subject='testoo',
+            message=msg_plain,
+            html_message=msg_html
+        )
 
     def get_success_url(self):
         return render(request, 'plateformeweb/event_list.html', message="c'est tout bon")

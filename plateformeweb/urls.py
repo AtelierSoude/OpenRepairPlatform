@@ -20,6 +20,7 @@ urlpatterns = [
     url(r'^activity/(?P<pk>[0-9]+)/(?P<slug>[-\w]+)/$', views.ActivityView.as_view(), name='activity_detail'),
     url(r'^event/$', views.EventListView.as_view(), name='event_list'),
     url(r'^event/create/$', views.EventCreateView.as_view(), name='event_create'),
+    url(r'^event/cancel_reservation/(?P<token>.+)/', views.cancel_reservation, name='cancel_reservation'),
     url(r'^event/(?P<pk>[0-9]+)/book/$', views.BookingEditView.as_view(), name='booking_form'),
     url(r'^event/(?P<pk>[0-9]+)/edit/$', views.EventEditView.as_view(), name='event_edit'),
     url(r'^event/(?P<pk>[0-9]+)/(?P<slug>[-\w]+)/$', views.EventView.as_view(), name='event_detail'),

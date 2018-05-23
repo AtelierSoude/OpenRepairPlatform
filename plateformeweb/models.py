@@ -115,18 +115,18 @@ Organization.admins = OrganizationAdminstratorManager()
 
 # ------------------------------------------------------------------------------
 
+class PlaceType(models.Model):
+    name = models.CharField(max_length=100, verbose_name=_('Type'),
+                            null=False, blank=False )
+    slug = AutoSlugField(populate_from='name', unique=True)
+
+    def __str__(self):
+        return self.slug
+
+    def get_other_place():
+        return PlaceType.get_or_create(name="Other")[0]
 
 class Place(models.Model):
-
-    # TODO put these definitions in a DB table -more flexible- or in code?
-    REPAIRCAFE = 'rc'
-    SCHOOL = 'sc'
-    OTHER = 'ot'
-    PLACE_TYPES = (
-        (REPAIRCAFE, _("Repair café")),
-        (SCHOOL, _("School")),
-    )
-
     name = models.CharField(max_length=100, null=False,
                             blank=False,
                             verbose_name=_("Name"))
@@ -137,9 +137,11 @@ class Place(models.Model):
     description = MarkdownField(verbose_name=_("Place description"),
                             null=False,
                             blank=False, default="")
-    type = models.CharField(max_length=2, verbose_name=_('Type'),
 
-                            choices=PLACE_TYPES, null=False, default=OTHER)
+    type = models.ForeignKey(PlaceType, verbose_name=_('Type'),
+                             null=False,
+                             on_delete=models.SET(PlaceType.get_other_place))
+
     slug = AutoSlugField(populate_from='name', default='', unique=True)
     # geolocation is provided by the AddressField
     address = AddressField(null=False, blank=False,
@@ -154,11 +156,9 @@ class Place(models.Model):
         return " ".join([self.name, '-', self.address.locality.__str__() or ''])
 
 
+
+
 # ------------------------------------------------------------------------------
-
-
-# TODO put these definitions in a DB table -more flexible- or in code?
-
 
 #Condition : mettre ailleurs, en test
 class Condition(models.Model):

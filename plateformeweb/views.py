@@ -276,6 +276,9 @@ class EventFormView():
                     'step': 15,
                 }
             )
+
+        form.fields["available_seats"].widget.attrs['min'] = "0"
+
         return form
 
     def get_success_url(self):

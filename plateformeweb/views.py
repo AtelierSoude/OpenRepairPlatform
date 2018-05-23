@@ -337,13 +337,16 @@ class BookingFormView():
             else:
                 if event.available_seats >= 0:
                     event.attendees.add(user)
-                    self.send_booking_mail(user_id, event_id, event)
+                    self.send_booking_mail(user, event)
                 else:
                     raise ValidationError("Trop de gens")
 
         return form
 
-    def send_booking_mail(self, user_id, event_id, event):
+    def send_booking_mail(self, user, event):
+        user_id = user.id
+        event_id = event.id
+
         serial = URLSafeSerializer('some_secret_key',
                                    salt='cancel_reservation')
         data = {'event_id': event_id, 'user_id': user_id}
@@ -374,7 +377,7 @@ class BookingFormView():
                                     params)
 
         mail.send(
-            ['bastien.versini@gmail.com'],
+            [user.email],
             'debugsoude@gmail.com',
             subject='testoo',
             message=msg_plain,

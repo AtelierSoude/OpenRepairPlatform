@@ -293,7 +293,15 @@ class EventCreateView(PermissionRequiredMixin, EventFormView, CreateView):
     def form_valid(self, form):
         obj = form.save(commit=False)
         obj.owner = self.request.user
-        print(self.request.__dict__)
+
+        # if no title is specified
+        if self.request.POST['title'] == '':
+            new_slug = str(obj.type)
+            new_slug += '-' + obj.organization.slug
+            new_slug += '-' + obj.location.slug
+            obj.title = obj.type
+            obj.slug = new_slug
+
         return super().form_valid(form)
 
 

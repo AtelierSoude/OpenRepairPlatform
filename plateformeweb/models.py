@@ -246,8 +246,7 @@ class Event(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        #TODO CHANGE THIS URGENT (kinda)
-        return "PLACEHOLDER TITLE"
+        return self.title
 
     def increase_seats(self):
         self.available_seats += 1

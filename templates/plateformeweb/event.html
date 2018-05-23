@@ -5,18 +5,14 @@
 {% load avatar_tags %}
 
 {% block list %}
-<div id="{{event.id}}" class="{{class}} card card-event 
+<div id="{{event.id}}" class="{{class}} card card-event
 {% if event.available_seats <= 0 %}
     border border-danger
 {% endif %}">
     <div class="event-card-title text-center row">
 
-            {% if event.title %}
-            {{event.title}}
-            {% else %}
             <a class="col-lg" href="{% url 'event_detail' event.id event.slug %}">
-            {{event.type}}</a>
-            {% endif %}
+            {{event.title}}</a>
 
             <div class="float-left mr-2">
             {% if event.available_seats == 0 %}

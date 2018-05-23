@@ -5,9 +5,28 @@
 {% load django_bootstrap_breadcrumbs %}
 {% load crispy_forms_tags %}
 
-<p>Etes-vous sur de vouloir participer ?</p>
+
+<p>
+    <span>Vous êtes sur le point
+
+            {% if request.user.is_authenticated and event in my_events_attending %}
+                d'annuler votre réservation à</span>
+            {% else %}
+                de réserver à</span>
+            {% endif %}
+            
+    <strong>{{event.type}} du {{ event.starts_at|date:"d M" }} à 
+        <a href="{% url 'place_detail' event.location.id event.location.slug %}">
+        {{ event.location.name }}
+        </a>
+    </strong>
+    </br>
+    <strong>Voulez-vous confirmer ?</strong>
+</p>
+
+
+
 <form action="" method="post">
     {% csrf_token %}
     {{ form|crispy }}
-    <input type="submit" value="Update" />
 </form>

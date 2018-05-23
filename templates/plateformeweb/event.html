@@ -74,8 +74,8 @@
             
                     {% if request.user.is_authenticated and event in my_events_attending %}
                     
-                        <a class="card-link mr-3 fm-update btn btn-primary float-right" href="{% url 'booking_form' event.id %}"
-                        data-fm-head="Update" data-fm-callback="reload">
+                        <a class="card-link mr-3 fm-update btn btn-danger float-right" href="{% url 'booking_form' event.id %}"
+                        data-fm-head="Annuler" data-fm-callback="reload">
                         {% fontawesome_icon 'delete' %}
                     Annuler
                     </a>
@@ -83,7 +83,7 @@
                     {% else %}
 
                         <a class="card-link mr-3 fm-update btn btn-primary float-right" href="{% url 'booking_form' event.id %}"
-                        data-fm-head="Update" data-fm-callback="reload">  
+                        data-fm-head="Confirmer" data-fm-callback="reload">  
                         {% fontawesome_icon 'ticket' %}
                         Réserver
                         </a>

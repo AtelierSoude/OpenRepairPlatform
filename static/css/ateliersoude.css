@@ -189,7 +189,12 @@ text-align: center;
 .fm-modal .modal-content {
     margin: auto !important;
     max-width: 700px !important;
+    min-height: 250px !important;
+    padding: 10px !important;
+    margin-top: 10% !important;
 }
+
+
 
 /********************************
 ************* Forms *************

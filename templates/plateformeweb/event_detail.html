@@ -17,17 +17,23 @@
 {% block TitleAndEdit %}
 
 <h5 class="float-left">
-    {{ event.type }} du {{ event.starts_at|date:"d M" }} à 
+    {{ event.type }} du {{ event.starts_at|date:"d M" }} à
     <a href="{% url 'place_detail' event.location.id event.location.slug %}">
           {{ event.location.name }}
     </a>
 </h5>
 
-{% if request.user.is_staff %} 
+{% if request.user.is_staff %}
 <a class="card-link mr-3 fm-update btn btn-primary float-right" href="{% url 'event_edit' event.id %}"
  data-fm-head="Update" data-fm-callback="reload">&nbsp
 <i class="fa fa-pencil-square-o 2-xs pt-1"></i>
 Editer
+</a>
+{% else %}
+<a class="card-link mr-3 fm-update btn btn-primary float-right" href="{% url 'booking_form' event.id %}"
+ data-fm-head="Book" data-fm-callback="reload">&nbsp
+<i class="fa fa-pencil-square-o 2-xs pt-1"></i>
+Réserver
 </a>
 {% endif %}
 

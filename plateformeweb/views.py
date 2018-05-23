@@ -233,6 +233,14 @@ def cancel_reservation(request, token):
 class EventView(DetailView):
     model = Event
 
+    def get(self, request, **kwargs):
+        event = Event.objects.get(pk=kwargs['pk'])
+        confirmed = event.presents.all()
+        for person in confirmed:
+            event.attendees.remove(person)
+
+        return super().get(request, **kwargs)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
@@ -241,8 +249,10 @@ class EventView(DetailView):
 class EventListView(ListView):
     model = Event
 
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
         context["list_type"] = "event"
         return context
 

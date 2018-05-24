@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'whitenoise.runserver_nostatic', # http://whitenoise.evans.io/en/stable/django.html
     'django.contrib.staticfiles',
     'users',
+    'api',
     'django_tables2',
     'import_export',
     'fontawesome',

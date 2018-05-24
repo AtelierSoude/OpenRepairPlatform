@@ -9,7 +9,7 @@
 
 <!-- a user card -->
 <div class="card-user card">
-   <div class="{{class}}">
+   <div class="{{class}}" id="square-{{user_id}}">
         <div class="avatar-card-user {{img_class}} p-2">
             {% avatar user %}
         </div>
@@ -40,9 +40,12 @@
                 {% endif %}
 
                 <a class="card-link" href="{{ user.get_absolute_url }}">
-                &nbsp<i class="fa fa-info-circle  2-xs pt-1"></i>Info</a>
+                     &nbsp<i class="fa fa-info-circle  2-xs pt-1"></i>Info</a>
                 </div> -->
         </div>
+        {% if absentee %}
+        <button class="btn-setPresent" id="{{userid}}">Présent</button>
+        {% endif %}
     </div>
 </div>
 

@@ -2,6 +2,7 @@
 
 {% load staticfiles %}
 {% load fontawesome %}
+{% load app_filters %}
 {% load avatar_tags %}
 {% load django_bootstrap_breadcrumbs %}
 {% load django_markdown django_markdown_static %}
@@ -71,14 +72,14 @@ Réserver
         <a href="{% url 'activity_detail' event.type.id event.type.slug %}">En savoir +</a>
     </div>
 
-    <div class="m-3 pt-3 p-2 bg-white"> 
+    <div class="m-3 pt-3 p-2 bg-white">
         <h6>
-            {% fontawesome_icon 'map-marker' %} 
+            {% fontawesome_icon 'map-marker' %}
             <a href="{% url 'place_detail' event.location.id event.location.slug %}">
                 {{ event.location.name }}</a>,
             {{ event.location.address }}
         </h6>
-        {% easy_map event.location.address 100 100 15 %} 
+        {% easy_map event.location.address 100 100 15 %}
     </div>
 
 {% endblock context %}
@@ -108,13 +109,12 @@ Réserver
     {% endfor %}
 
     {% for user in event.attendees.all %}
-    {% include "users/user.html" with class="row" img_class="col-12" content_class="col-12 text-center"  %}
+    {% include "users/user.html" with class="row" user_id=user.id img_class="col-12" content_class="col-12 text-center" absentee=True userid=user.id|serialize_id:event.id %}
     {% endfor %}
 
 {% endblock about2 %}
 
+<script src="{% static "js/event_detail.js" %}"></script>
 {% endblock about %}
-       
-</section>
 
-      
+</section>

@@ -24,6 +24,7 @@ from fm.views import AjaxCreateView, AjaxUpdateView
 logger = getLogger(__name__)
 
 
+
 def homepage(request):
     events = PublishedEvent.objects.filter(
         starts_at__gte=timezone.now()).order_by('starts_at')[:10]
@@ -239,10 +240,15 @@ class EventView(DetailView):
         for person in confirmed:
             event.attendees.remove(person)
 
-        return super().get(request, **kwargs)
+        return super().get(request)
+
+
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        event = context['event']
+        context['event_id'] = event.id
+
         return context
 
 

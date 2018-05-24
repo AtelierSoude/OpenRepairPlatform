@@ -33,6 +33,7 @@ urlpatterns = [
     url(r'^users/', include('users.urls')),
     url(r'^auth/', include('django.contrib.auth.urls')),
     url(r'^avatar/', include('avatar.urls')),
+    url(r'^api/', include('api.urls')),
 ]
 
 # DEBUG toolbar if DEBUG is true in the environment

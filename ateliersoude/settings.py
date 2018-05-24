@@ -322,3 +322,13 @@ AUTHENTICATION_BACKENDS = (
     'rules.permissions.ObjectPermissionBackend',
     'django.contrib.auth.backends.ModelBackend',
 )
+
+#django-avatar
+AVATAR_PROVIDERS = (
+    'avatar.providers.PrimaryAvatarProvider',
+    'avatar.providers.DefaultAvatarProvider',
+)
+
+AVATAR_CLEANUP_DELETED = True
+AVATAR_DEFAULT_URL = '../media/default.png'
+AVATAR_EXPOSE_USERNAMES = False

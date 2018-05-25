@@ -9,13 +9,13 @@
 <p>
     <span>Vous êtes sur le point
 
-            {% if request.user.is_authenticated and event in my_events_attending %}
+            {% if request.user.is_authenticated and request.user in event.attendees.all %}
                 d'annuler votre réservation à</span>
             {% else %}
                 de réserver à</span>
             {% endif %}
-            
-    <strong>{{event.type}} du {{ event.starts_at|date:"d M" }} à 
+
+    <strong>{{event.type}} du {{ event.starts_at|date:"d M" }} à
         <a href="{% url 'place_detail' event.location.id event.location.slug %}">
         {{ event.location.name }}
         </a>

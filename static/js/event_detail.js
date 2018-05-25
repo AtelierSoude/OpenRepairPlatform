@@ -7,17 +7,17 @@ function setEventHandler(button){
     button.onclick = () => setPresent(button.id);
 }
 
-function updateCSS(data){
-    console.log(data)
+function updateCSS(data, button_id){
     square = document.getElementById("square-"+data['user_id']);
     square.className = "row border border-success checked"
+    button = document.getElementById(button_id);
+    button.remove();
 }
 
 function setPresent(id){
     let payload = {
         idents: id
     }
-    var user_id;
     var view_model = this;
     var formBody = payload_to_formBody(payload);
     fetch('/api/setPresent/', {
@@ -27,7 +27,7 @@ function setPresent(id){
     })
         .then(handleErrors)
         .then(function(res){ return res.json(); })
-        .then(function(data){ updateCSS(data)});
+        .then(function(data){ updateCSS(data, id)});
 }
 
 function payload_to_formBody(payload){

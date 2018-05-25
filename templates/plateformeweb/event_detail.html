@@ -30,6 +30,8 @@
 <i class="fa fa-pencil-square-o 2-xs pt-1"></i>
 Editer
 </a>
+{% elif request.user in event.presents.all %}
+
 {% else %}
 <a class="card-link mr-3 fm-update btn btn-primary float-right" href="{% url 'booking_form' event.id %}"
  data-fm-head="Book" data-fm-callback="reload">&nbsp

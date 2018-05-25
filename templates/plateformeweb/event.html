@@ -33,17 +33,17 @@
 
         <div class="{{about_class}} pl-1 card-body">
             <div class="">
-        
-            
+
+
             <!-- about -->
 
             <ul class="list-group list-group-flush">
 
                     <li class="">
-                        <small>organisé par 
+                        <small>organisé par
                             <a href="{% url 'organization_detail' event.organization.id event.organization.slug %}">
                             {{ event.organization }}
-                        </a></small> 
+                        </a></small>
                     </li>
 
                 {% if request.resolver_match.url_name != "event_detail" %}
@@ -55,7 +55,7 @@
                         {% for condition in event.condition.all %}
                         <a> <small>{{condition.resume}}</small> </a>
                         {% endfor %}
-                    
+
                     </li>
 
                     <li class="">
@@ -69,41 +69,45 @@
                     </li>
 
                 </ul>
-    
+
                 <!-- book -->
-            
-                    {% if request.user.is_authenticated and event in my_events_attending %}
-                    
+                {% if not request.user.is_authenticated %}
+                {% else %}
+                    {% if request.user in event.attendees.all%}
                         <a class="card-link mr-3 fm-update btn btn-danger float-right" href="{% url 'booking_form' event.id %}"
                         data-fm-head="Annuler" data-fm-callback="reload">
                         {% fontawesome_icon 'delete' %}
-                    Annuler
+                        Annuler
                     </a>
-
+                    {% elif request.user in event.organizers.all %}
+                        <a class="card-link mr-3 fm-update btn btn-danger float-right" href="{% url 'event_edit' event.id %}"
+                        data-fm-head="Editer" data-fm-callback="reload">
+                        {% fontawesome_icon 'edit' %}
+                        Editer
+                    {% elif request.user in event.presents.all %}
                     {% else %}
-
                         <a class="card-link mr-3 fm-update btn btn-primary float-right" href="{% url 'booking_form' event.id %}"
-                        data-fm-head="Confirmer" data-fm-callback="reload">  
+                        data-fm-head="Confirmer" data-fm-callback="reload">
                         {% fontawesome_icon 'ticket' %}
                         Réserver
                         </a>
-
                     {% endif %}
-            
-                
-            
+                {% endif %}
+
+
+
             <!-- delete if user is organizer -->
 
                 {% if request.user.is_authenticated and event in my_events_organizing %}
                     <a href="#" class="card-link">Supprimer</a>
                     {% fontawesome_icon 'trash' large=True %}
                 {% endif %}
-            
+
             {% endif %}
 
         </div>
 
-    </div>    
+    </div>
 </div>
 </div>
 

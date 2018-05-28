@@ -107,10 +107,10 @@ class OrganizationAdministrator(OrganizationPerson):
 
 # extend the Organization with convenience methods
 
-Organization.visitors = OrganizationVisitorManager()
-Organization.members = OrganizationMemberManager()
-Organization.volunteers = OrganizationVolunteerManager()
-Organization.admins = OrganizationAdminstratorManager()
+Organization.visitors = OrganizationVisitor.objects
+Organization.members = OrganizationMember.objects
+Organization.volunteers = OrganizationVolunteer.objects
+Organization.admins = OrganizationAdministrator.objects
 
 
 # ------------------------------------------------------------------------------

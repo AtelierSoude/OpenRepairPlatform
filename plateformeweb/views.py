@@ -273,7 +273,7 @@ class EventListView(ListView):
 class EventFormView():
     model = Event
     fields = ["title", "type", "starts_at", "ends_at", "available_seats",
-              "attendees", "presents", "organizers", "location", "publish_at", "published",
+              "attendees", "organizers", "location", "publish_at", "published",
               "organization", "condition"]
 
     # date picker from
@@ -331,6 +331,9 @@ class EventCreateView(PermissionRequiredMixin, EventFormView, CreateView):
 
 class EventEditView(PermissionRequiredMixin, EventFormView, AjaxUpdateView):
     permission_required = 'plateformeweb.edit_event'
+    fields = ["title", "type", "starts_at", "ends_at", "available_seats",
+              "attendees", "presents", "organizers", "location", "publish_at", "published",
+              "organization", "condition"]
     queryset = Event.objects
 
 

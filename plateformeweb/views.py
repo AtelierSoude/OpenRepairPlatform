@@ -248,7 +248,12 @@ class EventView(DetailView):
         context = super().get_context_data(**kwargs)
         event = context['event']
         context['event_id'] = event.id
-
+        orga = event.organization
+        admins = orga.admins()
+        volunteers = orga.volunteers()
+        context['admin_or_volunteer'] = admins + volunteers
+        context['volunteers'] = volunteers
+        context['admins'] = admins
         return context
 
 

@@ -90,6 +90,7 @@ class OrganizationVolunteerManager(models.Manager):
 class OrganizationVolunteer(OrganizationPerson):
     abilities = models.ManyToManyField(Abilities)
     tagline = models.TextField(verbose_name=_('Tagline'))
+    objects = OrganizationVolunteerManager()
 
 
 # --- admin ---
@@ -107,10 +108,42 @@ class OrganizationAdministrator(OrganizationPerson):
 
 # extend the Organization with convenience methods
 
-Organization.visitors = OrganizationVisitor.objects
-Organization.members = OrganizationMember.objects
-Organization.volunteers = OrganizationVolunteer.objects
-Organization.admins = OrganizationAdministrator.objects
+def get_admins(self):
+    queryset = OrganizationPerson.objects.filter(role=OrganizationPerson.ADMIN, organization=self)
+    ret = []
+    for query in queryset:
+        ret += [query.user]
+    return ret
+
+
+def get_volunteers(self):
+    queryset = OrganizationPerson.objects.filter(role=OrganizationPerson.VOLUNTEER, organization=self)
+    ret = []
+    for query in queryset:
+        ret += [query.user]
+    return ret
+
+
+def get_members(self):
+    queryset = OrganizationPerson.objects.filter(role=OrganizationPerson.MEMBER, organization=self)
+    ret = []
+    for query in queryset:
+        ret += [query.user]
+    return ret
+
+
+def get_visitors(self):
+    queryset = OrganizationPerson.objects.filter(role=OrganizationPerson.VISITOR, organization=self)
+    ret = []
+    for query in queryset:
+        ret += [query.user]
+    return ret
+
+
+Organization.admins = get_admins
+Organization.visitors = get_visitors
+Organization.members = get_members
+Organization.volunteers = get_volunteers
 
 
 # ------------------------------------------------------------------------------

@@ -108,19 +108,33 @@
 
 {% block about2 %}
 
-    {% with about2="Participant.e.s" %}
+    {% with about2="Membres Actifs" %}
     {{ block.super }}
     {% endwith %}
 
-    {% for user in event.presents.all %}
-    {% include "users/user.html" with class="row border border-success checked" img_class="col-12" content_class="col-12 text-center" %}
-    {% endfor %}
-
-    {% for user in event.attendees.all %}
-    {% include "users/user.html" with class="row" user_id=user.id img_class="col-12" content_class="col-12 text-center" absentee=True userid=user.id|serialize_id:event.id %}
+    {% for user in volunteers %}
+            {% include "users/user.html" with class="row" user_id=user.id img_class="col-12" content_class="col-12 text-center" absentee=True userid=user.id|serialize_id:event.id %}
     {% endfor %}
 
 {% endblock about2 %}
+
+{% block about3 %}
+
+    {% with about3="Participant.e.s" %}
+    {{ block.super }}
+    {% endwith %}
+
+    {% if request.user.is_authenticated and request.user in admin_or_volunteer %}
+        {% for user in event.attendees.all %}
+            {% if user not in admin_or_volunteer %}
+                {% include "users/user.html" with class="row" user_id=user.id img_class="col-12" content_class="col-12 text-center" absentee=True userid=user.id|serialize_id:event.id %}
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        Vous devez être membre actif pour voir les participant.e.s
+    {% endif %}
+
+{% endblock about3 %}
 
 <script src="{% static "js/event_detail.js" %}"></script>
 {% endblock about %}

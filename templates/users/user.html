@@ -43,8 +43,11 @@
                      &nbsp<i class="fa fa-info-circle  2-xs pt-1"></i>Info</a>
                 </div> -->
         </div>
-        {% if absentee and request.user in event.organizers.all %}
-        <button class="btn-setPresent" id="{{userid}}">Présent</button>
+        {% if orga %}
+        {% elif absentee and request.user in event.organizers.all %}
+            <button class="btn-setPresent" id="{{userid}}">Présent</button>
+        {% elif not absentee and request.user in event.organizers.all %}
+            <button class="btn-setAbsent" id="{{userid}}">Annuler</button>
         {% endif %}
     </div>
 </div>

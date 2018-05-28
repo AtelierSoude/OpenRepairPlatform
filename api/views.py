@@ -22,3 +22,23 @@ def set_present(request):
         event.presents.add(person)
 
         return JsonResponse({'status': "OK", 'user_id': user_id})
+
+def set_absent(request):
+    if request.method != 'POST':
+        # TODO change this
+        return HttpResponse("Circulez, il n'y a rien à voir")
+    else:
+        serial = URLSafeSerializer('some_secret_key',
+                                    salt='presence')
+
+        data = serial.loads(request.POST['idents'])
+        print(data)
+        event_id = data['event_id']
+        user_id = data['user_id']
+
+        person = CustomUser.objects.get(pk=user_id)
+        event = Event.objects.get(pk=event_id)
+        event.presents.remove(person)
+        event.attendees.add(person)
+
+        return JsonResponse({'status': "OK", 'user_id': user_id})

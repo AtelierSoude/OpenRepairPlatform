@@ -84,13 +84,14 @@
                         data-fm-head="Editer" data-fm-callback="reload">
                         {% fontawesome_icon 'edit' %}
                         Editer
+                    </a>
                     {% elif request.user in event.presents.all %}
                     {% else %}
                         <a class="card-link mr-3 fm-update btn btn-primary float-right" href="{% url 'booking_form' event.id %}"
                         data-fm-head="Confirmer" data-fm-callback="reload">
                         {% fontawesome_icon 'ticket' %}
                         Réserver
-                        </a>
+                    </a>
                     {% endif %}
                 {% endif %}
 

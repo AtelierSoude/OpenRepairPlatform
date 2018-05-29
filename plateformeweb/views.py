@@ -223,12 +223,15 @@ def cancel_reservation(request, token):
     user_id = ret['user_id']
     event = Event.objects.get(pk=event_id)
     user = CustomUser.objects.get(pk=user_id)
+    context = {'event': event, 'user': user}
     attendees = event.attendees.all()
     if user in attendees:
         event.attendees.remove(user)
         event.available_seats += 1
         event.save()
-    return JsonResponse(ret)
+        return render(request, 'mail/cancel_ok.html', context)
+    else:
+        return render(request, 'mail/cancel_failed.html', context)
 
 
 class EventView(DetailView):

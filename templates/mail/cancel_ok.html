@@ -1,4 +1,4 @@
-{{user.get_full_name}}, votre annulation pour l'événement <a href="{% url 'event_detail' event.id event.slug %}"> {{event.title}} du {{event.starts_at}} de {{event.organization}}</a> a bien été prise en compte.<br>
+{{user.get_full_name}}, votre annulation pour l'événement <a href="{% url 'event_detail' event.id event.slug %}"> {{event.title}} du {{event.date_interval_format}}</a> a bien été prise en compte.<br>
 Si vous souhaitez vous réinscrire, veuillez vous diriger vers la page de l'évenement et réserver à nouveau.
 
 <!-- TODO: Mettre le lien de booking direct ? >

@@ -393,18 +393,9 @@ class BookingFormView():
         event_url = reverse('event_detail', args=[event_id, event.slug])
         event_url = self.request.build_absolute_uri(event_url)
 
-        place = event.location_id
-        place = Place.objects.get(pk=place).name
-
-        datetime = event.starts_at
-        date = datetime.strftime("%d/%m/%Y")
-        time = datetime.strftime("%H:%M")
-
         params = {'cancel_url': cancel_url,
                   'event_url': event_url,
-                  'date': date,
-                  'time': time,
-                  'place': place}
+                  'event': event}
 
         msg_plain = render_to_string('mail/relance.html',
                                     params)

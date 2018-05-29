@@ -10,6 +10,14 @@ RUN aptitude -y upgrade && \
 RUN curl -sL https://deb.nodesource.com/setup_6.x | bash -
 RUN aptitude -y install nodejs
 
+# French ENV for date
+RUN apt-get install -y locales locales-all
+RUN sed -i -e 's/# fr_FR.UTF-8 UTF-8/fr_FR.UTF-8 UTF-8/' /etc/locale.gen && \
+    locale-gen
+ENV LC_ALL fr_FR
+ENV LANG fr_FR
+ENV LANGUAGE fr_FR
+
 ENV PYTHONUNBUFFERED 1
 RUN mkdir /ateliersoude
 ADD requirements.txt /ateliersoude/

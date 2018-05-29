@@ -8,7 +8,7 @@ from autoslug import AutoSlugField
 from django_prices.models import MoneyField, TaxedMoneyField
 from django_markdown.models import MarkdownField
 from easy_maps.widgets import AddressWithMapWidget
-
+import locale
 # ------------------------------------------------------------------------------
 
 class Organization(models.Model):
@@ -288,6 +288,21 @@ class Event(models.Model):
     def decrease_seats(self):
         self.available_seats -= 1
         self.save()
+
+    def date_interval_format(self):
+        locale.setlocale(locale.LC_ALL, 'fr_FR')
+        starts_at_date = self.starts_at.date().strftime("%A %d %B %Y")
+        starts_at_time = self.starts_at.time().strftime("%X")
+        ends_at_time = self.ends_at.time().strftime("%X")
+
+        # ex Lundi 01 Janvier 2018 de 20:01:12 à 22:01:12
+        string = starts_at_date
+        string += " de "
+        string += starts_at_time
+        string += " à "
+        string += ends_at_time
+        return string
+
 
 
 class PublishedEventManager(models.Manager):

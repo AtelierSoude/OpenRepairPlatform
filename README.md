@@ -7,30 +7,30 @@ cd [git checkout directory]
 ```
 
 ### Update bootstrap data (optional)
- 
-Only if a change is needed in the initial content. It is possible to dump the 
-data that was manually created and make it a fixture. This involves opening a 
+
+Only if a change is needed in the initial content. It is possible to dump the
+data that was manually created and make it a fixture. This involves opening a
 shell in the running container (`docker exec -ti ateliersoude-django bash`), cd'ing
 to the `/ateliersoude` directory and running `./manage.py`. Look at the
 `quotation/fixtures/quotation/README.txt` file for more.
- 
+
 ### Build the application and run it
 
 - Before the initial build, run a full db rebuild (drops all DB content), also use this
-to wipe out the DB when needed: 
+to wipe out the DB when needed:
 
   `./start.sh rebuild_db`
-  
-- Rebuild application, collect static files, and start the gunicorn (production) 
-server, keeping the DB intact: 
-  
+
+- Rebuild application, collect static files, and start the gunicorn (production)
+server, keeping the DB intact:
+
   `./start.sh rebuild`
 
-- Reload the application (for gunicorn, in cases of minor code changes, faster): 
+- Reload the application (for gunicorn, in cases of minor code changes, faster):
 
   `./start.sh reload`
 
-- Start the auto-reloading development server (preferred way for development, all 
+- Start the auto-reloading development server (preferred way for development, all
 changed files are taken into account instantly):
 
   `./start.sh dev`
@@ -57,3 +57,9 @@ except for the dev server where they're displayed by default (container isn't de
 - Application:  `docker exec -ti ateliersoude-django bash`
 - Database: ` docker exec -ti ateliersoude-postgres bash`
 
+### Fixture data
+
+You can find some already implemented [users fixtures](users/fixtures/users/001_users.json) such as :
+
+`login: admin@example.com
+passwd: foobar`

@@ -402,10 +402,14 @@ class BookingFormView():
         msg_html = render_to_string('mail/relance.html',
                                     params)
 
+        date = event.starts_at.date().strftime("%d %B")
+        location = event.location.name
+        subject = "Votre réservation pour le " + date + " à " + location
+
         mail.send(
             [user.email],
             'debugsoude@gmail.com',
-            subject='testoo',
+            subject=subject,
             message=msg_plain,
             html_message=msg_html
         )

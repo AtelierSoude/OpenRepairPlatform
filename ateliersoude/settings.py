@@ -73,6 +73,7 @@ INSTALLED_APPS = [
     'avatar',
     'crispy_forms',
     'fm',
+    'celery',
     'django_bootstrap_breadcrumbs',
     'django_prices',
     'django_markdown',

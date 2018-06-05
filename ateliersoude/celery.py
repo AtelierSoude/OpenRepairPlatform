@@ -4,7 +4,6 @@ from celery.schedules import crontab
 from django.core import management
 import os
 import django
-import tasks
 
 # set the default Django settings module for the 'celery' program.
 os.environ['DJANGO_SETTINGS_MODULE'] = 'ateliersoude.settings'

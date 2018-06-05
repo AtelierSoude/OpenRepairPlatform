@@ -67,6 +67,7 @@ django-post_office
 #sécurité
 itsdangerous
 #celery
-celery
+
+celery[redis]
 djangorestframework
 redis

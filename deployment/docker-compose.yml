@@ -1,17 +1,18 @@
 version: '2'
 
 services:
+
   ateliersoude-postgres:
     restart: always
-    image: postgres
-    ports:
-      - "5432:5432"
+    image: library/postgres:latest
     environment:
       - POSTGRES_USER=ateliersoude
       - POSTGRES_PASSWORD=ateliersoude
       - POSTGRES_DB=ateliersoude-postgres
-    # volumes:
-      # - 'postgres:/var/lib/postgresql/data'
+    ports:
+      - "5432:5432"
+    volumes:
+      - 'postgres:/var/lib/postgresql/data'
 
   django:
     build:
@@ -20,18 +21,22 @@ services:
     depends_on:
       - ateliersoude-postgres
       - redis
+    # command: /ateliersoude/deployment/docker-app/bootstrap.sh
     command: /ateliersoude/bootstrap.sh
     env_file: .env
     environment:
       - POSTGRES_USER=ateliersoude
       - POSTGRES_PASSWORD=ateliersoude
       - POSTGRES_DB=ateliersoude-postgres
+      - POSTGRES_HOST=ateliersoude-postgres
       - DEVELOPMENT=1
       - DJANGO_DEBUG=1
     ports:
       - "8000:8000"
       - "8001:8001"
       - "5000:5000"
+    volumes:
+      - ../.:/ateliersoude
 
   redis:
     image: 'redis:3.0-alpine'
@@ -39,6 +44,7 @@ services:
       - 'redis:/var/lib/redis/data'
     ports:
       - '6379:6379'
+    command: redis-server
 
   celeryworker:
     build:
@@ -46,10 +52,23 @@ services:
       dockerfile: ./deployment/docker-app/Dockerfile
     env_file: .env
     depends_on:
+      - django
       - ateliersoude-postgres
       - redis
-
-    command: celery worker -B -l INFO --pidfile="/tmp/celerybeat.pid"
+    links:
+      - ateliersoude-postgres
+      - redis
+      - django
+    command: /ateliersoude/celery.sh
+    environment:
+      - POSTGRES_USER=ateliersoude
+      - POSTGRES_PASSWORD=ateliersoude
+      - POSTGRES_DB=ateliersoude-postgres
+      - POSTGRES_HOST=ateliersoude-postgres
+      - DEVELOPMENT=1
+      - DJANGO_DEBUG=1
+    volumes:
+      - ../.:/ateliersoude
 
   # celerybeat:
   #   build:
@@ -65,9 +84,11 @@ services:
   adminer:
     image: adminer
     restart: always
+    depends_on:
+      - ateliersoude-postgres
     ports:
       - 8080:8080
 
 volumes:
   redis:
-  # postgres:
+  postgres:

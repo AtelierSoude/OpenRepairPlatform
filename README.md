@@ -1,51 +1,26 @@
 ## Django-AtelierSoude
 
-### Move to the base directory
+### Move to the deployment directory
 
 ```bash
-cd [git checkout directory]
+cd [git checkout directory]/deployment
 ```
 
 ### Update bootstrap data (optional)
 
 Only if a change is needed in the initial content. It is possible to dump the
 data that was manually created and make it a fixture. This involves opening a
-shell in the running container (`docker exec -ti ateliersoude-django bash`), cd'ing
+shell in the running container (`docker exec -ti deployment_django_1 bash`), cd'ing
 to the `/ateliersoude` directory and running `./manage.py`. Look at the
 `quotation/fixtures/quotation/README.txt` file for more.
 
-### Build the application and run it
+### Running the application
 
-- Before the initial build, run a full db rebuild (drops all DB content), also use this
-to wipe out the DB when needed:
-
-  `./start.sh rebuild_db`
-
-- Rebuild application, collect static files, and start the gunicorn (production)
-server, keeping the DB intact:
-
-  `./start.sh rebuild`
-
-- Reload the application (for gunicorn, in cases of minor code changes, faster):
-
-  `./start.sh reload`
-
-- Start the auto-reloading development server (preferred way for development, all
-changed files are taken into account instantly):
-
-  `./start.sh dev`
-
-Note the build + run command will create docker containers and launch them, so a
-running docker daemon is needed.
-
-### Ports
-
-- For the dev server, the default is 8001 on all interfaces
-- For the gunicorn server, the default is 8000 on all interfaces
-
-The exposed port is configurable as the 2nd argument to the command, example:
-
-`./start.sh dev 127.0.0.1:8000` will start the dev server on port 8000, accessible only on localhost. Same thing for gunicorn
+After cd'ing to the deployment directory (and having docker-compose installed)
+```bash
+docker-compose up --build --force-recreate
+```
+(omitting --build --force-recreate ? seems buggy for me)
 
 ### Logs
 
@@ -54,8 +29,8 @@ except for the dev server where they're displayed by default (container isn't de
 
 ### Get into the containers
 
-- Application:  `docker exec -ti ateliersoude-django bash`
-- Database: ` docker exec -ti ateliersoude-postgres bash`
+- Application:  `docker exec -ti deployment_django_1 bash`
+- Database: ` docker exec -ti deployement_ateliersoude-postgres_1 bash`
 
 ### Fixture data
 

@@ -19,55 +19,39 @@ export POSTGRES_USER=ateliersoude
 export POSTGRES_PASSWORD=ateliersoude
 
 function rebuild_db() {
-    docker network create \
-        --driver bridge \
-        ateliersoude-$USERLOWER
-    docker build deployment/docker-db/ \
-        --tag ateliersoude-postgres-$USERLOWER
-    docker stop ateliersoude-postgres-$USERLOWER
-    docker rm -f ateliersoude-postgres-$USERLOWER
-    docker run --name ateliersoude-postgres-$USERLOWER \
-        --env POSTGRES_PASSWORD=ateliersoude \
-        --env POSTGRES_USER=ateliersoude \
-        --network ateliersoude-$USERLOWER \
-        --restart unless-stopped \
-        --detach \
-        ateliersoude-postgres-$USERLOWER
-    echo "resting a bit..."
-    sleep 10
+    cd ./deployment
+    docker-compose kill ateliersoude-postgres
+    docker-compose rm -f ateliersoude-postgres
+    docker-compose up -d --build ateliersoude-postgres
+    docker-compose kill ateliersoude-postgres
 }
 
 function rebuild_app() {
-    docker build deployment/docker-app/ \
-        --tag ateliersoude-django-app-$USERLOWER
-    docker stop ateliersoude-django-$USERLOWER
-    docker rm -f ateliersoude-django-$USERLOWER
+    cd ./deployment
+    docker-compose kill django
+    docker-compose rm -f django
+    docker-compose up -d --build django
+    docker-compose kill django
 }
 
 function start_gunicorn() {
-    docker run --name ateliersoude-django-$USERLOWER \
-        --volume $DIR:/ateliersoude \
-        --network ateliersoude-$USERLOWER \
-        --restart unless-stopped \
-        --publish ${PORT:-8000}:8000 \
-        --env LOGLEVEL=${LOGLEVEL:-INFO} \
-        --env POSTGRES_DB=ateliersoude-postgres-$USERLOWER \
-        --env DEVELOPMENT=1 \
-        --detach \
-        ateliersoude-django-app-$USERLOWER
-    }
+    # docker run --name ateliersoude-django-$USERLOWER \
+        #     --volume $DIR:/ateliersoude \
+        #     --network ateliersoude-$USERLOWER \
+    #     --restart unless-stopped \
+    #     --publish ${PORT:-8000}:8000 \
+    #     --env LOGLEVEL=${LOGLEVEL:-INFO} \
+    #     --env POSTGRES_DB=ateliersoude-postgres-$USERLOWER \
+    #     --env DEVELOPMENT=1 \
+    #     --detach \
+    #     ateliersoude-django-app-$USERLOWER
+    cd ./deployment
+    docker-compose up
+}
 
 function start_dev_server() {
-    docker run --name ateliersoude-django-$USERLOWER \
-        --env DJANGO_DEBUG=1 \
-        --tty --interactive \
-        --volume $DIR:/ateliersoude \
-        --network ateliersoude-$USERLOWER \
-        --publish ${PORT:-8001}:8001 \
-        --env LOGLEVEL=${LOGLEVEL:-INFO} \
-        --env POSTGRES_DB=ateliersoude-postgres-$USERLOWER \
-        --env DEVELOPMENT=1 \
-        ateliersoude-django-app-$USERLOWER
+    cd ./deployment
+    docker-compose up --force-recreate
 }
 
 

@@ -12,8 +12,11 @@ import colored_traceback
 
 colored_traceback.add_hook(always=True)
 
-POSTGRES_DB = os.environ["POSTGRES_DB"]
-DEVELOPMENT = os.environ["DEVELOPMENT"]
+POSTGRES_DB = os.environ.get("POSTGRES_DB")
+POSTGRES_USER = os.environ.get("POSTGRES_USER")
+POSTGRES_PASSWORD = os.environ.get("POSTGRES_PASSWORD")
+POSTGRES_HOST = os.environ.get("POSTGRES_HOST")
+DEVELOPMENT = os.environ.get("DEVELOPMENT")
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -130,10 +133,10 @@ WSGI_APPLICATION = 'ateliersoude.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'ateliersoude',
-        'USER': 'ateliersoude',
-        'PASSWORD': 'ateliersoude',
-        'HOST': POSTGRES_DB,
+        'NAME': POSTGRES_DB,
+        'USER': POSTGRES_USER,
+        'PASSWORD': POSTGRES_PASSWORD,
+        'HOST': POSTGRES_HOST,
         'PORT': '5432',
     }
 }
@@ -335,3 +338,12 @@ AVATAR_CLEANUP_DELETED = True
 AVATAR_DEFAULT_URL = '../media/default.png'
 AVATAR_EXPOSE_USERNAMES = False
 AVATAR_THUMB_FORMAT = 'PNG'
+
+
+POST_OFFICE = {
+    #Celery integration see https://github.com/ui/django-post_office
+    'DEFAULT_PRIORITY': 'now',
+
+    'SENDING_ORDER': ['created'],
+
+}

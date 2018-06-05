@@ -13,6 +13,9 @@ import colored_traceback
 colored_traceback.add_hook(always=True)
 
 POSTGRES_DB = os.environ.get("POSTGRES_DB")
+POSTGRES_USER = os.environ.get("POSTGRES_USER")
+POSTGRES_PASSWORD = os.environ.get("POSTGRES_PASSWORD")
+POSTGRES_HOST = os.environ.get("POSTGRES_HOST")
 DEVELOPMENT = os.environ.get("DEVELOPMENT")
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -130,10 +133,10 @@ WSGI_APPLICATION = 'ateliersoude.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'ateliersoude-postgres',
-        'USER': 'ateliersoude',
-        'PASSWORD': 'ateliersoude',
-        'HOST': POSTGRES_DB,
+        'NAME': POSTGRES_DB,
+        'USER': POSTGRES_USER,
+        'PASSWORD': POSTGRES_PASSWORD,
+        'HOST': POSTGRES_HOST,
         'PORT': '5432',
     }
 }

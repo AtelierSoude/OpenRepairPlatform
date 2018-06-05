@@ -28,6 +28,7 @@ services:
       - POSTGRES_USER=ateliersoude
       - POSTGRES_PASSWORD=ateliersoude
       - POSTGRES_DB=ateliersoude-postgres
+      - POSTGRES_HOST=ateliersoude-postgres
       - DEVELOPMENT=1
       - DJANGO_DEBUG=1
     ports:
@@ -63,6 +64,7 @@ services:
       - POSTGRES_USER=ateliersoude
       - POSTGRES_PASSWORD=ateliersoude
       - POSTGRES_DB=ateliersoude-postgres
+      - POSTGRES_HOST=ateliersoude-postgres
       - DEVELOPMENT=1
       - DJANGO_DEBUG=1
     volumes:

@@ -19,15 +19,16 @@ ENV LANG fr_FR
 ENV LANGUAGE fr_FR
 
 ENV PYTHONUNBUFFERED 1
-RUN mkdir /ateliersoude
 
 ADD deployment/docker-app/requirements.txt /ateliersoude/
+ADD deployment/docker-app/entrypoint.sh /ateliersoude/
+ADD deployment/docker-app/bootstrap.sh /ateliersoude/
 # will disappear when the volume is mounted, but that's ok
 RUN pip install -r /ateliersoude/requirements.txt
 
-COPY ./deployment/docker-app/bootstrap.sh /ateliersoude/bootstrap.sh
-COPY ./deployment/docker-app/entrypoint.sh /ateliersoude/entrypoint.sh
-COPY . /ateliersoude
+# COPY ./deployment/docker-app/bootstrap.sh /ateliersoude/bootstrap.sh
+# COPY ./deployment/docker-app/entrypoint.sh /ateliersoude/entrypoint.sh
+# COPY . /ateliersoude
 RUN sed -i 's/\r//' /ateliersoude/entrypoint.sh
 RUN sed -i 's/\r//' /ateliersoude/bootstrap.sh
 
@@ -35,6 +36,6 @@ RUN sed -i 's/\r//' /ateliersoude/bootstrap.sh
 # EXPOSE 8000
 # for manual runserver and ipdb
 # EXPOSE 8001
-ENTRYPOINT ["/ateliersoude/entrypoint.sh"]
+# ENTRYPOINT ["/ateliersoude/entrypoint.sh"]
 
 #CMD bash /ateliersoude/bootstrap.sh

@@ -92,7 +92,24 @@ document.getElementById("generate").onclick = function() {
             return on_yearly();
     }(checked_type);
     stage_two(dates);
+}
+
+function stage_two(dates){
+    console.log(dates);
+}
+
+function reset_list(){
+    document.getElementById("date-list").innerHTML = "";
+}
+
+
+document.getElementById("generate").onclick = function() {
+    reset_list();
+    stage_one();
 };
+
+document.getElementById("append").onclick = stage_one;
+document.getElementById("reset").onclick = reset_list;
 
 var interval = 1;
 

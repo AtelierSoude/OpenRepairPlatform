@@ -16,81 +16,54 @@
         <input type="checkbox" name="weekday" value="6"> Dimanche </input> <br>
 
     <br>
+    Jusqu'au (inclus) <input id="up_until" type="date">
+    <br><br>
 
     <input type="radio" name="repeat", value="monthly">Tous les mois le </input>
         <select id="nth">
-            <option value="first"> Premier </option>
-            <option value="second"> Second </option>
-            <option value="third"> Troisieme </option>
-            <option value="fourth"> Quatrieme </option>
-            <option value="fifth"> Cinquieme </option>
+            <option value="+1"> Premier </option>
+            <option value="+2"> Second </option>
+            <option value="+3"> Troisieme </option>
+            <option value="+4"> Quatrieme </option>
+            <option value="+5"> Cinquieme </option>
+            <option value="-2"> Avant-Dernier </option>
+            <option value="-1"> Dernier </option>
         </select>
 
         <select id="day">
-            <option value="monday"> Lundi </option>
-            <option value="tuesday"> Mardi </option>
-            <option value="wednesday"> Mercredi </option>
-            <option value="thursday"> Jeudi </option>
-            <option value="friday"> Vendredi </option>
-            <option value="saturday"> Samedi </option>
-            <option value="sunday"> Dimanche </option>
+            <option value="MO"> Lundi </option>
+            <option value="TU"> Mardi </option>
+            <option value="WE"> Mercredi </option>
+            <option value="TH"> Jeudi </option>
+            <option value="FR"> Vendredi </option>
+            <option value="SA"> Samedi </option>
+            <option value="SU"> Dimanche </option>
         </select>
 
+        pour <input type="number" id="event-count-monthly" value="1" min="1" max="24" style="width:4em;"></input> événements
     <br>
 
 
     <input type="radio" name="repeat", value="yearly">Tous les ans le</input>
-        <select id="day_of_month">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
-            <option value="10">10</option>
-            <option value="11">11</option>
-            <option value="12">12</option>
-            <option value="13">13</option>
-            <option value="14">14</option>
-            <option value="15">15</option>
-            <option value="17">17</option>
-            <option value="18">18</option>
-            <option value="19">19</option>
-            <option value="20">20</option>
-            <option value="21">21</option>
-            <option value="22">22</option>
-            <option value="23">23</option>
-            <option value="24">24</option>
-            <option value="25">25</option>
-            <option value="26">26</option>
-            <option value="27">27</option>
-            <option value="28">28</option>
-            <option value="29">29</option>
-            <option value="30">30</option>
-            <option value="31">31</option>
-        </select>
+        <input type="number" id="day-of-month" value="1" min="1" max="31" style="width:4em;"></input>
 
         <select id="month">
-            <option value="january">Janvier</option>
-            <option value="february">Fevrier</option>
-            <option value="march">Mars</option>
-            <option value="april">Avril</option>
-            <option value="may">Mai</option>
-            <option value="june">Juin</option>
-            <option value="july">Juillet</option>
-            <option value="august">Août</option>
-            <option value="september">Septembre</option>
-            <option value="october">Octobre</option>
-            <option value="november">Novembre</option>
-            <option value="december">Décembre</option>
+            <option value="1">Janvier</option>
+            <option value="2">Fevrier</option>
+            <option value="3">Mars</option>
+            <option value="4">Avril</option>
+            <option value="5">Mai</option>
+            <option value="6">Juin</option>
+            <option value="7">Juillet</option>
+            <option value="8">Août</option>
+            <option value="9">Septembre</option>
+            <option value="10">Octobre</option>
+            <option value="11">Novembre</option>
+            <option value="12">Décembre</option>
         </select>
 
-    <br><br>
+        pour <input type="number" id="event-count-yearly" value="1" min="1" max="31" style="width:4em;"></input> événements
 
-    Jusqu'au (inclus) <input id="up_until" type="date">
     <br><br>
 
     Periodes à exclure: <br>
@@ -102,20 +75,19 @@
         </span>
         <input type="button" id="new-interval" value="+"></input>
 
-       <!-- <span class="interval"> -->
-       <!--   du <input class="begin" id="interval-0" type="date"> -->
-       <!--   au <input class="end" id="interval-0" type="date"> -->
-       <!-- </span> -->
-
     <br> <br>
 
     <input type="button" id="append" value="Ajouter Récurrences"></input>
     <input type="button" id="generate" value="Générer Récurrences"></input>
     <input type="button" id="reset" value="Remise à zero"></input>
+    <br><br>
 
     <div class="date-list" id="date-list">
 
     </div>
+    <br>
+    <input id="new-event-date" type="date">
+    <input type="button" id="new-event" value="Ajouter Evément Ponctuel"></input>
 
     <script src="../static/js/rrule.js"> </script>
     <script src="../static/js/recurrence.js"> </script>

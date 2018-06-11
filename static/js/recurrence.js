@@ -15,6 +15,36 @@ function parse_dates(){
     };
 }
 
+// Polyfill of ISO string removing milliseconds in accordance to RRule's RFC
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString
+
+function pad(number) {
+    if ( number < 10 ) {
+        return '0' + number;
+    }
+    return number;
+}
+
+Date.prototype.toRRString = function() {
+    return this.getUTCFullYear()
+        + pad( this.getUTCMonth() + 1 )
+        + pad( this.getUTCDate() )
+        + 'T'
+        + pad( this.getUTCHours() )
+        + pad( this.getUTCMinutes() )
+        + pad( this.getUTCSeconds() )
+        + 'Z';
+};
+
+function RRule_format(date){
+    let ret = date.toISOString();
+    ret = ret.replace(/-/g, '');
+    ret = ret.replace(/:/g, '');
+    ret = ret.replace(/\./g, '');
+
+    return ret;
+}
+
 function apply_exclusions(rules){
     intervals = [];
     intervals_html = document.querySelectorAll('span.interval');
@@ -29,9 +59,6 @@ function apply_exclusions(rules){
     var all_dates = rules.all();
 
     intervals.forEach(function(interval){
-        console.log("i");
-        console.log(interval);
-
         //Set interval_end to midnight + 1 day, for last day inclusion rule
         interval_end = new Date(interval[1]);
         interval_end.setDate(interval_end.getDate() + 1);
@@ -46,12 +73,9 @@ function apply_exclusions(rules){
                 all_dates.splice(index, 1);
         });
     });
-    console.log(all_dates);
-
 
     return all_dates;
 }
-
 
 function on_weekly(){
     checked_weekdays = document.querySelectorAll('input[name=weekday]:checked');
@@ -75,12 +99,42 @@ function on_weekly(){
     }
 }
 
-function stage_two(dates){
-    console.log(dates);
+function on_monthly(){
+    var nth = document.getElementById("nth").value;
+    var day = document.getElementById("day").value;
+    var count = document.getElementById("event-count-monthly").value;
+
+    dates = parse_dates();
+    now = dates.now;
+    until = dates.until;
+    var rule_str = "FREQ=MONTHLY;BYDAY=" + nth + day +
+        ";COUNT=" + count +
+        ";DTSTART=" + now.toRRString() ;
+
+    var rule = rrulestr(rule_str);
+    return apply_exclusions(rule);
 }
 
+function on_yearly (){
+    var day_of_month = document.getElementById("day-of-month").value;
+    var month = document.getElementById("month").value;
+    var count = document.getElementById("event-count-yearly").value;
+    dates = parse_dates();
+    now = dates.now;
+    until = dates.until;
 
-document.getElementById("generate").onclick = function() {
+    var rule = new RRule({
+        freq: RRule.YEARLY,
+        dtstart: now,
+        count: parseInt(count),
+        bymonth: parseInt(month),
+        bymonthday: parseInt(day_of_month),
+    });
+    return apply_exclusions(rule);
+
+}
+
+function stage_one(){
     checked_type = document.querySelector('input[name="repeat"]:checked').value;
     dates = {}
     dates = function(checked_type){
@@ -94,8 +148,46 @@ document.getElementById("generate").onclick = function() {
     stage_two(dates);
 }
 
+
+function delete_event_button(x){
+    ident = x.target.id.replace(/delete-event-/g, '');
+    document.getElementById("event-"+ident).remove();
+    document.getElementById("delete-event-" + ident).remove();
+    document.getElementById("br-event-" + ident).remove();
+    // refresh_buttons();
+}
+
+var date_ident = 0;
+
 function stage_two(dates){
-    console.log(dates);
+    date_list = document.querySelector("#date-list");
+
+    dates.forEach(function(date){
+        var span_event = document.createElement("span");
+        span_event.classList.add("event");
+        span_event.id= "event-" + date_ident;
+
+        let date_string = "Le " + date.toLocaleDateString() + " ";
+        let text_node = document.createTextNode(date_string);
+        let br = document.createElement("br");
+        br.id = "br-event-" + date_ident;
+
+        var btn = document.createElement("input");
+        btn.type = "button";
+        btn.value = "-";
+        btn.class = "delete-event";
+        btn.id = "delete-event-" + date_ident;
+
+        btn.onclick = function (x) {
+            delete_event_button(x);
+        }
+
+        span_event.appendChild(text_node);
+        date_list.appendChild(span_event);
+        date_list.appendChild(btn);
+        date_list.appendChild(br);
+        date_ident++;
+    });
 }
 
 function reset_list(){
@@ -113,7 +205,7 @@ document.getElementById("reset").onclick = reset_list;
 
 var interval = 1;
 
-function delete_button(x){
+function delete_interval_button(x){
     ident = x.target.id.replace(/delete-interval-/g, '');
     document.getElementById("interval-"+ident).remove();
     document.getElementById("delete-interval-" + ident).remove();
@@ -128,7 +220,7 @@ function refresh_buttons(){
         ident = interval.id.replace(/interval-/g, '');
         if (interval !== last){
             document.getElementById("delete-interval-" + ident).onclick = function(x){
-                delete_button(x);
+                delete_interval_button(x);
             }
         }
     });
@@ -160,6 +252,7 @@ document.getElementById("new-interval").onclick = function(){
     span_interval.id= "interval-" + interval;
 
     let br = document.createElement("br");
+
     span_interval.appendChild(br);
 
     span_interval.innerHTML += "du "

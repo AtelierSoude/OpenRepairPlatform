@@ -3,7 +3,6 @@ function parse_dates(){
 
     //Set now to midnight
     now = new Date();
-    now = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0, 0);
 
     //Set until to midnight + 1 day, for last day inclusion rule
     until = new Date(up_until);
@@ -15,7 +14,7 @@ function parse_dates(){
     };
 }
 
-// Polyfill of ISO string removing milliseconds in accordance to RRule's RFC
+// Overload of ISO string removing milliseconds in accordance to RRule's RFC
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString
 
 function pad(number) {
@@ -23,6 +22,12 @@ function pad(number) {
         return '0' + number;
     }
     return number;
+}
+
+Date.prototype.sameDay = function(d) {
+    return this.getFullYear() === d.getFullYear()
+        && this.getDate() === d.getDate()
+        && this.getMonth() === d.getMonth();
 }
 
 Date.prototype.toRRString = function() {
@@ -35,6 +40,52 @@ Date.prototype.toRRString = function() {
         + pad( this.getUTCSeconds() )
         + 'Z';
 };
+
+// Overloading findIndex for dates
+Array.prototype.findDate = function(date) {
+    return this.findIndex(function(x) {
+        return x.sameDay(date);
+    });
+}
+
+Array.prototype.insert_sorted_date = function(date) {
+    if(this.length == 0){
+        this.push([date_ident, date]);
+        return -2;
+    }
+
+    for (var i = 0; i < this.length; i++){
+        if(this[i][1].sameDay(date))
+            return -1;
+        // we can assert this since following day as there are no duplicates
+        if (this[i][1].valueOf() > date.valueOf()){
+            this.splice(i, 0, [date_ident, date]);
+            return this[i+1][0]; // return class of previous element
+        }
+    }
+
+    this.push([date_ident, date]);
+    return this.length;
+
+}
+
+Array.prototype.findDate_2D = function(date) {
+    var i = 0;
+    var ident = parseInt(ident);
+    for (i = 0; i < this.length; i++)
+        if(this[i][1].sameDay(date))
+            return i;
+    return -1;
+}
+
+Array.prototype.ident_indexOf = function(ident){
+    var i = 0;
+    var ident = parseInt(ident);
+    for (i = 0; i < this.length; i++)
+        if(this[i][0] == ident)
+            return i;
+    return -1;
+}
 
 function RRule_format(date){
     let ret = date.toISOString();
@@ -65,10 +116,7 @@ function apply_exclusions(rules){
         excluded_dates = rules.between(new Date(interval[0]), interval_end);
 
         excluded_dates.forEach(function(date){
-            var index = all_dates.findIndex(function(x) {
-                return x.valueOf() === date.valueOf();
-            });
-
+            var index = all_dates.findDate(date);
             if (index != -1)
                 all_dates.splice(index, 1);
         });
@@ -149,49 +197,90 @@ function stage_one(){
 }
 
 
+
+var date_ident = 0;
+var all_dates = [];
+
 function delete_event_button(x){
     ident = x.target.id.replace(/delete-event-/g, '');
     document.getElementById("event-"+ident).remove();
     document.getElementById("delete-event-" + ident).remove();
     document.getElementById("br-event-" + ident).remove();
-    // refresh_buttons();
+
+    var index = all_dates.ident_indexOf(ident);
+    console.log(ident);
+    if (index != -1)
+        all_dates.splice(index, 1);
 }
 
-var date_ident = 0;
+function add_event_to_dom(event, date_div, place=-1){
+    var span_event = document.createElement("span");
+    span_event.classList.add("event");
+    span_event.id= "event-" + event[0];
+
+    let date_string = "Le " + event[1].toLocaleDateString() + " ";
+    let text_node = document.createTextNode(date_string);
+    let br = document.createElement("br");
+    br.id = "br-event-" + event[0];
+
+    var btn = document.createElement("input");
+    btn.type = "button";
+    btn.value = "-";
+    btn.class = "delete-event";
+    btn.id = "delete-event-" + event[0];
+
+
+    btn.onclick = function (x) {
+        delete_event_button(x);
+    }
+
+    span_event.appendChild(text_node);
+    // default behaviour or no prior date when adding punctual date
+    if (place == -1 || place == -2){
+        date_div.appendChild(span_event);
+        date_div.appendChild(btn);
+        date_div.appendChild(br);
+    }
+    else{
+        var before_node = document.getElementById("event-" + place);
+        date_div.insertBefore(span_event, before_node);
+        date_div.insertBefore(btn, before_node );
+        date_div.insertBefore(br, before_node);
+    }
+}
+
+function add_event(date){
+    // Don't add the date if already in list of dates
+    if (all_dates.findDate_2D(date) != -1)
+        return;
+    all_dates.push([date_ident, date]);
+    date_ident++;
+}
+
+function sort_dates(){
+    all_dates.sort(function(a, b){
+        if (a[1] < b[1]) return -1;
+        if (a[1] > b[1]) return 1;
+        return 0;
+    });
+    for (var i = 0; i < all_dates.length; i++)
+        all_dates[i][0] = i;
+
+    date_ident = all_dates.length;
+}
 
 function stage_two(dates){
-    date_list = document.querySelector("#date-list");
-
-    dates.forEach(function(date){
-        var span_event = document.createElement("span");
-        span_event.classList.add("event");
-        span_event.id= "event-" + date_ident;
-
-        let date_string = "Le " + date.toLocaleDateString() + " ";
-        let text_node = document.createTextNode(date_string);
-        let br = document.createElement("br");
-        br.id = "br-event-" + date_ident;
-
-        var btn = document.createElement("input");
-        btn.type = "button";
-        btn.value = "-";
-        btn.class = "delete-event";
-        btn.id = "delete-event-" + date_ident;
-
-        btn.onclick = function (x) {
-            delete_event_button(x);
-        }
-
-        span_event.appendChild(text_node);
-        date_list.appendChild(span_event);
-        date_list.appendChild(btn);
-        date_list.appendChild(br);
-        date_ident++;
-    });
+    var date_div = document.querySelector("#date-list");
+    dates.forEach(function (date) {add_event(date)});
+    sort_dates();
+    document.getElementById("date-list").innerHTML = "";
+    all_dates.forEach(function (event) {add_event_to_dom(event, date_div)});
 }
 
 function reset_list(){
     document.getElementById("date-list").innerHTML = "";
+    all_dates = [];
+    date_ident = 0;
 }
 
 
@@ -200,7 +289,10 @@ document.getElementById("generate").onclick = function() {
     stage_one();
 };
 
-document.getElementById("append").onclick = stage_one;
+document.getElementById("append").onclick = function() {
+    stage_one();
+    // stage_two();
+}
 document.getElementById("reset").onclick = reset_list;
 
 var interval = 1;
@@ -262,13 +354,24 @@ document.getElementById("new-interval").onclick = function(){
 
 
     document.querySelector('span.intervals').appendChild(span_interval);
-    //     `<br>
-    //     <span class="interval" id="interval-${interval}">
-    //     du <input class="begin" type="date">
-    //     au <input class="end" type="date">
-    //     </span>`
 
     refresh_buttons();
     interval++;
+};
+
+document.getElementById("new-event").onclick = function(){
+    var new_date_string = document.getElementById("new-event-date").value;
+    var new_date = new Date(new_date_string);
+    var index = all_dates.insert_sorted_date(new_date);
+    var date_div = document.querySelector("#date-list");
+    if (index == -1)
+        return;
+
+    console.log(index);
+    add_event_to_dom([date_ident, new_date], date_div, index);
+
+    date_ident++;
+
+
 
 };

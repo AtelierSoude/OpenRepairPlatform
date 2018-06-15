@@ -1,5 +1,6 @@
-from __future__ import absolute_import # optional, but I like it
+from __future__ import absolute_import
 
 from .common import *
 
-STATICFILES_STORAGE = None
+SECRET_KEY = 'e'
+GOOGLE_API_KEY = 'e'

@@ -17,3 +17,14 @@ class TestOrganizationView(TestCase):
         renderedView = response.render()
         self.assertEqual(renderedView.status_code, 200)
 
+    def test_organization_create(self):
+        response = self.client.get(reverse("organization_create"))
+        self.assertTemplateUsed(response, 'plateformeweb/organization_form.html')
+        renderedView = response.render()
+        self.assertEqual(renderedView.status_code, 200)
+
+    def test_organization_detail(self):
+        response = self.client.get(reverse("organization_detail", kwargs={'pk':self.org.pk,'slug':self.org.slug}))
+        self.assertTemplateUsed(response, 'plateformeweb/organization.html')
+        renderedView = response.render()
+        self.assertEqual(renderedView.status_code, 200)

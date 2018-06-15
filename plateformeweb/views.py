@@ -435,6 +435,11 @@ class MassEventCreateView(PermissionRequiredMixin, EventFormView, CreateView):
               "location", "organization",
               "starts_at", "ends_at", "publish_at"]
 
+    def date_substract(self, starts_at, countdown):
+        #TODO: change this if haing a publish_date in the past is a problem
+        return starts_at - datetime.timedelta(days=countdown)
+
+
     def post(self, request, *args, **kwargs):
         try:
             import simplejson as json
@@ -444,7 +449,7 @@ class MassEventCreateView(PermissionRequiredMixin, EventFormView, CreateView):
         json_data = request.POST['dates']
         starts_at = request.POST['starts_at']
         ends_at = request.POST['ends_at']
-        publish_countdown = request.POST['publish_at']
+        publish_countdown = int(request.POST['publish_at'])
         date_timestamps = json.loads(json_data)
 
         event_type=Activity.objects.get(pk=request.POST['type'])
@@ -461,6 +466,7 @@ class MassEventCreateView(PermissionRequiredMixin, EventFormView, CreateView):
                 int(date + int(request.POST['starts_at'])))
             ends_at = datetime.datetime.fromtimestamp(
                 int(date + int(request.POST['ends_at'])))
+            publish_date = self.date_substract(starts_at, publish_countdown)
 
             e = Event.objects.create(
                 organization=organization,
@@ -468,8 +474,7 @@ class MassEventCreateView(PermissionRequiredMixin, EventFormView, CreateView):
                 owner=request.user,
                 starts_at=starts_at,
                 ends_at=ends_at,
-                #TODO: change this v, function to calculate distance OR publish right now
-                publish_at=starts_at,
+                publish_at=publish_date,
                 available_seats=available_seats,
                 location=location,
                 type=event_type,

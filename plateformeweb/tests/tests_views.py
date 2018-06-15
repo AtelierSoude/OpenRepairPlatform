@@ -28,3 +28,9 @@ class TestOrganizationView(TestCase):
         self.assertTemplateUsed(response, 'plateformeweb/organization.html')
         renderedView = response.render()
         self.assertEqual(renderedView.status_code, 200)
+
+    def test_organization_edit(self):
+        response = self.client.get(reverse("organization_edit", kwargs={'pk':self.org.pk}))
+        self.assertTemplateUsed(response, 'plateformeweb/organization_form.html')
+        renderedView = response.render()
+        self.assertEqual(renderedView.status_code, 200)

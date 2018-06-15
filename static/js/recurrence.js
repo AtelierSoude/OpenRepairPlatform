@@ -361,6 +361,9 @@ document.getElementById("new-interval").onclick = function(){
 
 document.getElementById("new-event").onclick = function(){
     var new_date_string = document.getElementById("new-event-date").value;
+    if (new_date_string == '')
+        return;
+
     var new_date = new Date(new_date_string);
     var index = all_dates.insert_sorted_date(new_date);
     var date_div = document.querySelector("#date-list");
@@ -371,7 +374,43 @@ document.getElementById("new-event").onclick = function(){
     add_event_to_dom([date_ident, new_date], date_div, index);
 
     date_ident++;
-
-
-
 };
+
+function to_seconds(string){
+    tt=string.split(":");
+    sec=tt[0]*3600+tt[1]*60;
+    return sec;
+}
+
+function on_submit(){
+    var data = document.getElementById("submit-data");
+    var actual_start = document.getElementById("start-time");
+    var actual_end = document.getElementById("end-time");
+    var actual_countdown = document.getElementById("publish-countdown");
+
+    var hidden_start = document.getElementById("id_starts_at");
+    var hidden_end = document.getElementById("id_ends_at");
+    var hidden_countdown  = document.getElementById("id_publish_at");
+    if(all_dates.length == 0){
+        alert("temp warning Put in form valid that no dates were sent");
+    }
+    else{
+        var dates_timestamps = [];
+        all_dates.forEach(function(date){
+            //js timestamps are in milliseconds but epoch is in seconds
+            let unix_time = date[1].valueOf() / 1000;
+            dates_timestamps.push(unix_time);
+        });
+        data.value = JSON.stringify(dates_timestamps);
+        //parse int for timestamp addition
+        hidden_start.value = to_seconds(actual_start.value);
+        hidden_end.value = to_seconds(actual_end.value);
+        hidden_countdown.value = actual_countdown.value;
+
+        // wrap around next day if end time is before start
+        if (hidden_end.value < hidden_start.value)
+            hidden_end.value = hidden_end.value*1 + 3600*24;
+
+        data.form.submit();
+    }
+}

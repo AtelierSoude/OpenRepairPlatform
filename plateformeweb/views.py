@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.urls import reverse
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.core.exceptions import ValidationError
 from django.views.generic import DetailView, ListView, FormView, CreateView, \
     UpdateView
@@ -20,6 +20,9 @@ from django_markdown.fields import MarkdownFormField
 from django_markdown.widgets import MarkdownWidget
 
 from fm.views import AjaxCreateView, AjaxUpdateView
+
+import datetime
+from django import forms
 
 logger = getLogger(__name__)
 
@@ -420,4 +423,81 @@ class BookingFormView():
 
 class BookingEditView(BookingFormView, AjaxUpdateView):
     template_name = 'plateformeweb/booking_form.html'
+    queryset = Event.objects
+
+# --- mass edit ---
+
+class MassEventCreateView(PermissionRequiredMixin, EventFormView, CreateView):
+    permission_required = 'plateformeweb.create_event'
+    template_name = 'plateformeweb/mass_event_form.html'
+    model = Event
+    fields = ["type",  "available_seats",
+              "location", "organization",
+              "starts_at", "ends_at", "publish_at"]
+
+    def post(self, request, *args, **kwargs):
+        try:
+            import simplejson as json
+        except (ImportError,):
+            import json
+
+        json_data = request.POST['dates']
+        starts_at = request.POST['starts_at']
+        ends_at = request.POST['ends_at']
+        publish_countdown = request.POST['publish_at']
+        date_timestamps = json.loads(json_data)
+
+        event_type=Activity.objects.get(pk=request.POST['type'])
+        organization=Organization.objects.get(pk=request.POST['organization'])
+        available_seats=int(request.POST['available_seats'])
+        location=Place.objects.get(pk=request.POST['location'])
+
+        new_slug = str(event_type)
+        new_slug += '-' + organization.slug
+        new_slug += '-' + location.slug
+
+        for date in date_timestamps:
+            starts_at = datetime.datetime.fromtimestamp(
+                int(date + int(request.POST['starts_at'])))
+            ends_at = datetime.datetime.fromtimestamp(
+                int(date + int(request.POST['ends_at'])))
+
+            e = Event.objects.create(
+                organization=organization,
+                slug=new_slug,
+                owner=request.user,
+                starts_at=starts_at,
+                ends_at=ends_at,
+                #TODO: change this v, function to calculate distance OR publish right now
+                publish_at=starts_at,
+                available_seats=available_seats,
+                location=location,
+                type=event_type,
+            )
+
+            e.organizers.add(CustomUser.objects.get(email=request.user))
+            e.title = e.type.name
+            e.save()
+
+        return HttpResponse("OK!")
+
+    def get_form(self, form_class=None):
+        if form_class is None:
+            form_class = self.get_form_class()
+        form = super().get_form(form_class)
+        for field in ("starts_at", "ends_at", "publish_at"):
+            form.fields[field].widget = forms.HiddenInput()
+
+        return form
+
+
+    # set owner to current user on creation
+    def form_valid(self, form):
+        return super().form_valid(form)
+
+class MassEventEditView(PermissionRequiredMixin, EventFormView, AjaxUpdateView):
+    permission_required = 'plateformeweb.edit_event'
+    fields = ["title", "type", "starts_at", "ends_at", "available_seats",
+              "attendees", "presents", "organizers", "location", "publish_at", "published",
+              "organization", "condition"]
     queryset = Event.objects

@@ -1,3 +1,19 @@
+{% extends 'form_view.html' %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+{% load fontawesome %}
+{% load avatar_tags %}
+{% load django_bootstrap_breadcrumbs %}
+
+{% block breadcrumbs %}
+{% with type="mass-event-create" list_view="event_list" view="mass_event_create" %}
+    {{ block.super }}
+{% endwith %}
+{% endblock %}
+
+{% block title %} {{ block.super }} program {% endblock title %}
+
+{% block form %}
 <html>
   <head>
     <meta charset="utf-8">
@@ -89,8 +105,23 @@
     <input id="new-event-date" type="date">
     <input type="button" id="new-event" value="Ajouter Evément Ponctuel"></input>
 
-    <script src="../static/js/rrule.js"> </script>
-    <script src="../static/js/recurrence.js"> </script>
+    <form class="pure-form" action="" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ form|crispy }}
+      <input type="hidden" name="dates" id="submit-data">
+
+      Starts at:
+      <input type="time" id="start-time" value="14:00">
+      Ends at:
+      <input type="time" id="end-time" value="14:00">
+
+      Publish <input type="number" id="publish-countdown" value="1" min="1" max="31" style="width:4em;"></input> days beforehand
+    <input value="Save" class="btn btn-primary" onclick="on_submit()">
+    </form>
+
+    <script src="{% static 'js/rrule.js' %}"> </script>
+    <script src="{% static 'js/recurrence.js' %}"> </script>
   </body>
 
 </html>
+{% endblock form %}

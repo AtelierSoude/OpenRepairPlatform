@@ -16,11 +16,17 @@ to the `/ateliersoude` directory and running `./manage.py`. Look at the
 
 ### Running the application
 
-After cd'ing to the deployment directory (and having docker-compose installed)
+After cd'ing to the main directory (and having docker-compose installed), do this only once
 ```bash
-docker-compose up --build --force-recreate
+./start.sh create_env
 ```
-(omitting --build --force-recreate ? seems buggy for me)
+
+(later: fill in the environment variables like passwords in here)
+Then to run the application:
+
+```bash
+./start.sh dev
+```
 
 ### Logs
 

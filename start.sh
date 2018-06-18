@@ -54,6 +54,13 @@ function start_dev_server() {
     docker-compose up --force-recreate
 }
 
+function create_env_file(){
+    # TODO add env variables here
+    if [ ! -f ./deployment/.env ]; then
+        touch ./deployment/.env;
+    fi
+}
+
 
 function get_ports() {
     echo "************** external ports used by the docker container **************"
@@ -62,6 +69,9 @@ function get_ports() {
 }
 
 case "${ACTION}" in
+    "create_env")
+        create_env_file
+        ;;
     "rebuild_db")
         rebuild_db
         ;;
@@ -83,6 +93,7 @@ case "${ACTION}" in
     *)
         cat <<EOF
 $0 <action> [<port> [<loglevel>]]: Specify an action:
+    - create_env: create environment file for docker-compose, then fill in the environment variables
     - rebuild_db (postgres)
     - rebuild (gunicorn + static files)
     - reload (gunicorn, update for code changes, faster)

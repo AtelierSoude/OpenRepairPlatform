@@ -1,4 +1,3 @@
-
 {% load staticfiles %}
 {% load fontawesome %}
 {% load avatar_tags %}
@@ -26,7 +25,55 @@
 
 
 
-<form action="" method="post">
+<form id="book-form" action="" method="post">
     {% csrf_token %}
     {{ form|crispy }}
+    <input type="button" id="buttonsubmitreal"> PLACEHOLDER </input>
 </form>
+
+<script src="{% static 'js/helper_functions.js' %}"> </script>
+<script>
+function on_submit(/* e */) {
+    // if (e.preventDefault) e.preventDefault();
+    console.log("1")
+
+    var btn_primary = document.body.querySelector(".btn-primary");
+    var data = document.getElementById("book-form");
+    // data.form.submit();
+    let csrftoken = getCookie('csrftoken');
+    let headers = new Headers();
+    headers.append('X-CSRFToken', csrftoken);
+
+    let payload = {
+        event_id: "{{booking_id}}",
+    }
+
+    let formData = payload_to_formBody(payload);
+    var ret = {}
+    console.log(payload);
+
+    fetch('/api/book/', {
+        headers: headers,
+        method: "POST",
+        body: payload,
+        credentials: 'include',
+    })
+        .then(handleErrors)
+        .then(function(res){ return res.json(); })
+        .then(function(data){
+            console.log(data);
+        });
+
+    return false;
+}
+
+  document.getElementById("buttonsubmitreal").onclick = function(){
+      on_submit();
+  }
+  // var form = document.getElementById('book-form');
+  // if (form.attachEvent)
+  // form.attachEvent("submit", on_submit);
+  // else
+  // form.addEventListener("submit", on_submit);
+
+</script>

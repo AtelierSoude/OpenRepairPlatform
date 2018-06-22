@@ -1,6 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from django.core.exceptions import ValidationError
 from django.views.generic import DetailView, ListView, FormView, CreateView, \
     UpdateView
@@ -256,7 +256,13 @@ class EventView(DetailView):
         context['event_id'] = event.id
         orga = event.organization
         admins = orga.admins()
-        volunteers = orga.volunteers()
+        orga_volunteers = orga.volunteers()
+
+        volunteers = []
+        for v in orga_volunteers:
+            if v in event.attendees.all():
+                volunteers.append(v)
+
         context['admin_or_volunteer'] = admins + volunteers
         context['volunteers'] = volunteers
         context['admins'] = admins
@@ -351,34 +357,39 @@ class BookingFormView():
     fields = []
 
     def get_form(self, form_class=None, **kwargs):
-
         if form_class is None:
             form_class = self.get_form_class()
-
-        form = super().get_form(form_class)
 
         user_id = self.request.user.id
         event_id = self.request.resolver_match.kwargs['pk']
         user = CustomUser.objects.get(pk=user_id)
         event = Event.objects.get(pk=event_id)
+        organization = event.organization
         attendees = event.attendees.all()
+        available_seats = event.available_seats
+        form = super().get_form(form_class)
+        print(form_class)
+        print(event)
+        print(attendees)
 
-        if user in attendees:
-            event.increase_seats()
-        else:
-            if event.available_seats > 0:
-                event.decrease_seats()
+        # if form.is_valid():
+        #     if user in attendees:
+        #         print("if user in attendees")
+        #         available_seats += 1
+        #         event.attendees.remove(user)
+        #     else:
+        #         print("else")
+        #         if event.available_seats >= 0:
+        #             print("av_seats > 0")
+        #             available_seats -= 1
+        #             event.attendees.add(user)
+        #             self.send_booking_mail(user, event)
+        #         else:
+        #             raise ValidationError("Trop de gens")
 
-        if form.is_valid():
-            if user in attendees:
-                event.attendees.remove(user)
-            else:
-                if event.available_seats >= 0:
-                    event.attendees.add(user)
-                    self.send_booking_mail(user, event)
-                else:
-                    raise ValidationError("Trop de gens")
-
+        #     event.available_seats = available_seats
+        #     print(event.available_seats)
+        #     event.save()
         return form
 
     def send_booking_mail(self, user, event):
@@ -425,7 +436,20 @@ class BookingEditView(BookingFormView, AjaxUpdateView):
     template_name = 'plateformeweb/booking_form.html'
     queryset = Event.objects
 
-# --- mass edit ---
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        event_id = context['event'].id
+
+        serial = URLSafeSerializer('some_secret_key',
+                                   salt='book')
+
+        data = {'event_id': event_id}
+        context['booking_id'] = serial.dumps(data);
+        return context
+
+
+
+# --- mass event ---
 
 class MassEventCreateView(PermissionRequiredMixin, EventFormView, CreateView):
     permission_required = 'plateformeweb.create_event'
@@ -460,6 +484,8 @@ class MassEventCreateView(PermissionRequiredMixin, EventFormView, CreateView):
         new_slug = str(event_type)
         new_slug += '-' + organization.slug
         new_slug += '-' + location.slug
+
+        # today = timezone.now()
 
         for date in date_timestamps:
             starts_at = datetime.datetime.fromtimestamp(
@@ -500,9 +526,38 @@ class MassEventCreateView(PermissionRequiredMixin, EventFormView, CreateView):
     def form_valid(self, form):
         return super().form_valid(form)
 
-class MassEventEditView(PermissionRequiredMixin, EventFormView, AjaxUpdateView):
-    permission_required = 'plateformeweb.edit_event'
-    fields = ["title", "type", "starts_at", "ends_at", "available_seats",
-              "attendees", "presents", "organizers", "location", "publish_at", "published",
-              "organization", "condition"]
-    queryset = Event.objects
+class MassBookingCreateView(CreateView):
+    template_name = 'plateformeweb/mass_event_book.html'
+    model = Event
+    fields = []
+
+    def post(self, request, *args, **kwargs):
+        try:
+            import simplejson as json
+        except (ImportError,):
+            import json
+
+        json_data = request.POST['dates']
+        events_pk = json.loads(json_data)
+        events_pk = list(map(int, events_pk))
+        events = Event.objects.filter(pk__in=events_pk)
+        #TODO: bulk insert somehow?
+        for event in events:
+            event.attendees.add(request.user)
+
+        return HttpResponse("OK!")
+
+    def get_form(self, form_class=None, **kwargs):
+        if form_class is None:
+            form_class = self.get_form_class()
+        form = super().get_form(form_class)
+
+        return form
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        return context
+
+    def get_success_url(self):
+        return render(request, 'plateformeweb/event_list.html', message="c'est tout bon")

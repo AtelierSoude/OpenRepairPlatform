@@ -6,12 +6,12 @@
 {% load django_bootstrap_breadcrumbs %}
 
 {% block breadcrumbs %}
-{% with type="mass-event-create" list_view="event_list" view="mass_event_create" %}
+{% with type="mass-event-book" list_view="event_list" view="mass_event_book" %}
     {{ block.super }}
 {% endwith %}
 {% endblock %}
 
-{% block title %} {{ block.super }} program {% endblock title %}
+{% block title %} {{block.super}} program {% endblock title %}
 
 {% block form %}
 <html>
@@ -20,6 +20,12 @@
   </head>
 
   <body>
+    Organisation:
+    <select id="organization">
+    </select>
+
+    <br> <br>
+
     Répéter
 
     <input type="radio" checked name="repeat", value="weekly">toutes les semaines les</input> <br>
@@ -110,18 +116,13 @@
       {{ form|crispy }}
       <input type="hidden" name="dates" id="submit-data">
 
-      Starts at:
-      <input type="time" id="start-time" value="14:00">
-      Ends at:
-      <input type="time" id="end-time" value="14:00">
-
-      Publish <input type="number" id="publish-countdown" value="7" min="1" max="31" style="width:4em;"></input> days beforehand
-    <input value="Save" class="btn btn-primary" onclick="on_submit()">
+    <input value="Book" class="btn btn-primary" onclick="on_submit()">
     </form>
 
     <script src="{% static 'js/rrule.js' %}"> </script>
+    <script src="{% static 'js/helper_functions.js' %}"> </script>
     <script src="{% static 'js/recurrence_common.js' %}"> </script>
-    <script src="{% static 'js/recurrence_create.js' %}"> </script>
+    <script src="{% static 'js/recurrence_book.js' %}"> </script>
   </body>
 
 </html>

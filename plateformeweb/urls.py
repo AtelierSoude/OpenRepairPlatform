@@ -25,4 +25,5 @@ urlpatterns = [
     url(r'^event/(?P<pk>[0-9]+)/edit/$', views.EventEditView.as_view(), name='event_edit'),
     url(r'^event/(?P<pk>[0-9]+)/(?P<slug>[-\w]+)/$', views.EventView.as_view(), name='event_detail'),
     url(r'^massevent/create/$', views.MassEventCreateView.as_view(), name='mass_event_create'),
+    url(r'^massevent/book/$', views.MassBookingCreateView.as_view(), name='mass_event_book'),
 ]

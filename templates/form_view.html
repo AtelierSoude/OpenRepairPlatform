@@ -31,10 +31,9 @@
      
         {% if request.path == "/edit" %}
         Edit
-        {% else %}
+        {% elif request.path == "/create" %}
         Create
         {% endif %}
-        
         {% block title %}
         {% endblock title %}
 </h1>

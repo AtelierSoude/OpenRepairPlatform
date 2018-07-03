@@ -496,7 +496,7 @@ class MassEventCreateView(PermissionRequiredMixin, EventFormView, CreateView):
     def form_valid(self, form):
         return super().form_valid(form)
 
-class MassEventEditView(PermissionRequiredMixin, EventFormView, AjaxUpdateView):
+class MassEventEditView(PermissionRequiredMixin, EventFormView):
     permission_required = 'plateformeweb.edit_event'
     fields = ["title", "type", "starts_at", "ends_at", "available_seats",
               "attendees", "presents", "organizers", "location", "publish_at", "published",

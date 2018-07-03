@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.urls import reverse
 
 from users.models import CustomUser
-from plateformeweb.models import Organization
+from plateformeweb.models import *
 
 class TestOrganizationView(TestCase):
     "organization views tests"

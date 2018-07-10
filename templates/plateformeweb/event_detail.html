@@ -60,7 +60,7 @@
 {% block context %}
 
     <div class="pt-3">
-        {% include "plateformeweb/event.html" with img_class="row" about_class="row" %}
+        {% include "plateformeweb/event.html" with img_class="col-lg" about_class="row" %}
     </div>
 
     <div class="m-3 pt-3 p-2 bg-white">
@@ -125,6 +125,12 @@
     {% endwith %}
 
     {% if request.user.is_authenticated and request.user in admin_or_volunteer %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+            Vous avez les droits pour voir et confirmer les présences
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+    </div>
         {% for user in event.presents.all %}
             {% if user not in admin_or_volunteer %}
                 {% include "users/user.html" with class="row border border-success checked" user_id=user.id img_class="col-12" content_class="col-12 text-center" absentee=False userid=user.id|serialize_id:event.id %}
@@ -136,7 +142,12 @@
             {% endif %}
         {% endfor %}
     {% else %}
-        Vous devez être membre actif pour voir les participant.e.s
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            Vous devez être membre actif de l'association pour voir les participants
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+    </div>
     {% endif %}
 
 {% endblock about3 %}

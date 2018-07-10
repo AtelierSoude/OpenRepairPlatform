@@ -6,10 +6,13 @@
 {% load django_bootstrap_breadcrumbs %}
 {% load django_markdown django_markdown_static %}
 
+
 {% block breadcrumbs %}
+
 {% with type="organisations" list_view="organization_list" detail_name=organization.name %}
    {{ block.super }}
 {% endwith %}
+
 {% endblock %}
 
 {% block TitleAndEdit %}
@@ -37,7 +40,7 @@ Editer
 
 
 {% block context %}
-    {% include "plateformeweb/organization.html" %}
+    {% include "plateformeweb/organization.html" with class="sticky-position sticky-top"%}
 {% endblock context %} 
 
 {% block about %}
@@ -73,7 +76,7 @@ Editer
     {{ block.super }}
     {% endwith %}
     {% for event in organization.event_set.all %}
-        {% include "plateformeweb/event.html" with class="row" img_class="col-md-4" about_class="col-md-8"%}
+        {% include "plateformeweb/event.html" with class="row" img_class="col-md-2" about_class="col-md-10"%}
     {% endfor %}
 
 {% endblock about3 %}

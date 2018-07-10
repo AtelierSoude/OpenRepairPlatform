@@ -26,19 +26,20 @@
 
 {% block list %}
 
+<script>
+  
+</script>
 <section class="container-fluid row">
 
 <div class="col-lg-12 col-sm-12 ml-4 py-2">
 
   {% for event in object_list %}
 
-    <div class="float-left col-lg-4 col-md-6 col-sm-1">
-
     {% ifchanged %}
-      <h5 class="border-bottom">{{ event.starts_at|date:"d M" }}</h5>
-    {% else %}
-      <div class="border-bottom">...</div>
+    <h5 class="border-bottom col-lg float-left">{{ event.starts_at|date:"M" }}</h5>
     {% endifchanged %}
+
+    <div class="float-left col-lg-4 col-md-6 col-sm-1">
 
       {% include "plateformeweb/event.html" with class="" img_class="col-md-4" about_class="col-md-8 pb-2" %}
         

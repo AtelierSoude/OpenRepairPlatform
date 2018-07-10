@@ -2,8 +2,8 @@
 ************* Reset ************
 *********************************/
 body, html, .container, div, .card, ul, p {
-  margin: 0 !important ;
-  padding: 0 !important; 
+  /*margin: 0 !important ;
+  padding: 0 !important; */
  }
 
 /*******************************
@@ -14,6 +14,7 @@ body {
 }
 a {
   /* text-decoration: none !important; */
+  color : #49d3be;
 }
 a:hover{
   text-decoration-style: none !important;
@@ -35,13 +36,13 @@ h1, h2, h3 {
 }
 
 .btn-primary {
-  color: #fff;
+  color: #fff !important;
   background-color: #fee56e;
-  border-color: #49d3be;
+  border-color: #ffd300;
 }
 
 .btn-primary:hover {
-  color: #fff;
+  color: #fff !important;
   background-color: #49d3be;
   border-color: #fee56e;
 }
@@ -58,6 +59,10 @@ h1, h2, h3 {
   font-family: 'fontAwesome';
   border-radius: 35px;
 
+}
+
+.alert{
+  padding:10px !important;
 }
 /*******************************
 *********** Menu ***************
@@ -100,6 +105,7 @@ h1, h2, h3 {
 .card {
   margin : 15px !important;
   text-align: center;
+  border: none;
 }
 
 
@@ -118,7 +124,7 @@ h1, h2, h3 {
 }
 .card .fa, .card a {
   text-decoration: none;
-  color: #35bda6;
+  color: #49d3be
 }
 
 .card-body {
@@ -157,9 +163,15 @@ text-align: center;
   width: 100%;
 }
 
-.event-card-title{
-  background-color: #49d3be;
-  color: #fff;
+.event-date {
+  display: block; 
+  width:100%;
+  background-color: #cecece;
+  height:44px;
+  font-size:22px; 
+  line-height: 44px;
+  color : #586266;
+  
 }
 .event-card-title a{
   color : #083342;
@@ -299,6 +311,26 @@ input[type="checkbox"], input[type="radio"],input[type="number"]  {
   max-width: 50px;
 }
 
+.btn-circle.btn-xl {
+  width: 70px;
+  height: 70px;
+  padding: 10px 16px;
+  border-radius: 35px;
+  font-size: 24px;
+  line-height: 1.33;
+}
+
+.btn-circle {
+  width: 30px;
+  height: 30px;
+  padding: 6px 0px;
+  border-radius: 15px;
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.42857;
+}
+
+
 /********************************
 ********** Carousel *************
 *********************************/
@@ -323,9 +355,10 @@ input[type="checkbox"], input[type="radio"],input[type="number"]  {
 
 .profil-header-bar {
   width: 100% !important;
-  background-color: #35bda6;
+  background-color: #49d3be;
   height: 100px;
   padding: 10px;
+  top:70px;
 }
 .profil-header-bar.event{
   background-color: #fee56e;
@@ -373,3 +406,4 @@ input[type="checkbox"], input[type="radio"],input[type="number"]  {
   width: 100% !important;
   height: 300px !important;
 }
+

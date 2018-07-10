@@ -9,35 +9,27 @@
 {% if event.available_seats <= 0 %}
     border border-danger
 {% endif %}">
-    <div class="event-card-title text-center row">
-
-            <a class="col-lg" href="{% url 'event_detail' event.id event.slug %}">
-            {{event.title}}</a>
-
-            <div class="float-left mr-2">
-            {% if event.available_seats == 0 %}
-                <span class="badge badge-warning badge-pill">0</span>
-            {% else %}
-                <span class="badge badge-primary badge-pill">{{ event.available_seats }}</span>
-            {% endif %}
-                <small>Places</small>
-            </div>
-
-    </div>
 
     <div class="row">
 
         <div class="text-center align-middle {{img_class}}">
+            <span class="event-date">{{ event.starts_at|date:"d M" }}</span>
             <img class="img-fluid img-place" src="{{ event.type.picture.url }}">
         </div>
 
+        {% if request.resolver_match.url_name != "event_detail" %}
+   <!-- about -->
         <div class="{{about_class}} pl-1 card-body">
             <div class="">
 
-
-            <!-- about -->
+         
 
             <ul class="list-group list-group-flush">
+
+                    <li class="">
+                            <a href="{% url 'event_detail' event.id event.slug %}">
+                            {{event.title}}</a>
+                    </li>
 
                     <li class="">
                         <small>organisé par
@@ -45,12 +37,7 @@
                             {{ event.organization }}
                         </a></small>
                     </li>
-
-                {% if request.resolver_match.url_name != "event_detail" %}
-
-                    <li class="">
-                        <!-- <small>{% fontawesome_icon 'clock-o' %} {{ event.starts_at }}</small> -->
-                    </li>
+                   
                     <li>
                         {% for condition in event.condition.all %}
                         <a> <small>{{condition.resume}}</small> </a>
@@ -74,17 +61,22 @@
                 {% if not request.user.is_authenticated %}
                 {% else %}
                     {% if request.user in event.organizers.all %}
-                        <a class="card-link mr-3 fm-update btn btn-danger float-right" href="{% url 'event_edit' event.id %}"
+                        <a class="card-link mr-3 fm-update btn btn-danger float-right btn-circle" href="{% url 'event_edit' event.id %}"
                         data-fm-head="Editer" data-fm-callback="reload">
-                        {% fontawesome_icon 'edit' %}
-                        Editer
-                    </a>
+                        {% fontawesome_icon 'edit' %}</a>
+
+                        <a href="#" class="card-link mr-3 fm-update btn btn-danger float-right btn-circle">
+                        {% fontawesome_icon 'trash' large=True %}
+                        </a>
+    
+
                     {% elif request.user in event.attendees.all%}
                         <a class="card-link mr-3 fm-update btn btn-danger float-right" href="{% url 'booking_form' event.id %}"
                         data-fm-head="Annuler" data-fm-callback="reload">
                         {% fontawesome_icon 'delete' %}
                         Annuler
                     </a>
+
                     {% elif request.user in event.presents.all %}
                     {% else %}
                         <a class="card-link mr-3 fm-update btn btn-primary float-right" href="{% url 'booking_form' event.id %}"
@@ -94,21 +86,26 @@
                     </a>
                     {% endif %}
                 {% endif %}
+            
+            <div class="text-left row">
 
+                        <div class="float-left mr-2">
+                        {% if event.available_seats == 0 %}
+                            <span class="badge badge-warning badge-pill">Complet</span>
+                        {% else %}
+                            <span class="badge badge-primary badge-pill">{{ event.available_seats }}</span>
+                            <small>Places</small>
+                        {% endif %}
+                            
+                        </div>
+            
+            </div>
 
-
-            <!-- delete if user is organizer -->
-
-                {% if request.user.is_authenticated and event in my_events_organizing %}
-                    <a href="#" class="card-link">Supprimer</a>
-                    {% fontawesome_icon 'trash' large=True %}
-                {% endif %}
-
-            {% endif %}
+          
 
         </div>
-
-    </div>
+     
+    </div>   {% endif %}
 </div>
 </div>
 

@@ -1,0 +1,103 @@
+{% load staticfiles %}
+{% load fontawesome %}
+{% load avatar_tags %}
+
+{% block list %}
+<div :id="key" class="{{class}} card card-event">
+    <div class="event-card-title text-center row">
+            <a class="col-lg" :href="event.event_detail_url">
+            [[event.title]]</a>
+
+            <div class="float-left mr-2">
+                <span v-if="event.available_seats == 0" class="badge badge-warning badge-pill">0</span>
+                <span v-else class="badge badge-primary badge-pill">[[ event.available_seats ]]<span>
+                <small>Places</small>
+            </div>
+
+    </div>
+
+    <div class="row">
+
+        <div class="text-center align-middle {{img_class}}">
+            <img class="img-fluid img-place" :src="event.type_picture_url">
+        </div>
+
+        <div class="{{about_class}} pl-1 card-body">
+            <div class="">
+
+
+            <!-- about -->
+
+            <ul class="list-group list-group-flush">
+
+                    <li class="">
+                        <small>organisé par
+                            <a :href="organizations[event.organization_pk].organization_detail_url">
+                            [[ organizations[event.organization_pk].name ]]
+                        </a></small>
+                    </li>
+
+                {% if request.resolver_match.url_name != "event_detail" %}
+
+                    <li class="">
+                        <!-- <small>{% fontawesome_icon 'clock-o' %} [[ event.starts_at ]]</small> -->
+                    </li>
+                    <!-- <li v-for="condition in event.conditions"> -->
+                    <!--     <a> <small>[[condition.resume]]</small> </a> -->
+                    <!-- </li> -->
+
+                    <li class="">
+                        de <span class="hour-event text-center">[[event.starts_at]]</span>
+                        à <span class="hour-event text-center">[[event.ends_at]]</span>
+                    </li>
+                        <a :href="places[event.place_pk].place_detail_url">
+                            {% fontawesome_icon 'map-marker' %}
+                            <small>[[places[event.place_pk].truncated_name]]</small>
+                        </a>
+                    </li>
+
+                </ul>
+
+                <!-- book -->
+                {% if not request.user.is_authenticated %}
+                {% else %}
+                    {% if request.user in event.organizers.all %}
+                        <a class="card-link mr-3 fm-update btn btn-danger float-right" :href="event.edit_url"
+                        data-fm-head="Editer" data-fm-callback="reload">
+                        {% fontawesome_icon 'edit' %}
+                        Editer
+                    </a>
+                    {% elif request.user in event.attendees.all%}
+                        <a class="card-link mr-3 fm-update btn btn-danger float-right" :href="event.book_url"
+                        data-fm-head="Annuler" data-fm-callback="reload">
+                        {% fontawesome_icon 'delete' %}
+                        Annuler
+                    </a>
+                    {% elif request.user in event.presents.all %}
+                    {% else %}
+                        <a class="card-link mr-3 fm-update btn btn-primary float-right" :href="event.book_url"
+                        data-fm-head="Confirmer" data-fm-callback="reload">
+                        {% fontawesome_icon 'ticket' %}
+                        Réserver
+                    </a>
+                    {% endif %}
+                {% endif %}
+
+
+
+            <!-- delete if user is organizer -->
+
+                {% if request.user.is_authenticated and event in my_events_organizing %}
+                    <a href="#" class="card-link">Supprimer</a>
+                    {% fontawesome_icon 'trash' large=True %}
+                {% endif %}
+
+            {% endif %}
+
+        </div>
+
+    </div>
+</div>
+</div>
+
+{% endblock list %}

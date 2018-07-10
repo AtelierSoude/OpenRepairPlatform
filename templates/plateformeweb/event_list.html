@@ -13,9 +13,9 @@
   {% endwith %}
 {% endblock %}
 
-{% block title %} 
-  {{ block.super }} 
-  Events 
+{% block title %}
+  {{ block.super }}
+  Events
 {% endblock title %}
 
 {% block statistics %}
@@ -26,32 +26,43 @@
 
 {% block list %}
 
-<section class="container-fluid row">
-
+<section id="event-list" class="container-fluid row">
 <div class="col-lg-12 col-sm-12 ml-4 py-2">
 
-  {% for event in object_list %}
 
-    <div class="float-left col-lg-4 col-md-6 col-sm-1">
+    <div v-for="(event in event_list" class="float-left col-lg-4 col-md-6 col-sm-1">
+      <h5 v-if="last_date_str != event.day_month_str"> [[event.day_month_str ]] </h5>
 
-    {% ifchanged %}
-      <h5 class="border-bottom">{{ event.starts_at|date:"d M" }}</h5>
-    {% else %}
-      <div class="border-bottom">...</div>
-    {% endifchanged %}
-
-      {% include "plateformeweb/event.html" with class="" img_class="col-md-4" about_class="col-md-8 pb-2" %}
-        
+      {% include "plateformeweb/event_vuejs.html" with class="" img_class="col-md-4" about_class="col-md-8 pb-2" %}
     </div>
+   <div v-if="event_list.length == 0">No events yet.</div>
 
-    {% empty %}
-    <div>No events yet.</div>  
-
-  {% endfor %}
   </div>
-  
+
 </section>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.16/vue.js"></script>
+<script>
+  const app = new Vue({
+      delimiters: ['[[', ']]'],
+      el: "#event-list",
+      data() {
+          return {
+              event_list : [],
+              organizations: {},
+              places: {},
+              last_date_str: "",
+          }
+      },
+      created() {
+          fetch("/api/list_events/")
+              .then(response => response.json())
+              .then(json => {
+                  this.event_list = json.dates;
+                  this.organizations = json.organizations;
+                  this.places = json.places;
+              });
+      },
+  });
+</script>
 {% endblock list %}
-
-

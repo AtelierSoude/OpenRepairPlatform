@@ -270,14 +270,17 @@ class EventView(DetailView):
 
 
 class EventListView(ListView):
-    model = Event
+    queryset = {}
+
+    def get(self, request, **kwargs):
+        return render(request, "plateformeweb/event_list.html", {})
 
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
 
-        context["list_type"] = "event"
-        return context
+    #     context["list_type"] = "event"
+    #     return context
 
 
 # --- edit ---

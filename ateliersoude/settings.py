@@ -310,8 +310,10 @@ LOGIN_URL = '/auth/login/'
 DBSETTINGS_USE_CACHE = False
 
 # TODO for the address module; change it!
-GOOGLE_API_KEY = "AIzaSyCNZ-rIhY1zyq2LFghBV4x7mUQvtJCOK88"
-EASY_MAPS_GOOGLE_MAPS_API_KEY = "AIzaSyCNZ-rIhY1zyq2LFghBV4x7mUQvtJCOK88"
+GOOGLE_API_KEY = "AIzaSyD4BbszAhBjzV7S1ag3KKRNX_xLjy6bwEI"
+# GOOGLE_API_KEY = "AIzaSyCNZ-rIhY1zyq2LFghBV4x7mUQvtJCOK88"
+EASY_MAPS_GOOGLE_MAPS_API_KEY = "AIzaSyD4BbszAhBjzV7S1ag3KKRNX_xLjy6bwEI"
+# EASY_MAPS_GOOGLE_MAPS_API_KEY = "AIzaSyCNZ-rIhY1zyq2LFghBV4x7mUQvtJCOK88"
 
 
 # npm (https://github.com/kevin1024/django-npm)

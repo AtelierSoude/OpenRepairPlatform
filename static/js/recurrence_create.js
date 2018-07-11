@@ -226,7 +226,7 @@ function add_event_to_dom(event, date_div, place=-1){
     var btn = document.createElement("input");
     btn.type = "button";
     btn.value = "-";
-    btn.class = "delete-event card-link mr-3 fm-update btn btn-danger float-right btn-circle";
+    btn.class = "delete-event";
     btn.id = "delete-event-" + event[0];
 
 

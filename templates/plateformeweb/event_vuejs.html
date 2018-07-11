@@ -5,7 +5,7 @@
 
 
 {% block list %}
-<div :id="key" class="{{class}} card card-event
+<div :id="event.pk" class="{{class}} card card-event
 {% if event.available_seats <= 0 %}
     border border-danger
 {% endif %}">
@@ -22,7 +22,7 @@
         <div class="{{about_class}} pl-1 card-body">
             <div class="">
 
-         
+
 
             <ul class="list-group list-group-flush">
 
@@ -37,7 +37,7 @@
                              [[ organizations[event.organization_pk].name ]]
                         </a></small>
                     </li>
-                   
+
                     <li>
                         {% for condition in event.condition.all %}
                         <a> <small>{{condition.resume}}</small> </a>
@@ -68,7 +68,7 @@
                         <a href="#" class="card-link mr-3 fm-update btn btn-danger float-right btn-circle">
                         {% fontawesome_icon 'trash' large=True %}
                         </a>
-    
+
 
                     {% elif request.user in event.attendees.all%}
                         <a class="card-link mr-3 fm-update btn btn-danger float-right" :href="event.book_url"
@@ -86,25 +86,23 @@
                     </a>
                     {% endif %}
                 {% endif %}
-            
+
             <div class="text-left row">
 
                 <div class="float-left mr-2">
                      <span v-if="event.available_seats == 0" class="badge badge-warning badge-pill">pas de places</span>
                      <span v-else class="badge badge-primary badge-pill">[[ event.available_seats ]] places<span>
-                      
+
                 </div>
-            
+
             </div>
 
-          
+
 
         </div>
-     
+
     </div>   {% endif %}
 </div>
 </div>
 
 {% endblock list %}
-
-

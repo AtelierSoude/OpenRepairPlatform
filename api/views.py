@@ -117,6 +117,7 @@ def list_events(request):
             event_pk = event.pk
             event_slug = event.slug
             event_detail_url = reverse('event_detail', args=[event_pk, event_slug])
+            event_start_timestamp = event.starts_at.timestamp() * 1000
             organization = event.organization
             place = event.location
 
@@ -141,6 +142,7 @@ def list_events(request):
                                                         place_slug])
                 places[place_pk] = {
                     'pk': place_pk,
+                    'name': place.name,
                     'truncated_name': place.name[0:25],
                     'slug': place_slug,
                     'place_detail_url': place_detail_url,
@@ -161,6 +163,7 @@ def list_events(request):
                 'published': event.published,
                 'starts_at': event.starts_at.strftime("%H:%M"),
                 'ends_at': event.ends_at.strftime("%H:%M"),
+                'start_timestamp': event_start_timestamp,
                 'day_month_str': event.starts_at.strftime("%d %B"),
             }]
 

@@ -130,7 +130,7 @@ class PlaceCreateView(PermissionRequiredMixin, PlaceFormView, CreateView):
     def validate_image(self, image):
         # Asserts image is smaller than 5MB
         if image:
-            if image._size > 5 * 1024 * 1024:
+            if image.size > 5 * 1024 * 1024:
                 raise ValidationError("L'image est trop lourde (> 5Mo)")
             return image
         else:
@@ -152,7 +152,7 @@ class PlaceEditView(PermissionRequiredMixin, PlaceFormView, AjaxUpdateView):
     def validate_image(self, image):
         # Asserts image is smaller than 5MB
         if image:
-            if image._size > 5 * 1024 * 1024:
+            if image.size > 5 * 1024 * 1024:
                 raise ValidationError("L'image est trop lourde (> 5Mo)")
             return image
         else:

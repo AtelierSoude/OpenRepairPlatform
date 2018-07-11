@@ -24,14 +24,22 @@
 
 {% block about1 %}
 
+            <nav>
+                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                      <a class="nav-item nav-link active" id="nav-booking-tab" data-toggle="tab" href="#nav-booking" role="tab" aria-controls="nav-settings" aria-selected="true">Réservations</a>
+                      <a class="nav-item nav-link" id="nav-infos-tab" data-toggle="tab" href="#nav-infos" role="tab" aria-controls="nav-unique" aria-selected="true">Informations</a>
+                    </div>
+            </nav>
+
+
     {% with about1="Evenements inscrits" %}
     {{ block.super }}
     {% endwith %}
-    <div class="row">
+    <section class="row" id="nav-booking-tab">
         {% for event in attending_events %}
         {% include "plateformeweb/event.html" with class="col-md-4 col-12" img_class="col-md-4" about_class="col-md-8 pb-2" %}
         {% endfor %}
-    </div>
+    </section>
 
 {% endblock about1 %}
 

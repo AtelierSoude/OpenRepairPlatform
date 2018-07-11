@@ -1,11 +1,16 @@
-{% extends "base.html" %}
 
-{% block content %}
-<div class="">
-<section class="">
-        <div class="avatar"><img src="../../static/img/avatar.png"></div>
+{% extends 'form_view.html' %}
 
-    {% if form.errors %}
+{% load staticfiles %}
+{% load fontawesome %}
+{% load avatar_tags %}
+
+{% block form %}
+
+<div class="container">
+
+<section class="h-100">
+ {% if form.errors %}
         <p>Your username and password didn't match. Please try again.</p>
     {% endif %}
 
@@ -17,27 +22,53 @@
             <!-- <p>Please login to see this page.</p> -->
         {% endif %}
     {% endif %}
+		<div class="container h-100">
+			<div class="row justify-content-md-center h-100">
+				<div class="card-wrapper">
+					<div class="brand">
+						<img src="img/logo.jpg">
+					</div>
+					<div class="card fat">
 
-    <form method="post" action="{% url 'login' %}" class="pure-form pure-form-stacked">
-        {% csrf_token %}
+						<div class="card-body">
+							<h4 class="card-title">Se connecter</h4>
 
-        <div class="pure-control-group group">
-            <td>{{ form.username }}</td>
-            <td>{{ form.username.label_tag }}</td>
-        </div>
-        <div class="pure-control-group group">
-            <td>{{ form.password }}</td>
-            <td>{{ form.password.label_tag }}</td>
-        </div>
+							<form method="post" action="{% url 'login' %}" class="form col-md-8">
+							    {% csrf_token %}
+								<div class="form-group">
+									{{ form.username.label_tag }}
+									{{ form.username }}
+								</div>
 
-        <div class="pure-controls">
-            <input type="submit" class="" value="login"/>
-            <input type="hidden" name="next" value="{{ next }}"/>
-        </div>
-    </form>
+								<div class="form-group">	
+									{{ form.password.label_tag }}
+									{{ form.password }}
+                                    {# Assumes you setup the password_reset view in your URLconf #}
+                                    <p><a href="{% url 'password_reset' %}">Lost password?</a></p>
+								</div>
 
+								<div class="form-group">
+									<label>
+										<input type="checkbox" name="remember"> Remember Me
+									</label>
+								</div>
 
-    {# Assumes you setup the password_reset view in your URLconf #}
-    <p><a href="{% url 'password_reset' %}">Lost password?</a></p>
-</section></div>
+								<div class="form-group no-margin">
+									<button type="submit" class="btn btn-primary btn-block">
+										Login
+									</button>
+								</div>
+								<div class="margin-top20 text-center">
+									Don't have an account? <a href="register.html">Create One</a>
+								</div>
+							</form>
+						</div>
+					</div>
+				
+				</div>
+			</div>
+		</div>
+	</section>
+
+    </div>
 {% endblock %}

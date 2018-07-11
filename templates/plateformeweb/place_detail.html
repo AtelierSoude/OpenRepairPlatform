@@ -62,7 +62,7 @@ Editer
     {{ block.super }}
     {% endwith %}
     {% for event in place.event_set.all %}
-    {% include "plateformeweb/event.html" with class="" img_class="col-md-10" about_class="col-md-8 pb-2" %}
+    {% include "plateformeweb/event.html" with class="" img_class="col-md-2" about_class="col-md-10 pb-2" %}
     {% endfor %}
 
 {% endblock about2 %}

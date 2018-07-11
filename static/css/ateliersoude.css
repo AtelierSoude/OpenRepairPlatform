@@ -16,6 +16,9 @@ a {
   /* text-decoration: none !important; */
   color : #49d3be;
 }
+header{
+  z-index:1250 !important;
+}
 a:hover{
   text-decoration-style: none !important;
 }
@@ -68,6 +71,12 @@ h1, h2, h3 {
 *********** Menu ***************
 *********************************/
 
+.dropdown-menu {
+  
+    top: none;
+    right: 40px;
+    left: none;
+}
 
 .navbar {
   background-color: #083342 !important;
@@ -112,6 +121,11 @@ h1, h2, h3 {
 /*******************************
 ********* user card ************
 *********************************/
+
+.event{
+  line-height: 20px;
+  padding: 10px;
+}
 .card-user{
   max-width:200px !important;
   float: left;
@@ -144,7 +158,6 @@ text-align: center;
 
 }
 .avatar-card-user img {
-  height: 50px;
   width:auto;
 }
 
@@ -220,11 +233,11 @@ text-align: center;
 }
 
 textarea, input{
-  max-width:100%;
-    min-width:40px;
-    resize:vertical;
+  /* max-width:100%; */
+    min-width:20px;
     box-sizing:border-box;
-    margin:auto;
+    height : auto;
+    max-height:40px;
 }
 
 .form .selectmultiple{

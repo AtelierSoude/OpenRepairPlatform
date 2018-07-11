@@ -218,7 +218,7 @@ function add_event_to_dom(event, date_div, place=-1){
     span_event.classList.add("event");
     span_event.id= "event-" + event[0];
 
-    let date_string = "Le " + event[1].toLocaleDateString() + " ";
+    let date_string = "" + event[1].toLocaleDateString() + " ";
     let text_node = document.createTextNode(date_string);
     let br = document.createElement("br");
     br.id = "br-event-" + event[0];
@@ -226,7 +226,7 @@ function add_event_to_dom(event, date_div, place=-1){
     var btn = document.createElement("input");
     btn.type = "button";
     btn.value = "-";
-    btn.class = "delete-event";
+    btn.class = "delete-event card-link mr-3 fm-update btn btn-danger float-right btn-circle";
     btn.id = "delete-event-" + event[0];
 
 

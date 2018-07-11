@@ -11,7 +11,7 @@
 {% endwith %}
 {% endblock %}
 
-{% block title %} {{ block.super }} Création d'évènements réccurents {% endblock title %}
+{% block title %} {{ block.super }} Publication d'évènements {% endblock title %}
 
 {% block form %}
    
@@ -49,7 +49,6 @@
                 Publish 
                 <input type="number" id="publish-countdown" value="7" min="1" max="31" style="width:4em;"></input> 
                 days beforehand
-                <input value="Publier" class="btn btn-primary" onclick="on_submit()">
                 </form>
             </div>
         <!-- end event specifications essentials -->
@@ -67,7 +66,7 @@
 
 
   <!-- reccurence sheme -->
-            <div class="tab-pane fade" id="nav-reccurence" role="tabpanel" aria-labelledby="nav-reccurence-tab">
+            <div class="tab-pane fade"  id="nav-reccurence" role="tabpanel" aria-labelledby="nav-reccurence-tab">
 
             <input type="radio" checked name="repeat" value="weekly">toutes les semaines
             </input>
@@ -168,7 +167,7 @@
     </section>
   
     <!--- date generator -->
-    <section class="col-md-8 p-2 bg-white">
+    <section class="col-md-8 p-2 bg-white shadow">
 
         <div class="alert alert-warning alert-dismissible fade show" role="alert">
             Vous ne pouvez générer qu'un type d'évènement
@@ -178,8 +177,9 @@
           </div>
 
         <h4> Dates créées : </h4>
-        <div class="date-list row" id="date-list">
+        <div class="date-list row" style="min-height:350px" id="date-list">
         </div>
+        <input value="Publier" class="btn btn-primary float-right" onclick="on_submit()">
     </section>
     <!-- end date generator-->
 </div>

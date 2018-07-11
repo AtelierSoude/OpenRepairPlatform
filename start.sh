@@ -55,10 +55,23 @@ function start_dev_server() {
 }
 
 function create_env_file(){
-    # TODO add env variables here
-    if [ ! -f ./deployment/.env ]; then
-        touch ./deployment/.env;
-    fi
+    touch ./deployment/.env;
+    echo "Nom de l'utilisateur postgresql?"
+    read POSTGRES_USER
+    echo "Mot de passe de l'utilisateur postgresql?"
+    read POSTGRES_PASSWORD
+    echo "Nom de la base de donnees?"
+    read POSTGRES_DB
+    echo "Development server? (Please answer 1 or 0)"
+    read DEVELOPMENT
+    echo "Debug mode? (Please answer 1 or 0)"
+    read DJANGO_DEBUG
+
+    echo "POSTGRES_USER=$POSTGRES_USER" > ./deployment/.env
+    echo "POSTGRES_PASSWORD=$POSTGRES_PASSWORD" >> ./deployment/.env
+    echo "POSTGRES_DB=$POSTGRES_DB" >> ./deployment/.env
+    echo "DEVELOPMENT=$DEVELOPMENT" >> ./deployment/.env
+    echo "DJANGO_DEBUG=$DJANGO_DEBUG" >> ./deployment/.env
 }
 
 

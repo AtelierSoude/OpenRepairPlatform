@@ -60,8 +60,7 @@
                 <!-- book -->
                 {% if not request.user.is_authenticated %}
                 {% else %}
-                    {% if request.user in event.organizers.all %}
-                        <a class="card-link mr-3 fm-update btn btn-danger float-right btn-circle":href="event.edit_url"
+                        <a v-if="event.user_in_organizers" class="card-link mr-3 fm-update btn btn-danger float-right btn-circle":href="event.edit_url"
                         data-fm-head="Editer" data-fm-callback="reload">
                         {% fontawesome_icon 'edit' %}</a>
 
@@ -69,22 +68,18 @@
                         {% fontawesome_icon 'trash' large=True %}
                         </a>
 
-
-                    {% elif request.user in event.attendees.all%}
-                        <a class="card-link mr-3 fm-update btn btn-danger float-right" :href="event.book_url"
+                        <a v-else-if="user_in_attendees" class="card-link mr-3 fm-update btn btn-danger float-right" :href="event.book_url"
                         data-fm-head="Annuler" data-fm-callback="reload">
                         {% fontawesome_icon 'delete' %}
                         Annuler
                     </a>
 
-                    {% elif request.user in event.presents.all %}
-                    {% else %}
-                        <a class="card-link mr-3 fm-update btn btn-primary float-right":href="event.book_url"
+                        <span v-else-if="user_in_presents"></span>
+                        <a v-else class="card-link mr-3 fm-update btn btn-primary float-right" :href="event.book_url"
                         data-fm-head="Confirmer" data-fm-callback="reload">
                         {% fontawesome_icon 'ticket' %}
                         Réserver
                     </a>
-                    {% endif %}
                 {% endif %}
 
             <div class="text-left row">

@@ -164,6 +164,9 @@ def list_events(request):
                 'starts_at': event.starts_at.strftime("%H:%M"),
                 'ends_at': event.ends_at.strftime("%H:%M"),
                 'start_timestamp': event_start_timestamp,
+                'user_in_attendees': request.user in event.attendees.all(),
+                'user_in_presents': request.user in event.presents.all(),
+                'user_in_organizers': request.user in event.organizers.all(),
                 'day_month_str': event.starts_at.strftime("%d %B"),
             }]
 

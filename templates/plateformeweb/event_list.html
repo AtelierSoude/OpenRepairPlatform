@@ -62,6 +62,7 @@
 
 </section>
 
+<script src="{% static 'js/helper_functions.js' %}"> </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.16/vue.js"></script>
 <script>
   const app = new Vue({
@@ -81,7 +82,14 @@
           }
       },
       created() {
-          fetch("/api/list_events/")
+          let csrftoken = getCookie('csrftoken');
+          let headers = new Headers();
+          headers.append('X-CSRFToken', csrftoken);
+          fetch("/api/list_events/", {
+              headers: headers,
+              method: "GET",
+              credentials: 'include',
+          })
               .then(response => response.json())
               .then(json => {
                   this.event_list = json.dates;

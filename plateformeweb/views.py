@@ -292,6 +292,9 @@ class EventFormView():
         if form_class is None:
             form_class = self.get_form_class()
         form = super().get_form(form_class)
+        user_orgs = Organization.objects.filter(owner=self.request.user)
+        form.fields["organization"].queryset = user_orgs
+
         for field in ("starts_at", "ends_at", "publish_at"):
             form.fields[field].widget = DateTimePicker(
                 options={

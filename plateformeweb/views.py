@@ -522,6 +522,15 @@ class MassEventCreateView(PermissionRequiredMixin, EventFormView, CreateView):
         for field in ("starts_at", "ends_at", "publish_at"):
             form.fields[field].widget = forms.HiddenInput()
 
+        limited_choices = []
+        available_organizations = OrganizationPerson.objects.filter(user=self.request.user)
+        for result in available_organizations:
+            if result.role >=OrganizationPerson.ADMIN:
+                organization = result.organization
+                limited_choices.append([organization.pk, organization.name])
+
+        form.fields['organization'].choices = limited_choices
+
         return form
 
 

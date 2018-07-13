@@ -9,6 +9,8 @@ class TestAllViews(TestCase):
         admin_page = '/admin/'
         self.admin = CustomUser.objects.create_superuser('sankara', 'password')
         self.client.login(username='sankara', password='password')
+        # Random User
+        self.user = CustomUser.objects.create_user('lumumba', 'password')
 
         self.organization = Organization.objects.create(
             name = 'Atelier Soudé',
@@ -50,9 +52,30 @@ class TestAllViews(TestCase):
             assert resp.status_code == 200
 
     def test_organization_person_user_views(self):
-        self.user = CustomUser.objects.create_user('lumumba', 'password')
         self.org_person = OrganizationPerson.objects.create(user=self.user, organization=self.organization)
         self.client.login(username='lumumba', password='password')
+
+        authorized_views = [
+            reverse('organization_list'),
+            reverse('organization_detail', kwargs={'pk': self.organization.pk, 'slug': self.organization.slug }),
+            reverse('place_list'),
+            reverse('place_detail', kwargs={'pk': self.place.pk, 'slug': self.place.slug }),
+            reverse('activity_list'),
+            reverse('activity_detail', kwargs={'pk': self.activity.pk, 'slug': self.activity.slug }),
+            reverse('event_list'),
+            reverse('event_detail', kwargs={'pk': self.event.pk, 'slug': self.event.slug }),
+            reverse('booking_form', kwargs={'pk': self.event.pk })
+        ]
+
+        for page in authorized_views:
+            resp = self.client.get(page)
+            assert resp.status_code == 200
+
+
+    def test_organization_person_with_volunteer_role_user_views(self):
+        self.volunteer = CustomUser.objects.create_user('bourguiba', 'password')
+        self.org_person = OrganizationPerson.objects.create(user=self.volunteer, organization=self.organization, role=20)
+        self.client.login(username='bourguiba', password='password')
 
         authorized_views = [
             reverse('organization_list'),

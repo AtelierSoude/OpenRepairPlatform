@@ -22,7 +22,7 @@
 
 {% block content %}
 {% render_breadcrumbs %}
-<div class="container-fluid">  
+<div class="container">  
 
 
 <!-- title -->
@@ -34,7 +34,8 @@
         {% elif request.path == "/create" %}
         Create
         {% endif %}
-        <h1 class="text-center mx-auto"> {% block title %} {% endblock %}</h1>
+        {% block title %}
+        {% endblock title %}
 </h1>
 
 

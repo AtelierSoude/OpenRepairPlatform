@@ -72,7 +72,7 @@ h1, h2, h3 {
 *********************************/
 
 .dropdown-menu {
-  
+
     top: none;
     right: 40px;
     left: none;
@@ -177,14 +177,14 @@ text-align: center;
 }
 
 .event-date {
-  display: block; 
+  display: block;
   width:100%;
   background-color: #cecece;
   height:44px;
-  font-size:22px; 
+  font-size:22px;
   line-height: 44px;
   color : #586266;
-  
+
 }
 .event-card-title a{
   color : #083342;
@@ -209,7 +209,7 @@ text-align: center;
 }
 
 
-/* modals */ 
+/* modals */
 
 .fm-modal .modal-content {
     margin: auto !important;
@@ -226,11 +226,10 @@ text-align: center;
 *********************************/
 .form{
   padding: 20px !important;
+  margin: 10px auto !important;
+  width: 100%;
 }
 
-.day-choice li{
-  display: inline-block;
-}
 
 textarea, input{
   /* max-width:100%; */
@@ -313,12 +312,11 @@ input[type="url"]:focus,
 input[type="search"]:focus,
 input[type="tel"]:focus,
 input[type="color"]:focus,
-.uneditable-input:focus {   
+.uneditable-input:focus {
   border-color: rgba(0, 77, 64, 0.6);
   box-shadow: 0 1px 1px rgba(0, 77, 64, 0.75) inset, 0 0 8px rgba(0, 77, 64, 0.6);
   outline: 0 none;
 }
-
 input[type="checkbox"], input[type="radio"],input[type="number"]  {
   min-width: 30px;
   max-width: 50px;
@@ -342,7 +340,6 @@ input[type="checkbox"], input[type="radio"],input[type="number"]  {
   font-size: 12px;
   line-height: 1.42857;
 }
-
 
 /********************************
 ********** Carousel *************
@@ -397,7 +394,7 @@ input[type="checkbox"], input[type="radio"],input[type="number"]  {
 .breadcrumb{
   font-size: 12px;
   line-height: 20px;
-  padding-left: 10px !important; 
+  padding-left: 10px !important;
   margin-bottom: 0px !important;
 }
 .breadcrumb{

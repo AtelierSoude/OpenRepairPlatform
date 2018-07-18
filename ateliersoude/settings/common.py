@@ -19,13 +19,7 @@ POSTGRES_HOST = os.environ.get("POSTGRES_HOST")
 DEVELOPMENT = os.environ.get("DEVELOPMENT")
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'H/hXAUnb1ZKNGpToim2cg38dxiyHM6b+zB9zozhpTzkP'
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # only run debug if DEBUG=1 (or something else) is specified in the environment
 # TODO store the rest of the configuration in environment variables as well
@@ -82,7 +76,6 @@ INSTALLED_APPS = [
     'django_markdown',
     'post_office',
     'easy_maps',
-
 ]
 
 MIDDLEWARE = [
@@ -183,7 +176,6 @@ USE_THOUSAND_SEPARATOR = True
 # collected and put in temp dir by: python3 manage.py collectstatic
 STATIC_URL = '/static/'
 STATIC_ROOT = '/tmp/django-static'
-STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
@@ -314,7 +306,6 @@ GOOGLE_API_KEY = "AIzaSyD4BbszAhBjzV7S1ag3KKRNX_xLjy6bwEI"
 # GOOGLE_API_KEY = "AIzaSyCNZ-rIhY1zyq2LFghBV4x7mUQvtJCOK88"
 EASY_MAPS_GOOGLE_MAPS_API_KEY = "AIzaSyD4BbszAhBjzV7S1ag3KKRNX_xLjy6bwEI"
 # EASY_MAPS_GOOGLE_MAPS_API_KEY = "AIzaSyCNZ-rIhY1zyq2LFghBV4x7mUQvtJCOK88"
-
 
 # npm (https://github.com/kevin1024/django-npm)
 NPM_FILE_PATTERNS = {

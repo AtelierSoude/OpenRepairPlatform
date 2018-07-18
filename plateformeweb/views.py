@@ -19,7 +19,7 @@ from rules.contrib.views import PermissionRequiredMixin
 from django_markdown.fields import MarkdownFormField
 from django_markdown.widgets import MarkdownWidget
 
-from fm.views import AjaxCreateView, AjaxUpdateView
+from fm.views import AjaxCreateView, UpdateView
 
 import datetime
 from django import forms
@@ -80,7 +80,7 @@ class OrganizationCreateView(PermissionRequiredMixin, OrganizationFormView,
 
 
 class OrganizationEditView(PermissionRequiredMixin, OrganizationFormView,
-                           AjaxUpdateView):
+                           UpdateView):
     permission_required = 'plateformeweb.edit_organization'
     queryset = Organization.objects
 
@@ -145,7 +145,7 @@ class PlaceCreateView(PermissionRequiredMixin, PlaceFormView, CreateView):
         return super().form_valid(form)
 
 
-class PlaceEditView(PermissionRequiredMixin, PlaceFormView, AjaxUpdateView):
+class PlaceEditView(PermissionRequiredMixin, PlaceFormView, UpdateView):
     permission_required = 'plateformeweb.edit_place'
     queryset = Place.objects
 
@@ -212,7 +212,7 @@ class ActivityCreateView(PermissionRequiredMixin, ActivityFormView, CreateView):
         return super().form_valid(form)
 
 
-class ActivityEditView(PermissionRequiredMixin, ActivityFormView, AjaxUpdateView):
+class ActivityEditView(PermissionRequiredMixin, ActivityFormView, UpdateView):
     permission_required = 'plateformeweb.edit_acivity'
     queryset = Activity.objects
 
@@ -376,7 +376,7 @@ class BookingFormView():
         return render(request, 'plateformeweb/event_list.html', message="c'est tout bon")
 
 
-class BookingEditView(BookingFormView, AjaxUpdateView):
+class BookingEditView(BookingFormView, UpdateView):
     template_name = 'plateformeweb/booking_form.html'
     queryset = Event.objects
 
@@ -518,3 +518,10 @@ class MassBookingCreateView(CreateView):
 
     def get_success_url(self):
         return render(request, 'plateformeweb/event_list.html', message="c'est tout bon")
+
+class MassEventEditView(PermissionRequiredMixin, EventFormView):
+    permission_required = 'plateformeweb.edit_event'
+    fields = ["title", "type", "starts_at", "ends_at", "available_seats",
+              "attendees", "presents", "organizers", "location", "publish_at", "published",
+              "organization", "condition"]
+    queryset = Event.objects

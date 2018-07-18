@@ -285,66 +285,7 @@ class EventListView(ListView):
 
 # --- edit ---
 
-class EventFormView():
-    model = Event
-    fields = ["title", "type", "starts_at", "ends_at", "available_seats",
-              "attendees", "organizers", "location", "publish_at", "published",
-              "organization", "condition"]
-
-    # date picker from
-    #   https://xdsoft.net/jqplugins/datetimepicker/
-    # installed as a django app by
-    #   https://github.com/beda-software/django-datetimepicker
-    # fix get_form:
-    #   https://github.com/tomwalker/django_quiz/issues/71
-    def get_form(self, form_class=None):
-        if form_class is None:
-            form_class = self.get_form_class()
-        form = super().get_form(form_class)
-        for field in ("starts_at", "ends_at", "publish_at"):
-            form.fields[field].widget = DateTimePicker(
-                options={
-                    'format': '%Y-%m-%d %H:%M',
-                    # todo: i18n not working yet, needs to add a static JS
-                    # file for translations ?
-                    # see https://xdsoft.net/jqplugins/datetimepicker/
-                    'lang': self.request.LANGUAGE_CODE[:2],
-                    'step': 15,
-                }
-            )
-
-        form.fields["available_seats"].widget.attrs['min'] = "0"
-
-        return form
-
-    def get_success_url(self):
-        return reverse_lazy('event_detail',
-                            args=(self.object.pk, self.object.slug,))
-
-
-class EventCreateView(PermissionRequiredMixin, EventFormView, CreateView):
-    permission_required = 'plateformeweb.create_event'
-
-    # set owner to current user on creation
-    def form_valid(self, form):
-        obj = form.save(commit=False)
-        obj.owner = self.request.user
-
-        # if no title is specified
-        if self.request.POST['title'] == '':
-            new_slug = str(obj.type)
-            new_slug += '-' + obj.organization.slug
-            new_slug += '-' + obj.location.slug
-            obj.title = obj.type
-            obj.slug = new_slug
-
-        return super().form_valid(form)
-
-
-
-
-
-class EventEditView(PermissionRequiredMixin, EventFormView, AjaxUpdateView):
+class EventEditView(PermissionRequiredMixin, AjaxUpdateView):
     permission_required = 'plateformeweb.edit_event'
     fields = ["title", "type", "starts_at", "ends_at", "available_seats",
               "attendees", "presents", "organizers", "location", "publish_at", "published",
@@ -454,7 +395,7 @@ class BookingEditView(BookingFormView, AjaxUpdateView):
 
 # --- mass event ---
 
-class MassEventCreateView(PermissionRequiredMixin, EventFormView, CreateView):
+class EventCreateView(PermissionRequiredMixin, CreateView):
     permission_required = 'plateformeweb.create_event'
     template_name = 'plateformeweb/mass_event_form.html'
     model = Event

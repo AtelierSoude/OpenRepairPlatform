@@ -6,7 +6,7 @@
 {% load django_bootstrap_breadcrumbs %}
 
 {% block breadcrumbs %}
-{% with type="mass-event-create" list_view="event_list" view="mass_event_create" %}
+{% with type="mass-event-create" list_view="event_list" view="event_create" %}
     {{ block.super }}
 {% endwith %}
 {% endblock %}

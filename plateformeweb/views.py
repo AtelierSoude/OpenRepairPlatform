@@ -454,7 +454,7 @@ class EventCreateView(PermissionRequiredMixin, CreateView):
             e.title = e.type.name
             e.save()
 
-        return HttpResponse("OK!")
+        return HttpResponseRedirect(reverse("event_create"))
 
     def get_form(self, form_class=None):
         if form_class is None:

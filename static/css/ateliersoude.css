@@ -1,9 +1,9 @@
 /*******************************
 ************* Reset ************
 *********************************/
-body, html, .container, div, .card, .navbar, a, ul, p {
-  margin: 0 !important ;
-  padding: 0 !important; 
+body, html, .container, div, .card, ul, p {
+  /*margin: 0 !important ;
+  padding: 0 !important; */
  }
 
 /*******************************
@@ -14,6 +14,10 @@ body {
 }
 a {
   /* text-decoration: none !important; */
+  color : #49d3be;
+}
+header{
+  z-index:1250 !important;
 }
 a:hover{
   text-decoration-style: none !important;
@@ -35,13 +39,13 @@ h1, h2, h3 {
 }
 
 .btn-primary {
-  color: #fff;
+  color: #fff !important;
   background-color: #fee56e;
-  border-color: #49d3be;
+  border-color: #ffd300;
 }
 
 .btn-primary:hover {
-  color: #fff;
+  color: #fff !important;
   background-color: #49d3be;
   border-color: #fee56e;
 }
@@ -59,10 +63,20 @@ h1, h2, h3 {
   border-radius: 35px;
 
 }
+
+.alert{
+  padding:10px !important;
+}
 /*******************************
 *********** Menu ***************
 *********************************/
 
+.dropdown-menu {
+  
+    top: none;
+    right: 40px;
+    left: none;
+}
 
 .navbar {
   background-color: #083342 !important;
@@ -100,12 +114,18 @@ h1, h2, h3 {
 .card {
   margin : 15px !important;
   text-align: center;
+  border: none;
 }
 
 
 /*******************************
 ********* user card ************
 *********************************/
+
+.event{
+  line-height: 20px;
+  padding: 10px;
+}
 .card-user{
   max-width:200px !important;
   float: left;
@@ -118,7 +138,7 @@ h1, h2, h3 {
 }
 .card .fa, .card a {
   text-decoration: none;
-  color: #35bda6;
+  color: #49d3be
 }
 
 .card-body {
@@ -138,7 +158,6 @@ text-align: center;
 
 }
 .avatar-card-user img {
-  height: 50px;
   width:auto;
 }
 
@@ -157,9 +176,15 @@ text-align: center;
   width: 100%;
 }
 
-.event-card-title{
-  background-color: #49d3be;
-  color: #fff;
+.event-date {
+  display: block; 
+  width:100%;
+  background-color: #cecece;
+  height:44px;
+  font-size:22px; 
+  line-height: 44px;
+  color : #586266;
+  
 }
 .event-card-title a{
   color : #083342;
@@ -201,17 +226,18 @@ text-align: center;
 *********************************/
 .form{
   padding: 20px !important;
-  margin: 10px auto !important;
-  width: 100%;
 }
 
+.day-choice li{
+  display: inline-block;
+}
 
 textarea, input{
-  max-width:100%;
-    min-width:100%;
-    resize:vertical;
+  /* max-width:100%; */
+    min-width:20px;
     box-sizing:border-box;
-    margin:auto;
+    height : auto;
+    max-height:40px;
 }
 
 .form .selectmultiple{
@@ -292,6 +318,32 @@ input[type="color"]:focus,
   box-shadow: 0 1px 1px rgba(0, 77, 64, 0.75) inset, 0 0 8px rgba(0, 77, 64, 0.6);
   outline: 0 none;
 }
+
+input[type="checkbox"], input[type="radio"],input[type="number"]  {
+  min-width: 30px;
+  max-width: 50px;
+}
+
+.btn-circle.btn-xl {
+  width: 70px;
+  height: 70px;
+  padding: 10px 16px;
+  border-radius: 35px;
+  font-size: 24px;
+  line-height: 1.33;
+}
+
+.btn-circle {
+  width: 30px;
+  height: 30px;
+  padding: 6px 0px;
+  border-radius: 15px;
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.42857;
+}
+
+
 /********************************
 ********** Carousel *************
 *********************************/
@@ -316,9 +368,10 @@ input[type="color"]:focus,
 
 .profil-header-bar {
   width: 100% !important;
-  background-color: #35bda6;
+  background-color: #49d3be;
   height: 100px;
   padding: 10px;
+  top:70px;
 }
 .profil-header-bar.event{
   background-color: #fee56e;
@@ -366,3 +419,4 @@ input[type="color"]:focus,
   width: 100% !important;
   height: 300px !important;
 }
+

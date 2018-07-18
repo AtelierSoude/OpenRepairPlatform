@@ -218,7 +218,7 @@ function add_event_to_dom(event, date_div, place=-1){
     span_event.classList.add("event");
     span_event.id= "event-" + event[0];
 
-    let date_string = "Le " + event[1].toLocaleDateString() + " ";
+    let date_string = "" + event[1].toLocaleDateString() + " ";
     let text_node = document.createTextNode(date_string);
     let br = document.createElement("br");
     br.id = "br-event-" + event[0];
@@ -375,6 +375,35 @@ document.getElementById("new-event").onclick = function(){
 
     date_ident++;
 };
+
+document.getElementById("id_organization").onchange = function(x){
+    let payload = {
+        organization_id: x.target.value
+    }
+    var formBody = payload_to_formBody(payload);
+    fetch('/api/getPlacesForOrganization/', {
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+        method: "POST",
+        body: formBody
+    })
+        .then(handleErrors)
+        .then(function(res){ return res.json(); })
+        .then(function(data){
+            var place_sel = document.getElementById("id_location");
+            places = data['places'];
+
+            // Clear locations selection
+            for (var i = 0; i < place_sel.length; i++)
+                place_sel.remove(i);
+
+            for ( key in places ) {
+                option = document.createElement( 'option' );
+                option.value = key;
+                option.text = places[key];
+                place_sel.add( option );
+            }
+        });
+}
 
 function to_seconds(string){
     tt=string.split(":");

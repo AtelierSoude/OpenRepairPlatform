@@ -281,14 +281,6 @@ class Event(models.Model):
     def __str__(self):
         return self.title
 
-    def increase_seats(self):
-        self.available_seats += 1
-        self.save()
-
-    def decrease_seats(self):
-        self.available_seats -= 1
-        self.save()
-
     def date_interval_format(self):
         locale.setlocale(locale.LC_ALL, 'fr_FR')
         starts_at_date = self.starts_at.date().strftime("%A %d %B %Y")

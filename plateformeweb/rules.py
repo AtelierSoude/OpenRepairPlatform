@@ -76,6 +76,7 @@ rules.add_perm('plateformeweb.delete_activity',
 # events
 rules.add_perm('plateformeweb.create_event',
                is_org_admin_for_object | rules.is_staff | rules.is_superuser)
+
 rules.add_perm('plateformeweb.edit_event',
                is_owner_for_object | is_org_admin_for_object | rules.is_staff \
                | rules.is_superuser)

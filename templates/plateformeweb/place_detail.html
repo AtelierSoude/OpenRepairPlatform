@@ -39,8 +39,10 @@ Editer
 {% endblock header_ban %}}
 
 {% block context %}
-    {% include "plateformeweb/place.html" %}
+
+    {% include "plateformeweb/place.html"%}
    <div class="m-3 pt-3 p-2 bg-white"> {% easy_map place.address 100 100 15 %} </div>
+
 {% endblock context %} 
 
 {% block about %}
@@ -60,7 +62,7 @@ Editer
     {{ block.super }}
     {% endwith %}
     {% for event in place.event_set.all %}
-    {% include "plateformeweb/event.html" with class="col-md-6 col-12" img_class="col-md-4" about_class="col-md-8 pb-2" %}
+    {% include "plateformeweb/event.html" with class="" img_class="col-md-2" about_class="col-md-10 pb-2" %}
     {% endfor %}
 
 {% endblock about2 %}

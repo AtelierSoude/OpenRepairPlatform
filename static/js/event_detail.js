@@ -31,7 +31,6 @@ function setPresent(id){
     let payload = {
         idents: id
     }
-    var view_model = this;
     var formBody = payload_to_formBody(payload);
     fetch('/api/setPresent/', {
         headers: {"Content-Type": "application/x-www-form-urlencoded"},
@@ -47,7 +46,6 @@ function setAbsent(id){
     let payload = {
         idents: id
     }
-    var view_model = this;
     var formBody = payload_to_formBody(payload);
     fetch('/api/setAbsent/', {
         headers: {"Content-Type": "application/x-www-form-urlencoded"},
@@ -58,25 +56,5 @@ function setAbsent(id){
         .then(function(res){ return res.json(); })
         .then(function(data){ updateCSS_to_absent(data, id)});
 }
-
-function payload_to_formBody(payload){
-    var formBody = [];
-    for (var property in payload) {
-        var encodedKey = encodeURIComponent(property);
-        var encodedValue = encodeURIComponent(payload[property]);
-        formBody.push(encodedKey + "=" + encodedValue);
-    }
-    formBody = formBody.join("&");
-    return formBody;
-}
-
-function handleErrors(response) {
-    if (!response.ok) {
-        throw Error(response.statusText);
-    }
-    return response;
-}
-
-
 
 refresh_buttons();

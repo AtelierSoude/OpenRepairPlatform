@@ -465,13 +465,11 @@ class EventCreateView(PermissionRequiredMixin, CreateView):
 
         limited_choices = [["", '---------']]
         form.fields['location'].choices = limited_choices
-        user_orgs = OrganizationPerson.objects.filter(user=self.request.user)
-        # user_orgs = user_orgs.filter(role__gte=OrganizationPerson.ADMIN)
+        user_orgs = OrganizationPerson.objects.filter(user=self.request.user).filter(role__gte=OrganizationPerson.ADMIN)
 
         for result in user_orgs:
-            if result.role >=OrganizationPerson.ADMIN:
-                organization = result.organization
-                limited_choices.append([organization.pk, organization.name])
+            organization = result.organization
+            limited_choices.append([organization.pk, organization.name])
 
         form.fields['organization'].choices = limited_choices
         # form.fields['organization'].queryset = user_orgs

@@ -19,7 +19,7 @@ from rules.contrib.views import PermissionRequiredMixin
 from django_markdown.fields import MarkdownFormField
 from django_markdown.widgets import MarkdownWidget
 
-from fm.views import AjaxCreateView, UpdateView
+from fm.views import AjaxUpdateView, AjaxCreateView, UpdateView
 
 import datetime
 from django import forms
@@ -518,10 +518,3 @@ class MassBookingCreateView(CreateView):
 
     def get_success_url(self):
         return render(request, 'plateformeweb/event_list.html', message="c'est tout bon")
-
-class MassEventEditView(PermissionRequiredMixin, EventFormView):
-    permission_required = 'plateformeweb.edit_event'
-    fields = ["title", "type", "starts_at", "ends_at", "available_seats",
-              "attendees", "presents", "organizers", "location", "publish_at", "published",
-              "organization", "condition"]
-    queryset = Event.objects

@@ -4,7 +4,7 @@ from django.urls import reverse
 from users.models import CustomUser
 from time import strftime
 import locale
-from plateformeweb.models import Event, Organization, OrganizationPerson
+from plateformeweb.models import Event, Organization, OrganizationPerson, Place
 from urllib.parse import parse_qs
 from django.utils import timezone
 
@@ -62,6 +62,20 @@ def get_organizations(request):
                 volunteer_of[person.organization.pk] = person.organization.name
 
         return JsonResponse({'status': "OK", "organizations": volunteer_of})
+
+def get_places_for_organization(request):
+    if request.method != 'POST':
+        # TODO change this
+        return HttpResponse("Circulez, il n'y a rien à voir")
+    else:
+        places = {}
+        organization_pk = request.POST['organization_id']
+        organization = Organization.objects.get(pk=organization_pk)
+        places_qs = Place.objects.filter(organization=organization)
+        for place in places_qs:
+            places[place.pk] = str(place)
+
+        return JsonResponse({'status': "OK", "places": places})
 
 def get_dates(request):
     if request.method != 'POST':
@@ -171,3 +185,17 @@ def list_events(request):
             }]
 
         return JsonResponse({'status': "OK", "dates": events, "organizations": organizations, "places": places})
+
+def book_event(request):
+    if request.method != 'POST':
+        # TODO change this
+        return HttpResponse("Circulez, il n'y a rien à voir")
+    else:
+        person = CustomUser.objects.get(email=request.user)
+        # organizations = OrganizationPerson.objects.filter(user=request.user)
+        # volunteer_of = {}
+        # for person in organizations:
+            # if person.role >= OrganizationPerson.VOLUNTEER:
+                # volunteer_of[person.organization.pk] = person.organization.name
+
+        return JsonResponse({'status': "OK"})

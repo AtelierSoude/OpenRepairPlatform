@@ -130,7 +130,7 @@ class PlaceCreateView(PermissionRequiredMixin, PlaceFormView, CreateView):
     def validate_image(self, image):
         # Asserts image is smaller than 5MB
         if image:
-            if image._size > 5 * 1024 * 1024:
+            if image.size > 5 * 1024 * 1024:
                 raise ValidationError("L'image est trop lourde (> 5Mo)")
             return image
         else:
@@ -152,7 +152,7 @@ class PlaceEditView(PermissionRequiredMixin, PlaceFormView, AjaxUpdateView):
     def validate_image(self, image):
         # Asserts image is smaller than 5MB
         if image:
-            if image._size > 5 * 1024 * 1024:
+            if image.size > 5 * 1024 * 1024:
                 raise ValidationError("L'image est trop lourde (> 5Mo)")
             return image
         else:
@@ -459,7 +459,7 @@ class MassEventCreateView(PermissionRequiredMixin, EventFormView, CreateView):
     template_name = 'plateformeweb/mass_event_form.html'
     model = Event
     fields = ["type",  "available_seats",
-              "location", "organization",
+              "organization", "location",
               "starts_at", "ends_at", "publish_at"]
 
     def date_substract(self, starts_at, countdown):
@@ -522,14 +522,18 @@ class MassEventCreateView(PermissionRequiredMixin, EventFormView, CreateView):
         for field in ("starts_at", "ends_at", "publish_at"):
             form.fields[field].widget = forms.HiddenInput()
 
-        limited_choices = []
-        available_organizations = OrganizationPerson.objects.filter(user=self.request.user)
-        for result in available_organizations:
+        limited_choices = [["", '---------']]
+        form.fields['location'].choices = limited_choices
+        user_orgs = OrganizationPerson.objects.filter(user=self.request.user)
+        # user_orgs = user_orgs.filter(role__gte=OrganizationPerson.ADMIN)
+
+        for result in user_orgs:
             if result.role >=OrganizationPerson.ADMIN:
                 organization = result.organization
                 limited_choices.append([organization.pk, organization.name])
 
         form.fields['organization'].choices = limited_choices
+        # form.fields['organization'].queryset = user_orgs
 
         return form
 

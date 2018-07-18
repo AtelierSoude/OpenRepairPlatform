@@ -14,7 +14,7 @@
 {% block title %} {{ block.super }} Publication d'évènements {% endblock title %}
 
 {% block form %}
-   
+
 
 
 <div class="row">
@@ -33,29 +33,29 @@
         <!-- end tabs -->
 
         <div  class="pure-form form row bg-white pt-3 p-2 tab-content"  id="myTabContent">
-     
+
         <!-- event specifications essentials -->
             <div class="tab-pane fade show active" id="nav-settings" role="tabpanel" aria-labelledby="nav-settings-tab">
                 <form class="pure-form" action="" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ form|crispy }}
                 <input type="hidden" name="dates" id="submit-data">
-        
+
                 Starts at:
                 <input type="time" id="start-time" value="14:00">
                 Ends at:
                 <input type="time" id="end-time" value="14:00">
-        
-                Publish 
-                <input type="number" id="publish-countdown" value="7" min="1" max="31" style="width:4em;"></input> 
+
+                Publish
+                <input type="number" id="publish-countdown" value="7" min="1" max="31" style="width:4em;"></input>
                 days beforehand
                 </form>
             </div>
         <!-- end event specifications essentials -->
 
-        
+
     <!-- exclude -->
-        <div class="tab-pane fade" id="nav-unique" role="tabpanel" aria-labelledby="unique-tab">   
+        <div class="tab-pane fade" id="nav-unique" role="tabpanel" aria-labelledby="unique-tab">
             Rajouter une date:
             <br>
             <input id="new-event-date" type="date">
@@ -81,14 +81,14 @@
                 <li><input type="checkbox" name="weekday" value="6"> Di </input> <br></li>
             </ul>
             <br>
-            Jusqu'au (inclus) 
+            Jusqu'au (inclus)
             <input id="up_until" type="date">
             <br> <br>
 
                 <input type="radio" name="repeat" value="monthly">Tous les mois le
-                </input> 
+                </input>
             <br>
-            
+
             <select id="nth" class="select form-control">
                 <option value="+1"> Premier </option>
                 <option value="+2"> Second </option>
@@ -108,10 +108,10 @@
                 <option value="SA"> Samedi </option>
                 <option value="SU"> Dimanche </option>
             </select>
-        
+
             <span>
-                pour 
-                <input type="number" id="event-count-monthly" value="1" min="1" max="24" style="width:4em;"></input> 
+                pour
+                <input type="number" id="event-count-monthly" value="1" min="1" max="24" style="width:4em;"></input>
                 événements
             </span>
             <br> <br>
@@ -133,8 +133,8 @@
                 <option value="12">Décembre</option>
             </select>
             <span>
-                pour 
-                <input type="number" id="event-count-yearly" value="1" min="1" max="31" style="width:4em;"></input> 
+                pour
+                <input type="number" id="event-count-yearly" value="1" min="1" max="31" style="width:4em;"></input>
                 événements
             </span>
             <br>
@@ -148,8 +148,8 @@
    <!-- end recurrence sheme -->
 
      <!-- exclude -->
-     <div class="tab-pane fade" id="nav-exclude" role="tabpanel" aria-labelledby="exclude-tab">   
-            Periodes à exclure: 
+     <div class="tab-pane fade" id="nav-exclude" role="tabpanel" aria-labelledby="exclude-tab">
+            Periodes à exclure:
             <span class="intervals">
                 <span class="interval" id="interval-0">
                     du <input class="begin" type="date">
@@ -165,7 +165,7 @@
 
         </div>
     </section>
-  
+
     <!--- date generator -->
     <section class="col-md-8 p-2 bg-white shadow">
 
@@ -184,8 +184,8 @@
     <!-- end date generator-->
 </div>
 
+    <script src="{% static 'js/helper_functions.js' %}"> </script>
     <script src="{% static 'js/rrule.js' %}"> </script>
-    <script src="{% static 'js/recurrence_common.js' %}"> </script>
     <script src="{% static 'js/recurrence_create.js' %}"> </script>
-  
+
 {% endblock form %}

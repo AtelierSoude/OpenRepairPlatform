@@ -26,7 +26,7 @@ class TestAllViews(TestCase):
             picture = 'static/img/event-card.jpg')
         self.place = Place.objects.create(
             name = 'croixluizet',
-            # type = self.placetype,
+            type = self.placetype,
             slug = 'croixluizet',
             organization = self.organization,
             address = '',
@@ -120,7 +120,7 @@ class TestAllViews(TestCase):
             '/admin/plateformeweb/event/',
             '/admin/plateformeweb/condition/',
             '/admin/plateformeweb/activity/',
-            # '/admin/plateformeweb/placetype/',
+            '/admin/plateformeweb/placetype/',
             '/admin/plateformeweb/place/',
             '/admin/plateformeweb/organization/',
             '/admin/plateformeweb/organizationperson/',

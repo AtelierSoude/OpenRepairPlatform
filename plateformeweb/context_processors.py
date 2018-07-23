@@ -55,3 +55,10 @@ def last_events(request):
 def user_in_organization(request):
     users = OrganizationPerson.objects.all()
     return {'user_in_organization' : users}
+
+def admin_of_organizations(request):
+    if(request.user.is_authenticated):
+        orgs = OrganizationPerson.objects.filter(user=request.user, role__gte=OrganizationPerson.ADMIN)
+        if orgs:
+            return {'admin_of_organizations': True }
+    return {'admin_of_organizations': False }

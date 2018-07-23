@@ -119,7 +119,7 @@ TEMPLATES = [
                 'plateformeweb.context_processors.user_data',
                 'plateformeweb.context_processors.last_events',
                 'plateformeweb.context_processors.user_in_organization',
-
+                'plateformeweb.context_processors.admin_of_organizations',
             ],
         },
     },

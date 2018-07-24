@@ -4,6 +4,7 @@ from . import views
 
 
 urlpatterns = [
+    url(r'^deleteEvent/$', views.delete_event, name='delete_event'),
     url(r'^setPresent/$', views.set_present, name='set_present'),
     url(r'^setAbsent/$', views.set_absent, name='set_absent'),
     url(r'^getOrganizations/$', views.get_organizations, name='get_organizations'),

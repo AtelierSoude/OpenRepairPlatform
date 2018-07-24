@@ -116,22 +116,6 @@ def get_dates(request):
 
         return JsonResponse({'status': "OK", "dates": events})
 
-def book(request):
-    if request.method != 'POST':
-        # TODO change this
-        return HttpResponse("Circulez, il n'y a rien à voir")
-    else:
-        person = CustomUser.objects.get(email=request.user)
-        print("person")
-        print(person)
-        serial = URLSafeSerializer('some_secret_key',
-                                   salt='book')
-
-        print(request.POST)
-        # event = serial.loads(request.POST['event_id']);
-        # print("event")
-        # print(event)
-
 def list_events(request):
     if request.method != 'GET':
         # TODO change this

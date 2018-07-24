@@ -307,45 +307,6 @@ class EventEditView(PermissionRequiredMixin, AjaxUpdateView):
 
 
 class BookingFormView():
-    model = Event
-    fields = []
-
-    def get_form(self, form_class=None, **kwargs):
-        if form_class is None:
-            form_class = self.get_form_class()
-
-        user_id = self.request.user.id
-        event_id = self.request.resolver_match.kwargs['pk']
-        user = CustomUser.objects.get(pk=user_id)
-        event = Event.objects.get(pk=event_id)
-        organization = event.organization
-        attendees = event.attendees.all()
-        available_seats = event.available_seats
-        form = super().get_form(form_class)
-        print(form_class)
-        print(event)
-        print(attendees)
-
-        # if form.is_valid():
-        #     if user in attendees:
-        #         print("if user in attendees")
-        #         available_seats += 1
-        #         event.attendees.remove(user)
-        #     else:
-        #         print("else")
-        #         if event.available_seats >= 0:
-        #             print("av_seats > 0")
-        #             available_seats -= 1
-        #             event.attendees.add(user)
-        #             self.send_booking_mail(user, event)
-        #         else:
-        #             raise ValidationError("Trop de gens")
-
-        #     event.available_seats = available_seats
-        #     print(event.available_seats)
-        #     event.save()
-        return form
-
     def send_booking_mail(self, user, event):
         user_id = user.id
         event_id = event.id
@@ -381,10 +342,6 @@ class BookingFormView():
             message=msg_plain,
             html_message=msg_html
         )
-
-    def get_success_url(self):
-        return render(request, 'plateformeweb/event_list.html', message="c'est tout bon")
-
 
 class BookingEditView(BookingFormView, AjaxUpdateView):
     template_name = 'plateformeweb/booking_form.html'

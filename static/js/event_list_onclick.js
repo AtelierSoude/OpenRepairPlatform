@@ -13,6 +13,19 @@ function create_message(event, keyword){
     return message;
 }
 
+function book_or_cancel(headers, formData){
+    fetch('/api/book/', {
+        headers: headers,
+        method: "POST",
+        body: formData,
+        credentials: 'include',
+    })
+        .then(handleErrors)
+        .then(function(res){ return res.json(); })
+        .then(function(data){
+        });
+}
+
 function event_list_onclick(x){
     var purpose = x.attributes.purpose.value
     var event = app.event_list.filter(event => (event.pk == x.id))[0];
@@ -49,23 +62,11 @@ function event_list_onclick(x){
         break;
     case 'book':
         message = create_message(event, "réserver pour");
-        callback = function(event){
-            fetch('/api/book/', {
-                headers: headers,
-                method: "POST",
-                body: formData,
-                credentials: 'include',
-            })
-                .then(handleErrors)
-                .then(function(res){ return res.json(); })
-                .then(function(data){
-                });
-        }
+        callback = () => book_or_cancel(headers, formData);
         break;
     case 'cancel':
         message = create_message(event, "annuler votre réservation pour");
-        callback = function(event){
-        }
+        callback = () => book_or_cancel(headers, formData);
         break;
     default:
         message = "Switch error";

@@ -63,6 +63,45 @@ def get_organizations(request):
 
         return JsonResponse({'status': "OK", "organizations": volunteer_of})
 
+def get_all_places(request):
+    if request.method != 'GET':
+        # TODO change this
+        return HttpResponse("Circulez, il n'y a rien à voir")
+    else:
+        places = {}
+        places_qs = Place.objects.all()
+        for place in places_qs:
+            place_slug = place.slug
+            place_pk = place.pk
+            organization = place.organization
+            organization_detail_url = reverse('organization_detail',
+                                              args=[organization.pk,
+                                                    organization.slug])
+
+            place_detail_url = reverse('place_detail',
+                                       args=[place_pk,
+                                             place_slug])
+
+            longitude = place.address.longitude
+            latitude = place.address.latitude
+
+            print(place.address.__dict__)
+            places[place_pk] = {
+                'pk': place_pk,
+                'name': place.name,
+                'place_detail_url': place_detail_url,
+                "address": place.address.formatted,
+                'type': place.type.name,
+                'organization': place.organization.name,
+                'organization_url': organization_detail_url,
+                'latitude': latitude,
+                'longitude': longitude,
+                'picture': place.picture.url,
+                'description': place.description[:250],
+                }
+
+        return JsonResponse({'status': "OK", "places": places})
+
 def get_places_for_organization(request):
     if request.method != 'POST':
         # TODO change this

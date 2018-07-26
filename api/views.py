@@ -199,3 +199,31 @@ def book_event(request):
                 # volunteer_of[person.organization.pk] = person.organization.name
 
         return JsonResponse({'status': "OK"})
+
+def list_users(request, organization_pk, event_pk):
+    if request.method != 'GET':
+        # TODO change this
+        return HttpResponse("Circulez, il n'y a rien à voir")
+    else:
+        user = CustomUser.objects.get(email=request.user)
+        organization = Organization.objects.get(pk=organization_pk)
+        user_is_admin = OrganizationPerson.objects.get(user=user, organization=organization, role__gte=OrganizationPerson.ADMIN)
+        if not user_is_admin:
+            return JsonResponse({'status': -1})
+
+        users = OrganizationPerson.objects.filter(organization=organization)
+        event = Event.objects.get(pk=event_pk)
+        every_attendee = event.attendees.all() | event.presents.all() | event.organizers.all()
+        print(every_attendee)
+        users_dict = []
+        for user in users:
+            if user.user not in every_attendee:
+                new_user = {
+                    'pk': user.user.pk,
+                    'name': user.user.get_full_name(),
+                    'email': user.user.email,
+                    'role': user.role,
+                }
+                users_dict += [new_user]
+        return JsonResponse({'status': "OK",
+                             'users': users_dict})

@@ -214,7 +214,6 @@ def list_users(request, organization_pk, event_pk):
         users = OrganizationPerson.objects.filter(organization=organization)
         event = Event.objects.get(pk=event_pk)
         every_attendee = event.attendees.all() | event.presents.all() | event.organizers.all()
-        print(every_attendee)
         users_dict = []
         for user in users:
             if user.user not in every_attendee:
@@ -227,3 +226,27 @@ def list_users(request, organization_pk, event_pk):
                 users_dict += [new_user]
         return JsonResponse({'status': "OK",
                              'users': users_dict})
+def add_users(request):
+    if request.method != 'POST':
+        # TODO change this
+        return HttpResponse("Circulez, il n'y a rien à voir")
+    else:
+        request_body = request.body.decode("utf-8")
+        post_data = parse_qs(request_body)
+        event_pk = post_data['event_pk'][0]
+        user_list = post_data['user_list'][0].split(',')
+        event = Event.objects.get(pk=event_pk)
+        every_attendee = event.attendees.all() | event.presents.all() | event.organizers.all()
+
+        for user_pk in user_list:
+            user = CustomUser.objects.get(pk=user_pk)
+            now = timezone.now()
+            if event.starts_at <= now:
+                event.presents.add(user)
+            else:
+                event.attendees.add(user)
+            if user not in every_attendee:
+                event.available_seats -= 1
+
+        event.save()
+        return JsonResponse({'status': 'OK'})

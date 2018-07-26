@@ -85,7 +85,6 @@ def get_all_places(request):
             longitude = place.address.longitude
             latitude = place.address.latitude
 
-            print(place.address.__dict__)
             places[place_pk] = {
                 'pk': place_pk,
                 'name': place.name,

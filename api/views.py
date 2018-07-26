@@ -8,6 +8,24 @@ from plateformeweb.models import Event, Organization, OrganizationPerson, Place
 from urllib.parse import parse_qs
 from django.utils import timezone
 
+def delete_event(request):
+    if request.method != 'POST':
+        # TODO change this
+        return HttpResponse("Circulez, il n'y a rien à voir")
+    else:
+        request_body = request.body.decode("utf-8")
+        post_data = parse_qs(request_body)
+
+        event_id = post_data['event_id'][0]
+        event = Event.objects.get(pk=event_id)
+        person = CustomUser.objects.get(email=request.user)
+        if person in event.organizers.all():
+            event.delete()
+            return JsonResponse({'status': "OK"})
+
+        return JsonResponse({'status': -1})
+
+
 
 def set_present(request):
     if request.method != 'POST':
@@ -135,22 +153,6 @@ def get_dates(request):
                                 'timestamp': event.starts_at.timestamp()}
 
         return JsonResponse({'status': "OK", "dates": events})
-
-def book(request):
-    if request.method != 'POST':
-        # TODO change this
-        return HttpResponse("Circulez, il n'y a rien à voir")
-    else:
-        person = CustomUser.objects.get(email=request.user)
-        print("person")
-        print(person)
-        serial = URLSafeSerializer('some_secret_key',
-                                   salt='book')
-
-        print(request.POST)
-        # event = serial.loads(request.POST['event_id']);
-        # print("event")
-        # print(event)
 
 def list_events(request):
     if request.method != 'GET':

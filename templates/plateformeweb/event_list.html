@@ -26,6 +26,8 @@
 
 {% block list %}
 
+<script src="{% static 'js/make_modal.js' %}"> </script>
+
 <section id="event-list" class="container-fluid row">
 
     <select class="col-lg-2 col-sm-2" v-model="selected_place_pk">
@@ -131,4 +133,5 @@
       },
   });
 </script>
+<script src ="{% static 'js/event_list_onclick.js' %}"> </script>
 {% endblock list %}

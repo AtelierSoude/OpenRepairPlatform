@@ -195,6 +195,16 @@ class ActivityFormView():
             form_class = self.get_form_class()
         form = super().get_form(form_class)
         form.fields['description'] = CharField(widget=MarkdownWidget())
+
+        limited_choices = [["", '---------']]
+        user_orgs = OrganizationPerson.objects.filter(user=self.request.user,
+                                                      role__gte=OrganizationPerson.ADMIN)
+
+        for result in user_orgs:
+            organization = result.organization
+            limited_choices.append([organization.pk, organization.name])
+
+        form.fields['organization'].choices = limited_choices
         return form
 
     def get_success_url(self):
@@ -397,7 +407,7 @@ class BookingEditView(BookingFormView, AjaxUpdateView):
 
 class EventCreateView(PermissionRequiredMixin, CreateView):
     permission_required = 'plateformeweb.create_event'
-    template_name = 'plateformeweb/mass_event_form.html'
+    template_name = 'plateformeweb/event_form.html'
     model = Event
     fields = ["type",  "available_seats",
               "organization", "location",
@@ -465,7 +475,8 @@ class EventCreateView(PermissionRequiredMixin, CreateView):
 
         limited_choices = [["", '---------']]
         form.fields['location'].choices = limited_choices
-        user_orgs = OrganizationPerson.objects.filter(user=self.request.user).filter(role__gte=OrganizationPerson.ADMIN)
+        user_orgs = OrganizationPerson.objects.filter(user=self.request.user,
+                                                      role__gte=OrganizationPerson.ADMIN)
 
         for result in user_orgs:
             organization = result.organization

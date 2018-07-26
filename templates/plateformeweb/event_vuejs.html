@@ -59,27 +59,30 @@
 
                 <!-- book -->
                 {% if not request.user.is_authenticated %}
+                        <button :id="event.pk" purpose="book" class="card-link mr-3 btn btn-primary float-right" onclick="event_list_onclick(this)">
+                        {% fontawesome_icon 'ticket' %}
+                        Réserver
+                    </button>
                 {% else %}
-                        <a v-if="event.user_in_organizers" class="card-link mr-3 fm-update btn btn-danger float-right btn-circle":href="event.edit_url"
+                        <span v-if="event.user_in_organizers">
+                        <a class="card-link mr-3 fm-update btn btn-danger float-right btn-circle":href="event.edit_url"
                         data-fm-head="Editer" data-fm-callback="reload">
                         {% fontawesome_icon 'edit' %}</a>
 
-                        <a href="#" class="card-link mr-3 fm-update btn btn-danger float-right btn-circle">
+                        <button :id="event.pk" purpose="trash" class="card-link mr-3 btn btn-danger float-right btn-circle" onclick="event_list_onclick(this)">
                         {% fontawesome_icon 'trash' large=True %}
-                        </a>
+                        </button>
+                        </span>
 
-                        <a v-else-if="user_in_attendees" class="card-link mr-3 fm-update btn btn-danger float-right" :href="event.book_url"
-                        data-fm-head="Annuler" data-fm-callback="reload">
+                        <button v-else-if="event.user_in_attendees" :id="event.pk" purpose="cancel" class="card-link mr-3 btn btn-danger float-right" onclick="event_list_onclick(this)">
                         {% fontawesome_icon 'delete' %}
                         Annuler
-                    </a>
-
-                        <span v-else-if="user_in_presents"></span>
-                        <a v-else class="card-link mr-3 fm-update btn btn-primary float-right" :href="event.book_url"
-                        data-fm-head="Confirmer" data-fm-callback="reload">
+                    </button>
+                        <button v-else :id="event.pk" purpose="book" class="card-link mr-3 btn btn-primary float-right" onclick="event_list_onclick(this)">
                         {% fontawesome_icon 'ticket' %}
                         Réserver
-                    </a>
+                    </button>
+
                 {% endif %}
 
             <div class="text-left row">

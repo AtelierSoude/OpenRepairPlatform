@@ -148,6 +148,16 @@
               <span aria-hidden="true">&times;</span>
             </button>
     </div>
+     {% if request.user in event.attendees.all %}
+
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+          Cependant nous confirmons votre intention de participer à cet événement.
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+        </div>
+     {% endif %}
+    {% endif %}
     {% endif %}
 
 {% endblock about3 %}

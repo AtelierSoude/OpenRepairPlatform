@@ -126,12 +126,13 @@ h1, h2, h3 {
   line-height: 20px;
   padding: 10px;
 }
-.card-user{
-  max-width:200px !important;
-  float: left;
+.card-user {
+  font-size: 12px;
 }
+
 .card ul li {
   list-style-type: none;
+  text-align: left;
 }
 .card-user img{
   border-radius: 90%;

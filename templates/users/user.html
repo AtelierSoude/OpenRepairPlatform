@@ -8,7 +8,7 @@
 {% block list %}
 
 <!-- a user card -->
-<div class="card-user card">
+<div class="card-user card {{float}}" >
    <div class="{{class}}" id="square-{{user_id}}">
         <div class="avatar-card-user {{img_class}} p-2">
             {% avatar user %}
@@ -23,25 +23,18 @@
             </h5>
 
                 <p class="user-status">
-                {% if user.is_staff %}
-                    Volonteer
-                {% else %}
-                    Member
-                {% endif %}
+                Status 
                 </p>
-           <!--     <ul>
-                    <li>{% fontawesome_icon 'clock-o' %} {{ user.date_joined}}</li>
-                    <li>{% fontawesome_icon 'envelope-o' %}{{ user.email }}</li>
+
+                {% if request.resolver_match.url_name == "user_detail" %}
+
+                <ul class="list-group">
+                    <li class="list-group-item">{% fontawesome_icon 'clock-o' %} Membre depuis le {{ user.date_joined}}</li>
+                    <li class="list-group-item">{% fontawesome_icon 'envelope-o' %} {{ user.email }}</li>
                 </ul>
-                <div class="">
-                {% if request.user.is_authenticated and request.user.is_staff %}
-                <a href="#" class="card-link"><i class="fa fa-trash 2-xs pt-1"></i>supprimer</a>
 
                 {% endif %}
 
-                <a class="card-link" href="{{ user.get_absolute_url }}">
-                     &nbsp<i class="fa fa-info-circle  2-xs pt-1"></i>Info</a>
-                </div> -->
         </div>
         {% if orga %}
         {% elif absentee and request.user in event.organizers.all %}

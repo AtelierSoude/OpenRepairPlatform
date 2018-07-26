@@ -134,7 +134,7 @@
     {{ block.super }}
     {% endwith %}
         {% for user in event.organizers.all %}
-        {% include "users/user.html" with class="row" orga=True img_class="col-4" content_class="col-8" %}
+        {% include "users/user.html" with float="float-left" class="row" orga=True img_class="col-4" content_class="col-8" %}
         {% endfor %}
 
 {% endblock about1 %}
@@ -146,7 +146,7 @@
     {% endwith %}
 
     {% for user in volunteers %}
-            {% include "users/user.html" with class="row" user_id=user.id img_class="col-12" content_class="col-12 text-center" absentee=True userid=user.id|serialize_id:event.id %}
+            {% include "users/user.html" with float="float-left" class="row" user_id=user.id img_class="col-12" content_class="col-12 text-center" absentee=True userid=user.id|serialize_id:event.id %}
     {% endfor %}
 
 {% endblock about2 %}
@@ -166,12 +166,12 @@
     </div>
         {% for user in event.presents.all %}
             {% if user not in admin_or_volunteer %}
-                {% include "users/user.html" with class="row border border-success checked" user_id=user.id img_class="col-12" content_class="col-12 text-center" absentee=False userid=user.id|serialize_id:event.id %}
+                {% include "users/user.html" with float="float-left" class="row border border-success checked" user_id=user.id img_class="col-12" content_class="col-12 text-center" absentee=False userid=user.id|serialize_id:event.id %}
             {% endif %}
         {% endfor %}
         {% for user in event.attendees.all %}
             {% if user not in admin_or_volunteer %}
-                {% include "users/user.html" with class="row" user_id=user.id img_class="col-12" content_class="col-12 text-center" absentee=True userid=user.id|serialize_id:event.id %}
+                {% include "users/user.html" with float="float-left" class="row" user_id=user.id img_class="col-12" content_class="col-12 text-center" absentee=True userid=user.id|serialize_id:event.id %}
             {% endif %}
         {% endfor %}
     {% else %}

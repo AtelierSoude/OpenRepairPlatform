@@ -158,12 +158,137 @@
         </div>
      {% endif %}
     {% endif %}
+
+    {% if request.user.is_authenticated and request.user in event.organizers.all %}
+    <div id="add-user">
+      Ajouter parmi
+    <select class="col-lg-4 col-sm-4" v-model="selected_member_type">
+        <option value=0>Tous internes à l'organisation</option>
+        <option value=30>Administrateurs</option>
+        <option value=20>Membres actifis</option>
+        <option value=10>Adhérents</option>
+    </select>
+
+    <input type="text" v-model="fuzzy_input" placeholder="Nom, Prénom, Email...">
+
+    <br>
+    <br>
+    <select class="col-lg-6 col-sm-4" :size="fuzzy_list.length" v-model="selected_users" multiple>
+      <option v-for="result in fuzzy_list" :value="result.pk">
+        [[result.name]] -
+        [[result.email]] -
+        [[text_role(result.role)]]
+      </option>
+    </select>
+
+    <input type="button" v-on:click="add_users" value="Valider les utilisateurs"></input>
+    </div>
     {% endif %}
+
 
 {% endblock about3 %}
 
 <script src="{% static "js/helper_functions.js" %}"></script>
 <script src="{% static "js/event_detail.js" %}"></script>
+
+{% if request.user.is_authenticated and request.user in event.organizers.all %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.0.4/fuse.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.16/vue.js"></script>
+<script>
+  var organization_pk = {{event.organization.pk}};
+  var event_pk = {{event.pk}};
+  var options = {
+      shouldSort: true,
+      findAllMatches: true,
+      threshold: 0.6,
+      location: 0,
+      distance: 100,
+      maxPatternLength: 32,
+      minMatchCharLength: 3,
+      keys: [
+          "name",
+          "email"
+      ]
+  };
+
+  const user_add = new Vue({
+      delimiters: ['[[', ']]'],
+      el: "#add-user",
+      data() {
+          return {
+              fuzzy_input: "",
+              selected_member_type: 0,
+              text_roles: {
+                  0: "Visiteur",
+                  10: "Adhérent",
+                  20: "Membre Actif",
+                  30: "Administrateur",
+              },
+              all_users_in_org: [],
+              selected_users: [],
+          }
+      },
+      created() {
+          let csrftoken = getCookie('csrftoken');
+          let headers = new Headers();
+
+          headers.append('X-CSRFToken', csrftoken);
+          fetch("/api/getUsers/" + organization_pk + "/" + event_pk, {
+              headers: headers,
+              method: "GET",
+              credentials: 'include',
+          })
+              .then(response => response.json())
+              .then(json => {
+                  this.all_users_in_org = json.users;
+              });
+      },
+      methods: {
+          text_role: function(role_int){
+              return this.text_roles[role_int];
+          },
+          add_users: function(event){
+              let csrftoken = getCookie('csrftoken');
+              let headers = new Headers();
+              let payload = {
+                  event_pk: event_pk,
+                  user_list: this.selected_users,
+              };
+
+              let formData = payload_to_formBody(payload);
+
+              headers.append('X-CSRFToken', csrftoken);
+              headers.append('Content-Type',
+                             'application/x-ww-form-urlencoded; charset=UTF-8');
+
+              fetch("/api/addUsers/", {
+                  headers: headers,
+                  method: "POST",
+                  credentials: 'include',
+                  body: formData,
+              })
+                  .then(response => response.json())
+                  .then(json => {
+                      console.log(json);
+                  });
+          }
+      },
+      computed: {
+          users_matching_role: function(){
+              return this.all_users_in_org.filter(
+                  (user) => user.role >=this.selected_member_type);
+          },
+          fuzzy_list: function(){
+              var fuse = new Fuse(this.users_matching_role, options);
+              var result = fuse.search(this.fuzzy_input);
+
+              return result;
+          },
+      }
+  });
+
+</script>
+{% endif %}
 {% endblock about %}
 
 </section>

@@ -6,18 +6,18 @@
 {% load django_bootstrap_breadcrumbs %}
 
 {% block breadcrumbs %}
-{% with type="place" view="place_list" %}
+{% with type="lieux" view="place_list" %}
     {{ block.super }}
 {% endwith %}
 {% endblock %}
 
 
-{% block title %} {{ block.super }} Places {% endblock title %}
+{% block title %} {{ block.super }} Lieux {% endblock title %}
 
 
 {% block statistics %}
 
-  {% with first_value=place_list.all.count first_label='places' second_value='' second_label='events' third_value='' third_label='?' %}
+  {% with first_value=place_list.all.count first_label='lieux' second_value='' second_label='évènements' %}
   {{block.super}}
   {% endwith %}
 
@@ -25,6 +25,8 @@
 
 
 {% block list %}
+
+ <link rel="stylesheet" href="{% static "css/leaflet.awesome-markers.css" %}">
 
  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.3/dist/leaflet.css"
    integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ=="
@@ -34,21 +36,28 @@
    integrity="sha512-tAGcCfR4Sc5ZP5ZoVz0quoZDYX5aCtEm/eu1KhSLj2c9eFrylXZknQYmxUssFaVJKvvc0dJQixhGjG2yXWiV9Q=="
    crossorigin=""></script>
 
+   <script src="{% static "js/leaflet.awesome-markers.js" %}"></script>
+
 
 
 <section class="">
-  <div style="height:800px; width:800px" id="place_map"></div>
+  <div style="height:800px; width:100%" id="place_map"></div>
   <script>
     function popup_message(place){
-        message = "<img src=\"" + place.picture + "\" width=\"60px\" style=\"float: left\"></img>"
+        message = "<img src=\"" + place.picture + "\" class=\"pr-2 w-50 float-left\" style=\"height:auto\"></img>"
         message += "<a href=\"" + place.place_detail_url + "\">" + place.name + "</a>"
-        message += "<br> pour <a href=\"" + place.organization_url +"\">" + place.organization + "</a>"
-        message += "<br> Type: " + place.type
-        message += "<br> Description: " + place.description
-        message += "<br> Adresse: " + place.address
+        message += "<br> " +  place.type
+        message += "<br> <a href=\"" + place.organization_url +"\">" + place.organization + "</a>"
+        message += "<br><br><br>" + place.address
         return message;
     }
 
+    var redMarker = L.AwesomeMarkers.icon({
+    prefix: 'fa',
+    icon: 'home',
+    markerColor: 'darkblue'
+    });
+      
     var places;
     var place_map = L.map('place_map').setView([45.735, 4.9], 12);
 
@@ -67,7 +76,7 @@
                 latitude = place.latitude;
                 longitude = place.longitude;
                 marker = L.marker([latitude,
-                                        longitude]).addTo(place_map);
+                                        longitude], {icon: redMarker}).addTo(place_map);
 
                 marker.bindPopup(popup_message(place));
             });

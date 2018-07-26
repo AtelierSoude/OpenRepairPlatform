@@ -420,3 +420,8 @@ input[type="checkbox"], input[type="radio"],input[type="number"]  {
   height: 300px !important;
 }
 
+/* leaflet reset style */
+
+.leaflet-container a {
+  color: #49d3be !important;
+}

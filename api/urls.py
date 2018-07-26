@@ -10,6 +10,8 @@ urlpatterns = [
     url(r'^getPlacesForOrganization/$', views.get_places_for_organization, name='get_places_for_organization'),
     url(r'^getPlaces/$', views.get_all_places, name='get_all_places'),
     url(r'^getDates/$', views.get_dates, name='get_dates'),
+    url(r'^getUsers/(?P<organization_pk>[0-9]+)/(?P<event_pk>[0-9]+)/$', views.list_users, name='list_users'),
+    url(r'^addUsers/$', views.add_users, name='add_users'),
     url(r'^list_events/$', views.list_events, name='list_events'),
     url(r'^book/$', views.book_event, name='book'),
 ]

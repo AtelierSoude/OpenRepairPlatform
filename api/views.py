@@ -199,3 +199,71 @@ def book_event(request):
                 # volunteer_of[person.organization.pk] = person.organization.name
 
         return JsonResponse({'status': "OK"})
+
+def list_users(request, organization_pk, event_pk):
+    if request.method != 'GET':
+        # TODO change this
+        return HttpResponse("Circulez, il n'y a rien à voir")
+    else:
+        user = CustomUser.objects.get(email=request.user)
+        organization = Organization.objects.get(pk=organization_pk)
+        user_is_admin = OrganizationPerson.objects.get(user=user, organization=organization, role__gte=OrganizationPerson.ADMIN)
+        if not user_is_admin:
+            return JsonResponse({'status': -1})
+
+        users = OrganizationPerson.objects.filter(organization=organization)
+        event = Event.objects.get(pk=event_pk)
+        every_attendee = event.attendees.all() | event.presents.all() | event.organizers.all()
+        users_dict = []
+        for user in users:
+            if user.user not in every_attendee:
+                new_user = {
+                    'pk': user.user.pk,
+                    'name': user.user.get_full_name(),
+                    'email': user.user.email,
+                    'role': user.role,
+                }
+                users_dict += [new_user]
+        return JsonResponse({'status': "OK",
+                             'users': users_dict})
+def add_users(request):
+    if request.method != 'POST':
+        # TODO change this
+        return HttpResponse("Circulez, il n'y a rien à voir")
+    else:
+        request_body = request.body.decode("utf-8")
+        post_data = parse_qs(request_body)
+        event_pk = post_data['event_pk'][0]
+        user_list = post_data['user_list'][0].split(',')
+        event = Event.objects.get(pk=event_pk)
+        every_attendee = event.attendees.all() | event.presents.all() | event.organizers.all()
+        seats = event.available_seats
+        presents_pk = []
+        attending_pk = []
+
+        for user_pk in user_list:
+            user = CustomUser.objects.get(pk=user_pk)
+            now = timezone.now()
+
+            if event.starts_at <= now:
+                event.presents.add(user)
+                pesents_pk += [user.pk]
+            else:
+                if user not in every_attendee:
+                    print("a")
+                    seats -= 1
+
+                    event.attendees.add(user)
+                    attending_pk += [user.pk]
+                else:
+                    event.presents.add(user)
+                    presents_pk += [user.pk]
+
+
+
+        event.available_seats = seats;
+        event.save()
+        return JsonResponse({'status': 'OK',
+                             'seats': seats,
+                             'presents_pk': presents_pk,
+                             'attending_pk': attending_pk})

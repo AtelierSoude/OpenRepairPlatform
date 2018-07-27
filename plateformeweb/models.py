@@ -188,9 +188,6 @@ class Place(models.Model):
     def __str__(self):
         return " ".join([self.name, '-', self.address.locality.__str__() or ''])
 
-
-
-
 # ------------------------------------------------------------------------------
 
 #Condition : mettre ailleurs, en test
@@ -211,8 +208,7 @@ class Condition(models.Model):
     def __str__(self):
         return self.name
 
-
-# EventType is a activity
+# EventType is an activity
 class Activity(models.Model):
     name = models.CharField(verbose_name=_("Activity type"), max_length=100,
                             null=False,
@@ -220,7 +216,7 @@ class Activity(models.Model):
     slug = AutoSlugField(populate_from=('name'), default='',
                          unique=False)
     owner = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True)
-    description =MarkdownField(verbose_name=_("Activity description"),
+    description = MarkdownField(verbose_name=_("Activity description"),
                             null=False,
                             blank=False, default="")
     picture = models.ImageField(verbose_name=_('Image'), upload_to='activities/')

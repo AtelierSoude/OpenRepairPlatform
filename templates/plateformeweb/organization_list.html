@@ -26,16 +26,14 @@
 
 
 {% block list %}
-<section class="">
-    {% for organization in object_list %}
-    {% include "plateformeweb/organization.html" %}
-    {% empty %}
-    <div>No organizations yet.</div>    
-  
-  {% endfor %}
+  <section class="">
+    {% for organization in object_lst %}
+      {% include "plateformeweb/organization.html" %}
+      {% empty %}
+      <div>No organizations yet.</div>
+    {% endfor %}
   </section>
 {% endblock list %}
 
 
 
- 

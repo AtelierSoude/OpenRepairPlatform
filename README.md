@@ -42,5 +42,11 @@ except for the dev server where they're displayed by default (container isn't de
 
 You can find some already implemented [users fixtures](users/fixtures/users/001_users.json) such as :
 
-`login: admin@example.com
-passwd: foobar`
+login: `admin@example.com`
+passwd: `foobar`
+
+### Unit Tests
+
+To run unit tests:
+
+`docker-compose -f deployment/docker-compose.yml run --rm django python ateliersoude/manage.py test plateformeweb.tests --settings=ateliersoude.settings.test`

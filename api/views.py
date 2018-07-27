@@ -277,16 +277,33 @@ def add_users(request):
         user_list = post_data['user_list'][0].split(',')
         event = Event.objects.get(pk=event_pk)
         every_attendee = event.attendees.all() | event.presents.all() | event.organizers.all()
+        seats = event.available_seats
+        presents_pk = []
+        attending_pk = []
 
         for user_pk in user_list:
             user = CustomUser.objects.get(pk=user_pk)
             now = timezone.now()
+
             if event.starts_at <= now:
                 event.presents.add(user)
+                pesents_pk += [user.pk]
             else:
-                event.attendees.add(user)
-            if user not in every_attendee:
-                event.available_seats -= 1
+                if user not in every_attendee:
+                    print("a")
+                    seats -= 1
 
+                    event.attendees.add(user)
+                    attending_pk += [user.pk]
+                else:
+                    event.presents.add(user)
+                    presents_pk += [user.pk]
+
+
+
+        event.available_seats = seats;
         event.save()
-        return JsonResponse({'status': 'OK'})
+        return JsonResponse({'status': 'OK',
+                             'seats': seats,
+                             'presents_pk': presents_pk,
+                             'attending_pk': attending_pk})

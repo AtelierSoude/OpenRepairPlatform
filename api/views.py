@@ -231,14 +231,37 @@ def book_event(request):
         # TODO change this
         return HttpResponse("Circulez, il n'y a rien à voir")
     else:
-        person = CustomUser.objects.get(email=request.user)
-        # organizations = OrganizationPerson.objects.filter(user=request.user)
-        # volunteer_of = {}
-        # for person in organizations:
-            # if person.role >= OrganizationPerson.VOLUNTEER:
-                # volunteer_of[person.organization.pk] = person.organization.name
+        request_body = request.body.decode("utf-8")
+        post_data = parse_qs(request_body)
+        event_id = post_data['event_id'][0]
+        user = CustomUser.objects.get(email=request.user)
+        event = Event.objects.get(pk=event_id)
+        organization = event.organization
+        attendees = event.attendees.all()
 
-        return JsonResponse({'status': "OK"})
+        user_volunteer_orgs = OrganizationPerson.objects.filter(user=user,
+                                                      role__gte=OrganizationPerson.VOLUNTEER)
+
+
+        if user in attendees:
+            if organization not in user_volunteer_orgs:
+                event.available_seats += 1
+            event.attendees.remove(user)
+            event.save()
+            return JsonResponse({'status': 'unbook',
+                                 'available_seats': event.available_seats})
+        else:
+            if event.available_seats >= 0:
+                if organization not in user_volunteer_orgs:
+                    event.available_seats -= 1
+                event.attendees.add(user)
+                # send booking mail here
+            else:
+                return JsonResponse({'status': -1})
+
+        event.save()
+        return JsonResponse({'status': 'unbook',
+                             'available_seats': event.available_seats})
 
 def list_users(request, organization_pk, event_pk):
     if request.method != 'GET':
@@ -307,3 +330,4 @@ def add_users(request):
                              'seats': seats,
                              'presents_pk': presents_pk,
                              'attending_pk': attending_pk})
+

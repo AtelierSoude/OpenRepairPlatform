@@ -87,8 +87,41 @@
                 {{ event.location.name }}</a>,
             {{ event.location.address }}
         </h6>
-        {% easy_map event.location.address 100 100 15 %}
+         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.3/dist/leaflet.css"
+   integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ=="
+   crossorigin=""/>
+
+  <script src="https://unpkg.com/leaflet@1.3.3/dist/leaflet.js"
+   integrity="sha512-tAGcCfR4Sc5ZP5ZoVz0quoZDYX5aCtEm/eu1KhSLj2c9eFrylXZknQYmxUssFaVJKvvc0dJQixhGjG2yXWiV9Q=="
+   crossorigin=""></script>
+
+  <div style="height:400px; width:460px" id="event_map"></div>
     </div>
+
+
+  <script>
+    var longitude = new Array({{event.location.address.longitude}}).join('.');
+    var latitude = new Array({{event.location.address.latitude}}).join('.');
+    var event_map = L.map('event_map').setView([latitude, longitude], 16);
+
+    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        minZoom: 14,
+        maxZoom: 16,
+        id: 'mapbox.streets',
+        accessToken: 'pk.eyJ1IjoiYXRlbGllcnNvdWRlIiwiYSI6ImNqazEwZW16aDAzbDkza254cHhucHJtMncifQ.01v1DWXApDJmCySy4QvD4A',
+        noWrap: true,
+        reuseTiles: true,
+    }).addTo(event_map);
+
+    var marker = L.marker([latitude,longitude]).addTo(event_map);
+
+    event_map.touchZoom.disable();
+    event_map.doubleClickZoom.disable();
+    event_map.scrollWheelZoom.disable();
+    event_map.boxZoom.disable();
+    event_map.keyboard.disable();
+  </script>
 
 {% endblock context %}
 
@@ -101,7 +134,7 @@
     {{ block.super }}
     {% endwith %}
         {% for user in event.organizers.all %}
-        {% include "users/user.html" with class="row" orga=True img_class="col-4" content_class="col-8" %}
+        {% include "users/user.html" with float="float-left" class="row" orga=True img_class="col-4" content_class="col-8" %}
         {% endfor %}
 
 {% endblock about1 %}
@@ -113,7 +146,7 @@
     {% endwith %}
 
     {% for user in volunteers %}
-            {% include "users/user.html" with class="row" user_id=user.id img_class="col-12" content_class="col-12 text-center" absentee=True userid=user.id|serialize_id:event.id %}
+            {% include "users/user.html" with float="float-left" class="row" user_id=user.id img_class="col-12" content_class="col-12 text-center" absentee=True userid=user.id|serialize_id:event.id %}
     {% endfor %}
 
 {% endblock about2 %}
@@ -133,12 +166,12 @@
     </div>
         {% for user in event.presents.all %}
             {% if user not in admin_or_volunteer %}
-                {% include "users/user.html" with class="row border border-success checked" user_id=user.id img_class="col-12" content_class="col-12 text-center" absentee=False userid=user.id|serialize_id:event.id %}
+                {% include "users/user.html" with float="float-left" class="row border border-success checked" user_id=user.id img_class="col-12" content_class="col-12 text-center" absentee=False userid=user.id|serialize_id:event.id %}
             {% endif %}
         {% endfor %}
         {% for user in event.attendees.all %}
             {% if user not in admin_or_volunteer %}
-                {% include "users/user.html" with class="row" user_id=user.id img_class="col-12" content_class="col-12 text-center" absentee=True userid=user.id|serialize_id:event.id %}
+                {% include "users/user.html" with float="float-left" class="row" user_id=user.id img_class="col-12" content_class="col-12 text-center" absentee=True userid=user.id|serialize_id:event.id %}
             {% endif %}
         {% endfor %}
     {% else %}
@@ -148,12 +181,148 @@
               <span aria-hidden="true">&times;</span>
             </button>
     </div>
+     {% if request.user in event.attendees.all %}
+
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+          Cependant nous confirmons votre intention de participer à cet événement.
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+        </div>
+     {% endif %}
     {% endif %}
+
+    {% if request.user.is_authenticated and request.user in event.organizers.all %}
+    <div id="add-user">
+      Ajouter parmi
+    <select class="col-lg-4 col-sm-4" v-model="selected_member_type">
+        <option value=0>Tous internes à l'organisation</option>
+        <option value=30>Administrateurs</option>
+        <option value=20>Membres actifis</option>
+        <option value=10>Adhérents</option>
+    </select>
+
+    <input type="text" v-model="fuzzy_input" placeholder="Nom, Prénom, Email...">
+
+    <br>
+    <br>
+    <select class="col-lg-6 col-sm-4" :size="fuzzy_list.length" v-model="selected_users" multiple>
+      <option v-for="result in fuzzy_list" :value="result.pk">
+        [[result.name]] -
+        [[result.email]] -
+        [[text_role(result.role)]]
+      </option>
+    </select>
+
+    <input type="button" v-on:click="add_users" value="Valider les utilisateurs"></input>
+    </div>
+    {% endif %}
+
 
 {% endblock about3 %}
 
 <script src="{% static "js/helper_functions.js" %}"></script>
 <script src="{% static "js/event_detail.js" %}"></script>
+
+{% if request.user.is_authenticated and request.user in event.organizers.all %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.0.4/fuse.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.16/vue.js"></script>
+<script>
+  var organization_pk = {{event.organization.pk}};
+  var event_pk = {{event.pk}};
+  var options = {
+      shouldSort: true,
+      findAllMatches: true,
+      threshold: 0.6,
+      location: 0,
+      distance: 100,
+      maxPatternLength: 32,
+      minMatchCharLength: 3,
+      keys: [
+          "name",
+          "email"
+      ]
+  };
+
+  const user_add = new Vue({
+      delimiters: ['[[', ']]'],
+      el: "#add-user",
+      data() {
+          return {
+              fuzzy_input: "",
+              selected_member_type: 0,
+              text_roles: {
+                  0: "Visiteur",
+                  10: "Adhérent",
+                  20: "Membre Actif",
+                  30: "Administrateur",
+              },
+              all_users_in_org: [],
+              selected_users: [],
+          }
+      },
+      created() {
+          let csrftoken = getCookie('csrftoken');
+          let headers = new Headers();
+
+          headers.append('X-CSRFToken', csrftoken);
+          fetch("/api/getUsers/" + organization_pk + "/" + event_pk, {
+              headers: headers,
+              method: "GET",
+              credentials: 'include',
+          })
+              .then(response => response.json())
+              .then(json => {
+                  this.all_users_in_org = json.users;
+              });
+      },
+      methods: {
+          text_role: function(role_int){
+              return this.text_roles[role_int];
+          },
+          add_users: function(event){
+              let csrftoken = getCookie('csrftoken');
+              let headers = new Headers();
+              let payload = {
+                  event_pk: event_pk,
+                  user_list: this.selected_users,
+              };
+
+              let formData = payload_to_formBody(payload);
+
+              headers.append('X-CSRFToken', csrftoken);
+              headers.append('Content-Type',
+                             'application/x-ww-form-urlencoded; charset=UTF-8');
+
+              fetch("/api/addUsers/", {
+                  headers: headers,
+                  method: "POST",
+                  credentials: 'include',
+                  body: formData,
+              })
+                  .then(response => response.json())
+                  .then(json => {
+                      document.getElementById("available-seats").innerHTML = json.seats;
+                      location.reload(true);
+                  });
+          }
+      },
+      computed: {
+          users_matching_role: function(){
+              return this.all_users_in_org.filter(
+                  (user) => user.role >=this.selected_member_type);
+          },
+          fuzzy_list: function(){
+              var fuse = new Fuse(this.users_matching_role, options);
+              var result = fuse.search(this.fuzzy_input);
+
+              return result;
+          },
+      }
+  });
+
+</script>
+{% endif %}
 {% endblock about %}
 
 </section>

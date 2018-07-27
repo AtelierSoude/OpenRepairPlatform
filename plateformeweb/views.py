@@ -19,7 +19,7 @@ from rules.contrib.views import PermissionRequiredMixin
 from django_markdown.fields import MarkdownFormField
 from django_markdown.widgets import MarkdownWidget
 
-from fm.views import AjaxCreateView, AjaxUpdateView
+from fm.views import AjaxUpdateView, AjaxCreateView, UpdateView
 
 import datetime
 from django import forms
@@ -80,7 +80,7 @@ class OrganizationCreateView(PermissionRequiredMixin, OrganizationFormView,
 
 
 class OrganizationEditView(PermissionRequiredMixin, OrganizationFormView,
-                           AjaxUpdateView):
+                           UpdateView):
     permission_required = 'plateformeweb.edit_organization'
     queryset = Organization.objects
 
@@ -99,7 +99,7 @@ class PlaceListView(ListView):
     model = Place
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+        context = {}
         context["list_type"] = "place"
         return context
 
@@ -145,7 +145,7 @@ class PlaceCreateView(PermissionRequiredMixin, PlaceFormView, CreateView):
         return super().form_valid(form)
 
 
-class PlaceEditView(PermissionRequiredMixin, PlaceFormView, AjaxUpdateView):
+class PlaceEditView(PermissionRequiredMixin, PlaceFormView, UpdateView):
     permission_required = 'plateformeweb.edit_place'
     queryset = Place.objects
 
@@ -222,7 +222,7 @@ class ActivityCreateView(PermissionRequiredMixin, ActivityFormView, CreateView):
         return super().form_valid(form)
 
 
-class ActivityEditView(PermissionRequiredMixin, ActivityFormView, AjaxUpdateView):
+class ActivityEditView(PermissionRequiredMixin, ActivityFormView, UpdateView):
     permission_required = 'plateformeweb.edit_acivity'
     queryset = Activity.objects
 
@@ -343,7 +343,8 @@ class BookingFormView():
             html_message=msg_html
         )
 
-class BookingEditView(BookingFormView, AjaxUpdateView):
+class BookingEditView(BookingFormView, UpdateView):
+
     template_name = 'plateformeweb/booking_form.html'
     queryset = Event.objects
 

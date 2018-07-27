@@ -14,9 +14,15 @@
 
 {% block context %}
 
-<div class="row">
-    {% include "users/user.html" with user=target_user class="" img_class="row" about_class="row" %}
+<div class="">
+    {% include "users/user.html" with user=target_user class="w-100" img_class="col-lg" about_class="row" %}
 </div>
+
+<div class="list-group m-3 bg-white row" id="list-tab" role="tablist">
+        <a class="list-group-item list-group-item-action" id="list-organization-list" data-toggle="list" href="#list-organization" role="tab" aria-controls="organization">Organisations</a>
+        <a class="list-group-item list-group-item-action active" id="list-booking-list" data-toggle="list" href="#list-booking" role="tab" aria-controls="booking">Rendez-vous</a>
+</div>
+
 
 {% endblock context %}
 
@@ -24,23 +30,46 @@
 
 {% block about1 %}
 
-            <nav>
-                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                      <a class="nav-item nav-link active" id="nav-booking-tab" data-toggle="tab" href="#nav-booking" role="tab" aria-controls="nav-settings" aria-selected="true">Réservations</a>
-                      <a class="nav-item nav-link" id="nav-infos-tab" data-toggle="tab" href="#nav-infos" role="tab" aria-controls="nav-unique" aria-selected="true">Informations</a>
-                    </div>
-            </nav>
-
-
-    {% with about1="Evenements inscrits" %}
+    {% with about1="Organisations ratachées" %}
     {{ block.super }}
     {% endwith %}
-    <section class="row" id="nav-booking-tab">
-        {% for event in attending_events %}
-        {% include "plateformeweb/event.html" with class="col-md-4 col-12" img_class="col-md-4" about_class="col-md-8 pb-2" %}
-        {% endfor %}
+
+    <section class="row p-2" id="list-organization">
+        <ul class="list-group">
+
+            {% for organization in target_user.organizationperson_set.all %}
+            <li class="list-group-item">
+            {{ organization.role }} à
+                <a href="{% url 'organization_detail' organization.organization.id organization.organization.slug %}">
+                        {{ organization.organization.name }}
+                </a>
+            </li>
+            {% empty %}
+            <p>Ce profile n'est rattaché à aucune organisation</p>
+            {% endfor %}
+           
+        </ul>
     </section>
 
 {% endblock about1 %}
+
+{% block about2 %}
+
+    {% with about2="Rendez-vous" %}
+    {{ block.super }}
+    {% endwith %}
+
+    <section class="row" id="list-booking">
+
+        {% for event in target_user.event_set.all %}
+        {% include "plateformeweb/event.html" with class="col-md-4 col-12" img_class="col-md-4" about_class="col-md-8 pb-2" %}
+
+        {% empty %}
+        <p>Pas de réservation en attente</p>
+        {% endfor %}
+       
+    </section>
+
+{% endblock about2 %}
 
 {% endblock about %}

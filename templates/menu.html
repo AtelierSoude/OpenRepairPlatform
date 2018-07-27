@@ -35,8 +35,7 @@
               </ul>
             </div>
               <div class="navbar navbar-expand-lg navbar-dark bg-dark d-flex justify-content-end">
-                  {% if user.is_superuser %}
-
+                  {% if admin_of_organizations %}
                     <div class="navbar-brand" >
                         <a class="nav-link mr-3" href="{% url 'event_create' %}"
                         title="create event">

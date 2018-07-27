@@ -1,20 +1,14 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, AbstractUser
-from django.contrib.auth.models import BaseUserManager
-from django.contrib.auth.models import PermissionsMixin
-from django.utils.translation import ugettext_lazy as _
-from phonenumber_field.modelfields import PhoneNumberField
-from address.models import AddressField
-from avatar.models import AvatarField
-from django.urls import reverse
-
-from django.db import models
 from django.utils import timezone
 from django.utils.http import urlquote
 from django.utils.translation import ugettext_lazy as _
 from django.core.mail import send_mail
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, AbstractUser
 from django.contrib.auth.models import BaseUserManager
+from phonenumber_field.modelfields import PhoneNumberField
+from address.models import AddressField
+from avatar.models import AvatarField
+from django.urls import reverse
 import logging
 
 logger = logging.getLogger(__name__)
@@ -119,7 +113,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def get_absolute_url(self):
        return reverse('user_detail', kwargs={'pk':self.pk})
-      
+
 
     def email_user(self, subject, message, from_email=None):
         """

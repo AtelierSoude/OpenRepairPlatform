@@ -17,22 +17,12 @@
 
 {% block TitleAndEdit %}
 
-<div class="float-left mr-3">
-        {% if event.available_seats == 0 %}
-            <span class="badge badge-warning badge-pill">Complet</span>
-        {% else %}
-            <span class="badge badge-primary badge-pill">{{ event.available_seats }}
-            <small>Places</small></span>
-        {% endif %}  
-</div>
-
 <h5 class="float-left">
     {{ event.type }} du {{ event.starts_at|date:"d M" }} à
     <a href="{% url 'place_detail' event.location.id event.location.slug %}">
           {{ event.location.name }}
     </a>
-</h5> 
-
+</h5>
 
 {% if not request.user.is_authenticated %}
 {% else %}
@@ -105,7 +95,7 @@
    integrity="sha512-tAGcCfR4Sc5ZP5ZoVz0quoZDYX5aCtEm/eu1KhSLj2c9eFrylXZknQYmxUssFaVJKvvc0dJQixhGjG2yXWiV9Q=="
    crossorigin=""></script>
 
-  <div style="height:250px; width:100%" id="event_map"></div>
+  <div style="height:400px; width:460px" id="event_map"></div>
     </div>
 
 

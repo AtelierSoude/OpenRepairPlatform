@@ -10,7 +10,7 @@
 {% block breadcrumbs %}
 
 {{ block.super }}
-{% if request.path == "/edit" %}
+{% if request.path == "/edit" or "/userprofile" %}
 {% breadcrumb "edit" "" %}
 {% else %}
 {% breadcrumb "add" view %}

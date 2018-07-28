@@ -64,6 +64,8 @@ django-markdown-app==0.9.3.1
 django-easy-maps
 #emails
 django-post_office
+#form tweaks
+django-widget-tweaks
 #sécurité
 itsdangerous
 #celery

@@ -72,10 +72,10 @@ h1, h2, h3 {
 *********************************/
 
 .dropdown-menu {
-  
-    top: none;
-    right: 40px;
-    left: none;
+  right: 40px;
+  left: 210px !important;
+  top: 60px;
+}
 }
 
 .navbar {

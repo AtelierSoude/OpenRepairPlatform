@@ -60,9 +60,8 @@
                   <div class="navbar-brand arrow-login">
                       <a class="nav-link mr-3 dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class=""></i></a>
                       <div class="dropdown-menu " aria-labelledby="navbarDropdownMenuLink">
-                        <a class="dropdown-item" href="#">...</a>
                         <a class="dropdown-item" href="{{ user.get_absolute_url }}"> voir profil </a>
-                        <a class="dropdown-item" href="{% url "user_profile" %}">Editer profil</a>
+                        <a class="dropdown-item" href="{% url "user_profile" %}">Editer informations</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{% url "mass_event_book" %}">Signaler mes disponibilités</a>
                         <a class="nav-link" href="{% url 'logout' %}" title="Logout">Déconnexion</a>

@@ -28,39 +28,45 @@
 
 <script src="{% static 'js/make_modal.js' %}"> </script>
 
-<section id="event-list" class="container-fluid row">
 
-    <select class="col-lg-2 col-sm-2" v-model="selected_place_pk">
-        <option value=-1> Filtrer par lieu </option>
-        <option v-for="place in places" :value="place.pk">[[place.name]] </option>
-    </select>
-
-    <select class="col-lg-2 col-sm-2" v-model="selected_organization_pk">
-        <option value=-1> Filtrer par organization </option>
-        <option v-for="organization in organizations" :value="organization.pk">[[organization.name]] </option>
-    </select>
-
-    <select class="col-lg-2 col-sm-2" v-model="selected_type_pk">
-        <option value=-1> Filtrer par type </option>
-        <option v-for="type in types" :value="type.pk">[[type.name]] </option>
-    </select>
-
-    entre le
-    <input type="date" v-model="selected_start_date"/>
-    et le
-    <input type="date" v-model="selected_end_date"/>
+<section id="event-list" class="container-fluid row gradient-bg">
 
 
-<div class="col-lg-12 col-sm-12 ml-4 py-2">
+    <div class="form col-md-3 h-25 bg-white sticky-position sticky-top" style="top:100px">
 
-    <div v-for="event in selected_event_list" class="float-left col-lg-4 col-md-6 col-sm-1">
+        <h5 class="border-bottom">Rechercher</h5>
+
+        <select class="form-control form-group " v-model="selected_place_pk">
+            <option value=-1> Lieu </option>
+            <option v-for="place in places" :value="place.pk">[[place.name]] </option>
+        </select>
+        
+        <select class="form-control form-group " v-model="selected_organization_pk">
+            <option value=-1> Organisation </option>
+            <option v-for="organization in organizations" :value="organization.pk">[[organization.name]] </option>
+        </select>
+        
+        <select class="form-control form-group " v-model="selected_type_pk">
+            <option value=-1> Type </option>
+            <option v-for="type in types" :value="type.pk">[[type.name]] </option>
+        </select>
+        <p>
+        du <input type="date" v-model="selected_start_date"/> au <input type="date" v-model="selected_end_date"/>
+        </p>
+        
+        
+    </div>
+
+<div class="col-lg-8 col-md-8 col-sm-12 event-list">
+
+    <div v-for="event in selected_event_list" class=" float-left col-lg-6 col-md-6 col-sm-12">
 
       {% include "plateformeweb/event_vuejs.html" with class="" img_class="col-md-4" about_class="col-md-8 pb-2" %}
 
     </div>
    <div v-if="event_list.length == 0">No events yet.</div>
 
-  </div>
+</div>
 
 </section>
 

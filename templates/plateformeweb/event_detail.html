@@ -15,6 +15,7 @@
 {% endblock %}
 
 
+<!--- Item banner -->
 {% block TitleAndEdit %}
 
 <h5 class="float-left">
@@ -55,10 +56,12 @@
 {% endwith %}
 
 {% endblock header_ban %}
+<!-- End item banner -->
+
 
 
 {% block context %}
-
+<!-- About event -->
     <div class="pt-3">
         {% include "plateformeweb/event.html" with img_class="col-lg" about_class="row" %}
     </div>
@@ -66,9 +69,9 @@
     <div class="m-3 pt-3 p-2 bg-white">
             <p>
                 {% for condition in event.condition.all %}
-                    <span>
-                    {{condition.resume}}
-                    </span></br>
+                    <span>{{condition.resume}}</span>
+                {% empty %}
+                    <span>La participation est libre / pas de condition d'accès</span>
                 {% endfor %}
             </p>
         </div>
@@ -79,7 +82,10 @@
         </p>
         <a href="{% url 'activity_detail' event.type.id event.type.slug %}">En savoir +</a>
     </div>
+<!-- End about event -->
 
+
+<!-- Location -->
     <div class="m-3 pt-3 p-2 bg-white">
         <h6>
             {% fontawesome_icon 'map-marker' %}
@@ -95,10 +101,12 @@
    integrity="sha512-tAGcCfR4Sc5ZP5ZoVz0quoZDYX5aCtEm/eu1KhSLj2c9eFrylXZknQYmxUssFaVJKvvc0dJQixhGjG2yXWiV9Q=="
    crossorigin=""></script>
 
-  <div style="height:400px; width:460px" id="event_map"></div>
-    </div>
+  <div style="height:250px;" id="event_map"></div>
+</div>
+<!-- End location -->
 
 
+<!-- Leaflet script -->
   <script>
     var longitude = new Array({{event.location.address.longitude}}).join('.');
     var latitude = new Array({{event.location.address.latitude}}).join('.');
@@ -122,109 +130,128 @@
     event_map.boxZoom.disable();
     event_map.keyboard.disable();
   </script>
-
+<!-- End Leaflet script -->
 {% endblock context %}
 
 
 {% block about %}
 
 {% block about1 %}
+{% with about1="" %}
+{{ block.super }}
+{% endwith %}
 
-    {% with about1="Animateur.trice.s" %}
-    {{ block.super }}
-    {% endwith %}
-        {% for user in event.organizers.all %}
-        {% include "users/user.html" with float="float-left" class="row" orga=True img_class="col-4" content_class="col-8" %}
-        {% endfor %}
+<!-- Add users to event : attendees if date_event < current_date , presents if date_event = current_date -->
+{% if request.user.is_authenticated and request.user in admin_or_volunteer %}
 
-{% endblock about1 %}
 
-{% block about2 %}
+<!-- validating presents possibilities for volonteers -->
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+        Vous avez les droits pour voir et confirmer les présences
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+</div>
 
-    {% with about2="Membres Actifs" %}
-    {{ block.super }}
-    {% endwith %}
-
-    {% for user in volunteers %}
-            {% include "users/user.html" with float="float-left" class="row" user_id=user.id img_class="col-12" content_class="col-12 text-center" absentee=True userid=user.id|serialize_id:event.id %}
-    {% endfor %}
-
-{% endblock about2 %}
-
-{% block about3 %}
-
-    {% with about3="Participant.e.s" %}
-    {{ block.super }}
-    {% endwith %}
-
-    {% if request.user.is_authenticated and request.user in admin_or_volunteer %}
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-            Vous avez les droits pour voir et confirmer les présences
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-    </div>
-        {% for user in event.presents.all %}
-            {% if user not in admin_or_volunteer %}
-                {% include "users/user.html" with float="float-left" class="row border border-success checked" user_id=user.id img_class="col-12" content_class="col-12 text-center" absentee=False userid=user.id|serialize_id:event.id %}
-            {% endif %}
-        {% endfor %}
-        {% for user in event.attendees.all %}
-            {% if user not in admin_or_volunteer %}
-                {% include "users/user.html" with float="float-left" class="row" user_id=user.id img_class="col-12" content_class="col-12 text-center" absentee=True userid=user.id|serialize_id:event.id %}
-            {% endif %}
-        {% endfor %}
-    {% else %}
-    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            Vous devez être membre actif de l'association pour voir les participants
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-    </div>
-     {% if request.user in event.attendees.all %}
-
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-          Cependant nous confirmons votre intention de participer à cet événement.
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                </button>
-        </div>
-     {% endif %}
-    {% endif %}
-
-    {% if request.user.is_authenticated and request.user in event.organizers.all %}
-    <div id="add-user">
-      Ajouter parmi
-    <select class="col-lg-4 col-sm-4" v-model="selected_member_type">
+<div id="add-user" class="row m-2">
+    <span>Ajouter parmi </span>
+    <select class="col-md-2 col-sm-4 form-control" v-model="selected_member_type">
         <option value=0>Tous internes à l'organisation</option>
         <option value=30>Administrateurs</option>
         <option value=20>Membres actifis</option>
         <option value=10>Adhérents</option>
     </select>
 
-    <input type="text" v-model="fuzzy_input" placeholder="Nom, Prénom, Email...">
+    <div class="search-user col-md-6">
+        <input class="search-term-user col-lg-12" type="text" v-model="fuzzy_input" placeholder="Nom, Prénom, Email..." 
+        onclick="document.getElementById('search-user-result').style.display='block'">
 
-    <br>
-    <br>
-    <select class="col-lg-6 col-sm-4" :size="fuzzy_list.length" v-model="selected_users" multiple>
-      <option v-for="result in fuzzy_list" :value="result.pk">
-        [[result.name]] -
-        [[result.email]] -
-        [[text_role(result.role)]]
-      </option>
-    </select>
-
-    <input type="button" v-on:click="add_users" value="Valider les utilisateurs"></input>
+        <select id="search-user-result" :size="fuzzy_list.length" v-model="selected_users" multiple
+        onmouseout="this.style.display='none'">
+        <option v-for="result in fuzzy_list" :value="result.pk">
+            [[result.name]] -
+            [[result.email]] -
+            [[text_role(result.role)]]
+        </option>
+        </select>
     </div>
-    {% endif %}
+
+    <input type="button" class="btn col-md-2" v-on:click="add_users" value="Inscrire"></input>
+</div>
+
+<!-- or warning message for others users -->
+{% else %}
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+        Vous devez être membre actif de l'association pour voir les participants
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+</div>
+
+ {% if request.user in event.attendees.all %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+     Vous êtes bien inscrit à cet évènement
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+ {% endif %}
+
+{% endif %}
+<!-- end add users to event -->
+{% endblock about1 %}
 
 
+{% block about2 %}
+<!-- Users that have a role in the organization -->
+    {% with about2="Animateur.trice.s" %}
+    {{ block.super }}
+    {% endwith %}
+
+    {% for user in event.organizers.all %}
+        {% include "users/user.html" with float="float-left" class="row checked administrator" orga=True img_class="col-12" content_class="col-12 text-center" %}
+    {% endfor %}
+
+    {% for user in volunteers %}
+        {% if user in event.presents.all %}
+            {% include "users/user.html" with float="float-left" class="row checked" user_id=user.id img_class="col-12" content_class="col-12 text-center" absentee=True userid=user.id|serialize_id:event.id %}
+        {% else %}
+            {% include "users/user.html" with float="float-left" class="row" user_id=user.id img_class="col-12" content_class="col-12 text-center" absentee=True userid=user.id|serialize_id:event.id %}
+        {% endif %}
+    {% endfor %}
+
+<!-- End users that have a role in the organization -->
+{% endblock about2 %}
+
+
+{% block about3 %}
+<!-- Attendees and presents -->
+    {% with about3="Participant.e.s" %}
+    {{ block.super }}
+    {% endwith %}
+
+        {% for user in event.presents.all %}
+            {% if user not in admin_or_volunteer %}
+                {% include "users/user.html" with float="float-left" class="row checked" user_id=user.id img_class="col-4" content_class="col-6" absentee=False userid=user.id|serialize_id:event.id %}
+            {% endif %}
+        {% endfor %}
+
+        {% for user in event.attendees.all %}
+            {% if user not in admin_or_volunteer %}
+                {% include "users/user.html" with float="float-left" class="row" user_id=user.id img_class="col-4" content_class="col-8" absentee=True userid=user.id|serialize_id:event.id %}
+            {% endif %}
+        {% endfor %}
+
+<!-- End attendees and presents -->
 {% endblock about3 %}
 
 <script src="{% static "js/helper_functions.js" %}"></script>
 <script src="{% static "js/event_detail.js" %}"></script>
 
-{% if request.user.is_authenticated and request.user in event.organizers.all %}
+
+<!-- Add users script -->
+{% if request.user.is_authenticated and request.user in admin_or_volunteer %}
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.0.4/fuse.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.16/vue.js"></script>
 <script>
@@ -322,6 +349,9 @@
   });
 
 </script>
+<!-- End add users script -->
+
+
 {% endif %}
 {% endblock about %}
 

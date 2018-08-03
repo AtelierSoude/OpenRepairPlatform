@@ -64,6 +64,11 @@ h1, h2, h3 {
 
 }
 
+.administrator:before {
+  color:#ffd300;
+  content: "\f005";
+}
+
 .alert{
   padding:10px !important;
 }
@@ -480,3 +485,19 @@ input[type="checkbox"], input[type="radio"],input[type="number"]  {
   text-decoration: none;
   cursor: pointer;
 }
+
+/* search users */ 
+
+.search-user {
+  position: relative;
+  clear: both;
+}
+#search-user-result {
+  position: absolute;
+  display: none;
+  z-index: 100000;
+  top: 40px;
+  left: 15px;
+  width: 95%;
+}
+

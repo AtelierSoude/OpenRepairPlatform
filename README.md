@@ -54,3 +54,20 @@ passwd: `foobar`
 To run unit tests:
 
 `docker-compose -f deployment/docker-compose.yml run --rm django python ateliersoude/manage.py test plateformeweb.tests --settings=ateliersoude.settings.test`
+
+### Debugger
+
+Need a debugger ? in your view file :
+
+```
+from ipdb import set_trace
+
+set_trace()
+```
+
+to make it interactive run thet test with external ports, add `--service-ports` to the test command.
+
+`docker-compose -f deployment/docker-compose.yml run --service-ports --rm django python ateliersoude/manage.py test plateformeweb.tests --settings=ateliersoude.settings.test`
+
+
+

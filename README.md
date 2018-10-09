@@ -1,5 +1,9 @@
 ## Django-AtelierSoude
 
+OpenRepairPlatform is a Django based application designed to organize collaborative repair structures, features provides organization managment, event publishing, community members managment, repair tracking and sharing.
+
+The plateform is created by Atelier Soudé, an organization which repair everyday's people electric and electronic objects in Lyon, France.
+
 ### Move to the deployment directory
 
 ```bash
@@ -50,3 +54,20 @@ passwd: `foobar`
 To run unit tests:
 
 `docker-compose -f deployment/docker-compose.yml run --rm django python ateliersoude/manage.py test plateformeweb.tests --settings=ateliersoude.settings.test`
+
+### Debugger
+
+Need a debugger ? in your view file :
+
+```
+from ipdb import set_trace
+
+set_trace()
+```
+
+to make it interactive run thet test with external ports, add `--service-ports` to the test command.
+
+`docker-compose -f deployment/docker-compose.yml run --service-ports --rm django python ateliersoude/manage.py test plateformeweb.tests --settings=ateliersoude.settings.test`
+
+
+

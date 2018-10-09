@@ -179,24 +179,6 @@
     <input type="button" class="btn col-md-2" v-on:click="add_users" value="Inscrire"></input>
 </div>
 
-<!-- or warning message for others users -->
-{% else %}
-<div class="alert alert-warning alert-dismissible fade show" role="alert">
-        Vous devez être membre actif de l'association pour voir les participants
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-</div>
-
- {% if request.user in event.attendees.all %}
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-     Vous êtes bien inscrit à cet évènement
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
- {% endif %}
-
 {% endif %}
 <!-- end add users to event -->
 {% endblock about1 %}
@@ -230,6 +212,9 @@
     {{ block.super }}
     {% endwith %}
 
+
+{% if request.user.is_authenticated and request.user in admin_or_volunteer %}
+<!-- display presents for admin or volonteers -->
         {% for user in event.presents.all %}
             {% if user not in admin_or_volunteer %}
                 {% include "users/user.html" with float="float-left" class="row checked" user_id=user.id img_class="col-4" content_class="col-6" absentee=False userid=user.id|serialize_id:event.id %}
@@ -241,6 +226,26 @@
                 {% include "users/user.html" with float="float-left" class="row" user_id=user.id img_class="col-4" content_class="col-8" absentee=True userid=user.id|serialize_id:event.id %}
             {% endif %}
         {% endfor %}
+
+        {% else %}
+        <!-- or warning message for others users -->
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            Vous devez être membre actif de l'association pour voir les participants
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+            {% if request.user in event.attendees.all %}
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                Vous êtes bien inscrit à cet évènement
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endif %}
+
+{% endif %}
 
 <!-- End attendees and presents -->
 {% endblock about3 %}

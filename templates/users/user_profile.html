@@ -5,7 +5,7 @@
 {% load avatar_tags %}
 {% load django_bootstrap_breadcrumbs %}
 {% load crispy_forms_tags %}
-{% load widget_tweaks %}
+<!-- {% load widget_tweaks %} -->
 
 
 {% block breadcrumbs %}
@@ -58,7 +58,9 @@
                                     <span class="pure-form-message-inline">{{ field.help_text|safe }}</span>
                                 {% endif %}
                                     <div class="controls">
-                                        {{ field|add_class:"textinput textInput form-control float-left" }} {{ field.errors }}
+                                        {{ field }}
+                                        {# {{ field|add_class:"textinput textInput form-control float-left" }} #}
+                                        {{ field.errors }}
                                     </div>
                             </div>
 

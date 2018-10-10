@@ -8,13 +8,13 @@
 {% block list %}
 
 <!-- a user card -->
-<div class="card-user card {{float}}" >
+<div class="card-user card {{float}} p-2" >
    <div class="{{class}}" id="square-{{user_id}}">
-        <div class="avatar-card-user {{img_class}} p-2">
+        <div class="avatar-card-user {{img_class}}">
             {% avatar user %}
         </div>
 
-        <div class="{{content_class}} p-2">
+        <div class="{{content_class}}">
 
             <h5 class="mx-auto col-12">
                 <a class="card-link" href="{{ user.get_absolute_url }}">
@@ -35,13 +35,13 @@
 
                 {% endif %}
 
+            {% if orga %}
+            {% elif absentee and request.user in event.organizers.all %}
+                <button class="btn-setPresent btn" id="{{userid}}">Confirmer présence</button>
+            {% elif not absentee and request.user in event.organizers.all %}
+                <button class="btn-setAbsent btn" id="{{userid}}">Annuler présence</button>
+            {% endif %}
         </div>
-        {% if orga %}
-        {% elif absentee and request.user in event.organizers.all %}
-            <button class="btn-setPresent" id="{{userid}}">Présent</button>
-        {% elif not absentee and request.user in event.organizers.all %}
-            <button class="btn-setAbsent" id="{{userid}}">Annuler</button>
-        {% endif %}
     </div>
 </div>
 

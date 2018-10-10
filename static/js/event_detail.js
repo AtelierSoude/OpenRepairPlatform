@@ -11,10 +11,10 @@ function setEventHandler(button, fn){
 
 function updateCSS_to_present(data, button_id){
     square = document.getElementById("square-"+data['user_id']);
-    square.className = "row border border-success checked"
+    square.className = "row checked"
     button = document.getElementById(button_id);
-    button.className = "btn-setAbsent";
-    button.textContent = "Annuler";
+    button.className = "btn-setAbsent btn";
+    button.textContent = "Annuler présence";
     refresh_buttons();
 }
 
@@ -22,8 +22,8 @@ function updateCSS_to_absent(data, button_id){
     square = document.getElementById("square-"+data['user_id']);
     square.className = "row"
     button = document.getElementById(button_id);
-    button.className = "btn-setPresent";
-    button.textContent = "Présent";
+    button.className = "btn-setPresent btn";
+    button.textContent = "Confirmer présence";
     refresh_buttons();
 }
 

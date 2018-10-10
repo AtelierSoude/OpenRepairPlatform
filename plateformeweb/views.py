@@ -363,8 +363,8 @@ class BookingEditView(BookingFormView, UpdateView):
 
 # --- mass event ---
 
-class EventCreateView(PermissionRequiredMixin, CreateView):
-    permission_required = 'plateformeweb.create_event'
+class EventCreateView(CreateView):
+   # permission_required = 'plateformeweb.create_event'
     template_name = 'plateformeweb/event_form.html'
     model = Event
     fields = ["type",  "available_seats",

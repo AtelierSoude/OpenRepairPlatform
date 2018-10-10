@@ -64,6 +64,11 @@ h1, h2, h3 {
 
 }
 
+.administrator:before {
+  color:#ffd300;
+  content: "\f005";
+}
+
 .alert{
   padding:10px !important;
 }
@@ -72,17 +77,16 @@ h1, h2, h3 {
 *********************************/
 
 .dropdown-menu {
-<<<<<<< HEAD
-
-    top: none;
-    right: 40px;
-    left: none;
-=======
   right: 40px;
   left: 210px !important;
   top: 60px;
 }
->>>>>>> profile_style
+
+.gradient-bg{
+background: -moz-linear-gradient(top,  rgba(181,255,241,0.65) 0%, rgba(188,188,188,0) 100%); /* FF3.6-15 */
+background: -webkit-linear-gradient(top,  rgba(181,255,241,0.65) 0%,rgba(188,188,188,0) 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(to bottom,  rgba(181,255,241,0.65) 0%,rgba(188,188,188,0) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a6b5fff1', endColorstr='#00bcbcbc',GradientType=0 ); /* IE6-9 */
 }
 
 .navbar {
@@ -172,6 +176,19 @@ text-align: center;
 /*******************************
 ********* event card ************
 *********************************/
+
+
+.event-list:first-child {
+  width: 100% !important;  
+  max-width: 100% !important;
+}
+
+.event-list:first-child img{
+  width: auto;  
+  max-height: 150px;
+}
+
+
 .card-event {
    box-shadow: 0px 4px 0px #fee56e;
 }
@@ -468,3 +485,19 @@ input[type="checkbox"], input[type="radio"],input[type="number"]  {
   text-decoration: none;
   cursor: pointer;
 }
+
+/* search users */ 
+
+.search-user {
+  position: relative;
+  clear: both;
+}
+#search-user-result {
+  position: absolute;
+  display: none;
+  z-index: 100000;
+  top: 40px;
+  left: 15px;
+  width: 95%;
+}
+

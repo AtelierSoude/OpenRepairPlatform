@@ -8,7 +8,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Atelier Soudé</title>
-
     <!-- Mobile Specific Metas ––––––––––––––––––––––––––––––––––––––––––––– -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -16,53 +15,25 @@
     <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600"
           rel="stylesheet" type="text/css">
 
-    <!-- CSS –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-    {#    <link rel="stylesheet" href="{% static "css/normalize.css" %}">#}
-    {#    <link rel="stylesheet" href="{% static "css/skeleton.css" %}">#}
-
-   {# <link rel="stylesheet" href="{% static "npm/purecss/build/pure-min.css" %}"> #}
-
-
-    <!--[if lte IE 8]>
-        <link rel="stylesheet" href={% static "npm/purecss/build/grids-responsive-old-ie-min.css" %}>
-    <![endif]-->
     <!--[if gt IE 8]><!-->
     <link rel="stylesheet"
           href={% static "npm/purecss/build/grids-responsive-min.css" %}>
     <!--<![endif]-->
-    <!-- Favicon –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-
-
-    <!-- boostrap -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-     integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-     crossorigin="anonymous">
-
-
 
     <!-- Fontawesome –––––––––––––––––––––––––––––––––––––––––––––––––– -->
     {% fontawesome_stylesheet %}
 
     <!-- jQuery -->
-
-
     <script src="http://code.jquery.com/jquery-3.2.1.min.js"
             integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
             crossorigin="anonymous"></script>
-
-{#    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"#}
-{#            integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="#}
-{#            crossorigin="anonymous"></script>#}
-
-     <script src="{% static "js/stickyfill.js" %}"></script>
-
-     <script
-       src="https://code.jquery.com/jquery-3.1.1.min.js"
+    <script src="{% static "js/stickyfill.js" %}"></script>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"
        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
        crossorigin="anonymous"></script>
 
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
 
 {#    <link rel="stylesheet"#}
@@ -75,6 +46,7 @@
 
     <!-- keep last -->
     <link rel="stylesheet" href="{% static "css/ateliersoude.css" %}">
+    <link rel="stylesheet" href="{% static "css/bootstraptheme.css" %}">
 
     {% if user_form %}{{ user_form.media }}{% endif %}
     {% if form %}{{ form.media }}{% endif %}

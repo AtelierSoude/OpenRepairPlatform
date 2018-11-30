@@ -56,29 +56,29 @@ Editer
 
 {% block about2 %}
 
-    {% with about2="Lieux" %}
+{% with about2="Dates et lieux " %}
     {{ block.super }}
     {% endwith %}
+{{organization.event_set.all.count }} dates programmées dans ces lieux :
+<div class="row d-flex justify-content-center">
     {% for place in organization.place_set.all %}
-        {% include "plateformeweb/place.html" with class="my-3 col-sm-6 col-md-4" %}
+    {% include "plateformeweb/place.html" with class="col-md-3" img_class="hide" %}
     {% endfor %}
-   <!-- {% for organizationperson in organization.organizationperson_set.all %}
-    {% with user=organizationperson.user %}
-        {% include "users/user.html" %}
-    {% endwith %} -->
-{% endfor %}
-        
+</div>
+
 {% endblock about2 %}
 
 {% block about3 %}
-
-    {% with about3="Dates" %}
-    {{ block.super }}
+    {% with about3="membres" %}
+        {{ block.super }}
     {% endwith %}
-    {% for event in organization.event_set.all %}
-        {% include "plateformeweb/event.html" with class="row" img_class="col-md-2" about_class="col-md-10"%}
+    <div class="row d-flex justify-content-center">
+    {% for organizationperson in organization.organizationperson_set.all %}
+        {% with user=organizationperson.user %}
+            {% include "users/user.html" with class="row" img_class="col-12" content_class="col-12 text-center"%}
+        {% endwith %}
     {% endfor %}
-
+    </div>
 {% endblock about3 %}
 
 {% endblock about %}

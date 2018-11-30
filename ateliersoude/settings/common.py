@@ -75,9 +75,7 @@ INSTALLED_APPS = [
     'django_prices',
     'django_markdown',
     'post_office',
-    'easy_maps',
-   # 'widget_tweaks',#
-
+    'easy_maps' 
 ]
 
 MIDDLEWARE = [

@@ -65,7 +65,7 @@ django-easy-maps
 #emails
 django-post_office
 #form tweaks
-django-widget-tweaks
+#django-widget-tweaks
 #sécurité
 itsdangerous
 #celery

@@ -81,15 +81,12 @@ h1, h2, h3 {
   left: 210px !important;
   top: 60px;
 }
-<<<<<<< HEAD
-=======
 
 .gradient-bg{
 background: -moz-linear-gradient(top,  rgba(181,255,241,0.65) 0%, rgba(188,188,188,0) 100%); /* FF3.6-15 */
 background: -webkit-linear-gradient(top,  rgba(181,255,241,0.65) 0%,rgba(188,188,188,0) 100%); /* Chrome10-25,Safari5.1-6 */
 background: linear-gradient(to bottom,  rgba(181,255,241,0.65) 0%,rgba(188,188,188,0) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a6b5fff1', endColorstr='#00bcbcbc',GradientType=0 ); /* IE6-9 */
->>>>>>> 34e8fd3ec24faa5560f54225ddfd259eceb5c078
 }
 
 .navbar {

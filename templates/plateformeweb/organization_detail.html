@@ -22,13 +22,13 @@
     {{ organization.name }}
 </h5>
     
-    {% if request.user.is_staff %} 
-<a class="card-link mr-3 fm-update btn btn-primary float-right" href="{% url 'organization_edit' organization.id %}"
- data-fm-head="Update" data-fm-callback="reload">&nbsp
-<i class="fa fa-pencil-square-o 2-xs pt-1"></i>
-Editer
-</a>
-    {% endif %}
+{% if request.user.is_authenticated and request.user in organization.volunteers %}
+    <a class="card-link mr-3 fm-update btn btn-primary float-right" href="{% url 'organization_edit' organization.id %}"
+    data-fm-head="Update" data-fm-callback="reload">&nbsp
+    <i class="fa fa-pencil-square-o 2-xs pt-1"></i>
+    Editer
+    </a>
+{% endif %}
 
 {% endblock TitleAndEdit %}
 
@@ -69,11 +69,11 @@ Editer
 {% endblock about2 %}
 
 {% block about3 %}
-    {% with about3="membres" %}
+    {% with about3="membres actif.ve.s" %}
         {{ block.super }}
     {% endwith %}
     <div class="row d-flex justify-content-center">
-    {% for organizationperson in organization.organizationperson_set.all %}
+    {% for user in organization.volunteers %}
         {% with user=organizationperson.user %}
             {% include "users/user.html" with class="row" img_class="col-12" content_class="col-12 text-center"%}
         {% endwith %}

@@ -80,7 +80,7 @@ class OrganizationCreateView(PermissionRequiredMixin, OrganizationFormView,
 
 
 class OrganizationEditView(PermissionRequiredMixin, OrganizationFormView,
-                           UpdateView):
+                           AjaxUpdateView):
     permission_required = 'plateformeweb.edit_organization'
     queryset = Organization.objects
 

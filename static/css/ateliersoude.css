@@ -64,6 +64,10 @@ h1, h2, h3 {
 
 }
 
+.hide {
+  display:none !important;
+}
+
 .administrator:before {
   color:#ffd300;
   content: "\f005";

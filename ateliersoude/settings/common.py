@@ -284,9 +284,9 @@ DEBUG_TOOLBAR_PANELS = [
 ]
 
 EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'debugsoude@gmail.com'
-EMAIL_HOST_PASSWORD = 'foobar123'
+EMAIL_HOST = 'atelier-soude.fr'
+EMAIL_HOST_USER = 'no-reply@atelier-soude.fr'
+EMAIL_HOST_PASSWORD = 'noreplyeconomieparticipative'
 EMAIL_PORT = 587
 EMAIL_BACKEND = 'post_office.EmailBackend'
 

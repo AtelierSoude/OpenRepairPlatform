@@ -61,6 +61,9 @@ Editer
     {% with about2="Dates dans ce lieux" %}
     {{ block.super }}
     {% endwith %}
+
+    {% include "plateformeweb/event_list_vuejs.html" %}
+    
     {% for event in place.event_set.all %}
     {% include "plateformeweb/event.html" with class="" img_class="col-md-2" about_class="col-md-10 pb-2" %}
     {% endfor %}

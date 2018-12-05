@@ -337,7 +337,7 @@ class BookingFormView():
 
         mail.send(
             [user.email],
-            'debugsoude@gmail.com',
+            'no-reply@atelier-soude.fr',
             subject=subject,
             message=msg_plain,
             html_message=msg_html
@@ -356,7 +356,7 @@ class BookingEditView(BookingFormView, UpdateView):
                                    salt='book')
 
         data = {'event_id': event_id}
-        context['booking_id'] = serial.dumps(data);
+        context['booking_id'] = serial.dumps(data)
         return context
 
 

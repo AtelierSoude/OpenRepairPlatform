@@ -1,0 +1,62 @@
+
+
+{% load staticfiles %}
+{% load fontawesome %}
+{% load avatar_tags %}
+
+<script src="{% static 'js/make_modal.js' %}"> </script>
+
+
+
+<section id="event-list" class="container-fluid row gradient-bg">
+
+
+<div class="col-lg-8 col-md-8 col-sm-12 event-list">
+
+    <div v-for="event in selected_event_list" class=" float-left col-lg-6 col-md-6 col-sm-12">
+
+      {% include "plateformeweb/event_vuejs.html" with class="" img_class="col-md-4" about_class="col-md-8 pb-2" %}
+
+    </div>
+   <div v-if="event_list.length == 0">No events yet.</div>
+
+</div>
+
+</section>
+
+<script src="{% static 'js/helper_functions.js' %}"> </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.16/vue.js"></script>
+<script>
+var place_pk = "1";
+  const app = new Vue({
+      delimiters: ['[[', ']]'],
+      el: "#event-list",
+      data() {
+          return {
+              event_list : [],
+          }
+      },
+      created() {
+          let csrftoken = getCookie('csrftoken');
+          let headers = new Headers();
+          headers.append('X-CSRFToken', csrftoken);
+          fetch("/api/list_events2/place" + "/" + place_pk, {
+              headers: headers,
+              method: "GET",
+              credentials: 'include',
+          })
+              .then(response => response.json())
+              .then(json => {
+                  this.event_list = json.dates;
+              });
+      },
+      computed: {
+          selected_event_list: function() {
+              list = this.event_list;
+              return list;
+          },
+      },
+  });
+</script>
+<script src ="{% static 'js/event_list_onclick.js' %}"> </script>
+

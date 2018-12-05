@@ -8,10 +8,10 @@
 
 
 
-<section id="event-list" class="container-fluid row gradient-bg">
+<section id="event-list" class="container-fluid row">
 
 
-<div class="col-lg-8 col-md-8 col-sm-12 event-list">
+<div class="col-lg event-list">
 
     <div v-for="event in selected_event_list" class=" float-left col-lg-6 col-md-6 col-sm-12">
 
@@ -27,7 +27,10 @@
 <script src="{% static 'js/helper_functions.js' %}"> </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.16/vue.js"></script>
 <script>
-var place_pk = "1";
+
+var context_type = "{{context_type}}"
+var pk = "{{context_pk}}"
+
   const app = new Vue({
       delimiters: ['[[', ']]'],
       el: "#event-list",
@@ -40,7 +43,7 @@ var place_pk = "1";
           let csrftoken = getCookie('csrftoken');
           let headers = new Headers();
           headers.append('X-CSRFToken', csrftoken);
-          fetch("/api/list_events2/place" + "/" + place_pk, {
+          fetch("/api/list_events_" + context_type + "/" + context_type + "/" + pk, {
               headers: headers,
               method: "GET",
               credentials: 'include',
@@ -48,12 +51,15 @@ var place_pk = "1";
               .then(response => response.json())
               .then(json => {
                   this.event_list = json.dates;
+                  this.organizations = json.organizations;
+                  this.places = json.places;
               });
       },
       computed: {
           selected_event_list: function() {
               list = this.event_list;
               return list;
+              console.log(selected_event_list);
           },
       },
   });

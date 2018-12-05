@@ -41,6 +41,11 @@
 
 {% block context %}
     {% include "plateformeweb/organization.html" with class="sticky-position sticky-top"%}
+    Lieux : 
+        {% for place in organization.place_set.all %}
+        {% include "plateformeweb/place.html" with class="col-md-8" img_class="hide" %}
+        {% endfor %}
+
 {% endblock context %} 
 
 {% block about %}
@@ -56,15 +61,15 @@
 
 {% block about2 %}
 
-{% with about2="Dates et lieux " %}
+{% with about2="Prochains ateliers" %}
     {{ block.super }}
     {% endwith %}
-{{organization.event_set.all.count }} dates programmées dans ces lieux :
-<div class="row d-flex justify-content-center">
-    {% for place in organization.place_set.all %}
-    {% include "plateformeweb/place.html" with class="col-md-3" img_class="hide" %}
-    {% endfor %}
-</div>
+
+    <div class="row d-flex">
+
+        {% include "plateformeweb/event_list_vuejs.html" with context_type="organization" context_pk=organization.pk %}
+
+    </div>
 
 {% endblock about2 %}
 

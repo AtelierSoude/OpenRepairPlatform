@@ -14,6 +14,7 @@ urlpatterns = [
     url(r'^getUsers/(?P<organization_pk>[0-9]+)/(?P<event_pk>[0-9]+)/$', views.list_users, name='list_users'),
     url(r'^addUsers/$', views.add_users, name='add_users'),
     url(r'^list_events/$', views.list_events, name='list_events'),
-    url(r'^list_events2/(?P<context>[-\w]+)/(?P<context_pk>[0-9]+)/$', views.list_events2, name='list_events2'),
+    url(r'^list_events_place/(?P<context_type>[-\w]+)/(?P<context_pk>[0-9]+)/$', views.list_events_in_context, {'context_place':'yes'}, name='list_events_in_context'),
+    url(r'^list_events_organization/(?P<context_type>[-\w]+)/(?P<context_pk>[0-9]+)/$', views.list_events_in_context, {'context_org':'yes'}, name='list_events_in_context'),
     url(r'^book/$', views.book_event, name='book'),
 ]

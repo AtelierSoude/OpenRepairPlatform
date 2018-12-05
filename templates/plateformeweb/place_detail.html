@@ -19,6 +19,7 @@
 
 <h5 class="float-left">
     {{ place.name }}
+
 </h5>
     
     {% if request.user.is_staff %} 
@@ -62,11 +63,7 @@ Editer
     {{ block.super }}
     {% endwith %}
 
-    {% include "plateformeweb/event_list_vuejs.html" %}
-    
-    {% for event in place.event_set.all %}
-    {% include "plateformeweb/event.html" with class="" img_class="col-md-2" about_class="col-md-10 pb-2" %}
-    {% endfor %}
+    {% include "plateformeweb/event_list_vuejs.html" with context_type="place" context_pk=place.pk %}
 
 {% endblock about2 %}
 

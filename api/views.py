@@ -2,6 +2,10 @@ from itsdangerous import URLSafeSerializer, BadData
 from django.http import JsonResponse, HttpResponse
 from django.urls import reverse
 from users.models import CustomUser
+from django.db.models import Q
+from functools import reduce
+from operator import __or__ as OR
+
 from time import strftime
 import locale
 from plateformeweb.models import Event, Organization, OrganizationPerson, Place
@@ -155,7 +159,7 @@ def get_dates(request):
         return JsonResponse({'status': "OK", "dates": events})
 
 
-def list_events_in_context(request, context_pk, context_type, context_place=None, context_org=None ):
+def list_events_in_context(request, context_pk=None, context_type=None, context_user=None, context_place=None, context_org=None ):
     if request.method != 'GET':
         # TODO change this
         return HttpResponse("Circulez, il n'y a rien à voir")
@@ -167,11 +171,28 @@ def list_events_in_context(request, context_pk, context_type, context_place=None
 
         if context_place:
             place = Place.objects.get(pk=context_pk)
-            all_future_events = Event.objects.filter(location=place, starts_at__gte=today, published=True, ).order_by('starts_at')
+            all_future_events = Event.objects.filter(
+                location=place, 
+                starts_at__gte=today, 
+                published=True, ).order_by('starts_at')
         
         if context_org:
             organization = Organization.objects.get(pk=context_pk)
-            all_future_events = Event.objects.filter(organization=organization, starts_at__gte=today, published=True, ).order_by('starts_at')
+            all_future_events = Event.objects.filter(
+                organization=organization, 
+                starts_at__gte=today, 
+                published=True, ).order_by('starts_at')
+        
+        if context_user:
+            lst = [Q(attendees__pk=context_pk) , Q(presents__pk=context_pk) , Q(organizers__pk=context_pk)]
+            all_future_events = Event.objects.filter(reduce(OR, lst)).filter(
+                starts_at__gte=today, 
+                published=True,).order_by('starts_at')
+
+        else:
+            all_future_events = Event.objects.filter(
+                starts_at__gte=today, 
+                published=True).order_by('starts_at')
 
 
         locale.setlocale(locale.LC_ALL, 'fr_FR')
@@ -235,78 +256,6 @@ def list_events_in_context(request, context_pk, context_type, context_place=None
         return JsonResponse({'status': "OK", "dates": events, "organizations": organizations, "places": places})
 
 
-
-def list_events(request):
-    if request.method != 'GET':
-        # TODO change this
-        return HttpResponse("Circulez, il n'y a rien à voir")
-    else:
-        events = []
-        organizations = {}
-        places = {}
-
-        today = timezone.now()
-        all_future_events = Event.objects.filter(starts_at__gte=today, published=True).order_by('starts_at')
-        locale.setlocale(locale.LC_ALL, 'fr_FR')
-
-        for event in all_future_events:
-            event_pk = event.pk
-            event_slug = event.slug
-            event_detail_url = reverse('event_detail', args=[event_pk, event_slug])
-            event_start_timestamp = event.starts_at.timestamp() * 1000
-            organization = event.organization
-            place = event.location
-
-            if organization.pk not in organizations:
-                organization_slug = organization.slug
-                organization_pk = organization.pk
-                organization_detail_url = reverse('organization_detail',
-                                                  args=[organization_pk,
-                                                        organization_slug])
-                organizations[organization_pk] = {
-                    'pk': organization_pk,
-                    'name': organization.name,
-                    'slug': organization_slug,
-                    'organization_detail_url': organization_detail_url,
-                }
-
-            if place.pk not in places:
-                place_slug = place.slug
-                place_pk = place.pk
-                place_detail_url = reverse('place_detail',
-                                                  args=[place_pk,
-                                                        place_slug])
-                places[place_pk] = {
-                    'pk': place_pk,
-                    'name': place.name,
-                    'truncated_name': place.name[0:25],
-                    'slug': place_slug,
-                    'place_detail_url': place_detail_url,
-                }
-
-
-            events += [{
-                'pk': event.pk,
-                'title': event.title,
-                'slug': event_slug,
-                'available_seats': event.available_seats,
-                'type_picture_url': event.type.picture.url,
-                'event_detail_url': event_detail_url,
-                'book_url': reverse('booking_form', args=[event_pk]),
-                'edit_url': reverse('event_edit', args=[event_pk]),
-                'organization_pk': organization.pk,
-                'place_pk': event.location.pk,
-                'published': event.published,
-                'starts_at': event.starts_at.strftime("%H:%M"),
-                'ends_at': event.ends_at.strftime("%H:%M"),
-                'start_timestamp': event_start_timestamp,
-                'user_in_attendees': request.user in event.attendees.all(),
-                'user_in_presents': request.user in event.presents.all(),
-                'user_in_organizers': request.user in event.organizers.all(),
-                'day_month_str': event.starts_at.strftime("%d %B"),
-            }]
-
-        return JsonResponse({'status': "OK", "dates": events, "organizations": organizations, "places": places})
 
 def book_event(request):
     if request.method != 'POST':

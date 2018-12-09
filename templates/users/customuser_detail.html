@@ -61,13 +61,7 @@
 
     <section class="row" id="list-booking">
 
-        {% for event in target_user.event_set.all %}
-        {% include "plateformeweb/event.html" with class="col-md-4 col-12" img_class="col-md-4" about_class="col-md-8 pb-2" %}
-
-        {% empty %}
-        <p>Pas de réservation en attente</p>
-        {% endfor %}
-        
+        {% include "plateformeweb/event_list_vuejs.html" with context_type="user" context_pk=target_user.pk %}
 
     </section>
 

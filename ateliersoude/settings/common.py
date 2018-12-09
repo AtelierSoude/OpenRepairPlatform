@@ -286,7 +286,7 @@ DEBUG_TOOLBAR_PANELS = [
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'atelier-soude.fr'
 EMAIL_HOST_USER = 'no-reply@atelier-soude.fr'
-EMAIL_HOST_PASSWORD = 'noreplyeconomieparticipative'
+EMAIL_HOST_PASSWORD = ''
 EMAIL_PORT = 587
 EMAIL_BACKEND = 'post_office.EmailBackend'
 

@@ -43,7 +43,7 @@ var pk = "{{context_pk}}"
           let csrftoken = getCookie('csrftoken');
           let headers = new Headers();
           headers.append('X-CSRFToken', csrftoken);
-          fetch("/api/list_events_" + context_type + "/" + context_type + "/" + pk, {
+          fetch("/api/list_events_" + context_type + "/" + pk, {
               headers: headers,
               method: "GET",
               credentials: 'include',

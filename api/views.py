@@ -159,7 +159,7 @@ def get_dates(request):
         return JsonResponse({'status': "OK", "dates": events})
 
 
-def list_events_in_context(request, context_pk=None, context_type=None, context_user=None, context_place=None, context_org=None ):
+def list_events_in_context(request, context_pk=None, context_user=None, context_place=None, context_org=None ):
     if request.method != 'GET':
         # TODO change this
         return HttpResponse("Circulez, il n'y a rien à voir")

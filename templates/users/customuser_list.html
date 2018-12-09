@@ -12,19 +12,7 @@
 {% endwith %}
 {% endblock %}
 
-
-
 {% block title %} {{ block.super }} Users {% endblock title %}
-
-
-{% block statistics %}
-
-  {% with first_value=user_list.all.count first_label='members' second_value=user_list.is_staff.all.count second_label='volonteers' third_value='' third_label='up to date' %}
-  {{block.super}}
-  {% endwith %}
-
-{% endblock statistics %}
-
 
 {% block list %}
 

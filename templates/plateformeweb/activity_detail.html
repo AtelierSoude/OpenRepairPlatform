@@ -15,16 +15,16 @@
 {% block TitleAndEdit %}
 
 
-<h5 class="float-left">
-    {{ activity.name }}
-</h5>
-    
-    {% if request.user.is_staff %} 
-    <a class="card-link mr-3 fm-update btn btn-primary float-right" href="{% url 'activity_edit' activity.id %}"
-     data-fm-head="Update" data-fm-callback="reload">&nbsp
-    <i class="fa fa-pencil-square-o 2-xs pt-1"></i>
-    Editer
-    </a>
+    <h5 class="float-left">
+        {{ activity.name }}
+    </h5>
+        
+    {% if request.user.is_authenticated and request.user == activity.owner %}
+        <a class="card-link mr-3 fm-update btn btn-primary float-right" href="{% url 'activity_edit' activity.id %}"
+        data-fm-head="Update" data-fm-callback="reload">&nbsp
+        <i class="fa fa-pencil-square-o 2-xs pt-1"></i>
+        Editer
+        </a>
     {% endif %}
 
 {% endblock TitleAndEdit %}

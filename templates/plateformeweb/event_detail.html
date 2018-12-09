@@ -39,9 +39,9 @@
         data-fm-head="Book" data-fm-callback="reload">&nbsp
         <i class="fa fa-pencil-square-o 2-xs pt-1"></i>
         {% if request.user in event.attendees.all %}
-            Annuler Réservation
+            Je ne participe plus
         {% else %}
-            Réserver
+            Je participe
         {% endif %}
         </a>
     {% endif %}

@@ -22,14 +22,13 @@
 
 </h5>
     
-    {% if request.user.is_staff %} 
-<a class="card-link mr-3 fm-update btn btn-primary float-right" href="{% url 'place_edit' place.id %}"
- data-fm-head="Update" data-fm-callback="reload">&nbsp
-<i class="fa fa-pencil-square-o 2-xs pt-1"></i>
-Editer
-</a>
-
-    {% endif %}
+{% if request.user.is_authenticated and request.user in place.organization.volunteers or place.organization.admins %}
+    <a class="card-link mr-3 fm-update btn btn-primary float-right" href="{% url 'place_edit' place.id %}"
+    data-fm-head="Update" data-fm-callback="reload">&nbsp
+        <i class="fa fa-pencil-square-o 2-xs pt-1"></i>
+    Editer
+    </a>
+{% endif %}
 
 {% endblock TitleAndEdit %}
 
@@ -40,10 +39,8 @@ Editer
 {% endblock header_ban %}}
 
 {% block context %}
-
     {% include "plateformeweb/place.html"%}
    <div class="m-3 pt-3 p-2 bg-white"> {% easy_map place.address 100 100 15 %} </div>
-
 {% endblock context %} 
 
 {% block about %}

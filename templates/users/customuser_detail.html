@@ -11,6 +11,16 @@
 {% endwith %}
 {% endblock %}
 
+{% block TitleAndEdit %}
+
+{% if target_user.pk == request.user.pk %}
+    <a class="card-link mr-3 fm-update btn btn-primary float-right" href="{% url "user_profile" %}">
+        <i class="fa fa-pencil-square-o 2-xs pt-1"></i>
+    Editer mon profil
+    </a>
+{% endif %}
+
+{% endblock TitleAndEdit %}
 
 {% block context %}
 

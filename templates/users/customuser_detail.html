@@ -13,6 +13,25 @@
 
 {% block TitleAndEdit %}
 
+<!-- organizationperson -->
+<div class="row p-2" id="list-organization">
+        <ul class="list-group">
+
+            {% for organization in target_user.organizationperson_set.all %}
+            <li class="list-group-item">
+            {{ organization.role }} à
+                <a href="{% url 'organization_detail' organization.organization.id organization.organization.slug %}">
+                        {{ organization.organization.name }}
+                </a>
+            </li>
+            {% empty %}
+            <p>Ce profil n'est rattaché à aucune organisation</p>
+            {% endfor %}
+           
+        </ul>
+</div>
+
+<!-- edit profil -->
 {% if target_user.pk == request.user.pk %}
     <a class="card-link mr-3 fm-update btn btn-primary float-right" href="{% url "user_profile" %}">
         <i class="fa fa-pencil-square-o 2-xs pt-1"></i>
@@ -28,53 +47,15 @@
     {% include "users/user.html" with user=target_user class="w-100" img_class="col-lg" about_class="row" %}
 </div>
 
-<div class="list-group m-3 bg-white row" id="list-tab" role="tablist">
-        <a class="list-group-item list-group-item-action" id="list-organization-list" data-toggle="list" href="#list-organization" role="tab" aria-controls="organization">Organisations</a>
-        <a class="list-group-item list-group-item-action active" id="list-booking-list" data-toggle="list" href="#list-booking" role="tab" aria-controls="booking">Rendez-vous</a>
-</div>
-
-
+<!-- which rendez-vous -->
 {% endblock context %}
 
 {% block about %}
+<h5 class="border-bottom border-gray pb-2 mb-0 clear ">Rendez-vous</h5>
 
-{% block about1 %}
+<section class="row" id="list-booking">
 
-    {% with about1="Organisations ratachées" %}
-    {{ block.super }}
-    {% endwith %}
+    {% include "plateformeweb/event_list_vuejs.html" with context_type="user" context_pk=target_user.pk %}
 
-    <section class="row p-2" id="list-organization">
-        <ul class="list-group">
-
-            {% for organization in target_user.organizationperson_set.all %}
-            <li class="list-group-item">
-            {{ organization.role }} à
-                <a href="{% url 'organization_detail' organization.organization.id organization.organization.slug %}">
-                        {{ organization.organization.name }}
-                </a>
-            </li>
-            {% empty %}
-            <p>Ce profile n'est rattaché à aucune organisation</p>
-            {% endfor %}
-           
-        </ul>
-    </section>
-
-{% endblock about1 %}
-
-{% block about2 %}
-
-    {% with about2="Rendez-vous" %}
-    {{ block.super }}
-    {% endwith %}
-
-    <section class="row" id="list-booking">
-
-        {% include "plateformeweb/event_list_vuejs.html" with context_type="user" context_pk=target_user.pk %}
-
-    </section>
-
-{% endblock about2 %}
-
+</section>
 {% endblock about %}

@@ -40,17 +40,9 @@
 {% endblock context %} 
 
 {% block about %}
-
-{% block about1 %}
-{% with about1="Description" %}
-{{ block.super }}
-
-
-{% endwith %}
+<h5 class="border-bottom border-gray pb-2 mb-0 clear ">Description</h5>
 <p>
 {{ activity.description|markdown }}
 </p>
-{% endblock about1 %}
-
 {% endblock about %}
       

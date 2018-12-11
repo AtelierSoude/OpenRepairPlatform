@@ -136,11 +136,6 @@
 
 {% block about %}
 
-{% block about1 %}
-{% with about1="" %}
-{{ block.super }}
-{% endwith %}
-
 <!-- Add users to event : attendees if date_event < current_date , presents if date_event = current_date -->
 {% if request.user.is_authenticated and request.user in admin_or_volunteer %}
 
@@ -181,14 +176,10 @@
 
 {% endif %}
 <!-- end add users to event -->
-{% endblock about1 %}
 
-
-{% block about2 %}
 <!-- Users that have a role in the organization -->
-    {% with about2="Animateur.trice.s" %}
-    {{ block.super }}
-    {% endwith %}
+
+<h5 class="border-bottom border-gray pb-2 mb-0 clear ">Animateur.trice.s</h5>
 
     {% for user in event.organizers.all %}
         {% include "users/user.html" with float="float-left" class="row checked administrator" orga=True img_class="col-12" content_class="col-12 text-center" %}
@@ -203,15 +194,10 @@
     {% endfor %}
 
 <!-- End users that have a role in the organization -->
-{% endblock about2 %}
 
-
-{% block about3 %}
 <!-- Attendees and presents -->
-    {% with about3="Participant.e.s" %}
-    {{ block.super }}
-    {% endwith %}
 
+<h5 class="border-bottom border-gray pb-2 mb-0 clear ">Participant.e.s</h5>
 
 {% if request.user.is_authenticated and request.user in admin_or_volunteer %}
 <!-- display presents for admin or volonteers -->
@@ -248,7 +234,6 @@
 {% endif %}
 
 <!-- End attendees and presents -->
-{% endblock about3 %}
 
 <script src="{% static "js/helper_functions.js" %}"></script>
 <script src="{% static "js/event_detail.js" %}"></script>

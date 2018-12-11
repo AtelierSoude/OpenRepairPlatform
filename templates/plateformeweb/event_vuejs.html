@@ -58,10 +58,11 @@
                 </ul>
 
                 <!-- book -->
-
-                <button v-if="event.user_in_organizers" id="event.pk" purpose="trash" class="card-link mr-3 btn btn-danger float-right btn-circle" onclick="event_list_onclick(this)">
+                <span v-if="event.user_in_organizers">
+                <button id="event.pk" purpose="trash" class="card-link mr-3 btn btn-danger float-right btn-circle" onclick="event_list_onclick(this)">
                     {% fontawesome_icon 'trash' large=True %}
                 </button>
+                </span>
                     
                 <button v-if="event.user_in_attendees" :id="event.pk" purpose="cancel" class="card-link mr-3 btn btn-danger float-right" onclick="event_list_onclick(this)">
                     Je ne participe plus

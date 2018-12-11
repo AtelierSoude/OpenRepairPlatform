@@ -45,24 +45,11 @@
 
 {% block about %}
 
-{% block about1 %}
-
-    {% with about1="Description" %}
-    {{ block.super }}
-    {% endwith %}
+    <h5 class="border-bottom border-gray pb-2 mb-0 clear ">Description</h5>
     {{ place.description|markdown }}
 
-{% endblock about1 %}
-
-{% block about2 %}
-
-    {% with about2="Dates dans ce lieux" %}
-    {{ block.super }}
-    {% endwith %}
-
+    <h5 class="border-bottom border-gray pb-2 mb-0 clear ">Evenements organisés à {{plae.name}} </h5>
     {% include "plateformeweb/event_list_vuejs.html" with context_type="place" context_pk=place.pk %}
-
-{% endblock about2 %}
 
 {% endblock about %}
       

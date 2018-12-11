@@ -16,11 +16,7 @@
 {% endblock %}
 
 {% block TitleAndEdit %}
-
-
-<h5 class="float-left">
-    {{ organization.name }}
-</h5>
+<h5 class="float-left">{{ organization.name }}</h5>
     
 {% if request.user.is_authenticated and request.user in organization.volunteers or organization.admins %}
     <a class="card-link mr-3 fm-update btn btn-primary float-right" href="{% url 'organization_edit' organization.id %}"
@@ -38,7 +34,6 @@
 {% endwith %}
 {% endblock header_ban %}}
 
-
 {% block context %}
     {% include "plateformeweb/organization.html" with class="sticky-position sticky-top"%}
     Lieux : 
@@ -48,22 +43,14 @@
 
 {% endblock context %} 
 
+
 {% block about %}
 
-{% block about1 %}
+<h5 class="border-bottom border-gray pb-2 mb-0 clear ">Description</h5>
 
-    {% with about1="Description" %}
-    {{ block.super }}
-    {% endwith %}
     {{ organization.description|markdown }}
 
-{% endblock about1 %}
-
-{% block about2 %}
-
-{% with about2="Prochains ateliers" %}
-    {{ block.super }}
-    {% endwith %}
+<h5 class="border-bottom border-gray pb-2 mb-0 clear ">Prochaines dates</h5> 
 
     <div class="row d-flex">
 
@@ -71,12 +58,8 @@
 
     </div>
 
-{% endblock about2 %}
+<h5 class="border-bottom border-gray pb-2 mb-0 clear ">Membres actif.ve.s </h5>
 
-{% block about3 %}
-    {% with about3="membres actif.ve.s" %}
-        {{ block.super }}
-    {% endwith %}
     <div class="row d-flex justify-content-center">
     {% for user in organization.volunteers %}
         {% with user=organizationperson.user %}
@@ -84,7 +67,6 @@
         {% endwith %}
     {% endfor %}
     </div>
-{% endblock about3 %}
 
 {% endblock about %}
 

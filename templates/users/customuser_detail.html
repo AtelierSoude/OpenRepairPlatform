@@ -11,15 +11,30 @@
 {% endwith %}
 {% endblock %}
 
+{% if user.is_authenticated %}
+
 {% block TitleAndEdit %}
 
 <!-- organizationperson -->
-<div class="row p-2" id="list-organization">
+
+
+<div class="row p-2 float-left" id="list-organization">
         <ul class="list-group">
 
             {% for organization in target_user.organizationperson_set.all %}
             <li class="list-group-item">
-            {{ organization.role }} à
+
+                {% if organization.role == 0 %}
+                    Visiteur 
+                {% elif organization.role == 10 %}
+                    Membre 
+                {% elif organization.role == 20 %}
+                    Membre actif
+                {% elif organization.role == 30 %}
+                    Administateur
+                {% endif %}
+
+                à
                 <a href="{% url 'organization_detail' organization.organization.id organization.organization.slug %}">
                         {{ organization.organization.name }}
                 </a>
@@ -59,3 +74,5 @@
 
 </section>
 {% endblock about %}
+
+{% endif %}

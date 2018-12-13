@@ -12,10 +12,7 @@
 {% endblock %}
 
 {% block TitleAndEdit %}
-
 <!-- organizationperson -->
-
-
 <div class="row p-2 float-left" id="list-organization">
         <ul class="list-group">
 
@@ -51,18 +48,15 @@
     Editer mon profil
     </a>
 {% endif %}
-
 {% endblock TitleAndEdit %}
 
 {% block context %}
-
 <div class="">
     {% include "users/user.html" with user=target_user class="w-100" img_class="col-lg" about_class="row" %}
 </div>
 
-<!-- which rendez-vous -->
 {% endblock context %}
-
+<!-- which rendez-vous -->
 {% block about %}
 <h5 class="border-bottom border-gray pb-2 mb-0 clear ">Rendez-vous</h5>
 

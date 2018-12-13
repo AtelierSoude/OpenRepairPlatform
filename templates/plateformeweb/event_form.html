@@ -6,7 +6,7 @@
 {% load django_bootstrap_breadcrumbs %}
 
 {% block breadcrumbs %}
-{% with type="mass-event-create" list_view="event_list" view="event_create" %}
+{% with type="create-events" list_view="event_list" view="event_create" %}
     {{ block.super }}
 {% endwith %}
 {% endblock %}
@@ -14,7 +14,6 @@
 {% block title %} {{ block.super }} Publication d'évènements {% endblock title %}
 
 {% block form %}
-
 
 
 <div class="row">

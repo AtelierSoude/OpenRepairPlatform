@@ -12,13 +12,19 @@
 {% endwith %}
 {% endblock %}
 
+<!-- just for define header-bar right color -->
+{% block header_ban %}
+    {% with object="activity" %}
+    {{ block.super }}
+{% endwith %}
+{% endblock header_ban %}
+<!-- end define -->
+
+
 {% block TitleAndEdit %}
-
-
     <h5 class="float-left">
         {{ activity.name }}
     </h5>
-        
     {% if request.user.is_authenticated and request.user == activity.owner %}
         <a class="card-link mr-3 fm-update btn btn-primary float-right" href="{% url 'activity_edit' activity.id %}"
         data-fm-head="Update" data-fm-callback="reload">&nbsp
@@ -26,14 +32,7 @@
         Editer
         </a>
     {% endif %}
-
 {% endblock TitleAndEdit %}
-
-{% block header_ban %}
-    {% with object="activity" %}
-    {{ block.super }}
-{% endwith %}
-{% endblock header_ban %}}
 
 {% block context %}
     {% include "plateformeweb/activity.html" with id=activity.pk %}

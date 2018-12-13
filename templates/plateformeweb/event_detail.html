@@ -14,10 +14,16 @@
 {% endwith %}
 {% endblock %}
 
+<!-- define right header-bar color -->
+{% block header_ban %}
+    {% with object="event" %}
+        {{ block.super }}
+{% endwith %}
+{% endblock header_ban %}
+<!-- end define -->
 
 <!--- Item banner -->
 {% block TitleAndEdit %}
-
 <h5 class="float-left">
     {{ event.type }} du {{ event.starts_at|date:"d M" }} à
     <a href="{% url 'place_detail' event.location.id event.location.slug %}">
@@ -46,18 +52,8 @@
         </a>
     {% endif %}
 {% endif %}
-
 {% endblock TitleAndEdit %}
-
-
-{% block header_ban %}
-    {% with object="event" %}
-    {{ block.super }}
-{% endwith %}
-
-{% endblock header_ban %}
 <!-- End item banner -->
-
 
 
 {% block context %}

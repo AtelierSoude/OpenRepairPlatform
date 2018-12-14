@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+{% load fontawesome %}
+{% load avatar_tags %}
+{% load django_bootstrap_breadcrumbs %}
+
+{% block content %}
+{% render_breadcrumbs %}
+<div class="container">  
+<div class="col-lg">
+<!-- title -->
+<h1>Manage {{organization.name}}</h1>
+
+<h2>Conditions d'accès</h2>
+<a class="nav-link mr-3 fm-create" href="{% url 'condition_create' %}" title="create condition" data-fm-head="Create" data-fm-callback="reload">
+    <i class="fa fa-plus-circle fa-xs"></i>
+</a>
+{% for condition in organization.condition_set.all %}
+{{condition.name}}
+{% endfor %}
+
+
+<h2>Lieux</h2>
+    <a class="nav-link mr-3 fm-create" href="{% url 'place_create' %}" title="create place" data-fm-head="Create" data-fm-callback="reload">
+        <i class="fa fa-map-marker fa-lg"></i> <i class="fa fa-plus-circle fa-xs"></i>
+    </a>
+{% for place in organization.place_set.all %}
+{% include "plateformeweb/place.html" with class="col-lg" img_class="hide" %}
+{% endfor %}
+
+
+
+<h2>Activity</h2>
+
+{% for activity in organization.event_set.all %}
+{% include "plateformeweb/activity.html" %}
+{% endfor %}
+
+</div>
+</div>
+{% endblock %}

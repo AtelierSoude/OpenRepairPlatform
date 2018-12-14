@@ -191,6 +191,8 @@ class Place(models.Model):
 # ------------------------------------------------------------------------------
 
 #Condition : mettre ailleurs, en test
+
+
 class Condition(models.Model):
     name = models.CharField(verbose_name=_("Condition Type"), max_length=100,
                             null=False,
@@ -201,6 +203,8 @@ class Condition(models.Model):
     description = models.TextField(verbose_name=_("Condition description"),
                             null=False,
                             blank=False, default="")
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE,
+                                     null=True)
     price = MoneyField(
         'tarif', currency='EUR', default='5', max_digits=9,
         decimal_places=2, blank=True)

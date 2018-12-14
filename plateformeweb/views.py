@@ -244,7 +244,7 @@ class ActivityListView(ListView):
 
 class ActivityFormView():
     model = Activity
-    fields = ["name", "description", "picture"]
+    fields = ["name", "description", "organization", "picture"]
 
     def get_form(self, form_class=None):
         if form_class is None:
@@ -253,6 +253,14 @@ class ActivityFormView():
         form.fields['description'] = CharField(widget=MarkdownWidget())
 
         limited_choices = [["", '---------']]
+        form.fields['description'] = CharField(widget=MarkdownWidget())
+        user_orgs = OrganizationPerson.objects.filter(user=self.request.user,
+                                                      role__gte=OrganizationPerson.ADMIN)
+        for result in user_orgs:
+            organization = result.organization
+            limited_choices.append([organization.pk, organization.name])
+        form.fields['organization'].choices = limited_choices
+
         return form
 
     def get_success_url(self):
@@ -260,13 +268,11 @@ class ActivityFormView():
                             args=(self.object.pk, self.object.slug,))
 
 
-class ActivityCreateView(PermissionRequiredMixin, ActivityFormView, CreateView):
+class ActivityCreateView(PermissionRequiredMixin, ActivityFormView, AjaxCreateView):
     permission_required = 'plateformeweb.create_activity'
 
         # set owner to current user on creation
     def form_valid(self, form):
-        obj = form.save(commit=False)
-        obj.owner = self.request.user
         return super().form_valid(form)
 
 

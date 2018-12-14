@@ -219,7 +219,7 @@ class Activity(models.Model):
                             blank=False, default="")
     slug = AutoSlugField(populate_from=('name'), default='',
                          unique=False)
-    owner = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True)
+    organization = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True)
     description = MarkdownField(verbose_name=_("Activity description"),
                             null=False,
                             blank=False, default="")

@@ -29,7 +29,7 @@
                 {% if request.resolver_match.url_name == "user_detail" %}
                 
                 <ul class="list-group">
-                    {% for organization in user.organizationperson_set.all %}
+                    {% for organization in user.organizationperson_set.all|slice:"1" %}
                         {% if request.user.is_authenticated and request.user in organization.organization.volunteers or organization.organization.admins %}
                         <li class="list-group-item">{% fontawesome_icon 'phone' %}   {{ user.phone_number }} </li>
                         <li class="list-group-item">{% fontawesome_icon 'envelope-o' %} {{ user.email }}</li>

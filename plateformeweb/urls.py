@@ -10,6 +10,7 @@ urlpatterns = [
     url(r'^organization/create/$', views.OrganizationCreateView.as_view(), name='organization_create'),
     url(r'^organization/(?P<pk>[0-9]+)/edit/$', views.OrganizationEditView.as_view(), name='organization_edit'),
     url(r'^organization/(?P<pk>[0-9]+)/(?P<slug>[-\w]+)/$', views.OrganizationView.as_view(), name='organization_detail'),
+    url(r'^organization_manager/(?P<pk>[0-9]+)/$', views.OrganizationManager, name='organization_manager'),
     url(r'^place/$', views.PlaceListView.as_view(), name='place_list'),
     url(r'^place/create/$', views.PlaceCreateView.as_view(), name='place_create'),
     url(r'^place/(?P<pk>[0-9]+)/edit/$', views.PlaceEditView.as_view(), name='place_edit'),

@@ -85,6 +85,16 @@ class OrganizationEditView(PermissionRequiredMixin, OrganizationFormView,
     queryset = Organization.objects
 
 
+# -- Admin page to manage the organization contents -- 
+
+def OrganizationManager(request, pk):
+    organization = Organization.objects.get(pk=pk)
+    organization_admins = organization.admins()
+    if request.user in organization_admins:
+        context = {"organization": organization}
+    return render(request, 'plateformeweb/organization_manager.html', context)
+
+
 # --- Places ---
 
 class PlaceView(DetailView):

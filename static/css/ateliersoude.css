@@ -81,9 +81,10 @@ h1, h2, h3 {
 *********************************/
 
 .dropdown-menu {
-  right: 40px;
-  left: 210px !important;
+  right: 0px;
+  left: 150px !important;
   top: 60px;
+  width: 100%;
 }
 
 .gradient-bg{

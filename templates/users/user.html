@@ -27,12 +27,19 @@
                 </p>
 
                 {% if request.resolver_match.url_name == "user_detail" %}
-
+                
                 <ul class="list-group">
-                    <li class="list-group-item">{% fontawesome_icon 'clock-o' %} Membre depuis le {{ user.date_joined}}</li>
-                    <li class="list-group-item">{% fontawesome_icon 'envelope-o' %} {{ user.email }}</li>
+                    {% for organization in user.organizationperson_set.all %}
+                        {% if request.user.is_authenticated and request.user in organization.organization.volunteers or organization.organization.admins %}
+                        <li class="list-group-item">{% fontawesome_icon 'phone' %}   {{ user.phone_number }} </li>
+                        <li class="list-group-item">{% fontawesome_icon 'envelope-o' %} {{ user.email }}</li>
+                        <li class="list-group-item">{% fontawesome_icon 'map-marked' %}   {{ user.street_address }} </li>
+                        <li class="list-group-item">{% fontawesome_icon 'birthday-cake' %}   {{ user.birth_date }} </li>
+                        {% endif %}
+                    {% endfor %}
+                        <li class="list-group-item">{% fontawesome_icon 'clock-o' %} Membre depuis le {{ user.date_joined }}</li>
                 </ul>
-
+                
                 {% endif %}
 
             {% if orga %}

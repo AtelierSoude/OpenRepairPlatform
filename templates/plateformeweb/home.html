@@ -19,19 +19,10 @@
     {% if user.is_authenticated %}
 
         <div class="row">
-
             <div class="row"> 
                 {% avatar user %}
                 <h1>{{request.user.first_name}}</h1>
             </div>
-       
-             <div class="row"> 
-                {% for event in my_last_event_attending %}
-                    <h3 class="text-align-center">Mes prochaines réservation</h3>
-                    {% include "plateformeweb/event.html" with class="row" img_class="col-3" about_class="col-9" %}
-                {% endfor %}
-            </div>
-
         </div>
 
     {% else %}
@@ -76,17 +67,6 @@
                 </a>
             </div>
           </div>
-
-<!-- Last events -->
-
-<h1> Prochaines dates </h1>
-
-<section class="row ml-4 py-2">
-    {% for event in last_events %}
-        {% include "plateformeweb/event.html" with class="row" img_class="col-4" about_class="col-8" %}
-    {% endfor %}
-</section>
-
 
     {% endif %}
 

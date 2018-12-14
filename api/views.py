@@ -2,6 +2,10 @@ from itsdangerous import URLSafeSerializer, BadData
 from django.http import JsonResponse, HttpResponse
 from django.urls import reverse
 from users.models import CustomUser
+from django.db.models import Q
+from functools import reduce
+from operator import __or__ as OR
+
 from time import strftime
 import locale
 from plateformeweb.models import Event, Organization, OrganizationPerson, Place
@@ -154,7 +158,8 @@ def get_dates(request):
 
         return JsonResponse({'status': "OK", "dates": events})
 
-def list_events(request):
+
+def list_events_in_context(request, context_pk=None, context_type=None, context_user=None, context_place=None, context_org=None ):
     if request.method != 'GET':
         # TODO change this
         return HttpResponse("Circulez, il n'y a rien à voir")
@@ -162,9 +167,34 @@ def list_events(request):
         events = []
         organizations = {}
         places = {}
-
         today = timezone.now()
-        all_future_events = Event.objects.filter(starts_at__gte=today, published=True).order_by('starts_at')
+
+        if context_place:
+            place = Place.objects.get(pk=context_pk)
+            all_future_events = Event.objects.filter(
+                location=place, 
+                starts_at__gte=today, 
+                published=True, ).order_by('starts_at')
+        
+        if context_org:
+            organization = Organization.objects.get(pk=context_pk)
+            all_future_events = Event.objects.filter(
+                organization=organization, 
+                starts_at__gte=today, 
+                published=True, ).order_by('starts_at')
+        
+        if context_user:
+            lst = [Q(attendees__pk=context_pk) , Q(presents__pk=context_pk) , Q(organizers__pk=context_pk)]
+            all_future_events = Event.objects.filter(reduce(OR, lst)).filter(
+                starts_at__gte=today, 
+                published=True,).order_by('starts_at')
+
+        else:
+            all_future_events = Event.objects.filter(
+                starts_at__gte=today, 
+                published=True).order_by('starts_at')
+
+
         locale.setlocale(locale.LC_ALL, 'fr_FR')
 
         for event in all_future_events:
@@ -187,7 +217,7 @@ def list_events(request):
                     'slug': organization_slug,
                     'organization_detail_url': organization_detail_url,
                 }
-
+            
             if place.pk not in places:
                 place_slug = place.slug
                 place_pk = place.pk
@@ -202,7 +232,6 @@ def list_events(request):
                     'place_detail_url': place_detail_url,
                 }
 
-
             events += [{
                 'pk': event.pk,
                 'title': event.title,
@@ -212,7 +241,7 @@ def list_events(request):
                 'event_detail_url': event_detail_url,
                 'book_url': reverse('booking_form', args=[event_pk]),
                 'edit_url': reverse('event_edit', args=[event_pk]),
-                'organization_pk': event.organization.pk,
+                'organization_pk': organization.pk,
                 'place_pk': event.location.pk,
                 'published': event.published,
                 'starts_at': event.starts_at.strftime("%H:%M"),
@@ -225,6 +254,8 @@ def list_events(request):
             }]
 
         return JsonResponse({'status': "OK", "dates": events, "organizations": organizations, "places": places})
+
+
 
 def book_event(request):
     if request.method != 'POST':

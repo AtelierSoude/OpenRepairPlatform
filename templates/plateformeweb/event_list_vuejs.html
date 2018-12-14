@@ -1,0 +1,68 @@
+
+
+{% load staticfiles %}
+{% load fontawesome %}
+{% load avatar_tags %}
+
+<script src="{% static 'js/make_modal.js' %}"> </script>
+
+
+
+<section id="event-list" class="container-fluid row">
+
+
+<div class="col-lg event-list">
+
+    <div v-for="event in selected_event_list" class=" float-left col-lg-6 col-md-6 col-sm-12">
+
+      {% include "plateformeweb/event_vuejs.html" with class="" img_class="col-md-4" about_class="col-md-8 pb-2" %}
+
+    </div>
+   <div v-if="event_list.length == 0"><img src="{% static "img/loading-gif.gif" %}"></div>
+
+</div>
+
+</section>
+
+<script src="{% static 'js/helper_functions.js' %}"> </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.16/vue.js"></script>
+<script>
+
+var context_type = "{{context_type}}"
+var pk = "{{context_pk}}"
+
+  const app = new Vue({
+      delimiters: ['[[', ']]'],
+      el: "#event-list",
+      data() {
+          return {
+              event_list : [],
+          }
+      },
+      created() {
+          let csrftoken = getCookie('csrftoken');
+          let headers = new Headers();
+          headers.append('X-CSRFToken', csrftoken);
+          fetch("/api/list_events_" + context_type + "/" + pk, {
+              headers: headers,
+              method: "GET",
+              credentials: 'include',
+          })
+              .then(response => response.json())
+              .then(json => {
+                  this.event_list = json.dates;
+                  this.organizations = json.organizations;
+                  this.places = json.places;
+              });
+      },
+      computed: {
+          selected_event_list: function() {
+              list = this.event_list;
+              return list;
+              console.log(selected_event_list);
+          },
+      },
+  });
+</script>
+<script src ="{% static 'js/event_list_onclick.js' %}"> </script>
+

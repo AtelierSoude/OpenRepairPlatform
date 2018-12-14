@@ -145,7 +145,7 @@ class PlaceCreateView(PermissionRequiredMixin, PlaceFormView, CreateView):
         return super().form_valid(form)
 
 
-class PlaceEditView(PermissionRequiredMixin, PlaceFormView, UpdateView):
+class PlaceEditView(PermissionRequiredMixin, PlaceFormView, AjaxUpdateView):
     permission_required = 'plateformeweb.edit_place'
     queryset = Place.objects
 
@@ -197,14 +197,6 @@ class ActivityFormView():
         form.fields['description'] = CharField(widget=MarkdownWidget())
 
         limited_choices = [["", '---------']]
-        user_orgs = OrganizationPerson.objects.filter(user=self.request.user,
-                                                      role__gte=OrganizationPerson.ADMIN)
-
-        for result in user_orgs:
-            organization = result.organization
-            limited_choices.append([organization.pk, organization.name])
-
-        form.fields['organization'].choices = limited_choices
         return form
 
     def get_success_url(self):
@@ -222,8 +214,8 @@ class ActivityCreateView(PermissionRequiredMixin, ActivityFormView, CreateView):
         return super().form_valid(form)
 
 
-class ActivityEditView(PermissionRequiredMixin, ActivityFormView, UpdateView):
-    permission_required = 'plateformeweb.edit_acivity'
+class ActivityEditView( ActivityFormView, AjaxUpdateView):
+   # permission_required = 'plateformeweb.edit_acivity'
     queryset = Activity.objects
 
 
@@ -298,7 +290,7 @@ class EventListView(ListView):
 class EventEditView(PermissionRequiredMixin, AjaxUpdateView):
     permission_required = 'plateformeweb.edit_event'
     fields = ["title", "type", "starts_at", "ends_at", "available_seats",
-              "attendees", "presents", "organizers", "location", "publish_at", "published",
+              "organizers", "location", "publish_at", "published",
               "organization", "condition"]
     queryset = Event.objects
 
@@ -337,7 +329,7 @@ class BookingFormView():
 
         mail.send(
             [user.email],
-            'debugsoude@gmail.com',
+            'no-reply@atelier-soude.fr',
             subject=subject,
             message=msg_plain,
             html_message=msg_html
@@ -356,7 +348,7 @@ class BookingEditView(BookingFormView, UpdateView):
                                    salt='book')
 
         data = {'event_id': event_id}
-        context['booking_id'] = serial.dumps(data);
+        context['booking_id'] = serial.dumps(data)
         return context
 
 

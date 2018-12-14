@@ -12,45 +12,36 @@
 {% endwith %}
 {% endblock %}
 
-{% block TitleAndEdit %}
-
-
-<h5 class="float-left">
-    {{ activity.name }}
-</h5>
-    
-    {% if request.user.is_staff %} 
-    <a class="card-link mr-3 fm-update btn btn-primary float-right" href="{% url 'activity_edit' activity.id %}"
-     data-fm-head="Update" data-fm-callback="reload">&nbsp
-    <i class="fa fa-pencil-square-o 2-xs pt-1"></i>
-    Editer
-    </a>
-    {% endif %}
-
-{% endblock TitleAndEdit %}
-
+<!-- just for define header-bar right color -->
 {% block header_ban %}
     {% with object="activity" %}
     {{ block.super }}
 {% endwith %}
-{% endblock header_ban %}}
+{% endblock header_ban %}
+<!-- end define -->
+
+
+{% block TitleAndEdit %}
+    <h5 class="float-left">
+        {{ activity.name }}
+    </h5>
+    {% if request.user.is_authenticated and request.user == activity.owner %}
+        <a class="card-link mr-3 fm-update btn btn-primary float-right" href="{% url 'activity_edit' activity.id %}"
+        data-fm-head="Update" data-fm-callback="reload">&nbsp
+        <i class="fa fa-pencil-square-o 2-xs pt-1"></i>
+        Editer
+        </a>
+    {% endif %}
+{% endblock TitleAndEdit %}
 
 {% block context %}
     {% include "plateformeweb/activity.html" with id=activity.pk %}
 {% endblock context %} 
 
 {% block about %}
-
-{% block about1 %}
-{% with about1="Description" %}
-{{ block.super }}
-
-
-{% endwith %}
+<h5 class="border-bottom border-gray pb-2 mb-0 clear ">Description</h5>
 <p>
 {{ activity.description|markdown }}
 </p>
-{% endblock about1 %}
-
 {% endblock about %}
       

@@ -1,4 +1,3 @@
-
 {% extends 'list_view.html' %}
 
 {% load staticfiles %}
@@ -12,18 +11,7 @@
 {% endwith %}
 {% endblock %}
 
-
 {% block title %} {{ block.super }} organisations {% endblock title %}
-
-
-{% block statistics %}
-
-  {% with first_value=organization_list.all.count first_label='organisations' second_value='' second_label='events' third_value='' third_label='?' %}
-  {{block.super}}
-  {% endwith %}
-
-{% endblock statistics %}
-
 
 {% block list %}
   <section class="">

@@ -1,4 +1,4 @@
-{% extends 'form_view.html' %}
+
 
 {% load staticfiles %}
 {% load fontawesome %}
@@ -6,14 +6,7 @@
 {% load django_bootstrap_breadcrumbs %}
 {% load crispy_forms_tags %}
 
-
-{% block breadcrumbs %}
-{% with type="informations" list_view="" view="user_profile" %}
-    {{ block.super }}
-{% endwith %}
-{% endblock %}
-
-{% block title %} {{ block.super }} Mes informations {% endblock title %}
+Edites mes informations
 
 {% block form %}
 

@@ -1,4 +1,3 @@
-
 {% extends 'list_view.html' %}
 
 {% load staticfiles %}
@@ -12,19 +11,7 @@
 {% endwith %}
 {% endblock %}
 
-
-
 {% block title %} {{ block.super }} Users {% endblock title %}
-
-
-{% block statistics %}
-
-  {% with first_value=user_list.all.count first_label='members' second_value=user_list.is_staff.all.count second_label='volonteers' third_value='' third_label='up to date' %}
-  {{block.super}}
-  {% endwith %}
-
-{% endblock statistics %}
-
 
 {% block list %}
 
@@ -33,29 +20,14 @@
 
 {% for user in object_list %}
 		{% include "users/user.html" with class="row" img_class="col-12" content_class="col-12 text-center" %}
-	<!-- {% empty %}
-  <div>No users yet.</div>   --> 
+{% empty %}
+  <div>No users yet.</div>  
 {% endfor %}
 
 
 </div>
 </section>
 
-		
 {% endblock list %}
-
-
-<!-- <div class="row">
-	<div class="col-md-4">
-		<p>balazkek^</p>
-	</div>
-	<div class="col-md-4">
-		<p>balazkek^</p>
-	</div>
-	<div class="col-md-4">
-		<p>balazkek^</p>
-	</div>
-</div> -->
-
 
 

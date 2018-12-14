@@ -14,16 +14,6 @@
 
 {% block title %} {{ block.super }} Lieux {% endblock title %}
 
-
-{% block statistics %}
-
-  {% with first_value=place_list.all.count first_label='lieux' second_value='' second_label='évènements' %}
-  {{block.super}}
-  {% endwith %}
-
-{% endblock statistics %}
-
-
 {% block list %}
 
  <link rel="stylesheet" href="{% static "css/leaflet.awesome-markers.css" %}">

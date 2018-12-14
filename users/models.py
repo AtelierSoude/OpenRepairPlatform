@@ -5,7 +5,6 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.mail import send_mail
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, AbstractUser
 from django.contrib.auth.models import BaseUserManager
-from phonenumber_field.modelfields import PhoneNumberField
 from address.models import AddressField
 from avatar.models import AvatarField
 from django.urls import reverse
@@ -70,11 +69,10 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
                                         'active. Unselect this instead of deleting accounts.'))
     date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
 
-    # https://github.com/stefanfoulis/django-phonenumber-field
-    phone_number = PhoneNumberField(_("phone number"), blank=True, null=True)
-
     # https://github.com/furious-luke/django-address
     street_address = AddressField(_("street address"), blank=True, null=True)
+
+    phone_number = models.CharField(_("phone number"), max_length=15, blank=True, null=True)
 
     birth_date = models.DateField(_("date of birth"), blank=True, null=True)
 

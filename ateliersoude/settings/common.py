@@ -65,7 +65,6 @@ INSTALLED_APPS = [
     'dbsettings',
     'debug_toolbar',
     'plateformeweb',
-    'phonenumber_field',
     'address',
     'avatar',
     'crispy_forms',

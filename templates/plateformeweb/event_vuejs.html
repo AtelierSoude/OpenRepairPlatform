@@ -5,6 +5,7 @@
 
 
 {% block list %}
+<a :href="event.event_detail_url">
     <div v-if="event.available_seats == 0" class="unaccessible">
     </div>
 
@@ -22,8 +23,7 @@
         <div class="{{about_class}} card-body">
 
                     <h5 class="card-title">
-                        <a :href="event.event_detail_url">
-                        [[event.title]]</a>
+                        [[event.title]]
                     </h5>
 
                             <span v-if="event.available_seats == 0" class="badge badge-warning">plus de place</span>
@@ -49,4 +49,5 @@
                 <button v-else :id="event.pk" purpose="book" class="m-2 btn btn-primary" onclick="event_list_onclick(this)">
                     Je participe
                 </button>
+</a>
 {% endblock list %}

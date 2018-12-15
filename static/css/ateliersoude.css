@@ -10,7 +10,7 @@ body, html, .container, div, .card, ul, p {
 ******* éléments généraux *******
 *********************************/
 body {
-    background-color: #F4F3F0;
+    background-color: #eef2f6 !important;
 }
 a {
   /* text-decoration: none !important; */
@@ -131,7 +131,8 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a6b5fff1', e
 .card {
   margin : 15px !important;
   text-align: center;
-  border: none;
+  border : none !important;
+  border-radius: none !important;
 }
 
 
@@ -156,6 +157,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a6b5fff1', e
 
 .card-user {
   font-size: 12px;
+  z-index: 1000;
 }
 
 .card ul li {
@@ -167,7 +169,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a6b5fff1', e
 }
 .card .fa, .card a {
   text-decoration: none;
-  color: #49d3be
+  color:  #212120;
 }
 
 .card-body {

@@ -259,7 +259,9 @@ text-align: center;
     min-height: 250px !important;
     padding: 10px !important;
     margin-top: 10% !important;
+    width: 50% !important;
 }
+
 
 
 
@@ -475,7 +477,7 @@ input[type="checkbox"], input[type="radio"],input[type="number"]  {
 .js-modal {
   display: none;
   position: fixed;
-  z-index: 1;
+  z-index: 10000;
   left: 0;
   top: 0;
   width: 100%;
@@ -490,7 +492,7 @@ input[type="checkbox"], input[type="radio"],input[type="number"]  {
   margin: 15% auto;
   padding: 20px;
   border: 1px solid #888;
-  width: 80%;
+  width: 50% !important;
 }
 
 .close {

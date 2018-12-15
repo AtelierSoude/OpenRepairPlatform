@@ -35,7 +35,7 @@
 {% else %}
     {% if request.user in event.organizers.all %}
         <a class="card-link mr-3 fm-update btn btn-primary float-right" href="{% url 'event_edit' event.id %}"
-    data-fm-head="Update" data-fm-callback="reload">&nbsp
+    data-fm-head="Create" data-fm-callback="reload">&nbsp
         <i class="fa fa-pencil-square-o 2-xs pt-1"></i>
         Editer
         </a>
@@ -58,11 +58,11 @@
 
 {% block context %}
 <!-- About event -->
-    <div class="pt-3">
+    <div class="pt-3 card">
         {% include "plateformeweb/event.html" with img_class="col-lg" about_class="row" %}
     </div>
 
-    <div class="m-3 pt-3 p-2 bg-white">
+    <div class="m-3 pt-3 p-2 card">
             <p>
                 {% for condition in event.condition.all %}
                     <span>{{condition.resume}}</span>
@@ -72,7 +72,7 @@
             </p>
         </div>
 
-    <div class="m-3 pt-3 p-2 bg-white">
+    <div class="m-3 pt-3 p-2 card">
         <p>
         {{event.type.description|truncatechars:100|markdown}}
         </p>

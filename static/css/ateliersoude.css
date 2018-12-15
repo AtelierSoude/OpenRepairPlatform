@@ -81,9 +81,10 @@ h1, h2, h3 {
 *********************************/
 
 .dropdown-menu {
-  right: 40px;
-  left: 210px !important;
+  right: 0px;
+  left: 150px !important;
   top: 60px;
+  width: 100%;
 }
 
 .gradient-bg{
@@ -96,6 +97,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a6b5fff1', e
 .navbar {
   background-color: #083342 !important;
   padding: 05px !important;
+  border: none !important;
 }
 .navbar ul li a {
   margin-left: 15px !important;
@@ -141,6 +143,17 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a6b5fff1', e
   line-height: 20px;
   padding: 10px;
 }
+
+.unaccessible{
+  background-color: #29292999;
+  overflow: hidden;
+  width: 100%;
+  position: absolute;
+  top: 0; 
+  bottom: 0; 
+  z-index: 0; 
+}
+
 .card-user {
   font-size: 12px;
 }
@@ -246,7 +259,9 @@ text-align: center;
     min-height: 250px !important;
     padding: 10px !important;
     margin-top: 10% !important;
+    width: 50% !important;
 }
+
 
 
 
@@ -347,8 +362,8 @@ input[type="color"]:focus,
   outline: 0 none;
 }
 input[type="checkbox"], input[type="radio"],input[type="number"]  {
-  min-width: 30px;
-  max-width: 50px;
+ /* min-width: 30px;
+  max-width: 50px; */
 }
 
 .btn-circle.btn-xl {
@@ -427,8 +442,12 @@ input[type="checkbox"], input[type="radio"],input[type="number"]  {
   margin-bottom: 0px !important;
 }
 .breadcrumb{
-  background-color: #fff;
+    border-color:none !important;
+    border-style: none !important;
+    border-width: 0px !important;
+    background-color: #fff !important;
 }
+
 .breadcrumb a{
   color: #083342;
 }
@@ -458,7 +477,7 @@ input[type="checkbox"], input[type="radio"],input[type="number"]  {
 .js-modal {
   display: none;
   position: fixed;
-  z-index: 1;
+  z-index: 10000;
   left: 0;
   top: 0;
   width: 100%;
@@ -473,7 +492,7 @@ input[type="checkbox"], input[type="radio"],input[type="number"]  {
   margin: 15% auto;
   padding: 20px;
   border: 1px solid #888;
-  width: 80%;
+  width: 50% !important;
 }
 
 .close {

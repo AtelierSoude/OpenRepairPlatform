@@ -6,8 +6,8 @@
 
 {% block menu %}
 
-<header class="sticky-top sticky-position">
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-2 pl-2">
+<header class="position-relative">
+        <nav class="navbar navbar-expand-lg">
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
             </button>
@@ -34,19 +34,14 @@
                 </li>
               </ul>
             </div>
-              <div class="navbar navbar-expand-lg navbar-dark bg-dark d-flex justify-content-end">
+              <div class="navbar navbar-expand-lg d-flex justify-content-end">
                   {% if admin_of_organizations %}
                     <div class="navbar-brand" >
                         <a class="nav-link mr-3" href="{% url 'event_create' %}"
                         title="create event">
                         <i class="fa fa-calendar fa-lg"></i>
-                        <i class="fa fa-plus-circle fa-xs"></i></a></div>
-
-                    <div class="navbar-brand" >
-                        <a class="nav-link mr-3" href="{% url 'place_create' %}"
-                        title="create place">
-                        <i class="fa fa-map-marker fa-lg"></i>
-                        <i class="fa fa-plus-circle fa-xs"></i></a></div>
+                        <i class="fa fa-plus-circle fa-xs"></i></a>
+                    </div>
                   {% endif %}
 
                   {% if user.is_authenticated %}
@@ -61,6 +56,12 @@
                       <a class="nav-link mr-3 dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class=""></i></a>
                       <div class="dropdown-menu " aria-labelledby="navbarDropdownMenuLink">
                         <a class="dropdown-item" href="{{ user.get_absolute_url }}"> voir profil </a>
+                        <div class="dropdown-divider"></div>
+                            {% for organization in user.organizationperson_set.all %}
+                                {% if user in organization.organization.admins %}
+                                    <a class="dropdown-item" href="{% url "organization_manager" organization.organization.pk %}"> Manager {{organization.organization.name}} </a>
+                                {% endif %}
+                            {% endfor %}
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{% url "mass_event_book" %}">Signaler mes disponibilités</a>
                         <a class="nav-link" href="{% url 'logout' %}" title="Logout">Déconnexion</a>

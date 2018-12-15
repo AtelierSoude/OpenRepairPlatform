@@ -25,40 +25,50 @@
 
 <section id="event-list" class="container-fluid row gradient-bg">
 
+    <div style="position:relative; z-index: 2;" class="col-md-3 bg-white">
+    <div class="bg-white sticky-position sticky-top" style="top:100px;">
 
-    <div class="form col-md-3 h-25 bg-white sticky-position sticky-top" style="top:100px">
+        <h5>Organisation</h5>
 
-        <h5 class="border-bottom">Rechercher</h5>
+        <div class="form-check pb-1" v-for="organization in organizations">
+            <input :value="organization.pk" v-model="selected_organization_pk" class="form-check-input" type="radio">
+            <label class="form-check-label">
+                [[organization.name]]
+            </label>
+        </div>
+        <br>
+        <h5>Type d'activité</h5> 
 
-        <select class="form-control form-group " v-model="selected_place_pk">
-            <option value=-1> Lieu </option>
-            <option v-for="place in places" :value="place.pk">[[place.name]] </option>
-        </select>
-        
-        <select class="form-control form-group " v-model="selected_organization_pk">
-            <option value=-1> Organisation </option>
-            <option v-for="organization in organizations" :value="organization.pk">[[organization.name]] </option>
-        </select>
-        
-        <select class="form-control form-group " v-model="selected_type_pk">
-            <option value=-1> Type </option>
-            <option v-for="type in types" :value="type.pk">[[type.name]] </option>
-        </select>
+        <div class="form-check pb-1" v-for="activity in activities">
+            <input :value="activity.pk" v-model="selected_activity_pk" class="form-check-input" type="radio">
+            <label class="form-check-label">
+                [[activity.name]]
+            </label>
+        </div>
+        <br>
+        <h5>Lieux</h5>
+
+        <div class="form-check pb-1" v-for="place in places">
+            <input :value="place.pk" v-model="selected_place_pk" class="form-check-input" type="radio">
+            <label class="form-check-label">
+                [[place.name]]
+            </label>
+        </div>
+        <br>
+        <h5>Dates</h5>
         <p>
         du <input type="date" v-model="selected_start_date"/> au <input type="date" v-model="selected_end_date"/>
         </p>
-        
-        
+    </div>
     </div>
 
-<div class="col-lg-8 col-md-8 col-sm-12 event-list">
+<div class="col-lg col-md-12 col-sm-12 event-list card-columns">
 
-    <div v-for="event in selected_event_list" class=" float-left col-lg-6 col-md-6 col-sm-12">
-
-      {% include "plateformeweb/event_vuejs.html" with class="" img_class="col-md-4" about_class="col-md-8 pb-2" %}
-
+    <div v-for="event in selected_event_list" class="card">
+      {% include "plateformeweb/event_vuejs.html" with img_class="" about_class="col-lg" %}
     </div>
-   <div v-if="event_list.length == 0">No events yet.</div>
+
+    <div v-if="event_list.length == 0"><img src="{% static "img/loading-gif.gif" %}"></div>
 
 </div>
 
@@ -76,6 +86,8 @@
               organizations: {},
               places: {},
               types: {},
+              activities: {},
+              selected_activity_pk : -1,
               selected_place_pk : -1,
               selected_organization_pk : -1,
               selected_type_pk : -1,
@@ -94,9 +106,10 @@
           })
               .then(response => response.json())
               .then(json => {
-                  this.event_list = json.dates;
-                  this.organizations = json.organizations;
-                  this.places = json.places;
+                this.organizations = json.organizations;
+                this.places = json.places;
+                this.activities = json.activities;
+                this.event_list = json.dates;
               });
       },
       methods: {
@@ -111,7 +124,12 @@
                   list = list.filter(event => (event.organization_pk == this.selected_organization_pk));
               return list;
           },
-          filter_dates : function(list){
+          filter_activities: function(list){
+              if(this.selected_activity_pk != -1)
+                  list = list.filter(event => (event.type_pk == this.selected_activity_pk));
+              return list;
+          },
+          filter_dates: function(list){
               if(this.selected_start_date != 0 && this.selected_end_date != 0){
                   start_date = new Date(this.selected_start_date).getTime();
                   end_date = new Date(this.selected_end_date).getTime();
@@ -124,14 +142,16 @@
       },
       computed: {
           selected_event_list: function() {
-              list = this.event_list;
-              list = this.filter_places(list);
-              list = this.filter_organizations(list);
-              list = this.filter_dates(list);
-              return list;
+            list = this.event_list;
+            list = this.filter_activities(list);
+            list = this.filter_places(list);
+            list = this.filter_organizations(list);
+            list = this.filter_dates(list);
+            return list;
           },
       },
   });
 </script>
 <script src ="{% static 'js/event_list_onclick.js' %}"> </script>
+
 {% endblock list %}

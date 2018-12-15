@@ -85,6 +85,16 @@ class OrganizationEditView(PermissionRequiredMixin, OrganizationFormView,
     queryset = Organization.objects
 
 
+# -- Admin page to manage the organization contents -- 
+
+def OrganizationManager(request, pk):
+    organization = Organization.objects.get(pk=pk)
+    organization_admins = organization.admins()
+    if request.user in organization_admins:
+        context = {"organization": organization}
+    return render(request, 'plateformeweb/organization_manager.html', context)
+
+
 # --- Places ---
 
 class PlaceView(DetailView):
@@ -124,8 +134,8 @@ class PlaceFormView():
                             args=(self.object.pk, self.object.slug,))
 
 
-class PlaceCreateView(PermissionRequiredMixin, PlaceFormView, CreateView):
-    permission_required = 'plateformeweb.create_place'
+class PlaceCreateView(PlaceFormView, AjaxCreateView):
+    #permission_required = 'plateformeweb.create_place'
 
     def validate_image(self, image):
         # Asserts image is smaller than 5MB
@@ -145,8 +155,8 @@ class PlaceCreateView(PermissionRequiredMixin, PlaceFormView, CreateView):
         return super().form_valid(form)
 
 
-class PlaceEditView(PermissionRequiredMixin, PlaceFormView, AjaxUpdateView):
-    permission_required = 'plateformeweb.edit_place'
+class PlaceEditView(PlaceFormView, AjaxUpdateView):
+    #permission_required = 'plateformeweb.edit_place'
     queryset = Place.objects
 
     def validate_image(self, image):
@@ -162,6 +172,53 @@ class PlaceEditView(PermissionRequiredMixin, PlaceFormView, AjaxUpdateView):
         image = form.cleaned_data.get('picture', False)
         self.validate_image(image)
         return super().form_valid(form)
+
+
+# --- Conditions ---
+
+class ConditionView(DetailView):
+    model = Condition
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
+class ConditionFormView():
+    model = Condition
+    fields = ["name", "resume", "description", "organization", "price"]
+
+    def get_form(self, form_class=None):
+        if form_class is None:
+            form_class = self.get_form_class()
+        form = super().get_form(form_class)
+        
+        limited_choices = [["", '---------']]
+        form.fields['description'] = CharField(widget=MarkdownWidget())
+        user_orgs = OrganizationPerson.objects.filter(user=self.request.user,
+                                                      role__gte=OrganizationPerson.ADMIN)
+        for result in user_orgs:
+            organization = result.organization
+            limited_choices.append([organization.pk, organization.name])
+        form.fields['organization'].choices = limited_choices
+      
+        return form
+
+    def get_success_url(self):
+        return reverse_lazy('activity_detail',
+                            args=(self.object.pk, self.object.slug,))
+
+
+class ConditionCreateView( ConditionFormView, AjaxCreateView):
+    #permission_required = 'plateformeweb.create_activity'
+
+        # set owner to current user on creation
+    def form_valid(self, form):
+        return super().form_valid(form)
+
+
+class ConditionEditView(ConditionFormView, AjaxUpdateView):
+   # permission_required = 'plateformeweb.edit_acivity'
+    queryset = Activity.objects
 
 
 # --- Activity Types ---
@@ -184,11 +241,10 @@ class ActivityListView(ListView):
         return context
 
 
-# --- edit ---
 
 class ActivityFormView():
     model = Activity
-    fields = ["name", "description", "picture"]
+    fields = ["name", "description", "organization", "picture"]
 
     def get_form(self, form_class=None):
         if form_class is None:
@@ -197,6 +253,14 @@ class ActivityFormView():
         form.fields['description'] = CharField(widget=MarkdownWidget())
 
         limited_choices = [["", '---------']]
+        form.fields['description'] = CharField(widget=MarkdownWidget())
+        user_orgs = OrganizationPerson.objects.filter(user=self.request.user,
+                                                      role__gte=OrganizationPerson.ADMIN)
+        for result in user_orgs:
+            organization = result.organization
+            limited_choices.append([organization.pk, organization.name])
+        form.fields['organization'].choices = limited_choices
+
         return form
 
     def get_success_url(self):
@@ -204,13 +268,11 @@ class ActivityFormView():
                             args=(self.object.pk, self.object.slug,))
 
 
-class ActivityCreateView(PermissionRequiredMixin, ActivityFormView, CreateView):
-    permission_required = 'plateformeweb.create_activity'
+class ActivityCreateView(ActivityFormView, AjaxCreateView):
+    #permission_required = 'plateformeweb.create_activity'
 
         # set owner to current user on creation
     def form_valid(self, form):
-        obj = form.save(commit=False)
-        obj.owner = self.request.user
         return super().form_valid(form)
 
 

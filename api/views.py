@@ -167,6 +167,7 @@ def list_events_in_context(request, context_pk=None, context_type=None, context_
         events = []
         organizations = {}
         places = {}
+        activitys = {}
         today = timezone.now()
 
         if context_place:
@@ -204,6 +205,7 @@ def list_events_in_context(request, context_pk=None, context_type=None, context_
             event_start_timestamp = event.starts_at.timestamp() * 1000
             organization = event.organization
             place = event.location
+            activity = event.type
 
             if organization.pk not in organizations:
                 organization_slug = organization.slug
@@ -232,6 +234,20 @@ def list_events_in_context(request, context_pk=None, context_type=None, context_
                     'place_detail_url': place_detail_url,
                 }
 
+            if activity.pk not in activitys:
+                activity_slug = activity.slug
+                activity_pk = activity.pk
+                activity_detail_url = reverse('activity_detail',
+                                                    args=[activity_pk,
+                                                        activity_slug])
+                activitys[activity_pk] = {
+                    'pk': activity_pk,
+                    'name': activity.name,
+                    'truncated_name': activity.name[0:25],
+                    'slug': activity_slug,
+                    'activity_detail_url': activity_detail_url,
+                }
+
             events += [{
                 'pk': event.pk,
                 'title': event.title,
@@ -243,6 +259,7 @@ def list_events_in_context(request, context_pk=None, context_type=None, context_
                 'edit_url': reverse('event_edit', args=[event_pk]),
                 'organization_pk': organization.pk,
                 'place_pk': event.location.pk,
+                'type_pk': event.type.pk,
                 'published': event.published,
                 'starts_at': event.starts_at.strftime("%H:%M"),
                 'ends_at': event.ends_at.strftime("%H:%M"),
@@ -253,7 +270,7 @@ def list_events_in_context(request, context_pk=None, context_type=None, context_
                 'day_month_str': event.starts_at.strftime("%d %B"),
             }]
 
-        return JsonResponse({'status': "OK", "dates": events, "organizations": organizations, "places": places})
+        return JsonResponse({'status': "OK", "dates": events, "organizations": organizations, "places": places, "activities": activitys, })
 
 
 

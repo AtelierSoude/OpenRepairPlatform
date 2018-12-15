@@ -11,12 +11,11 @@
 <section id="event-list" class="container-fluid row">
 
 
-<div class="col-lg event-list">
+    <div class="event-list card-columns">
 
-    <div v-for="event in selected_event_list" class=" float-left col-lg-6 col-md-6 col-sm-12">
-
-      {% include "plateformeweb/event_vuejs.html" with class="" img_class="col-md-4" about_class="col-md-8 pb-2" %}
-
+        <div v-for="event in selected_event_list" class="card">
+            {% include "plateformeweb/event_vuejs.html" with img_class="" about_class="col-lg" %}
+    
     </div>
    <div v-if="event_list.length == 0"><img src="{% static "img/loading-gif.gif" %}"></div>
 
@@ -62,6 +61,7 @@ var pk = "{{context_pk}}"
               console.log(selected_event_list);
           },
       },
+  
   });
 </script>
 <script src ="{% static 'js/event_list_onclick.js' %}"> </script>

@@ -28,6 +28,9 @@
             <div class="card col-md-4">
                     <h4>{{condition.name}}</h4>
                     <p>{{condition.resume}}</p>
+                    <a class="float-right fm-update" href="{% url 'condition_edit' condition.pk %}" title="update condition" data-fm-head="update condition" data-fm-callback="reload">
+                    <i class="fa fa-edit fa-2x"></i>
+                    </a>
             </div>
         {% endfor %}
         </div>

@@ -62,10 +62,10 @@
     </div>
     </div>
 
-<div class="col-lg col-md-12 col-sm-12 event-list">
+<div class="col-lg col-md-12 col-sm-12 event-list card-columns">
 
-    <div v-for="event in selected_event_list" class="float-left col-lg-4 col-md-6 col-sm-12">
-      {% include "plateformeweb/event_vuejs.html" with class="" img_class="" about_class="col-lg" %}
+    <div v-for="event in selected_event_list" class="card">
+      {% include "plateformeweb/event_vuejs.html" with img_class="" about_class="col-lg" %}
     </div>
 
     <div v-if="event_list.length == 0"><img src="{% static "img/loading-gif.gif" %}"></div>
@@ -153,4 +153,5 @@
   });
 </script>
 <script src ="{% static 'js/event_list_onclick.js' %}"> </script>
+
 {% endblock list %}

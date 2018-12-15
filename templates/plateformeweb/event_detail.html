@@ -58,11 +58,11 @@
 
 {% block context %}
 <!-- About event -->
-    <div class="pt-3">
+    <div class="pt-3 card">
         {% include "plateformeweb/event.html" with img_class="col-lg" about_class="row" %}
     </div>
 
-    <div class="m-3 pt-3 p-2 bg-white">
+    <div class="m-3 pt-3 p-2 card">
             <p>
                 {% for condition in event.condition.all %}
                     <span>{{condition.resume}}</span>
@@ -72,7 +72,7 @@
             </p>
         </div>
 
-    <div class="m-3 pt-3 p-2 bg-white">
+    <div class="m-3 pt-3 p-2 card">
         <p>
         {{event.type.description|truncatechars:100|markdown}}
         </p>

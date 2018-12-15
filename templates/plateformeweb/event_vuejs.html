@@ -5,8 +5,6 @@
 
 
 {% block list %}
-<div :id="event.pk" class="{{class}} card">
-    
     <div v-if="event.available_seats == 0" class="unaccessible">
     </div>
 
@@ -28,10 +26,8 @@
                         [[event.title]]</a>
                     </h5>
 
-                    <div class="float-left">
-                            <span v-if="event.available_seats == 0" class="badge badge-warning">pas de places</span>
+                            <span v-if="event.available_seats == 0" class="badge badge-warning">plus de place</span>
                             <span v-else class="badge badge-primary">[[ event.available_seats ]] places<span>
-                    </div>
         </div>
 
                    <span> organisé par
@@ -53,7 +49,4 @@
                 <button v-else :id="event.pk" purpose="book" class="m-2 btn btn-primary" onclick="event_list_onclick(this)">
                     Je participe
                 </button>
-   
-</div>
-
 {% endblock list %}

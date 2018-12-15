@@ -5,87 +5,55 @@
 
 
 {% block list %}
-<div :id="event.pk" class="{{class}} card card-event
-{% if event.available_seats <= 0 %}
-    border border-danger
-{% endif %}">
+<div :id="event.pk" class="{{class}} card">
+    
+    <div v-if="event.available_seats == 0" class="unaccessible">
+    </div>
 
-    <div class="row">
+        <div class="card-header">
+            <h5 class="">[[event.day_month_str ]]</h5>
+            de <span class="hour-event text-center">[[event.starts_at]] à [[event.ends_at]]</span>
+            <button v-if="event.user_in_organizers" :id="event.pk" purpose="trash" class="card-link btn btn-danger float-right"
+            style="position:absolute; right:-10px; top:-10px" onclick="event_list_onclick(this)">
+                    {% fontawesome_icon 'trash' large=True %}
+            </button>
+        </div>
+            <img class="card-img-top {{img_class}}" :src="event.type_picture_url">
 
-        <div class="text-center align-middle {{img_class}}">
-            <span class="event-date">[[event.day_month_str ]]</span>
-            <img class="img-fluid img-place" :src="event.type_picture_url">
+   <!-- about -->
+        <div class="{{about_class}} card-body">
+
+                    <h5 class="card-title">
+                        <a :href="event.event_detail_url">
+                        [[event.title]]</a>
+                    </h5>
+
+                    <div class="float-left">
+                            <span v-if="event.available_seats == 0" class="badge badge-warning">pas de places</span>
+                            <span v-else class="badge badge-primary">[[ event.available_seats ]] places<span>
+                    </div>
         </div>
 
-        {% if request.resolver_match.url_name != "event_detail" %}
-   <!-- about -->
-        <div class="{{about_class}} pl-1 card-body">
-            <div class="">
-
-
-
-            <ul class="list-group list-group-flush">
-
-                    <li class="">
-                            <a :href="event.event_detail_url">
-                           [[event.title]]</a>
-                    </li>
-
-                    <li class="">
-                        <small>organisé par
+                   <span> organisé par
                             <a :href="organizations[event.organization_pk].organization_detail_url">
                              [[ organizations[event.organization_pk].name ]]
-                        </a></small>
-                    </li>
-
-                    <li>
-                        {% for condition in event.condition.all %}
-                        <a> <small>{{condition.resume}}</small> </a>
-                        {% endfor %}
-
-                    </li>
-
-                    <li class="">
-                        de <span class="hour-event text-center">[[event.starts_at]]</span>
-                        à <span class="hour-event text-center">[[event.ends_at]]</span>
-                    </li>
+                        </a> à
                             <a :href="places[event.place_pk].place_detail_url">
                             {% fontawesome_icon 'map-marker' %}
-                            <small>[[places[event.place_pk].truncated_name]]</small>
+                            [[places[event.place_pk].truncated_name]]
                         </a>
-                    </li>
-
-                </ul>
-
+                    </span>
+       
                 <!-- book -->
-                <button v-if="event.user_in_organizers" :id="event.pk" purpose="trash" class="card-link mr-3 btn btn-danger float-right" onclick="event_list_onclick(this)">
-                    {% fontawesome_icon 'trash' large=True %}
-                </button>
-                    
-                <button v-if="event.user_in_attendees" :id="event.pk" purpose="cancel" class="card-link mr-3 btn btn-danger float-right" onclick="event_list_onclick(this)">
+        
+                <button v-if="event.user_in_attendees" :id="event.pk" purpose="cancel" class="m-2 btn btn-danger" onclick="event_list_onclick(this)">
                     Je ne participe plus
                 </button>
 
-                <button v-else :id="event.pk" purpose="book" class="card-link mr-3 btn btn-primary float-right" onclick="event_list_onclick(this)">
+                <button v-else :id="event.pk" purpose="book" class="m-2 btn btn-primary" onclick="event_list_onclick(this)">
                     Je participe
                 </button>
-
-            <div class="text-left row">
-
-                <div class="float-left mr-2">
-                     <span v-if="event.available_seats == 0" class="badge badge-warning badge-pill">pas de places</span>
-                     <span v-else class="badge badge-primary badge-pill">[[ event.available_seats ]] places<span>
-
-                </div>
-
-            </div>
-
-
-
-        </div>
-
-    </div>   {% endif %}
-</div>
+   
 </div>
 
 {% endblock list %}

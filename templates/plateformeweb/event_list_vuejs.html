@@ -13,9 +13,9 @@
 
 <div class="col-lg event-list">
 
-    <div v-for="event in selected_event_list" class=" float-left col-lg-6 col-md-6 col-sm-12">
+    <div v-for="event in selected_event_list" class="float-left col-md-4 col-sm-12">
 
-      {% include "plateformeweb/event_vuejs.html" with class="" img_class="col-md-4" about_class="col-md-8 pb-2" %}
+            {% include "plateformeweb/event_vuejs.html" with class="" img_class="mw-100" about_class="col-lg" %}
 
     </div>
    <div v-if="event_list.length == 0"><img src="{% static "img/loading-gif.gif" %}"></div>

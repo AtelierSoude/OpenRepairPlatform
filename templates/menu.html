@@ -6,8 +6,8 @@
 
 {% block menu %}
 
-<header class="sticky-top sticky-position">
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-2 pl-2">
+<header class="position-relative">
+        <nav class="navbar navbar-expand-lg">
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
             </button>
@@ -34,7 +34,7 @@
                 </li>
               </ul>
             </div>
-              <div class="navbar navbar-expand-lg navbar-dark bg-dark d-flex justify-content-end">
+              <div class="navbar navbar-expand-lg d-flex justify-content-end">
                   {% if admin_of_organizations %}
                     <div class="navbar-brand" >
                         <a class="nav-link mr-3" href="{% url 'event_create' %}"

@@ -97,6 +97,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a6b5fff1', e
 .navbar {
   background-color: #083342 !important;
   padding: 05px !important;
+  border: none !important;
 }
 .navbar ul li a {
   margin-left: 15px !important;
@@ -142,6 +143,17 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a6b5fff1', e
   line-height: 20px;
   padding: 10px;
 }
+
+.unaccessible{
+  background-color: #29292999;
+  overflow: hidden;
+  width: 100%;
+  position: absolute;
+  top: 0; 
+  bottom: 0; 
+  z-index: 0; 
+}
+
 .card-user {
   font-size: 12px;
 }
@@ -348,8 +360,8 @@ input[type="color"]:focus,
   outline: 0 none;
 }
 input[type="checkbox"], input[type="radio"],input[type="number"]  {
-  min-width: 30px;
-  max-width: 50px;
+ /* min-width: 30px;
+  max-width: 50px; */
 }
 
 .btn-circle.btn-xl {
@@ -428,8 +440,12 @@ input[type="checkbox"], input[type="radio"],input[type="number"]  {
   margin-bottom: 0px !important;
 }
 .breadcrumb{
-  background-color: #fff;
+    border-color:none !important;
+    border-style: none !important;
+    border-width: 0px !important;
+    background-color: #fff !important;
 }
+
 .breadcrumb a{
   color: #083342;
 }

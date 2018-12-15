@@ -134,8 +134,8 @@ class PlaceFormView():
                             args=(self.object.pk, self.object.slug,))
 
 
-class PlaceCreateView(PermissionRequiredMixin, PlaceFormView, AjaxCreateView):
-    permission_required = 'plateformeweb.create_place'
+class PlaceCreateView(PlaceFormView, AjaxCreateView):
+    #permission_required = 'plateformeweb.create_place'
 
     def validate_image(self, image):
         # Asserts image is smaller than 5MB
@@ -155,8 +155,8 @@ class PlaceCreateView(PermissionRequiredMixin, PlaceFormView, AjaxCreateView):
         return super().form_valid(form)
 
 
-class PlaceEditView(PermissionRequiredMixin, PlaceFormView, AjaxUpdateView):
-    permission_required = 'plateformeweb.edit_place'
+class PlaceEditView(PlaceFormView, AjaxUpdateView):
+    #permission_required = 'plateformeweb.edit_place'
     queryset = Place.objects
 
     def validate_image(self, image):
@@ -208,8 +208,8 @@ class ConditionFormView():
                             args=(self.object.pk, self.object.slug,))
 
 
-class ConditionCreateView(PermissionRequiredMixin, ConditionFormView, AjaxCreateView):
-    permission_required = 'plateformeweb.create_activity'
+class ConditionCreateView( ConditionFormView, AjaxCreateView):
+    #permission_required = 'plateformeweb.create_activity'
 
         # set owner to current user on creation
     def form_valid(self, form):
@@ -268,8 +268,8 @@ class ActivityFormView():
                             args=(self.object.pk, self.object.slug,))
 
 
-class ActivityCreateView(PermissionRequiredMixin, ActivityFormView, AjaxCreateView):
-    permission_required = 'plateformeweb.create_activity'
+class ActivityCreateView(ActivityFormView, AjaxCreateView):
+    #permission_required = 'plateformeweb.create_activity'
 
         # set owner to current user on creation
     def form_valid(self, form):

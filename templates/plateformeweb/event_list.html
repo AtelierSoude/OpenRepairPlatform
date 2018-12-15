@@ -68,7 +68,7 @@
       {% include "plateformeweb/event_vuejs.html" with class="" img_class="" about_class="col-lg" %}
     </div>
 
-   <div v-if="event_list.length == 0">No events yet.</div>
+    <div v-if="event_list.length == 0"><img src="{% static "img/loading-gif.gif" %}"></div>
 
 </div>
 

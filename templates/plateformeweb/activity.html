@@ -9,7 +9,7 @@
 {% block list %}
 
 <div class="{{class}} card" id="">
-    
+    <a class="card-link" href="{% url 'activity_detail' activity.id activity.slug %}">
         <img class="img-fluid img-place {{img_class}}" src="{{ activity.picture.url }}">
 
         {% if request.resolver_match.url_name != "activity_detail" %}
@@ -17,12 +17,10 @@
         <div class="card-body {{about_class}}">
             <h5 class="card-title">{{ activity.name }}</h5>
             <p class="card-text">{{ activity.description|markdown  }}</p>
-            <a class="card-link" href="{% url 'activity_detail' activity.id activity.slug %}">
-            More ...</a>
-
         </div>
 
         {% endif %}
       </div>
+    </a>
 
 {% endblock %}

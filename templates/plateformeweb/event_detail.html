@@ -58,8 +58,8 @@
 
 {% block context %}
 <!-- About event -->
-    <div class="pt-3 card">
-        {% include "plateformeweb/event.html" with img_class="col-lg" about_class="row" %}
+    <div class="card pt-3">
+        {% include "plateformeweb/event.html" with img_class="" about_class="row" %}
     </div>
 
     <div class="m-3 pt-3 p-2 card">
@@ -70,14 +70,16 @@
                     <span>La participation est libre / pas de condition d'accès</span>
                 {% endfor %}
             </p>
-        </div>
-
-    <div class="m-3 pt-3 p-2 card">
-        <p>
-        {{event.type.description|truncatechars:100|markdown}}
-        </p>
-        <a href="{% url 'activity_detail' event.type.id event.type.slug %}">En savoir +</a>
     </div>
+
+    <a href="{% url 'activity_detail' event.type.id event.type.slug %}">
+        <div class="m-3 pt-3 p-2 card">
+            <p>
+            {{event.type.description|truncatechars:100|markdown}}
+            </p>
+            <a href="{% url 'activity_detail' event.type.id event.type.slug %}">En savoir +</a>
+        </div>
+    </a>
 <!-- End about event -->
 
 
@@ -177,6 +179,7 @@
 
 <h5 class="border-bottom border-gray pb-2 mb-0 clear ">Animateur.trice.s</h5>
 
+<div class="card-columns">
     {% for user in event.organizers.all %}
         {% include "users/user.html" with float="float-left" class="row checked administrator" orga=True img_class="col-12" content_class="col-12 text-center" %}
     {% endfor %}
@@ -188,7 +191,7 @@
             {% include "users/user.html" with float="float-left" class="row" user_id=user.id img_class="col-12" content_class="col-12 text-center" absentee=True userid=user.id|serialize_id:event.id %}
         {% endif %}
     {% endfor %}
-
+</div>
 <!-- End users that have a role in the organization -->
 
 <!-- Attendees and presents -->
@@ -196,6 +199,7 @@
 <h5 class="border-bottom border-gray pb-2 mb-0 clear ">Participant.e.s</h5>
 
 {% if request.user.is_authenticated and request.user in admin_or_volunteer %}
+    <div class="card-columns">
 <!-- display presents for admin or volonteers -->
         {% for user in event.presents.all %}
             {% if user not in admin_or_volunteer %}
@@ -208,26 +212,27 @@
                 {% include "users/user.html" with float="float-left" class="row" user_id=user.id img_class="col-4" content_class="col-8" absentee=True userid=user.id|serialize_id:event.id %}
             {% endif %}
         {% endfor %}
+    </div>
+{% else %}
+<!-- or warning message for others users -->
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+    Vous devez être membre actif de l'association pour voir les participants
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
 
-        {% else %}
-        <!-- or warning message for others users -->
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            Vous devez être membre actif de l'association pour voir les participants
+    {% if request.user in event.attendees.all %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+        Vous êtes bien inscrit à cet évènement
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-
-            {% if request.user in event.attendees.all %}
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                Vous êtes bien inscrit à cet évènement
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-            {% endif %}
-
+    {% endif %}
 {% endif %}
+
+</div>
 
 <!-- End attendees and presents -->
 

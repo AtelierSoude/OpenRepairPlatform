@@ -8,48 +8,49 @@
 {% block list %}
 
 <!-- a user card -->
-<div class="card-user card {{float}} p-2" >
-   <div class="{{class}}" id="square-{{user_id}}">
-        <div class="avatar-card-user {{img_class}}">
-            {% avatar user %}
-        </div>
+<div class="card-user card p-2">
+    <a href="{{ user.get_absolute_url }}">
+        <div class="{{class}}" id="square-{{user_id}}">
+                <div class="avatar-card-user {{img_class}}">
+                    {% avatar user %}
+                </div>
 
-        <div class="{{content_class}}">
+                <div class="{{content_class}}">
 
-            <h5 class="mx-auto col-12">
-                <a class="card-link" href="{{ user.get_absolute_url }}">
-             {{ user.first_name|capfirst }} {{ user.last_name|capfirst}}
-                </a>
-            </h5>
+                    <h5 class="mx-auto col-12">
+                    {{ user.first_name|capfirst }} {{ user.last_name|capfirst}}
+                    </h5>
 
-                <p class="user-status">
-                Status 
-                </p>
+                        <p class="user-status">
+                        Status 
+                        </p>
 
-                {% if request.resolver_match.url_name == "user_detail" %}
-                
-                <ul class="list-group">
-                    {% for organization in user.organizationperson_set.all|slice:"1" %}
-                        {% if request.user.is_authenticated and request.user in organization.organization.volunteers or organization.organization.admins %}
-                        <li class="list-group-item">{% fontawesome_icon 'phone' %}   {{ user.phone_number }} </li>
-                        <li class="list-group-item">{% fontawesome_icon 'envelope-o' %} {{ user.email }}</li>
-                        <li class="list-group-item">{% fontawesome_icon 'map-marked' %}   {{ user.street_address }} </li>
-                        <li class="list-group-item">{% fontawesome_icon 'birthday-cake' %}   {{ user.birth_date }} </li>
+                        {% if request.resolver_match.url_name == "user_detail" %}
+                        
+                        <ul class="list-group">
+                            {% for organization in user.organizationperson_set.all|slice:"1" %}
+                                {% if request.user.is_authenticated and request.user in organization.organization.volunteers or organization.organization.admins %}
+                                <li class="list-group-item">{% fontawesome_icon 'phone' %}   {{ user.phone_number }} </li>
+                                <li class="list-group-item">{% fontawesome_icon 'envelope-o' %} {{ user.email }}</li>
+                                <li class="list-group-item">{% fontawesome_icon 'map-marked' %}   {{ user.street_address }} </li>
+                                <li class="list-group-item">{% fontawesome_icon 'birthday-cake' %}   {{ user.birth_date }} </li>
+                                {% endif %}
+                            {% endfor %}
+                                <li class="list-group-item">{% fontawesome_icon 'clock-o' %} Membre depuis le {{ user.date_joined }}</li>
+                        </ul>
+                        
                         {% endif %}
-                    {% endfor %}
-                        <li class="list-group-item">{% fontawesome_icon 'clock-o' %} Membre depuis le {{ user.date_joined }}</li>
-                </ul>
-                
-                {% endif %}
 
-            {% if orga %}
-            {% elif absentee and request.user in event.organizers.all %}
-                <button class="btn-setPresent btn" id="{{userid}}">Confirmer présence</button>
-            {% elif not absentee and request.user in event.organizers.all %}
-                <button class="btn-setAbsent btn" id="{{userid}}">Annuler présence</button>
-            {% endif %}
-        </div>
-    </div>
-</div>
+                    {% if orga %}
+                    {% elif absentee and request.user in event.organizers.all %}
+                        <button class="btn-setPresent btn" id="{{userid}}">Confirmer présence</button>
+                    {% elif not absentee and request.user in event.organizers.all %}
+                        <button class="btn-setAbsent btn" id="{{userid}}">Annuler présence</button>
+                    {% endif %}
+                </div>
+         </div>
+     </a>
+ </div>
+
 
 {% endblock list %}

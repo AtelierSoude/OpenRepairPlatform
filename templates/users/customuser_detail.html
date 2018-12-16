@@ -51,14 +51,14 @@
 {% endblock TitleAndEdit %}
 
 {% block context %}
-<div class="">
-    {% include "users/user.html" with user=target_user class="w-100" img_class="col-lg" about_class="row" %}
+<div class="sticky-position sticky-top">
+    {% include "users/user.html" with user=target_user class="" img_class="col-lg" about_class="row" %}
 </div>
 
 {% endblock context %}
 <!-- which rendez-vous -->
 {% block about %}
-<h5 class="border-bottom border-gray pb-2 mb-0 clear ">Rendez-vous</h5>
+<h5 class="border-bottom border-gray pb-2 mb-0 clear">Rendez-vous</h5>
 
 <section class="row" id="list-booking">
 

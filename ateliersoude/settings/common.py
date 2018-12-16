@@ -27,7 +27,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 DEBUG = bool(int(os.environ.get('DJANGO_DEBUG', 0)))
 
 # TODO adjust for production
-ALLOWED_HOSTS = ["dev.atelier-soude.fr", "ns60.amakuru.net", "127.0.0.1", "localhost"]
+ALLOWED_HOSTS = ['*']
+#ALLOWED_HOSTS = ['"dev.atelier-soude.fr", "ns60.amakuru.net", "127.0.0.1", "localhost"']
 
 # for debug toolbar, localhost (through docker and localhost)
 # no wildcards for IPs, possible to use a sort of wildcard for hostnames,
@@ -71,7 +72,6 @@ INSTALLED_APPS = [
     'fm',
     'celery',
     'django_bootstrap_breadcrumbs',
-    'django_prices',
     'django_markdown',
     'post_office',
     'easy_maps' 

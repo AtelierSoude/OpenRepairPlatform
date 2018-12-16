@@ -7,19 +7,14 @@
 {% if event.available_seats <= 0 %}
     border border-danger
 {% endif %}">
-
-    <div class="">
-
+ 
         <div class="text-center align-middle {{img_class}}">
-            <span class="event-date">{{ event.starts_at|date:"d M" }} - <span id="available-seats">{{event.available_seats}}</span> places left</span>
             <img class="img-fluid img-place" src="{{ event.type.picture.url }}">
         </div>
-
+                
         {% if request.resolver_match.url_name != "event_detail" %}
    <!-- about -->
         <div class="{{about_class}} pl-1 card-body">
-            <div class="">
-
          
 
             <ul class="list-group list-group-flush">
@@ -104,7 +99,7 @@
         </div>
      
     </div>   {% endif %}
-</div>
+
 </div>
 
 {% endblock list %}

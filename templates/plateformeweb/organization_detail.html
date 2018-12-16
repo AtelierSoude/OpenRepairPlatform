@@ -35,10 +35,6 @@
 
 {% block context %}
     {% include "plateformeweb/organization.html" with class="sticky-position sticky-top"%}
-    Lieux : 
-        {% for place in organization.place_set.all %}
-        {% include "plateformeweb/place.html" with class="col-md-8" img_class="hide" %}
-        {% endfor %}
 {% endblock context %} 
 
 
@@ -47,21 +43,31 @@
 
     {{ organization.description|markdown }}
 
-<h5 class="border-bottom border-gray pb-2 mb-0 clear ">Prochaines dates</h5> 
+<h5 class="border-bottom border-gray pb-2 mb-0 clear ">Locaux</h5> 
 
-    <div class="row d-flex">
-        {% include "plateformeweb/event_list_vuejs.html" with context_type="organization" context_pk=organization.pk %}
-    </div>
+<div class="card-columns">
+        {% for place in organization.place_set.all %}
+        {% include "plateformeweb/place.html" with class="card" about_class="col-12" img_class="card-img-top" %}
+        {% endfor %}
+</div>
 
 <h5 class="border-bottom border-gray pb-2 mb-0 clear ">Membres actif.ve.s </h5>
 
-    <div class="row d-flex justify-content-center">
+<div class="card-columns">
     {% for user in organization.admins %}
         {% include "users/user.html" with class="row" img_class="col-12" content_class="col-12 text-center"%}
     {% endfor %}
     {% for user in organization.volunteers %}
         {% include "users/user.html" with class="row" img_class="col-12" content_class="col-12 text-center"%}
     {% endfor %}
+</div>
+
+<h5 class="border-bottom border-gray pb-2 mb-0 clear ">Prochaines dates</h5> 
+
+    <div class="row d-flex">
+        {% include "plateformeweb/event_list_vuejs.html" with context_type="organization" context_pk=organization.pk %}
     </div>
+
+
 {% endblock about %}
 

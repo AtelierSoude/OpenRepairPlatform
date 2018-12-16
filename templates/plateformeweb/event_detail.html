@@ -30,6 +30,15 @@
           {{ event.location.name }}
     </a>
 </h5>
+<div class="float-left ml-3">
+        {% if event.available_seats == 0 %}
+            <span class="badge badge-warning">Complet</span>
+        {% else %}
+            <span class="badge badge-primary">{{ event.available_seats }}
+            <small>Places</small></span>
+        {% endif %}
+</div>
+
 
 {% if not request.user.is_authenticated %}
 {% else %}
@@ -58,8 +67,8 @@
 
 {% block context %}
 <!-- About event -->
-    <div class="card pt-3">
-        {% include "plateformeweb/event.html" with img_class="" about_class="row" %}
+    <div class="card sticky-position sticky-top sticky-keep" >
+        <img class="img-fluid img-place" src="{{ event.type.picture.url }}">
     </div>
 
     <div class="m-3 pt-3 p-2 card">
@@ -135,6 +144,8 @@
 {% block about %}
 
 <!-- Add users to event : attendees if date_event < current_date , presents if date_event = current_date -->
+
+<!-- end add users to event -->
 {% if request.user.is_authenticated and request.user in admin_or_volunteer %}
 
 
@@ -144,42 +155,41 @@
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-</div>
-
-<div id="add-user" class="row m-2">
-    <span>Ajouter parmi </span>
-    <select class="col-md-2 col-sm-4 form-control" v-model="selected_member_type">
-        <option value=0>Tous internes à l'organisation</option>
-        <option value=30>Administrateurs</option>
-        <option value=20>Membres actifis</option>
-        <option value=10>Adhérents</option>
-    </select>
-
-    <div class="search-user col-md-6">
-        <input class="search-term-user col-lg-12" type="text" v-model="fuzzy_input" placeholder="Nom, Prénom, Email..." 
-        onclick="document.getElementById('search-user-result').style.display='block'">
-
-        <select id="search-user-result" :size="fuzzy_list.length" v-model="selected_users" multiple
-        onmouseout="this.style.display='none'">
-        <option v-for="result in fuzzy_list" :value="result.pk">
-            [[result.name]] -
-            [[result.email]] -
-            [[text_role(result.role)]]
-        </option>
-        </select>
     </div>
-
-    <input type="button" class="btn col-md-2" v-on:click="add_users" value="Inscrire"></input>
-</div>
-
+<div id="add-user" class="row float-right">
+    <!---<span>Ajouter parmi </span>
+     <select class="col-md-2 col-sm-4 form-control" v-model="selected_member_type">
+         <option value=0>Tous internes à l'organisation</option>
+         <option value=30>Administrateurs</option>
+         <option value=20>Membres actifis</option>
+         <option value=10>Adhérents</option>
+     </select> -->
+ 
+     <div class="search-user col-8 float-right">
+         <input class="search-term-user" style="width:100%" type="text" v-model="fuzzy_input" placeholder="Nom, Prénom, Email..." 
+         onclick="document.getElementById('search-user-result').style.display='block'">
+ 
+         <select id="search-user-result" :size="fuzzy_list.length" v-model="selected_users" multiple
+         onmouseout="this.style.display='none'">
+         <option v-for="result in fuzzy_list" :value="result.pk">
+             [[result.name]] -
+             [[result.email]] -
+             [[text_role(result.role)]]
+         </option>
+         </select>
+     </div>
+ 
+     <input type="button" class="btn col-4 float-right" v-on:click="add_users" value="ajouter">
+     </input>
+ </div>
 {% endif %}
-<!-- end add users to event -->
 
 <!-- Users that have a role in the organization -->
 
 <h5 class="border-bottom border-gray pb-2 mb-0 clear ">Animateur.trice.s</h5>
 
 <div class="card-columns">
+
     {% for user in event.organizers.all %}
         {% include "users/user.html" with float="float-left" class="row checked administrator" orga=True img_class="col-12" content_class="col-12 text-center" %}
     {% endfor %}
@@ -191,6 +201,7 @@
             {% include "users/user.html" with float="float-left" class="row" user_id=user.id img_class="col-12" content_class="col-12 text-center" absentee=True userid=user.id|serialize_id:event.id %}
         {% endif %}
     {% endfor %}
+    
 </div>
 <!-- End users that have a role in the organization -->
 
@@ -206,7 +217,6 @@
                 {% include "users/user.html" with float="float-left" class="row checked" user_id=user.id img_class="col-4" content_class="col-6" absentee=False userid=user.id|serialize_id:event.id %}
             {% endif %}
         {% endfor %}
-
         {% for user in event.attendees.all %}
             {% if user not in admin_or_volunteer %}
                 {% include "users/user.html" with float="float-left" class="row" user_id=user.id img_class="col-4" content_class="col-8" absentee=True userid=user.id|serialize_id:event.id %}

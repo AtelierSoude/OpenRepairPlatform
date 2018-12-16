@@ -261,7 +261,7 @@ text-align: center;
     min-height: 250px !important;
     padding: 10px !important;
     margin-top: 10% !important;
-    width: 50% !important;
+    width: 90% !important;
 }
 
 
@@ -499,7 +499,7 @@ input[type="checkbox"], input[type="radio"],input[type="number"]  {
 
 .close {
   color: #aaa;
-  float: right;
+  text-align: right;
   font-size: 28px;
   font-weight: bold;
 }
@@ -526,3 +526,19 @@ input[type="checkbox"], input[type="radio"],input[type="number"]  {
   width: 95%;
 }
 
+/* media queries */
+
+@media (max-width: 768px) {
+
+  .modal-content {
+    width: 90% !important;
+  }
+
+  
+.profil-header-bar.event{
+  height: 250px;
+}
+.sticky-keep{
+  top:150px !important;
+}
+}

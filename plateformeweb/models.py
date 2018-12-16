@@ -5,7 +5,6 @@ from address.models import AddressField
 from users.models import CustomUser
 from django.conf import settings
 from autoslug import AutoSlugField
-from django_prices.models import MoneyField, TaxedMoneyField
 from django_markdown.models import MarkdownField
 from easy_maps.widgets import AddressWithMapWidget
 import locale
@@ -19,6 +18,7 @@ class Organization(models.Model):
     description = MarkdownField(verbose_name=_("Activity description"),
                             null=False,
                             blank=False, default="")
+    picture = models.ImageField(verbose_name=_('Image'), upload_to='organizations/', null=True)
     active = models.BooleanField(verbose_name=_('Active'))
     slug = AutoSlugField(populate_from='name', unique=True, default='')
     created_at = models.DateTimeField(auto_now_add=True)
@@ -205,10 +205,8 @@ class Condition(models.Model):
                             blank=False, default="")
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE,
                                      null=True)
-    price = MoneyField(
-        'tarif', currency='EUR', default='5', max_digits=9,
-        decimal_places=2, blank=True)
-
+    price = models.IntegerField(verbose_name=_('Price'),
+                                          null=False, blank=True, default=5)
     def __str__(self):
         return self.name
 

@@ -14,7 +14,7 @@
 {% block title %} {{ block.super }} organisations {% endblock title %}
 
 {% block list %}
-  <section class="">
+  <section class="card-columns">
     {% for organization in object_list %}
       {% include "plateformeweb/organization.html" %}
       {% empty %}

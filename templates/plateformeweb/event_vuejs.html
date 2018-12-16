@@ -31,10 +31,12 @@
         </div>
 
                    <span> organisé par
-                            <a :href="organizations[event.organization_pk].organization_detail_url">
+                        <a :href="organizations[event.organization_pk].organization_detail_url">
                              [[ organizations[event.organization_pk].name ]]
-                        </a> à
-                            <a :href="places[event.place_pk].place_detail_url">
+                        </a>
+                    </span><br>
+                    <span>
+                        <a :href="places[event.place_pk].place_detail_url">
                             {% fontawesome_icon 'map-marker' %}
                             [[places[event.place_pk].truncated_name]]
                         </a>

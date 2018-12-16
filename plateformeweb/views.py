@@ -59,7 +59,7 @@ class OrganizationListView(ListView):
 
 class OrganizationFormView():
     model = Organization
-    fields = ["name", "description", "active"]
+    fields = ["name", "description","picture", "active"]
 
     def get_form(self, form_class=None):
         if form_class is None:
@@ -79,9 +79,9 @@ class OrganizationCreateView(PermissionRequiredMixin, OrganizationFormView,
     permission_required = 'plateformeweb.create_organization'
 
 
-class OrganizationEditView(PermissionRequiredMixin, OrganizationFormView,
+class OrganizationEditView(OrganizationFormView,
                            AjaxUpdateView):
-    permission_required = 'plateformeweb.edit_organization'
+    #permission_required = 'plateformeweb.edit_organization'
     queryset = Organization.objects
 
 
@@ -422,7 +422,7 @@ class EventCreateView(CreateView):
     template_name = 'plateformeweb/event_form.html'
     model = Event
     fields = ["type",  "available_seats",
-              "organization", "location",
+              "organization", "location", "condition",
               "starts_at", "ends_at", "publish_at"]
 
     def date_substract(self, starts_at, countdown):

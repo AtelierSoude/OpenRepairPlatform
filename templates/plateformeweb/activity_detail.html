@@ -35,7 +35,9 @@
 {% endblock TitleAndEdit %}
 
 {% block context %}
+<div class="sticky-position sticky-top sticky-keep">
     {% include "plateformeweb/activity.html" with id=activity.pk %}
+</div>
 {% endblock context %} 
 
 {% block about %}

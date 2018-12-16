@@ -20,10 +20,10 @@
 <div class="container-fluid profil-header-bar sticky-position sticky-top {{object}}">
     <div class="row">
 
-        <div class="col-3">
+        <div class="col-md-3 col-sm-0">
         </div> 
        
-        <div class="col-9 header-bar-title">
+        <div class="col-md-9 col-sm-12 header-bar-title">
         {% block TitleAndEdit %}
         {% endblock TitleAndEdit %}
         </div>
@@ -34,10 +34,8 @@
 
 <div class="row container-fluid">
 <section class="col-md-3" style=" position: relative; top:-100px;" > 
-        <div class="sticky-top sticky-position" style="top:100px">
         {% block context %}
         {% endblock context %}
-        </div>
 </section>   
 
 

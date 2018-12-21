@@ -171,24 +171,24 @@ def list_events_in_context(request, context_pk=None, context_type=None, context_
         today = timezone.now()
 
         if context_place:
-            place = Place.objects.get(pk=context_pk)
+            this_place = Place.objects.get(pk=context_pk)
             all_future_events = Event.objects.filter(
-                location=place, 
+                location=this_place, 
                 starts_at__gte=today, 
-                published=True, ).order_by('starts_at')
+                published=True).order_by('starts_at')
         
-        if context_org:
-            organization = Organization.objects.get(pk=context_pk)
+        elif context_org:
+            this_organization = Organization.objects.get(pk=context_pk)
             all_future_events = Event.objects.filter(
-                organization=organization, 
+                organization=this_organization, 
                 starts_at__gte=today, 
-                published=True, ).order_by('starts_at')
+                published=True).order_by('starts_at')
         
-        if context_user:
+        elif context_user:
             lst = [Q(attendees__pk=context_pk) , Q(presents__pk=context_pk) , Q(organizers__pk=context_pk)]
             all_future_events = Event.objects.filter(reduce(OR, lst)).filter(
                 starts_at__gte=today, 
-                published=True,).order_by('starts_at')
+                published=True).order_by('starts_at')
 
         else:
             all_future_events = Event.objects.filter(

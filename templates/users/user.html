@@ -9,8 +9,8 @@
 
 <!-- a user card -->
 <div class="card-user card p-2">
-    <a href="{{ user.get_absolute_url }}">
         <div class="{{class}}" id="square-{{user_id}}">
+            <a href="{{ user.get_absolute_url }}">
                 <div class="avatar-card-user {{img_class}}">
                     {% avatar user %}
                 </div>
@@ -21,15 +21,30 @@
                     {{ user.first_name|capfirst }} {{ user.last_name|capfirst}}
                     </h5>
 
-                        <p class="user-status">
-                        Status 
-                        </p>
+                    {% for organization in user.organizationperson_set.all %}
+                    <span class="user-status">
+        
+                        {% if organization.role == 0 %}
+                            Visiteur 
+                        {% elif organization.role == 10 %}
+                            Membre 
+                        {% elif organization.role == 20 %}
+                            Membre actif
+                        {% elif organization.role == 30 %}
+                            Administateur
+                        {% endif %}
+        
+                        à
+                        {{ organization.organization.name }}
+
+                    </span>
+                    {% endfor %}
 
                         {% if request.resolver_match.url_name == "user_detail" %}
                         
                         <ul class="list-group">
                             {% for organization in user.organizationperson_set.all|slice:"1" %}
-                                {% if request.user.is_authenticated and request.user in organization.organization.volunteers or organization.organization.admins %}
+                                {% if request.user.is_authenticated and request.user in organization.organization.admins %}
                                 <li class="list-group-item">{% fontawesome_icon 'phone' %}   {{ user.phone_number }} </li>
                                 <li class="list-group-item">{% fontawesome_icon 'envelope-o' %} {{ user.email }}</li>
                                 <li class="list-group-item">{% fontawesome_icon 'map-marked' %}   {{ user.street_address }} </li>
@@ -40,16 +55,16 @@
                         </ul>
                         
                         {% endif %}
-
-                    {% if orga %}
-                    {% elif absentee and request.user in event.organizers.all %}
-                        <button class="btn-setPresent btn" id="{{userid}}">Confirmer présence</button>
-                    {% elif not absentee and request.user in event.organizers.all %}
-                        <button class="btn-setAbsent btn" id="{{userid}}">Annuler présence</button>
-                    {% endif %}
                 </div>
+            </a>
          </div>
-     </a>
+
+     {% if orga %}
+     {% elif absentee and request.user in event.organizers.all %}
+         <button class="btn-setPresent btn" id="{{userid}}">Confirmer présence</button>
+     {% elif not absentee and request.user in event.organizers.all %}
+         <button class="btn-setAbsent btn" id="{{userid}}">Annuler présence</button>
+     {% endif %}
  </div>
 
 

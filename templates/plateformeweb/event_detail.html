@@ -24,21 +24,6 @@
 
 <!--- Item banner -->
 {% block TitleAndEdit %}
-<h5 class="float-left">
-    {{ event.type }} du {{ event.starts_at|date:"d M" }} à
-    <a href="{% url 'place_detail' event.location.id event.location.slug %}">
-          {{ event.location.name }}
-    </a>
-</h5>
-<div class="float-left ml-3">
-        {% if event.available_seats == 0 %}
-            <span class="badge badge-warning">Complet</span>
-        {% else %}
-            <span class="badge badge-primary">{{ event.available_seats }}
-            <small>Places</small></span>
-        {% endif %}
-</div>
-
 
 {% if not request.user.is_authenticated %}
 {% else %}
@@ -61,6 +46,28 @@
         </a>
     {% endif %}
 {% endif %}
+
+<h5 class="row">
+    {{ event.type }} du {{ event.starts_at|date:"d M" }} à
+    <a href="{% url 'place_detail' event.location.id event.location.slug %}">
+          {{ event.location.name }}
+    </a>
+    <div class="float-left ml-3">
+            {% if event.available_seats == 0 %}
+                <span class="badge badge-warning">Complet</span>
+            {% else %}
+                <span class="badge badge-primary">{{ event.available_seats }}
+                <small>Places</small></span>
+            {% endif %}
+    </div>
+</h5>
+
+<div class="row">
+    par <a href="{% url 'organization_detail' event.organization.id event.organization.slug %}">
+            {{ event.organization.name }}
+      </a>
+</div>
+
 {% endblock TitleAndEdit %}
 <!-- End item banner -->
 
@@ -169,9 +176,9 @@
          <input class="search-term-user" style="width:100%" type="text" v-model="fuzzy_input" placeholder="Nom, Prénom, Email..." 
          onclick="document.getElementById('search-user-result').style.display='block'">
  
-         <select id="search-user-result" :size="fuzzy_list.length" v-model="selected_users" multiple
+         <select id="search-user-result" class="list-group" :size="fuzzy_list.length" v-model="selected_users" multiple
          onmouseout="this.style.display='none'">
-         <option v-for="result in fuzzy_list" :value="result.pk">
+         <option class="list-group-item" v-for="result in fuzzy_list" :value="result.pk">
              [[result.name]] -
              [[result.email]] -
              [[text_role(result.role)]]
@@ -194,13 +201,16 @@
         {% include "users/user.html" with float="float-left" class="row checked administrator" orga=True img_class="col-12" content_class="col-12 text-center" %}
     {% endfor %}
 
-    {% for user in volunteers %}
-        {% if user in event.presents.all %}
-            {% include "users/user.html" with float="float-left" class="row checked" user_id=user.id img_class="col-12" content_class="col-12 text-center" absentee=True userid=user.id|serialize_id:event.id %}
-        {% else %}
+    {% for user in admin_or_volunteer %}
+        {% if user in event.attendees.all %}
             {% include "users/user.html" with float="float-left" class="row" user_id=user.id img_class="col-12" content_class="col-12 text-center" absentee=True userid=user.id|serialize_id:event.id %}
         {% endif %}
+        {% if user in event.presents.all %}
+            {% include "users/user.html" with float="float-left" class="row checked" user_id=user.id img_class="col-12" content_class="col-12 text-center" absentee=True userid=user.id|serialize_id:event.id %}
+        {% endif %}
     {% endfor %}
+
+  
     
 </div>
 <!-- End users that have a role in the organization -->
@@ -214,12 +224,12 @@
 <!-- display presents for admin or volonteers -->
         {% for user in event.presents.all %}
             {% if user not in admin_or_volunteer %}
-                {% include "users/user.html" with float="float-left" class="row checked" user_id=user.id img_class="col-4" content_class="col-6" absentee=False userid=user.id|serialize_id:event.id %}
+                {% include "users/user.html" with float="float-left" class="row checked" user_id=user.id img_class="col-12" content_class="col-12" absentee=False userid=user.id|serialize_id:event.id %}
             {% endif %}
         {% endfor %}
         {% for user in event.attendees.all %}
             {% if user not in admin_or_volunteer %}
-                {% include "users/user.html" with float="float-left" class="row" user_id=user.id img_class="col-4" content_class="col-8" absentee=True userid=user.id|serialize_id:event.id %}
+                {% include "users/user.html" with float="float-left" class="row" user_id=user.id img_class="col-12" content_class="col-12" absentee=True userid=user.id|serialize_id:event.id %}
             {% endif %}
         {% endfor %}
     </div>

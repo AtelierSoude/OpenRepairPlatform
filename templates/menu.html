@@ -2,7 +2,7 @@
 {% load fontawesome %}
 {% load avatar_tags %}
 {% load django_bootstrap_breadcrumbs %}
-
+{% load notifications_tags %}
 
 {% block menu %}
 
@@ -44,6 +44,18 @@
                   {% endif %}
 
                   {% if user.is_authenticated %}
+                  <script src="{% static 'notifications/notify.js' %}" type="text/javascript"></script>
+                    {% register_notify_callbacks callbacks='fill_notification_list,fill_notification_badge' %}
+                    {% live_notify_badge badge_class="badge" %}
+                    <div class="navbar-brand arrow-login">
+                            <a class="nav-link mr-3 dropdown-toggle" href="#" id="notificationDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class=""></i></a>
+                            <div class="dropdown-menu " aria-labelledby="notificationDropdownMenuLink">
+                            {% live_notify_list %}
+                            </div>
+                    </div>
+         
+              
+
                     <div class="navbar-brand avatar"><a class="nav-link mr-3" href="{{ user.get_absolute_url }}">{% avatar user %} {{ user.first_name }}</a></div>
                   {% else %}
                     <div class="navbar-brand" ><a class="nav-link mr-3" href="{% url "login" %}"><i class="fa fa-user-circle-o fa-2x"></i></a></div>

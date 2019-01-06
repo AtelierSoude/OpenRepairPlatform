@@ -21,6 +21,8 @@ from django_markdown.widgets import MarkdownWidget
 
 from fm.views import AjaxUpdateView, AjaxCreateView, UpdateView
 
+from notifications.signals import notify
+
 import datetime
 from django import forms
 
@@ -476,6 +478,7 @@ class EventCreateView(CreateView):
             e.title = e.type.name
             e.save()
 
+        notify.send(sender=request.user, recipient=request.user, verb='a cree un evenement de', action_object=available_seats, target=organization, level='error', description='comme un grand', **kwargs)      
         return HttpResponseRedirect(reverse("event_create"))
 
     def get_form(self, form_class=None):

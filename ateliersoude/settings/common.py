@@ -74,7 +74,8 @@ INSTALLED_APPS = [
     'django_bootstrap_breadcrumbs',
     'django_markdown',
     'post_office',
-    'easy_maps' 
+    'easy_maps',
+    'notifications',
 ]
 
 MIDDLEWARE = [

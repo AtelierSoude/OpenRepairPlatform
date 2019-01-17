@@ -119,6 +119,12 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         """
         send_mail(subject, message, from_email, [self.email])
 
+    def __str__(self):
+        if self.first_name or self.last_name:
+            full_name = '%s %s' % (self.first_name, self.last_name)
+            return full_name.strip()
+        else:
+            return self.email
 
     def __iter__(self):
         for field in self._meta.get_fields():

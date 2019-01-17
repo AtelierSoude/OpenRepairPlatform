@@ -231,6 +231,10 @@ class Activity(models.Model):
 
     def __str__(self):
         return self.name
+    
+    def get_absolute_url(self):
+        return reverse('activity_detail', args=(self.pk, self.slug,))
+
 
 
 
@@ -298,6 +302,9 @@ class Event(models.Model):
         string += " à "
         string += ends_at_time
         return string
+
+    def get_absolute_url(self):
+        return reverse('event_detail', args=(self.pk, self.slug,))
 
 
 

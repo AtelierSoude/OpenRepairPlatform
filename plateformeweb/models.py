@@ -192,7 +192,7 @@ class Place(models.Model):
         return reverse('place_detail', args=(self.pk, self.slug,))
 
     def __str__(self):
-        return " ".join([self.name, '-', self.address.locality.__str__() or ''])
+        return self.name
 
 # ------------------------------------------------------------------------------
 
@@ -286,9 +286,6 @@ class Event(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def __str__(self):
-        return self.title
-
     def date_interval_format(self):
         locale.setlocale(locale.LC_ALL, 'fr_FR')
         starts_at_date = self.starts_at.date().strftime("%A %d %B %Y")
@@ -306,6 +303,9 @@ class Event(models.Model):
     def get_absolute_url(self):
         return reverse('event_detail', args=(self.pk, self.slug,))
 
+    def __str__(self):
+        long_title = " ".join([self.title, 'de', self.starts_at.date().strftime("%A %d %B %Y").__str__(), 'à', self.location.__str__() or ''])
+        return long_title
 
 
 class PublishedEventManager(models.Manager):

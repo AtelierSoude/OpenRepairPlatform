@@ -64,9 +64,11 @@ django-post_office
 #django-widget-tweaks
 #sécurité
 itsdangerous
-django-notifications-hq
 #celery
+git+https://github.com/justquick/django-activity-stream.git#egg=actstream
 
+django-jsonfield
+django-jsonfield-compat
 celery[redis]
 djangorestframework
 redis

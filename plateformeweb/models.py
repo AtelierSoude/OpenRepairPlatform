@@ -1,6 +1,7 @@
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from django.db import models
+from django.urls import reverse
 from address.models import AddressField
 from users.models import CustomUser
 from django.conf import settings
@@ -27,6 +28,8 @@ class Organization(models.Model):
     def __str__(self):
         return self.name
 
+    def get_absolute_url(self):
+        return reverse('organization_detail', args=(self.pk, self.slug,))
 
 class OrganizationPerson(models.Model):
     VISITOR = 0
@@ -184,6 +187,9 @@ class Place(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def get_absolute_url(self):
+        return reverse('place_detail', args=(self.pk, self.slug,))
 
     def __str__(self):
         return " ".join([self.name, '-', self.address.locality.__str__() or ''])

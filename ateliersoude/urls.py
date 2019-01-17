@@ -18,7 +18,6 @@ from django.conf.urls import include, url
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.views.static import serve
-import notifications.urls
 
 from . import views
 
@@ -35,7 +34,6 @@ urlpatterns = [
     url(r'^auth/', include('django.contrib.auth.urls')),
     url(r'^avatar/', include('avatar.urls')),
     url(r'^api/', include('api.urls')),
-    url('^inbox/notifications/', include(notifications.urls, namespace='notifications')),
 ]
 
 # DEBUG toolbar if DEBUG is true in the environment

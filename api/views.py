@@ -12,6 +12,9 @@ from plateformeweb.models import Event, Organization, OrganizationPerson, Place
 from urllib.parse import parse_qs
 from django.utils import timezone
 
+from django.db.models.signals import post_save
+from actstream import action
+
 def delete_event(request):
     if request.method != 'POST':
         # TODO change this
@@ -302,6 +305,7 @@ def book_event(request):
             if event.available_seats >= 0:
                 if organization not in user_volunteer_orgs:
                     event.available_seats -= 1
+                action.send(request.user, verb='sest inscris', action_object=event)
                 event.attendees.add(user)
                 # send booking mail here
             else:

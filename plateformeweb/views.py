@@ -21,10 +21,11 @@ from django_markdown.widgets import MarkdownWidget
 
 from fm.views import AjaxUpdateView, AjaxCreateView, UpdateView
 
-from notifications.signals import notify
-
 import datetime
 from django import forms
+
+from django.db.models.signals import post_save
+from actstream import action
 
 logger = getLogger(__name__)
 
@@ -173,6 +174,8 @@ class PlaceEditView(PlaceFormView, AjaxUpdateView):
     def form_valid(self, form):
         image = form.cleaned_data.get('picture', False)
         self.validate_image(image)
+        obj = form.save(commit=False)
+        action.send(self.request.user, verb=' a modifié ', action_object=obj, target=obj.organization)
         return super().form_valid(form)
 
 
@@ -506,6 +509,7 @@ class EventCreateView(CreateView):
     # set owner to current user on creation
     def form_valid(self, form):
         return super().form_valid(form)
+
 
 class MassBookingCreateView(CreateView):
     template_name = 'plateformeweb/mass_event_book.html'

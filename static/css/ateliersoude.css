@@ -119,6 +119,23 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a6b5fff1', e
   height: 40px !important;
   padding: 5px !important;
 }
+
+
+
+/********************************
+************ feed ***************
+*********************************/
+
+.feed {
+  margin : 15px !important;
+  text-align: center;
+  border : none !important;
+  border-radius: none !important;
+  background-color: #FFF;
+  padding: 10px;
+}
+
+
 /********************************
 ************ card ***************
 *********************************/

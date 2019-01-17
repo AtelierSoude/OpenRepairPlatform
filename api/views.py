@@ -27,6 +27,7 @@ def delete_event(request):
         event = Event.objects.get(pk=event_id)
         person = CustomUser.objects.get(email=request.user)
         if person in event.organizers.all():
+            action.send(request.user, verb="a supprimé", target=event)   
             event.delete()
             return JsonResponse({'status': "OK"})
 
@@ -43,7 +44,6 @@ def set_present(request):
                                     salt='presence')
 
         data = serial.loads(request.POST['idents'])
-        print(data)
         event_id = data['event_id']
         user_id = data['user_id']
 
@@ -51,6 +51,7 @@ def set_present(request):
         event = Event.objects.get(pk=event_id)
         event.attendees.remove(person)
         event.presents.add(person)
+        action.send(request.user, verb="a validé la présence de", action_object=person,  target=event)   
 
         return JsonResponse({'status': "OK", 'user_id': user_id})
 
@@ -63,7 +64,6 @@ def set_absent(request):
                                     salt='presence')
 
         data = serial.loads(request.POST['idents'])
-        print(data)
         event_id = data['event_id']
         user_id = data['user_id']
 
@@ -71,6 +71,7 @@ def set_absent(request):
         event = Event.objects.get(pk=event_id)
         event.presents.remove(person)
         event.attendees.add(person)
+        action.send(request.user, verb="a dé-validé la présence de", action_object=person,  target=event)   
 
         return JsonResponse({'status': "OK", 'user_id': user_id})
 
@@ -298,6 +299,7 @@ def book_event(request):
             if organization not in user_volunteer_orgs:
                 event.available_seats += 1
             event.attendees.remove(user)
+            action.send(user, verb="s'est désinscrit de", target=event)    
             event.save()
             return JsonResponse({'status': 'unbook',
                                  'available_seats': event.available_seats})
@@ -305,7 +307,7 @@ def book_event(request):
             if event.available_seats >= 0:
                 if organization not in user_volunteer_orgs:
                     event.available_seats -= 1
-                action.send(request.user, verb='sest inscris', action_object=event)
+                action.send(user, verb="s'est inscrit à", target=event)    
                 event.attendees.add(user)
                 # send booking mail here
             else:
@@ -370,10 +372,11 @@ def add_users(request):
 
                     event.attendees.add(user)
                     attending_pk += [user.pk]
+                    action.send(request.user, verb="a inscris", action_object=user,  target=event)   
                 else:
-                    event.presents.add(user)
+                    event.presents.add(user) 
                     presents_pk += [user.pk]
-
+                    
 
 
         event.available_seats = seats;

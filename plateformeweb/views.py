@@ -153,8 +153,9 @@ class PlaceCreateView(PlaceFormView, AjaxCreateView):
     def form_valid(self, form):
         image = form.cleaned_data.get('picture', False)
         self.validate_image(image)
-        obj = form.save(commit=False)
+        obj = form.save()
         obj.owner = self.request.user
+        action.send(self.request.user, verb=' a créé ', action_object=obj, target=obj.organization)
         return super().form_valid(form)
 
 
@@ -278,12 +279,19 @@ class ActivityCreateView(ActivityFormView, AjaxCreateView):
 
         # set owner to current user on creation
     def form_valid(self, form):
+        obj = form.save()
+        action.send(self.request.user, verb=' a créé ', action_object=obj)
         return super().form_valid(form)
 
 
 class ActivityEditView( ActivityFormView, AjaxUpdateView):
    # permission_required = 'plateformeweb.edit_acivity'
     queryset = Activity.objects
+
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        action.send(self.request.user, verb=' a modifié ', action_object=obj)
+        return super().form_valid(form)
 
 
 # --- Events ---
@@ -480,8 +488,9 @@ class EventCreateView(CreateView):
             e.organizers.add(CustomUser.objects.get(email=request.user))
             e.title = e.type.name
             e.save()
+            action.send(self.request.user, verb=' a créé ', action_object=e, target=e.organization)        
 
-        notify.send(sender=request.user, recipient=request.user, verb='a cree un evenement de', action_object=available_seats, target=organization, level='error', description='comme un grand', **kwargs)      
+        
         return HttpResponseRedirect(reverse("event_create"))
 
     def get_form(self, form_class=None):

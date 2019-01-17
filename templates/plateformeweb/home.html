@@ -12,10 +12,18 @@
 
     {% if user.is_authenticated %}
 
+        <h2>Ce que j'ai fait</h2>
         {% activity_stream 'actor' user %}
         {% for action in stream %}
           <div class="row feed"> {% display_action action %} </div> 
         {% endfor %}
+
+        <h2>Ce qu'on a fait à propos de moi</h2>
+        {% activity_stream 'action_object' user %}
+        {% for action in stream %}
+          <div class="row feed"> {% display_action action %} </div> 
+        {% endfor %}
+
 
     {% else %}
 

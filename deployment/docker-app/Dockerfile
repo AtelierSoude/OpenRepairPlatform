@@ -25,7 +25,7 @@ ADD deployment/docker-app/entrypoint.sh /ateliersoude/
 ADD deployment/docker-app/bootstrap.sh /ateliersoude/
 # will disappear when the volume is mounted, but that's ok
 RUN pip install -r /ateliersoude/requirements.txt
-
+RUN pip install django-activity-stream
 # COPY ./deployment/docker-app/bootstrap.sh /ateliersoude/bootstrap.sh
 # COPY ./deployment/docker-app/entrypoint.sh /ateliersoude/entrypoint.sh
 # COPY . /ateliersoude

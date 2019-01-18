@@ -24,6 +24,15 @@
           <div class="row feed"> {% display_action action %} </div> 
         {% endfor %}
 
+        <h2>Ce que les gens de mon orga font à propos d'elle</h2>
+        {% for organization in user.organizationperson_set.all %}
+            <p>fil d'actu de {{organization.organization}}</p>
+            {% activity_stream 'target' organization.organization %}
+            {% for action in stream %}
+            <div class="row feed"> {% display_action action %} </div> 
+            {% endfor %}
+        {% endfor %}
+
 
     {% else %}
 

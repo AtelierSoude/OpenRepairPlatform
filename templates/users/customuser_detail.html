@@ -3,6 +3,8 @@
 {% load fontawesome %}
 {% load avatar_tags %}
 
+{% load activity_tags %}
+
 {% load django_bootstrap_breadcrumbs %}
 
 {% block breadcrumbs %}
@@ -58,6 +60,17 @@
 {% endblock context %}
 <!-- which rendez-vous -->
 {% block about %}
+
+{% activity_stream 'actor' target_user %}
+{% for action in stream %}
+  <div class="row feed"> {% display_action action %} </div> 
+{% endfor %}
+
+{% activity_stream 'action_object' target_user %}
+{% for action in stream %}
+  <div class="row feed"> {% display_action action %} </div> 
+{% endfor %}
+
 <h5 class="border-bottom border-gray pb-2 mb-0 clear">Rendez-vous</h5>
 
 <section class="row" id="list-booking">

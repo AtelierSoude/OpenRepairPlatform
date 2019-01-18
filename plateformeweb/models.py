@@ -304,9 +304,8 @@ class Event(models.Model):
         return reverse('event_detail', args=(self.pk, self.slug,))
 
     def __str__(self):
-        long_title = " ".join([self.title, 'de', self.starts_at.date().strftime("%A %d %B %Y").__str__(), 'à', self.location.__str__() or ''])
-        return long_title
-
+        full_title = '%s %s' % (self.title, self.starts_at.date().strftime("%A %d %B %Y"))
+        return full_title
 
 class PublishedEventManager(models.Manager):
     def get_queryset(self):

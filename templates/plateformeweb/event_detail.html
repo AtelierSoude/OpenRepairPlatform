@@ -7,6 +7,7 @@
 {% load django_bootstrap_breadcrumbs %}
 {% load django_markdown django_markdown_static %}
 {% load easy_maps_tags %}
+{% load activity_tags %}
 
 {% block breadcrumbs %}
 {% with type="events" list_view="event_list" detail_name=event.title %}
@@ -149,6 +150,16 @@
 
 
 {% block about %}
+
+{% activity_stream 'target' event %}
+{% for action in stream %}
+  <div class="row feed"> {% display_action action %} </div> 
+{% endfor %}
+
+{% activity_stream 'action_object' event %}
+{% for action in stream %}
+  <div class="row feed"> {% display_action action %} </div> 
+{% endfor %}
 
 <!-- Add users to event : attendees if date_event < current_date , presents if date_event = current_date -->
 

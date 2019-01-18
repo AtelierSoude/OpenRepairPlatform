@@ -11,6 +11,9 @@ from django.utils.functional import cached_property
 
 # Create your views here.
 
+from django.db.models.signals import post_save
+from actstream import action
+
 
 
 def user_profile(request):
@@ -26,6 +29,7 @@ def user_profile(request):
                              instance=CustomUser.objects.get(id=request.user.id))
         if user_form.is_valid():
             user_form.save()
+        action.send(request.user, verb="a modifié ses informations")        
         return render(request,
                       'users/user_profile.html',
                       {'user_form': user_form})
@@ -60,6 +64,7 @@ def register(request):
             new_user = authenticate(username=form.cleaned_data['email'],
                                     password=form.cleaned_data['password1'],
                                     )
+            action.send(new_user, verb="a créé un compte")        
             login(request, new_user)
             return HttpResponseRedirect(reverse("user_profile"))
 

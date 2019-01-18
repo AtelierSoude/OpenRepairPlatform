@@ -14,6 +14,7 @@ from django.utils import timezone
 
 from django.db.models.signals import post_save
 from actstream import action
+from actstream.actions import follow, unfollow
 
 def delete_event(request):
     if request.method != 'POST':
@@ -286,7 +287,7 @@ def book_event(request):
         request_body = request.body.decode("utf-8")
         post_data = parse_qs(request_body)
         event_id = post_data['event_id'][0]
-        user = CustomUser.objects.get(email=request.user)
+        user = CustomUser.objects.get(email=request.user.email)
         event = Event.objects.get(pk=event_id)
         organization = event.organization
         attendees = event.attendees.all()
@@ -308,6 +309,7 @@ def book_event(request):
                 if organization not in user_volunteer_orgs:
                     event.available_seats -= 1
                 action.send(user, verb="s'est inscrit à", target=event)    
+                follow(user, event, actor_only=False)
                 event.attendees.add(user)
                 # send booking mail here
             else:

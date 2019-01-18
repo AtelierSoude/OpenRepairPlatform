@@ -155,7 +155,7 @@ class PlaceCreateView(PlaceFormView, AjaxCreateView):
         self.validate_image(image)
         obj = form.save()
         obj.owner = self.request.user
-        action.send(self.request.user, verb=' a créé ', action_object=obj, target=obj.organization)
+        action.send(self.request.user, verb=' a créé ', action_object=obj)
         return super().form_valid(form)
 
 
@@ -176,7 +176,7 @@ class PlaceEditView(PlaceFormView, AjaxUpdateView):
         image = form.cleaned_data.get('picture', False)
         self.validate_image(image)
         obj = form.save(commit=False)
-        action.send(self.request.user, verb=' a modifié ', action_object=obj, target=obj.organization)
+        action.send(self.request.user, verb=' a modifié ', action_object=obj)
         return super().form_valid(form)
 
 
@@ -485,10 +485,10 @@ class EventCreateView(CreateView):
                 type=event_type,
             )
 
-            e.organizers.add(CustomUser.objects.get(email=request.user))
+            e.organizers.add(CustomUser.objects.get(email=request.user.email))
             e.title = e.type.name
             e.save()
-            action.send(self.request.user, verb=' a créé ', action_object=e, target=e.organization)        
+            action.send(self.request.user, verb=' a créé ', action_object=e, target=e.location)        
 
         
         return HttpResponseRedirect(reverse("event_create"))

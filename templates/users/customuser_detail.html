@@ -60,7 +60,7 @@
 {% endblock context %}
 
 {% block stream %}
-    {% with object=request.user %}
+    {% with object=target_user %}
     {{ block.super }}
     {% endwith %}
 {% endblock stream %}

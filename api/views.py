@@ -324,7 +324,7 @@ def list_users(request, organization_pk, event_pk):
         # TODO change this
         return HttpResponse("Circulez, il n'y a rien à voir")
     else:
-        user = CustomUser.objects.get(email=request.user)
+        user = CustomUser.objects.get(email=request.user.email)
         organization = Organization.objects.get(pk=organization_pk)
         user_is_admin = OrganizationPerson.objects.get(user=user, organization=organization, role__gte=OrganizationPerson.ADMIN)
         if not user_is_admin:

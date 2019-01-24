@@ -26,6 +26,7 @@ from django import forms
 
 from django.db.models.signals import post_save
 from actstream import action
+from actstream.actions import follow, unfollow
 
 logger = getLogger(__name__)
 
@@ -156,6 +157,7 @@ class PlaceCreateView(PlaceFormView, AjaxCreateView):
         obj = form.save()
         obj.owner = self.request.user
         action.send(self.request.user, verb=' a créé ', action_object=obj)
+        follow(self.request.user, obj, actor_only=False) 
         return super().form_valid(form)
 
 
@@ -281,6 +283,7 @@ class ActivityCreateView(ActivityFormView, AjaxCreateView):
     def form_valid(self, form):
         obj = form.save()
         action.send(self.request.user, verb=' a créé ', action_object=obj)
+        follow(self.request.user, obj, actor_only=False)  
         return super().form_valid(form)
 
 
@@ -488,7 +491,8 @@ class EventCreateView(CreateView):
             e.organizers.add(CustomUser.objects.get(email=request.user.email))
             e.title = e.type.name
             e.save()
-            action.send(self.request.user, verb=' a créé ', action_object=e, target=e.location)        
+            action.send(self.request.user, verb=' a créé ', action_object=e, target=e.location)  
+            follow(self.request.user, e, actor_only=False)      
 
         
         return HttpResponseRedirect(reverse("event_create"))
@@ -538,7 +542,6 @@ class MassBookingCreateView(CreateView):
         #TODO: bulk insert somehow?
         for event in events:
             event.attendees.add(request.user)
-
         return HttpResponse("OK!")
 
     def get_form(self, form_class=None, **kwargs):

@@ -9,6 +9,8 @@ import os
 import socket
 import re
 import colored_traceback
+import users.apps
+import plateformeweb.apps
 
 colored_traceback.add_hook(always=True)
 
@@ -45,6 +47,7 @@ APPEND_SLASH = True
 
 INSTALLED_APPS = [
     # django rules autodiscover rules.py files
+    'django.contrib.sites',
     'rules.apps.AutodiscoverRulesConfig',
     'datetimepicker',
     'grappelli',
@@ -57,16 +60,15 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'whitenoise.runserver_nostatic', # http://whitenoise.evans.io/en/stable/django.html
     'django.contrib.staticfiles',
-    'users',
+    'users.apps.CustomusersConfig',
     'api',
+    'dbsettings',
     'django_tables2',
     'import_export',
     'fontawesome',
     'simple_history',
-    'dbsettings',
-    'django.contrib.sites',
     'debug_toolbar',
-    'plateformeweb',
+    'plateformeweb.apps.PlateformeWebAppConfig',
     'address',
     'avatar',
     'crispy_forms',
@@ -79,6 +81,8 @@ INSTALLED_APPS = [
     'actstream',
 ]
 SITE_ID = 1
+
+DBSETTINGS_USE_SITES = False
 
 MIDDLEWARE = [
     # put the following line first, unless it breaks other middleware

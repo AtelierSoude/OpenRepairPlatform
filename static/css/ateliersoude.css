@@ -9,6 +9,12 @@ body, html, .container, div, .card, ul, p {
 /*******************************
 ******* éléments généraux *******
 *********************************/
+
+.row {
+  margin-right: 0px !important;
+  margin-left: 0px !important;
+}
+
 body {
     background-color: #eef2f6 !important;
 }

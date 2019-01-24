@@ -68,7 +68,6 @@ itsdangerous
 celery[redis]
 djangorestframework
 redis
-
 git+https://github.com/justquick/django-activity-stream.git#egg=actstream
 django-jsonfield
 django-jsonfield-compat

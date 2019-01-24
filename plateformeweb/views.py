@@ -34,10 +34,9 @@ logger = getLogger(__name__)
 
 def homepage(request):
     if request.user.is_authenticated():
-   #return 
         return redirect('/activity/')
     else:
-        return render(request, 'plateformeweb/home.html')
+        return render (request, 'plateformeweb/home.html')
 
 
 # TODO move all this in separate apps?

@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     'fontawesome',
     'simple_history',
     'dbsettings',
+    'django.contrib.sites',
     'debug_toolbar',
     'plateformeweb',
     'address',
@@ -77,6 +78,7 @@ INSTALLED_APPS = [
     'easy_maps',
     'actstream',
 ]
+SITE_ID = 1
 
 MIDDLEWARE = [
     # put the following line first, unless it breaks other middleware

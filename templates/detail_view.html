@@ -34,54 +34,50 @@
 {% endblock %}
 
 <div class="row container-fluid">
-<section class="col-md-3" style=" position: relative; top:-100px;" > 
+<section class="col-md-3 bg-white shadow" style=" position: relative; top:-100px;" > 
         {% block context %} 
         {% endblock context %}
-
-        <!-- activity stream -->
-        {% block stream %}
-        <div class="card">
-            <div class="card-header">
-                    Dernières activités
-            </div>
-            <div class="list-group feed_stream">
-                {% activity_stream 'actor' object %}
-                {% for action in stream %}
-                <div class=" feed list-group-item"> {% display_action action %} </div> 
-                {% endfor %}
-    
-                {% activity_stream 'action_object' object %}
-                {% for action in stream %}
-                <div class=" feed list-group-item"> {% display_action action %} </div> 
-                {% endfor %}
-    
-                {% activity_stream 'target' object %}
-                {% for action in stream %}
-                <div class=" feed list-group-item"> {% display_action action %} </div> 
-                {% endfor %}
-            </div>
-            <div class="card-footer">
-                <a href="{% follow_all_url object %}">
-                        {% if request.user|is_following:object %}
-                            stop following
-                        {% else %}
-                            follow
-                        {% endif %}
-                </a>
-            </div>
-        </div>
-        {% endblock stream %}
-<!-- activity stream -->    
-
 </section>   
 
 
     <!-- details about -->
-    <section class="col-md-9 pt-3">
+    <section class="col-md-6 pt-3">
     {% block about %}
     {% endblock about %}
     </section>
 
+<section class="col-md-3 bg-white shadow" style="" > 
+            <!-- activity stream -->
+            {% block stream %}
+            <div class="card">
+                <h5>
+                        Dernières activités
+                </h5>
+    
+                <div class="list-group feed_stream">   
+                    {% activity_stream 'actor' object %}        
+                        {% include "feed.html" %}
+                    {% activity_stream 'action_object' object %}  
+                        {% include "feed.html" %}
+                    {% activity_stream 'target' object %}    
+                        {% include "feed.html" %}
+                </div>
+    
+                <div class="">
+                    <a href="{% follow_all_url object %}">
+                            {% if request.user|is_following:object %}
+                            <span class="text-danger"> stop following </span>
+                            {% else %}
+                               follow 
+                            {% endif %}
+                    </a>
+                </div>
+            </div>
+            {% endblock stream %}
+    <!-- activity stream -->    
+</section>   
+    
+    
 </div>
 
 </div>

@@ -73,12 +73,12 @@ INSTALLED_APPS = [
     'avatar',
     'crispy_forms',
     'fm',
-    'celery',
     'django_bootstrap_breadcrumbs',
     'django_markdown',
     'post_office',
     'easy_maps',
     'actstream',
+    'celery',
 ]
 SITE_ID = 1
 

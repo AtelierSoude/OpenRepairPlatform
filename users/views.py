@@ -29,15 +29,10 @@ def user_profile(request):
                              instance=CustomUser.objects.get(id=request.user.id))
         if user_form.is_valid():
             user_form.save()
-        action.send(request.user, verb="a modifié ses informations")        
+            action.send(request.user, verb="a modifié ses informations")        
         return render(request,
                       'users/user_profile.html',
                       {'user_form': user_form})
-
-        events = PublishedEvent.objects.filter(
-        starts_at__gte=timezone.now()).order_by('starts_at')[:10]
-    context = {"events": events}
-
 
 def list_users(request):
     if request.method == 'GET':

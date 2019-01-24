@@ -4,6 +4,7 @@
 {% load fontawesome %}
 {% load avatar_tags %}
 {% load django_bootstrap_breadcrumbs %}
+{% load activity_tags %}
 
     <!-- breadcrumb -->
 {% block breadcrumbs %}
@@ -34,8 +35,35 @@
 
 <div class="row container-fluid">
 <section class="col-md-3" style=" position: relative; top:-100px;" > 
-        {% block context %}
+        {% block context %} 
         {% endblock context %}
+
+        <!-- activity stream -->
+        {% block stream %}
+        <div class="card">
+            <div class="card-header">
+                    Dernières activités
+            </div>
+            <div class="list-group feed_stream">
+                {% activity_stream 'actor' object %}
+                {% for action in stream %}
+                <div class=" feed list-group-item"> {% display_action action %} </div> 
+                {% endfor %}
+    
+                {% activity_stream 'action_object' object %}
+                {% for action in stream %}
+                <div class=" feed list-group-item"> {% display_action action %} </div> 
+                {% endfor %}
+    
+                {% activity_stream 'target' object %}
+                {% for action in stream %}
+                <div class=" feed list-group-item"> {% display_action action %} </div> 
+                {% endfor %}
+            </div>
+        </div>
+        {% endblock stream %}
+<!-- activity stream -->    
+
 </section>   
 
 

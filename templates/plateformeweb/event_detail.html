@@ -101,7 +101,7 @@
 
 
 <!-- Location -->
-    <div class="m-3 pt-3 p-2 bg-white">
+<div class="m-3 pt-3 p-2 bg-white">
         <h6>
             {% fontawesome_icon 'map-marker' %}
             <a href="{% url 'place_detail' event.location.id event.location.slug %}">
@@ -148,18 +148,14 @@
 <!-- End Leaflet script -->
 {% endblock context %}
 
+{% block stream %}
+    {% with object=event %}
+    {{ block.super }}
+    {% endwith %}
+{% endblock stream %}
+
 
 {% block about %}
-
-{% activity_stream 'target' event %}
-{% for action in stream %}
-  <div class="row feed"> {% display_action action %} </div> 
-{% endfor %}
-
-{% activity_stream 'action_object' event %}
-{% for action in stream %}
-  <div class="row feed"> {% display_action action %} </div> 
-{% endfor %}
 
 <!-- Add users to event : attendees if date_event < current_date , presents if date_event = current_date -->
 
@@ -221,8 +217,6 @@
         {% endif %}
     {% endfor %}
 
-  
-    
 </div>
 <!-- End users that have a role in the organization -->
 
@@ -263,7 +257,6 @@
     {% endif %}
 {% endif %}
 
-</div>
 
 <!-- End attendees and presents -->
 
@@ -377,4 +370,3 @@
 {% endif %}
 {% endblock about %}
 
-</section>

@@ -126,13 +126,19 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a6b5fff1', e
 ************ feed ***************
 *********************************/
 
+.feed_stream{
+  height: 300px;
+  overflow: scroll;
+}
+
 .feed {
-  margin : 15px !important;
+  margin : 15px;
+  margin-top: 05px;
+  margin-bottom: 05px;
   text-align: center;
-  border : none !important;
-  border-radius: none !important;
   background-color: #FFF;
   padding: 10px;
+  font-size: 12px !important;
 }
 
 
@@ -184,7 +190,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a6b5fff1', e
 .card-user img{
   border-radius: 90%;
 }
-.card .fa, .card a {
+.card .fa, .card > a {
   text-decoration: none;
   color:  #212120;
 }

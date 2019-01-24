@@ -7,6 +7,7 @@
 {% load django_markdown django_markdown_static %}
 {% load activity_tags %}
 
+
 {% block breadcrumbs %}
 {% with type="activity" list_view="activity_list" detail_name=activity.name %}
    {{ block.super }}
@@ -36,30 +37,18 @@
 {% endblock TitleAndEdit %}
 
 {% block context %}
-
-
 <div class="sticky-position sticky-top sticky-keep">
     {% include "plateformeweb/activity.html" with id=activity.pk %}
 </div>
 {% endblock context %} 
 
-{% block about %}
+{% block stream %}
+    {% with object=activity %}
+    {{ block.super }}
+    {% endwith %}
+{% endblock stream %}
 
-{% activity_stream 'actor' activity %}
-{% for action in stream %}
-  <div class="row feed"> {% display_action action %} </div> 
-{% endfor %}
-
-{% activity_stream 'action_object' activity %}
-{% for action in stream %}
-  <div class="row feed"> {% display_action action %} </div> 
-{% endfor %}
-
-{% activity_stream 'target' activity %}
-{% for action in stream %}
-  <div class="row feed"> {% display_action action %} </div> 
-{% endfor %}
-
+{% block about %}    
 
 <h5 class="border-bottom border-gray pb-2 mb-0 clear ">Description</h5>
 <p>

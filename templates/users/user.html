@@ -9,8 +9,8 @@
 
 <!-- a user card -->
 <div class="card-user card p-2">
+    <a href="{{ user.get_absolute_url }}">
         <div class="{{class}}" id="square-{{user_id}}">
-            <a href="{{ user.get_absolute_url }}">
                 <div class="avatar-card-user {{img_class}}">
                     {% avatar user %}
                 </div>
@@ -56,8 +56,8 @@
                         
                         {% endif %}
                 </div>
-            </a>
          </div>
+    </a>
 
      {% if orga %}
      {% elif absentee and request.user in event.organizers.all %}

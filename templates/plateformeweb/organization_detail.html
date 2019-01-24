@@ -37,25 +37,13 @@
     {% include "plateformeweb/organization.html" with class="sticky-position sticky-top"%}
 {% endblock context %} 
 
+{% block stream %}
+    {% with object=organization %}
+    {{ block.super }}
+    {% endwith %}
+{% endblock stream %}
 
 {% block about %}
-
-{% activity_stream 'actor' organization %}
-{% for action in stream %}
-  <div class="row feed"> {% display_action action %} </div> 
-{% endfor %}
-
-{% activity_stream 'action_object' organization %}
-{% for action in stream %}
-  <div class="row feed"> {% display_action action %} </div> 
-{% endfor %}
-
-{% activity_stream 'target' organization %}
-{% for action in stream %}
-  <div class="row feed"> {% display_action action %} </div> 
-{% endfor %}
-
-
 <h5 class="border-bottom border-gray pb-2 mb-0 clear ">Description</h5>
 
     {{ organization.description|markdown }}

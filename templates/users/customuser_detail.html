@@ -58,18 +58,16 @@
 </div>
 
 {% endblock context %}
+
+{% block stream %}
+    {% with object=request.user %}
+    {{ block.super }}
+    {% endwith %}
+{% endblock stream %}
+
+
 <!-- which rendez-vous -->
 {% block about %}
-
-{% activity_stream 'actor' target_user %}
-{% for action in stream %}
-  <div class="row feed"> {% display_action action %} </div> 
-{% endfor %}
-
-{% activity_stream 'action_object' target_user %}
-{% for action in stream %}
-  <div class="row feed"> {% display_action action %} </div> 
-{% endfor %}
 
 <h5 class="border-bottom border-gray pb-2 mb-0 clear">Rendez-vous</h5>
 

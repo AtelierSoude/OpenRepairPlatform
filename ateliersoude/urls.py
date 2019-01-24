@@ -21,7 +21,6 @@ from django.views.static import serve
 
 from . import views
 
-
 urlpatterns = [
     url(r'^$', views.home),
     url(r'^markdown/', include( 'django_markdown.urls')),
@@ -34,6 +33,7 @@ urlpatterns = [
     url(r'^auth/', include('django.contrib.auth.urls')),
     url(r'^avatar/', include('avatar.urls')),
     url(r'^api/', include('api.urls')),
+    url(r'^activity/', include('actstream.urls')),
 ]
 
 # DEBUG toolbar if DEBUG is true in the environment

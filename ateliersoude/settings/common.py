@@ -297,7 +297,7 @@ EMAIL_PORT = 587
 EMAIL_BACKEND = 'post_office.EmailBackend'
 
 # where to go after successful authentication?
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/activity/'
 LOGIN_URL = '/auth/login/'
 
 # FIXTURE_DIRS= (

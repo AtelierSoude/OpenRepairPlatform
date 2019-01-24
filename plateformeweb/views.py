@@ -33,11 +33,11 @@ logger = getLogger(__name__)
 
 
 def homepage(request):
-    events = PublishedEvent.objects.filter(
-        starts_at__gte=timezone.now()).order_by('starts_at')[:10]
-    context = {"events": events}
-    return render(request, 'plateformeweb/home.html', context)
-
+    if request.user.is_authenticated():
+   #return 
+        return redirect('/activity/')
+    else:
+        return render(request, 'plateformeweb/home.html')
 
 
 # TODO move all this in separate apps?

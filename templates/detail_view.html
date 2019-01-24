@@ -60,6 +60,15 @@
                 <div class=" feed list-group-item"> {% display_action action %} </div> 
                 {% endfor %}
             </div>
+            <div class="card-footer">
+                <a href="{% follow_all_url object %}">
+                        {% if request.user|is_following:object %}
+                            stop following
+                        {% else %}
+                            follow
+                        {% endif %}
+                </a>
+            </div>
         </div>
         {% endblock stream %}
 <!-- activity stream -->    

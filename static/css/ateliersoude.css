@@ -9,7 +9,10 @@ body, html, .container, div, .card, ul, p {
 /*******************************
 ******* éléments généraux *******
 *********************************/
-
+.container-fluid{
+  padding: 0px !important;
+  margin: 0px !important;
+}
 .row {
   margin-right: 0px !important;
   margin-left: 0px !important;

@@ -1,7 +1,7 @@
-FROM python:3-stretch
+FROM python:3.6
 
 # install nodejs for npm
-# see http://linuxbsdos.com/2017/06/26/how-to-install-node-js-lts-on-debian-9-stretch/
+# see http://linuxbsdos.com/2017/06/26/how-to-install-node-js-lts-on--9-stretch/
 RUN apt-get -y update && \
     apt-get -y install apt-utils aptitude
 RUN aptitude -y upgrade && \

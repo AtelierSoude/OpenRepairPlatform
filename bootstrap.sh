@@ -5,9 +5,10 @@
 cd /ateliersoude/
 
 if ! [[ -e /bootstrap_done ]]; then
+    python manage.py syncdb --noinput
     echo '\e[1;32m'"--- bootstrapping the application ---"'\e[0m'
-    python3 manage.py makemigrations || exit 1
-    python3 manage.py migrate --noinput || exit 1
+    python3 manage.py makemigrations
+    python3 manage.py migrate
     python3 manage.py shell < bootstrap.py
     python3 manage.py loaddata users/fixtures/users/*.json
     python3 manage.py loaddata plateformeweb/fixtures/*.json

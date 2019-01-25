@@ -7,6 +7,7 @@
 {% load django_bootstrap_breadcrumbs %}
 {% load django_markdown django_markdown_static %}
 {% load easy_maps_tags %}
+{% load activity_tags %}
 
 {% block breadcrumbs %}
 {% with type="events" list_view="event_list" detail_name=event.title %}
@@ -24,12 +25,6 @@
 
 <!--- Item banner -->
 {% block TitleAndEdit %}
-<h5 class="float-left">
-    {{ event.type }} du {{ event.starts_at|date:"d M" }} à
-    <a href="{% url 'place_detail' event.location.id event.location.slug %}">
-          {{ event.location.name }}
-    </a>
-</h5>
 
 {% if not request.user.is_authenticated %}
 {% else %}
@@ -52,14 +47,36 @@
         </a>
     {% endif %}
 {% endif %}
+
+<h5 class="row">
+    {{ event.type }} du {{ event.starts_at|date:"d M" }} à
+    <a href="{% url 'place_detail' event.location.id event.location.slug %}">
+          {{ event.location.name }}
+    </a>
+    <div class="float-left ml-3">
+            {% if event.available_seats == 0 %}
+                <span class="badge badge-warning">Complet</span>
+            {% else %}
+                <span class="badge badge-primary">{{ event.available_seats }}
+                <small>Places</small></span>
+            {% endif %}
+    </div>
+</h5>
+
+<div class="row">
+    par <a href="{% url 'organization_detail' event.organization.id event.organization.slug %}">
+            {{ event.organization.name }}
+      </a>
+</div>
+
 {% endblock TitleAndEdit %}
 <!-- End item banner -->
 
 
 {% block context %}
 <!-- About event -->
-    <div class="pt-3 card">
-        {% include "plateformeweb/event.html" with img_class="col-lg" about_class="row" %}
+    <div class="card sticky-position sticky-top sticky-keep" >
+        <img class="img-fluid img-place" src="{{ event.type.picture.url }}">
     </div>
 
     <div class="m-3 pt-3 p-2 card">
@@ -70,19 +87,21 @@
                     <span>La participation est libre / pas de condition d'accès</span>
                 {% endfor %}
             </p>
-        </div>
-
-    <div class="m-3 pt-3 p-2 card">
-        <p>
-        {{event.type.description|truncatechars:100|markdown}}
-        </p>
-        <a href="{% url 'activity_detail' event.type.id event.type.slug %}">En savoir +</a>
     </div>
+
+    <a href="{% url 'activity_detail' event.type.id event.type.slug %}">
+        <div class="m-3 pt-3 p-2 card">
+            <p>
+            {{event.type.description|truncatechars:100|markdown}}
+            </p>
+            <a href="{% url 'activity_detail' event.type.id event.type.slug %}">En savoir +</a>
+        </div>
+    </a>
 <!-- End about event -->
 
 
 <!-- Location -->
-    <div class="m-3 pt-3 p-2 bg-white">
+<div class="m-3 pt-3 p-2 bg-white">
         <h6>
             {% fontawesome_icon 'map-marker' %}
             <a href="{% url 'place_detail' event.location.id event.location.slug %}">
@@ -129,10 +148,18 @@
 <!-- End Leaflet script -->
 {% endblock context %}
 
+{% block stream %}
+    {% with object=event %}
+    {{ block.super }}
+    {% endwith %}
+{% endblock stream %}
+
 
 {% block about %}
 
 <!-- Add users to event : attendees if date_event < current_date , presents if date_event = current_date -->
+
+<!-- end add users to event -->
 {% if request.user.is_authenticated and request.user in admin_or_volunteer %}
 
 
@@ -142,53 +169,55 @@
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-</div>
-
-<div id="add-user" class="row m-2">
-    <span>Ajouter parmi </span>
-    <select class="col-md-2 col-sm-4 form-control" v-model="selected_member_type">
-        <option value=0>Tous internes à l'organisation</option>
-        <option value=30>Administrateurs</option>
-        <option value=20>Membres actifis</option>
-        <option value=10>Adhérents</option>
-    </select>
-
-    <div class="search-user col-md-6">
-        <input class="search-term-user col-lg-12" type="text" v-model="fuzzy_input" placeholder="Nom, Prénom, Email..." 
-        onclick="document.getElementById('search-user-result').style.display='block'">
-
-        <select id="search-user-result" :size="fuzzy_list.length" v-model="selected_users" multiple
-        onmouseout="this.style.display='none'">
-        <option v-for="result in fuzzy_list" :value="result.pk">
-            [[result.name]] -
-            [[result.email]] -
-            [[text_role(result.role)]]
-        </option>
-        </select>
     </div>
-
-    <input type="button" class="btn col-md-2" v-on:click="add_users" value="Inscrire"></input>
-</div>
-
+<div id="add-user" class="row float-right">
+    <!---<span>Ajouter parmi </span>
+     <select class="col-md-2 col-sm-4 form-control" v-model="selected_member_type">
+         <option value=0>Tous internes à l'organisation</option>
+         <option value=30>Administrateurs</option>
+         <option value=20>Membres actifis</option>
+         <option value=10>Adhérents</option>
+     </select> -->
+ 
+     <div class="search-user col-8 float-right">
+         <input class="search-term-user" style="width:100%" type="text" v-model="fuzzy_input" placeholder="Nom, Prénom, Email..." 
+         onclick="document.getElementById('search-user-result').style.display='block'">
+ 
+         <select id="search-user-result" class="list-group" :size="fuzzy_list.length" v-model="selected_users" multiple
+         onmouseout="this.style.display='none'">
+         <option class="list-group-item" v-for="result in fuzzy_list" :value="result.pk">
+             [[result.name]] -
+             [[result.email]] -
+             [[text_role(result.role)]]
+         </option>
+         </select>
+     </div>
+ 
+     <input type="button" class="btn col-4 float-right" v-on:click="add_users" value="ajouter">
+     </input>
+ </div>
 {% endif %}
-<!-- end add users to event -->
 
 <!-- Users that have a role in the organization -->
 
 <h5 class="border-bottom border-gray pb-2 mb-0 clear ">Animateur.trice.s</h5>
 
+<div class="card-columns">
+
     {% for user in event.organizers.all %}
         {% include "users/user.html" with float="float-left" class="row checked administrator" orga=True img_class="col-12" content_class="col-12 text-center" %}
     {% endfor %}
 
-    {% for user in volunteers %}
+    {% for user in admin_or_volunteer %}
+        {% if user in event.attendees.all %}
+            {% include "users/user.html" with float="float-left" class="row" user_id=user.id img_class="col-12" content_class="col-12 text-center" absentee=True userid=user.id|serialize_id:event.id %}
+        {% endif %}
         {% if user in event.presents.all %}
             {% include "users/user.html" with float="float-left" class="row checked" user_id=user.id img_class="col-12" content_class="col-12 text-center" absentee=True userid=user.id|serialize_id:event.id %}
-        {% else %}
-            {% include "users/user.html" with float="float-left" class="row" user_id=user.id img_class="col-12" content_class="col-12 text-center" absentee=True userid=user.id|serialize_id:event.id %}
         {% endif %}
     {% endfor %}
 
+</div>
 <!-- End users that have a role in the organization -->
 
 <!-- Attendees and presents -->
@@ -196,38 +225,38 @@
 <h5 class="border-bottom border-gray pb-2 mb-0 clear ">Participant.e.s</h5>
 
 {% if request.user.is_authenticated and request.user in admin_or_volunteer %}
+    <div class="card-columns">
 <!-- display presents for admin or volonteers -->
         {% for user in event.presents.all %}
             {% if user not in admin_or_volunteer %}
-                {% include "users/user.html" with float="float-left" class="row checked" user_id=user.id img_class="col-4" content_class="col-6" absentee=False userid=user.id|serialize_id:event.id %}
+                {% include "users/user.html" with float="float-left" class="row checked" user_id=user.id img_class="col-12" content_class="col-12" absentee=False userid=user.id|serialize_id:event.id %}
             {% endif %}
         {% endfor %}
-
         {% for user in event.attendees.all %}
             {% if user not in admin_or_volunteer %}
-                {% include "users/user.html" with float="float-left" class="row" user_id=user.id img_class="col-4" content_class="col-8" absentee=True userid=user.id|serialize_id:event.id %}
+                {% include "users/user.html" with float="float-left" class="row" user_id=user.id img_class="col-12" content_class="col-12" absentee=True userid=user.id|serialize_id:event.id %}
             {% endif %}
         {% endfor %}
+    </div>
+{% else %}
+<!-- or warning message for others users -->
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+    Vous devez être membre actif de l'association pour voir les participants
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
 
-        {% else %}
-        <!-- or warning message for others users -->
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            Vous devez être membre actif de l'association pour voir les participants
+    {% if request.user in event.attendees.all %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+        Vous êtes bien inscrit à cet évènement
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-
-            {% if request.user in event.attendees.all %}
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                Vous êtes bien inscrit à cet évènement
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-            {% endif %}
-
+    {% endif %}
 {% endif %}
+
 
 <!-- End attendees and presents -->
 
@@ -341,4 +370,3 @@
 {% endif %}
 {% endblock about %}
 
-</section>

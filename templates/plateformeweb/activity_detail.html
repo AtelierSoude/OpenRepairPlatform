@@ -5,6 +5,8 @@
 {% load avatar_tags %}
 {% load django_bootstrap_breadcrumbs %}
 {% load django_markdown django_markdown_static %}
+{% load activity_tags %}
+
 
 {% block breadcrumbs %}
 {% with type="activity" list_view="activity_list" detail_name=activity.name %}
@@ -35,10 +37,19 @@
 {% endblock TitleAndEdit %}
 
 {% block context %}
+<div class="sticky-position sticky-top sticky-keep">
     {% include "plateformeweb/activity.html" with id=activity.pk %}
+</div>
 {% endblock context %} 
 
-{% block about %}
+{% block stream %}
+    {% with object=activity %}
+    {{ block.super }}
+    {% endwith %}
+{% endblock stream %}
+
+{% block about %}    
+
 <h5 class="border-bottom border-gray pb-2 mb-0 clear ">Description</h5>
 <p>
 {{ activity.description|markdown }}

@@ -9,8 +9,17 @@ body, html, .container, div, .card, ul, p {
 /*******************************
 ******* éléments généraux *******
 *********************************/
+.container-fluid{
+  padding: 0px !important;
+  margin: 0px !important;
+}
+.row {
+  margin-right: 0px !important;
+  margin-left: 0px !important;
+}
+
 body {
-    background-color: #F4F3F0;
+    background-color: #eef2f6 !important;
 }
 a {
   /* text-decoration: none !important; */
@@ -119,6 +128,29 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a6b5fff1', e
   height: 40px !important;
   padding: 5px !important;
 }
+
+
+
+/********************************
+************ feed ***************
+*********************************/
+
+.feed_stream{
+  height: 300px;
+  overflow: scroll;
+}
+
+.feed {
+  margin : 15px;
+  margin-top: 05px;
+  margin-bottom: 05px;
+  text-align: center;
+  background-color: #FFF;
+  padding: 10px;
+  font-size: 12px !important;
+}
+
+
 /********************************
 ************ card ***************
 *********************************/
@@ -131,7 +163,8 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a6b5fff1', e
 .card {
   margin : 15px !important;
   text-align: center;
-  border: none;
+  border : none !important;
+  border-radius: none !important;
 }
 
 
@@ -156,6 +189,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a6b5fff1', e
 
 .card-user {
   font-size: 12px;
+  z-index: 1000;
 }
 
 .card ul li {
@@ -165,9 +199,9 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a6b5fff1', e
 .card-user img{
   border-radius: 90%;
 }
-.card .fa, .card a {
+.card .fa, .card > a {
   text-decoration: none;
-  color: #49d3be
+  color:  #212120;
 }
 
 .card-body {
@@ -259,7 +293,7 @@ text-align: center;
     min-height: 250px !important;
     padding: 10px !important;
     margin-top: 10% !important;
-    width: 50% !important;
+    width: 90% !important;
 }
 
 
@@ -497,7 +531,7 @@ input[type="checkbox"], input[type="radio"],input[type="number"]  {
 
 .close {
   color: #aaa;
-  float: right;
+  text-align: right;
   font-size: 28px;
   font-weight: bold;
 }
@@ -524,3 +558,19 @@ input[type="checkbox"], input[type="radio"],input[type="number"]  {
   width: 95%;
 }
 
+/* media queries */
+
+@media (max-width: 768px) {
+
+  .modal-content {
+    width: 90% !important;
+  }
+
+  
+.profil-header-bar.event{
+  height: 250px;
+}
+.sticky-keep{
+  top:150px !important;
+}
+}

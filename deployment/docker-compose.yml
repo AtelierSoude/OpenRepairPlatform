@@ -1,10 +1,10 @@
-version: '2'
+version: '3.3'
 
 services:
 
   ateliersoude-postgres:
     restart: always
-    image: library/postgres:latest
+    image: 'postgres:10'
     environment:
       - POSTGRES_USER=ateliersoude
       - POSTGRES_PASSWORD=ateliersoude
@@ -39,7 +39,7 @@ services:
       - ../.:/ateliersoude
 
   redis:
-    image: 'redis:3.0-alpine'
+    image: 'redis:alpine'
     volumes:
       - 'redis:/var/lib/redis/data'
     ports:

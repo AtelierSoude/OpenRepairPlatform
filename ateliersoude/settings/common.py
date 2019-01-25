@@ -9,6 +9,8 @@ import os
 import socket
 import re
 import colored_traceback
+import users.apps
+import plateformeweb.apps
 
 colored_traceback.add_hook(always=True)
 
@@ -27,7 +29,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 DEBUG = bool(int(os.environ.get('DJANGO_DEBUG', 0)))
 
 # TODO adjust for production
-ALLOWED_HOSTS = ["dev.atelier-soude.fr", "ns60.amakuru.net", "127.0.0.1", "localhost"]
+ALLOWED_HOSTS = ['*']
+#ALLOWED_HOSTS = ['"dev.atelier-soude.fr", "ns60.amakuru.net", "127.0.0.1", "localhost"']
 
 # for debug toolbar, localhost (through docker and localhost)
 # no wildcards for IPs, possible to use a sort of wildcard for hostnames,
@@ -44,6 +47,7 @@ APPEND_SLASH = True
 
 INSTALLED_APPS = [
     # django rules autodiscover rules.py files
+    'django.contrib.sites',
     'rules.apps.AutodiscoverRulesConfig',
     'datetimepicker',
     'grappelli',
@@ -56,26 +60,29 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'whitenoise.runserver_nostatic', # http://whitenoise.evans.io/en/stable/django.html
     'django.contrib.staticfiles',
-    'users',
+    'users.apps.CustomusersConfig',
     'api',
+    'dbsettings',
     'django_tables2',
     'import_export',
     'fontawesome',
     'simple_history',
-    'dbsettings',
     'debug_toolbar',
-    'plateformeweb',
+    'plateformeweb.apps.PlateformeWebAppConfig',
     'address',
     'avatar',
     'crispy_forms',
     'fm',
-    'celery',
     'django_bootstrap_breadcrumbs',
-    'django_prices',
     'django_markdown',
     'post_office',
-    'easy_maps' 
+    'easy_maps',
+    'actstream',
+    'celery',
 ]
+SITE_ID = 1
+
+DBSETTINGS_USE_SITES = False
 
 MIDDLEWARE = [
     # put the following line first, unless it breaks other middleware
@@ -290,7 +297,7 @@ EMAIL_PORT = 587
 EMAIL_BACKEND = 'post_office.EmailBackend'
 
 # where to go after successful authentication?
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/activity/'
 LOGIN_URL = '/auth/login/'
 
 # FIXTURE_DIRS= (

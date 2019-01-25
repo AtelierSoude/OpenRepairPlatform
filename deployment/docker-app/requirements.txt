@@ -54,8 +54,6 @@ rules
 django_bootstrap_breadcrumbs
 # modals
 django-fm
-# price field
-django-prices
 #mardown editor
 django-markdown-app==0.9.3.1
 #map marker
@@ -66,8 +64,12 @@ django-post_office
 #django-widget-tweaks
 #sécurité
 itsdangerous
-#celery
-
-celery[redis]
+#elery
+redis==2.10.6
+#celery==4.2.1
+git+https://github.com/celery/celery.git#egg=celery
 djangorestframework
-redis
+
+git+https://github.com/justquick/django-activity-stream.git#egg=actstream
+django-jsonfield
+django-jsonfield-compat

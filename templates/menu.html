@@ -3,16 +3,14 @@
 {% load avatar_tags %}
 {% load django_bootstrap_breadcrumbs %}
 
-
 {% block menu %}
 
 <header class="position-relative">
         <nav class="navbar navbar-expand-lg">
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
+              <span class="navbar-toggler-icon">{% fontawesome_icon 'bars' %} </span>
             </button>
             <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
-                <div class="navbar-brand"> <a href="{% url "homepage" %}"><img src="{% static "img/logo_ateliersoude.svg" %}" width="30px" height="30px"></a></div>
               <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
                 <li class="nav-item active">
                     <a href="{% url "homepage" %}">Accueil</a>
@@ -45,6 +43,8 @@
                   {% endif %}
 
                   {% if user.is_authenticated %}
+              
+
                     <div class="navbar-brand avatar"><a class="nav-link mr-3" href="{{ user.get_absolute_url }}">{% avatar user %} {{ user.first_name }}</a></div>
                   {% else %}
                     <div class="navbar-brand" ><a class="nav-link mr-3" href="{% url "login" %}"><i class="fa fa-user-circle-o fa-2x"></i></a></div>

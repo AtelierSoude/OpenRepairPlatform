@@ -12,6 +12,10 @@ from plateformeweb.models import Event, Organization, OrganizationPerson, Place
 from urllib.parse import parse_qs
 from django.utils import timezone
 
+from django.db.models.signals import post_save
+from actstream import action
+from actstream.actions import follow, unfollow
+
 def delete_event(request):
     if request.method != 'POST':
         # TODO change this
@@ -24,6 +28,7 @@ def delete_event(request):
         event = Event.objects.get(pk=event_id)
         person = CustomUser.objects.get(email=request.user)
         if person in event.organizers.all():
+            action.send(request.user, verb="a supprimé", target=event)   
             event.delete()
             return JsonResponse({'status': "OK"})
 
@@ -40,7 +45,6 @@ def set_present(request):
                                     salt='presence')
 
         data = serial.loads(request.POST['idents'])
-        print(data)
         event_id = data['event_id']
         user_id = data['user_id']
 
@@ -48,6 +52,7 @@ def set_present(request):
         event = Event.objects.get(pk=event_id)
         event.attendees.remove(person)
         event.presents.add(person)
+        action.send(request.user, verb="a validé la présence de", action_object=person,  target=event)   
 
         return JsonResponse({'status': "OK", 'user_id': user_id})
 
@@ -60,7 +65,6 @@ def set_absent(request):
                                     salt='presence')
 
         data = serial.loads(request.POST['idents'])
-        print(data)
         event_id = data['event_id']
         user_id = data['user_id']
 
@@ -68,6 +72,7 @@ def set_absent(request):
         event = Event.objects.get(pk=event_id)
         event.presents.remove(person)
         event.attendees.add(person)
+        action.send(request.user, verb="a dé-validé la présence de", action_object=person,  target=event)   
 
         return JsonResponse({'status': "OK", 'user_id': user_id})
 
@@ -171,24 +176,24 @@ def list_events_in_context(request, context_pk=None, context_type=None, context_
         today = timezone.now()
 
         if context_place:
-            place = Place.objects.get(pk=context_pk)
+            this_place = Place.objects.get(pk=context_pk)
             all_future_events = Event.objects.filter(
-                location=place, 
+                location=this_place, 
                 starts_at__gte=today, 
-                published=True, ).order_by('starts_at')
+                published=True).order_by('starts_at')
         
-        if context_org:
-            organization = Organization.objects.get(pk=context_pk)
+        elif context_org:
+            this_organization = Organization.objects.get(pk=context_pk)
             all_future_events = Event.objects.filter(
-                organization=organization, 
+                organization=this_organization, 
                 starts_at__gte=today, 
-                published=True, ).order_by('starts_at')
+                published=True).order_by('starts_at')
         
-        if context_user:
+        elif context_user:
             lst = [Q(attendees__pk=context_pk) , Q(presents__pk=context_pk) , Q(organizers__pk=context_pk)]
             all_future_events = Event.objects.filter(reduce(OR, lst)).filter(
                 starts_at__gte=today, 
-                published=True,).order_by('starts_at')
+                published=True).order_by('starts_at')
 
         else:
             all_future_events = Event.objects.filter(
@@ -282,7 +287,7 @@ def book_event(request):
         request_body = request.body.decode("utf-8")
         post_data = parse_qs(request_body)
         event_id = post_data['event_id'][0]
-        user = CustomUser.objects.get(email=request.user)
+        user = CustomUser.objects.get(email=request.user.email)
         event = Event.objects.get(pk=event_id)
         organization = event.organization
         attendees = event.attendees.all()
@@ -295,6 +300,7 @@ def book_event(request):
             if organization not in user_volunteer_orgs:
                 event.available_seats += 1
             event.attendees.remove(user)
+            action.send(user, verb="s'est désinscrit de", target=event)    
             event.save()
             return JsonResponse({'status': 'unbook',
                                  'available_seats': event.available_seats})
@@ -302,6 +308,8 @@ def book_event(request):
             if event.available_seats >= 0:
                 if organization not in user_volunteer_orgs:
                     event.available_seats -= 1
+                action.send(user, verb="s'est inscrit à", target=event)    
+                follow(user, event, actor_only=False)
                 event.attendees.add(user)
                 # send booking mail here
             else:
@@ -316,7 +324,7 @@ def list_users(request, organization_pk, event_pk):
         # TODO change this
         return HttpResponse("Circulez, il n'y a rien à voir")
     else:
-        user = CustomUser.objects.get(email=request.user)
+        user = CustomUser.objects.get(email=request.user.email)
         organization = Organization.objects.get(pk=organization_pk)
         user_is_admin = OrganizationPerson.objects.get(user=user, organization=organization, role__gte=OrganizationPerson.ADMIN)
         if not user_is_admin:
@@ -366,10 +374,11 @@ def add_users(request):
 
                     event.attendees.add(user)
                     attending_pk += [user.pk]
+                    action.send(request.user, verb="a inscris", action_object=user,  target=event)   
                 else:
-                    event.presents.add(user)
+                    event.presents.add(user) 
                     presents_pk += [user.pk]
-
+                    
 
 
         event.available_seats = seats;

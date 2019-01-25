@@ -6,6 +6,7 @@
 {% load django_bootstrap_breadcrumbs %}
 {% load easy_maps_tags %}
 {% load django_markdown django_markdown_static %}
+{% load activity_tags %}
 
 {% block breadcrumbs %}
     {% with type="places" list_view="place_list" detail_name=place.name %}
@@ -38,7 +39,15 @@
    <div class="m-3 pt-3 p-2 bg-white"> {% easy_map place.address 100 100 15 %} </div>
 {% endblock context %} 
 
+{% block stream %}
+    {% with object=place %}
+    {{ block.super }}
+    {% endwith %}
+{% endblock stream %}
+
+
 {% block about %}
+
     <h5 class="border-bottom border-gray pb-2 mb-0 clear ">Description</h5>
     {{ place.description|markdown }}
 

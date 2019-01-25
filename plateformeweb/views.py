@@ -24,16 +24,19 @@ from fm.views import AjaxUpdateView, AjaxCreateView, UpdateView
 import datetime
 from django import forms
 
+from django.db.models.signals import post_save
+from actstream import action
+from actstream.actions import follow, unfollow
+
 logger = getLogger(__name__)
 
 
 
 def homepage(request):
-    events = PublishedEvent.objects.filter(
-        starts_at__gte=timezone.now()).order_by('starts_at')[:10]
-    context = {"events": events}
-    return render(request, 'plateformeweb/home.html', context)
-
+    if request.user.is_authenticated():
+        return redirect('/activity/')
+    else:
+        return render (request, 'plateformeweb/home.html')
 
 
 # TODO move all this in separate apps?
@@ -59,7 +62,7 @@ class OrganizationListView(ListView):
 
 class OrganizationFormView():
     model = Organization
-    fields = ["name", "description", "active"]
+    fields = ["name", "description","picture", "active"]
 
     def get_form(self, form_class=None):
         if form_class is None:
@@ -79,9 +82,9 @@ class OrganizationCreateView(PermissionRequiredMixin, OrganizationFormView,
     permission_required = 'plateformeweb.create_organization'
 
 
-class OrganizationEditView(PermissionRequiredMixin, OrganizationFormView,
+class OrganizationEditView(OrganizationFormView,
                            AjaxUpdateView):
-    permission_required = 'plateformeweb.edit_organization'
+    #permission_required = 'plateformeweb.edit_organization'
     queryset = Organization.objects
 
 
@@ -150,8 +153,10 @@ class PlaceCreateView(PlaceFormView, AjaxCreateView):
     def form_valid(self, form):
         image = form.cleaned_data.get('picture', False)
         self.validate_image(image)
-        obj = form.save(commit=False)
+        obj = form.save()
         obj.owner = self.request.user
+        action.send(self.request.user, verb=' a créé ', action_object=obj)
+        follow(self.request.user, obj, actor_only=False) 
         return super().form_valid(form)
 
 
@@ -171,6 +176,8 @@ class PlaceEditView(PlaceFormView, AjaxUpdateView):
     def form_valid(self, form):
         image = form.cleaned_data.get('picture', False)
         self.validate_image(image)
+        obj = form.save(commit=False)
+        action.send(self.request.user, verb=' a modifié ', action_object=obj)
         return super().form_valid(form)
 
 
@@ -273,12 +280,20 @@ class ActivityCreateView(ActivityFormView, AjaxCreateView):
 
         # set owner to current user on creation
     def form_valid(self, form):
+        obj = form.save()
+        action.send(self.request.user, verb=' a créé ', action_object=obj)
+        follow(self.request.user, obj, actor_only=False)  
         return super().form_valid(form)
 
 
 class ActivityEditView( ActivityFormView, AjaxUpdateView):
    # permission_required = 'plateformeweb.edit_acivity'
     queryset = Activity.objects
+
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        action.send(self.request.user, verb=' a modifié ', action_object=obj)
+        return super().form_valid(form)
 
 
 # --- Events ---
@@ -422,7 +437,7 @@ class EventCreateView(CreateView):
     template_name = 'plateformeweb/event_form.html'
     model = Event
     fields = ["type",  "available_seats",
-              "organization", "location",
+              "organization", "location", "condition",
               "starts_at", "ends_at", "publish_at"]
 
     def date_substract(self, starts_at, countdown):
@@ -472,10 +487,13 @@ class EventCreateView(CreateView):
                 type=event_type,
             )
 
-            e.organizers.add(CustomUser.objects.get(email=request.user))
+            e.organizers.add(CustomUser.objects.get(email=request.user.email))
             e.title = e.type.name
             e.save()
+            action.send(self.request.user, verb=' a créé ', action_object=e, target=e.location)  
+            follow(self.request.user, e, actor_only=False)      
 
+        
         return HttpResponseRedirect(reverse("event_create"))
 
     def get_form(self, form_class=None):
@@ -504,6 +522,7 @@ class EventCreateView(CreateView):
     def form_valid(self, form):
         return super().form_valid(form)
 
+
 class MassBookingCreateView(CreateView):
     template_name = 'plateformeweb/mass_event_book.html'
     model = Event
@@ -522,7 +541,6 @@ class MassBookingCreateView(CreateView):
         #TODO: bulk insert somehow?
         for event in events:
             event.attendees.add(request.user)
-
         return HttpResponse("OK!")
 
     def get_form(self, form_class=None, **kwargs):

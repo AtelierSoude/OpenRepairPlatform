@@ -4,6 +4,7 @@
 {% load fontawesome %}
 {% load avatar_tags %}
 {% load django_bootstrap_breadcrumbs %}
+{% load activity_tags %}
 
     <!-- breadcrumb -->
 {% block breadcrumbs %}
@@ -20,10 +21,10 @@
 <div class="container-fluid profil-header-bar sticky-position sticky-top {{object}}">
     <div class="row">
 
-        <div class="col-4">
+        <div class="col-md-3 col-sm-0">
         </div> 
        
-        <div class="col-8 header-bar-title">
+        <div class="col-md-9 col-sm-12 header-bar-title">
         {% block TitleAndEdit %}
         {% endblock TitleAndEdit %}
         </div>
@@ -32,21 +33,51 @@
 </div>
 {% endblock %}
 
-<div class="row">
-<section class="col-md-4" style=" position: relative; top:-100px;" > 
-        <div class="sticky-top sticky-position" style="top:100px">
-        {% block context %}
+<div class="row container-fluid">
+<section class="col-md-3 bg-white shadow" style=" position: relative; top:-100px;" > 
+        {% block context %} 
         {% endblock context %}
-        </div>
 </section>   
 
 
     <!-- details about -->
-    <section class="col-md-8 pt-3">
+    <section class="col-md-6 pt-3">
     {% block about %}
     {% endblock about %}
     </section>
 
+<section class="col-md-3 bg-white shadow" style="" > 
+            <!-- activity stream -->
+            {% block stream %}
+            <div class="card">
+                <h5>
+                        Dernières activités
+                </h5>
+    
+                <div class="list-group feed_stream">   
+                    {% activity_stream 'actor' object %}        
+                        {% include "feed.html" %}
+                    {% activity_stream 'action_object' object %}  
+                        {% include "feed.html" %}
+                    {% activity_stream 'target' object %}    
+                        {% include "feed.html" %}
+                </div>
+    
+                <div class="">
+                    <a href="{% follow_all_url object %}">
+                            {% if request.user|is_following:object %}
+                            <span class="text-danger"> stop following </span>
+                            {% else %}
+                               follow 
+                            {% endif %}
+                    </a>
+                </div>
+            </div>
+            {% endblock stream %}
+    <!-- activity stream -->    
+</section>   
+    
+    
 </div>
 
 </div>

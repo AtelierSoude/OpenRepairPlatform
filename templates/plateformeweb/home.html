@@ -2,29 +2,16 @@
 {% load staticfiles %}
 {% load fontawesome %}
 {% load avatar_tags %} 
-
+{% load activity_tags %}
 
 {% block content %}
 <div class="secondary-background">
-
-    <section class="">
-            <h1>L'Atelier Soudé</h1>
-            <span>Prenez simplement rendez-vous pour réparer vos appareil</span>
-        </section>
-
 
     <!-- Change home when user is logged -->
     <section class="col-lg">
 
     {% if user.is_authenticated %}
-
-        <div class="row">
-            <div class="row"> 
-                {% avatar user %}
-                <h1>{{request.user.first_name}}</h1>
-            </div>
-        </div>
-
+   
     {% else %}
 
     <div class="container-fluid">

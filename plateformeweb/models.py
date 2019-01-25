@@ -1,11 +1,11 @@
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from django.db import models
+from django.urls import reverse
 from address.models import AddressField
 from users.models import CustomUser
 from django.conf import settings
 from autoslug import AutoSlugField
-from django_prices.models import MoneyField, TaxedMoneyField
 from django_markdown.models import MarkdownField
 from easy_maps.widgets import AddressWithMapWidget
 import locale
@@ -19,6 +19,7 @@ class Organization(models.Model):
     description = MarkdownField(verbose_name=_("Activity description"),
                             null=False,
                             blank=False, default="")
+    picture = models.ImageField(verbose_name=_('Image'), upload_to='organizations/', null=True)
     active = models.BooleanField(verbose_name=_('Active'))
     slug = AutoSlugField(populate_from='name', unique=True, default='')
     created_at = models.DateTimeField(auto_now_add=True)
@@ -27,6 +28,8 @@ class Organization(models.Model):
     def __str__(self):
         return self.name
 
+    def get_absolute_url(self):
+        return reverse('organization_detail', args=(self.pk, self.slug,))
 
 class OrganizationPerson(models.Model):
     VISITOR = 0
@@ -185,8 +188,11 @@ class Place(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def get_absolute_url(self):
+        return reverse('place_detail', args=(self.pk, self.slug,))
+
     def __str__(self):
-        return " ".join([self.name, '-', self.address.locality.__str__() or ''])
+        return self.name
 
 # ------------------------------------------------------------------------------
 
@@ -205,10 +211,8 @@ class Condition(models.Model):
                             blank=False, default="")
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE,
                                      null=True)
-    price = MoneyField(
-        'tarif', currency='EUR', default='5', max_digits=9,
-        decimal_places=2, blank=True)
-
+    price = models.IntegerField(verbose_name=_('Price'),
+                                          null=False, blank=True, default=5)
     def __str__(self):
         return self.name
 
@@ -227,6 +231,10 @@ class Activity(models.Model):
 
     def __str__(self):
         return self.name
+    
+    def get_absolute_url(self):
+        return reverse('activity_detail', args=(self.pk, self.slug,))
+
 
 
 
@@ -278,9 +286,6 @@ class Event(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def __str__(self):
-        return self.title
-
     def date_interval_format(self):
         locale.setlocale(locale.LC_ALL, 'fr_FR')
         starts_at_date = self.starts_at.date().strftime("%A %d %B %Y")
@@ -295,7 +300,12 @@ class Event(models.Model):
         string += ends_at_time
         return string
 
+    def get_absolute_url(self):
+        return reverse('event_detail', args=(self.pk, self.slug,))
 
+    def __str__(self):
+        full_title = '%s %s' % (self.title, self.starts_at.date().strftime("%A %d %B %Y"))
+        return full_title
 
 class PublishedEventManager(models.Manager):
     def get_queryset(self):

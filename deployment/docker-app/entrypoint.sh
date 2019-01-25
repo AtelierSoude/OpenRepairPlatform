@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+
 export REDIS_URL=redis://redis:6379
 
 # the official postgres image uses 'postgres' as default user if not set explictly.

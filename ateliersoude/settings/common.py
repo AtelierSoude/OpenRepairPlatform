@@ -75,10 +75,10 @@ INSTALLED_APPS = [
     'fm',
     'django_bootstrap_breadcrumbs',
     'django_markdown',
-    'post_office',
     'easy_maps',
     'actstream',
     'celery',
+    'post_office',
 ]
 SITE_ID = 1
 
@@ -289,12 +289,23 @@ DEBUG_TOOLBAR_PANELS = [
     'debug_toolbar.panels.profiling.ProfilingPanel',
 ]
 
+# Celery application definition
+CELERY_BROKER_URL = 'redis://redis:6379/0'
+CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Europe/Paris'
+
 EMAIL_USE_TLS = True
-EMAIL_HOST = 'atelier-soude.fr'
-EMAIL_HOST_USER = 'no-reply@atelier-soude.fr'
+EMAIL_HOST = ''
+EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWORD = ''
 EMAIL_PORT = 587
-EMAIL_BACKEND = 'post_office.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+DEFAULT_FROM_EMAIL = ''
+SERVER_EMAIL = ''
+
 
 # where to go after successful authentication?
 LOGIN_REDIRECT_URL = '/activity/'
@@ -342,7 +353,6 @@ AVATAR_THUMB_FORMAT = 'PNG'
 POST_OFFICE = {
     #Celery integration see https://github.com/ui/django-post_office
     'DEFAULT_PRIORITY': 'now',
-
     'SENDING_ORDER': ['created'],
 
 }

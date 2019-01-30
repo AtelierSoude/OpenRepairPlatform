@@ -28,6 +28,11 @@ from django.db.models.signals import post_save
 from actstream import action
 from actstream.actions import follow, unfollow
 
+from actstream.models import actor_stream
+
+from django.core.mail import send_mail
+from django.utils.timezone import now
+
 logger = getLogger(__name__)
 
 
@@ -37,6 +42,25 @@ def homepage(request):
         return redirect('/activity/')
     else:
         return render (request, 'plateformeweb/home.html')
+
+def send_notification(request, user):
+    notification = user.actor_actions.all()[:1]
+    params = {'notification': notification }
+
+    msg_plain = render_to_string('mail/notification.html',
+                                params)
+    msg_html = render_to_string('mail/notification.html',
+                                params)
+
+    subject = 'Votre dernière activité'
+
+    mail.send(
+        [user.email],
+        'no-reply@atelier-soude.fr',
+        subject=subject,
+        message=msg_plain,
+        html_message=msg_html
+    )
 
 
 # TODO move all this in separate apps?

@@ -15,12 +15,16 @@ import datetime
 from django.db.models.signals import post_save
 from actstream import action
 from actstream.actions import follow, unfollow
-from post_office import mail
+
 from django.template.loader import render_to_string
 from actstream.models import actor_stream
 
+from plateformeweb.views import send_notification
+
+from post_office import mail
 from django.core.mail import send_mail
 from django.utils.timezone import now
+
 
 ### mailers ###
 def cancel_reservation(request, token):
@@ -39,27 +43,6 @@ def cancel_reservation(request, token):
         return render(request, 'mail/cancel_ok.html', context)
     else:
         return render(request, 'mail/cancel_failed.html', context)
-
-
-def send_notification(request, user):
-    notification = user.actor_actions.all()[:1]
-    params = {'notification': notification }
-
-    msg_plain = render_to_string('mail/notification.html',
-                                params)
-    msg_html = render_to_string('mail/notification.html',
-                                params)
-
-    subject = 'Votre dernière activité'
-
-    mail.send(
-        [user.email],
-        'no-reply@atelier-soude.fr',
-        subject=subject,
-        message=msg_plain,
-        html_message=msg_html
-    )
-
 
 def send_booking_mail(request, user, event):
     user_id = user.id

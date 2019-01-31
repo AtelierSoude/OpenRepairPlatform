@@ -69,7 +69,7 @@ function create_env_file(){
     echo "Adresse du serveur SMTP?"
     read SMTP_HOST
     echo "Adresse electronique de notifications?"
-    read EMAIL_HOST
+    read EMAIL_ADRESSE
     echo "Mot de passe de l'adresse?"
     read EMAIL_PASSWORD
 
@@ -78,9 +78,9 @@ function create_env_file(){
     echo "POSTGRES_DB=$POSTGRES_DB" >> ./deployment/.env
     echo "DEVELOPMENT=$DEVELOPMENT" >> ./deployment/.env
     echo "DJANGO_DEBUG=$DJANGO_DEBUG" >> ./deployment/.env
-    echo "SMTP_HOST='$SMTP_HOST'" >> ./deployment/.env
-    echo "EMAIL_HOST='$EMAIL_HOST'" >> ./deployment/.env
-    echo "EMAIL_PASSWORD='$EMAIL_PASSWORD'" >> ./deployment/.env
+    echo "SMTP_HOST=$SMTP_HOST" >> ./deployment/.env
+    echo "EMAIL_ADRESSE=$EMAIL_ADRESSE" >> ./deployment/.env
+    echo "EMAIL_PASSWORD='$EMAIL_PASSWORD" >> ./deployment/.env
 }
 
 

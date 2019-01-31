@@ -32,6 +32,9 @@ services:
       - POSTGRES_HOST=${POSTGRES_DB}
       - DEVELOPMENT=${DEVELOPMENT}
       - DJANGO_DEBUG=${DJANGO_DEBUG}
+      - SMTP_HOST=${SMTP_HOST}
+      - EMAIL_ADRESSE=${EMAIL_ADRESSE}
+      - EMAIL_PASSWORD=${EMAIL_PASSWORD}
     ports:
       - "8000:8000"
       - "8001:8001"
@@ -88,7 +91,7 @@ services:
     depends_on:
       - ateliersoude-postgres
     ports:
-      - 8080:8080
+      - 8086:8006
 
 volumes:
   redis:

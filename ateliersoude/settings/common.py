@@ -20,6 +20,10 @@ POSTGRES_PASSWORD = os.environ.get("POSTGRES_PASSWORD")
 POSTGRES_HOST = os.environ.get("POSTGRES_HOST")
 DEVELOPMENT = os.environ.get("DEVELOPMENT")
 
+SMTP_HOST = os.environ.get("SMTP_HOST")
+EMAIL_ADRESSE = os.environ.get("EMAIL_ADRESSE")
+EMAIL_PASSWORD = os.environ.get("EMAIL_PASSWORD")
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -30,7 +34,7 @@ DEBUG = bool(int(os.environ.get('DJANGO_DEBUG', 0)))
 
 # TODO adjust for production
 ALLOWED_HOSTS = ['*']
-#ALLOWED_HOSTS = ['"dev.atelier-soude.fr", "ns60.amakuru.net", "127.0.0.1", "localhost"']
+#ALLOWED_HOSTS = ['"dev.atelier-soude.fr", "127.0.0.1", "localhost"']
 
 # for debug toolbar, localhost (through docker and localhost)
 # no wildcards for IPs, possible to use a sort of wildcard for hostnames,
@@ -298,13 +302,13 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Europe/Paris'
 
 EMAIL_USE_TLS = True
-EMAIL_HOST = ''
-EMAIL_HOST_USER = ''
-EMAIL_HOST_PASSWORD = ''
+EMAIL_HOST = SMTP_HOST
+EMAIL_HOST_USER = EMAIL_ADRESSE
+EMAIL_HOST_PASSWORD = EMAIL_PASSWORD
 EMAIL_PORT = 587
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-DEFAULT_FROM_EMAIL = ''
-SERVER_EMAIL = ''
+DEFAULT_FROM_EMAIL = EMAIL_ADRESSE
+SERVER_EMAIL = EMAIL_ADRESSE
 
 
 # where to go after successful authentication?
@@ -354,5 +358,5 @@ POST_OFFICE = {
     #Celery integration see https://github.com/ui/django-post_office
     'DEFAULT_PRIORITY': 'now',
     'SENDING_ORDER': ['created'],
-
+    'LOG_LEVEL': 2, # Log only failed deliveries
 }

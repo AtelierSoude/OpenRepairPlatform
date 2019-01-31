@@ -11,11 +11,77 @@ import locale
 from plateformeweb.models import Event, Organization, OrganizationPerson, Place
 from urllib.parse import parse_qs
 from django.utils import timezone
-
+import datetime
 from django.db.models.signals import post_save
 from actstream import action
 from actstream.actions import follow, unfollow
 
+from django.template.loader import render_to_string
+from actstream.models import actor_stream
+
+from plateformeweb.views import send_notification
+
+from post_office import mail
+from django.core.mail import send_mail
+from django.utils.timezone import now
+
+
+### mailers ###
+def cancel_reservation(request, token):
+    s = URLSafeSerializer('some_secret_key', salt='cancel_reservation')
+    ret = s.loads(token)
+    event_id = ret['event_id']
+    user_id = ret['user_id']
+    event = Event.objects.get(pk=event_id)
+    user = CustomUser.objects.get(pk=user_id)
+    context = {'event': event, 'user': user}
+    attendees = event.attendees.all()
+    if user in attendees:
+        event.attendees.remove(user)
+        event.available_seats += 1
+        event.save()
+        return render(request, 'mail/cancel_ok.html', context)
+    else:
+        return render(request, 'mail/cancel_failed.html', context)
+
+def send_booking_mail(request, user, event):
+    user_id = user.id
+    event_id = event.id
+
+    serial = URLSafeSerializer('some_secret_key',
+                                salt='cancel_reservation')
+    data = {'event_id': event_id, 'user_id': user_id}
+
+    cancel_token = serial.dumps(data)
+    cancel_url = reverse('cancel_reservation', args=[cancel_token])
+    cancel_url = request.build_absolute_uri(cancel_url)
+
+    event_url = reverse('event_detail', args=[event_id, event.slug])
+    event_url = request.build_absolute_uri(event_url)
+
+    params = {'cancel_url': cancel_url,
+                'event_url': event_url,
+                'event': event}
+
+    msg_plain = render_to_string('mail/relance.html',
+                                params)
+    msg_html = render_to_string('mail/relance.html',
+                                params)
+
+    date = event.starts_at.date().strftime("%d %B")
+    location = event.location.name
+    subject = "Votre réservation pour le " + date + " à " + location
+
+    mail.send(
+        [user.email],
+        'no-reply@atelier-soude.fr',
+        subject=subject,
+        message=msg_plain,
+        html_message=msg_html
+    )
+
+
+### event ###
 def delete_event(request):
     if request.method != 'POST':
         # TODO change this
@@ -277,8 +343,6 @@ def list_events_in_context(request, context_pk=None, context_type=None, context_
 
         return JsonResponse({'status': "OK", "dates": events, "organizations": organizations, "places": places, "activities": activitys, })
 
-
-
 def book_event(request):
     if request.method != 'POST':
         # TODO change this
@@ -307,11 +371,14 @@ def book_event(request):
         else:
             if event.available_seats >= 0:
                 if organization not in user_volunteer_orgs:
-                    event.available_seats -= 1
+                    event.available_seats -= 1          
                 action.send(user, verb="s'est inscrit à", target=event)    
                 follow(user, event, actor_only=False)
                 event.attendees.add(user)
-                # send booking mail here
+                # send booking mail here or notification here
+                send_booking_mail(request, user, event)
+                #send_notification(request, user)
+                
             else:
                 return JsonResponse({'status': -1})
 

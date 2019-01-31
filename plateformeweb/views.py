@@ -28,6 +28,11 @@ from django.db.models.signals import post_save
 from actstream import action
 from actstream.actions import follow, unfollow
 
+from actstream.models import actor_stream, following, followers
+
+from django.core.mail import send_mail
+from django.utils.timezone import now
+
 logger = getLogger(__name__)
 
 
@@ -37,6 +42,34 @@ def homepage(request):
         return redirect('/activity/')
     else:
         return render (request, 'plateformeweb/home.html')
+
+def send_notification(request, target_object, target_type):
+    send_to = followers(target_object)
+    
+    if target_type == "actor":
+        notification = target_object.actor_actions.all()[:1]
+    elif target_type == "action_object":
+        notification = target_object.action_object_actions.all()[:1]
+    elif target_type == "target":
+        notification = target_object.target_actions.all()[:1]
+
+    params = {'notification': notification }
+
+    msg_plain = render_to_string('mail/notification.html',
+                                params)
+    msg_html = render_to_string('mail/notification.html',
+                                params)
+
+    subject = "nouvelle notification"
+
+    for user in send_to:
+        mail.send(
+            [user.email],
+            'no-reply@atelier-soude.fr',
+            subject=subject,
+            message=msg_plain,
+            html_message=msg_html
+        )
 
 
 # TODO move all this in separate apps?
@@ -178,6 +211,7 @@ class PlaceEditView(PlaceFormView, AjaxUpdateView):
         self.validate_image(image)
         obj = form.save(commit=False)
         action.send(self.request.user, verb=' a modifié ', action_object=obj)
+        follow(self.request.user, obj, actor_only=False) 
         return super().form_valid(form)
 
 
@@ -283,6 +317,7 @@ class ActivityCreateView(ActivityFormView, AjaxCreateView):
         obj = form.save()
         action.send(self.request.user, verb=' a créé ', action_object=obj)
         follow(self.request.user, obj, actor_only=False)  
+        send_notification(self.request, target_object=obj, target_type="action_object")    
         return super().form_valid(form)
 
 
@@ -293,6 +328,7 @@ class ActivityEditView( ActivityFormView, AjaxUpdateView):
     def form_valid(self, form):
         obj = form.save(commit=False)
         action.send(self.request.user, verb=' a modifié ', action_object=obj)
+        send_notification(self.request, target_object=obj, target_type="action_object")    
         return super().form_valid(form)
 
 
@@ -491,7 +527,7 @@ class EventCreateView(CreateView):
             e.title = e.type.name
             e.save()
             action.send(self.request.user, verb=' a créé ', action_object=e, target=e.location)  
-            follow(self.request.user, e, actor_only=False)      
+            follow(self.request.user, e, actor_only=False)  
 
         
         return HttpResponseRedirect(reverse("event_create"))

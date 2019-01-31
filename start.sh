@@ -66,12 +66,21 @@ function create_env_file(){
     read DEVELOPMENT
     echo "Debug mode? (Please answer 1 or 0)"
     read DJANGO_DEBUG
+    echo "Adresse du serveur SMTP?"
+    read SMTP_HOST
+    echo "Adresse electronique de notifications?"
+    read EMAIL_HOST
+    echo "Mot de passe de l'adresse?"
+    read EMAIL_PASSWORD
 
-    echo "POSTGRES_USER=$POSTGRES_USER" > ./deployment/.env
+    echo "POSTGRES_USER=$POSTGRES_USER" >> ./deployment/.env
     echo "POSTGRES_PASSWORD=$POSTGRES_PASSWORD" >> ./deployment/.env
     echo "POSTGRES_DB=$POSTGRES_DB" >> ./deployment/.env
     echo "DEVELOPMENT=$DEVELOPMENT" >> ./deployment/.env
     echo "DJANGO_DEBUG=$DJANGO_DEBUG" >> ./deployment/.env
+    echo "SMTP_HOST='$SMTP_HOST'" >> ./deployment/.env
+    echo "EMAIL_HOST='$EMAIL_HOST'" >> ./deployment/.env
+    echo "EMAIL_PASSWORD='$EMAIL_PASSWORD'" >> ./deployment/.env
 }
 
 

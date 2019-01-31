@@ -14,6 +14,8 @@ from django.utils.functional import cached_property
 from django.db.models.signals import post_save
 from actstream import action
 
+from django.core.mail import send_mail
+
 
 
 def user_profile(request):

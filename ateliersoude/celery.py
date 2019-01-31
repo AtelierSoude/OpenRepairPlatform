@@ -11,13 +11,9 @@ import django
 os.environ['DJANGO_SETTINGS_MODULE'] = 'ateliersoude.settings'
 
 app = Celery('ateliersoude')
+app.config_from_object('django.conf:settings', namespace='CELERY')
+app.autodiscover_tasks()
 
-app.conf.broker_url = 'redis://redis:6379/0'
-app.conf.result_backend = 'redis://redis:6379/0'
-app.conf.accept_content = ['application/json']
-app.conf.result_serializer = 'json'
-app.conf.task_serializer = 'json'
-app.conf.timezone = 'Europe/Paris'
 app.conf.beat_schedule = {
 	# every minute
 	'every-minute': {
@@ -33,20 +29,8 @@ app.conf.beat_schedule = {
 }
 
 # Load task modules from all registered Django app configs.
-# app.autodiscover_tasks(lambda: settings.INSTALLED_APPS, force=True)
+#app.autodiscover_tasks(lambda: settings.INSTALLED_APPS, force=True)
 
 @app.task()
 def debug_task(self):
     print('Request: {0!r}'.format(self.request))
-
-@app.task(name='tasks.send_queued_mail')
-def send_queued_mail():
-    management.call_command('send_queued_mail')
-
-@app.task(name='tasks.publish_events')
-def publish_events():
-    from plateformeweb.models import Event
-    from django.utils import timezone
-    today = timezone.now()
-    unpublished_events = Event.objects.filter(publish_at__lte=today, starts_at__gte=today, published=False)
-    unpublished_events.update(published=True)

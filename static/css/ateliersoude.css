@@ -549,19 +549,15 @@ input[type="checkbox"], input[type="radio"],input[type="number"]  {
   cursor: pointer;
 }
 
-/* search users */ 
+/* search users 
 
 .search-user {
   position: relative;
   clear: both;
-}
+}*/
 #search-user-result {
-  position: absolute;
-  display: none;
-  z-index: 100000;
-  top: 40px;
-  left: 15px;
-  width: 95%;
+ width:100%;
+ height: 250px;
 }
 
 /* media queries */

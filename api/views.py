@@ -381,10 +381,11 @@ def add_users(request):
                     
 
 
-        event.available_seats = seats;
+        event.available_seats = seats
         event.save()
         return JsonResponse({'status': 'OK',
                              'seats': seats,
                              'presents_pk': presents_pk,
                              'attending_pk': attending_pk})
+    
 

@@ -164,38 +164,7 @@
 
 
 <!-- validating presents possibilities for volonteers -->
-<div class="alert alert-success alert-dismissible fade show" role="alert">
-        Vous avez les droits pour voir et confirmer les présences
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-<div id="add-user" class="row float-right">
-    <!---<span>Ajouter parmi </span>
-     <select class="col-md-2 col-sm-4 form-control" v-model="selected_member_type">
-         <option value=0>Tous internes à l'organisation</option>
-         <option value=30>Administrateurs</option>
-         <option value=20>Membres actifis</option>
-         <option value=10>Adhérents</option>
-     </select> -->
- 
-     <div class="search-user col-8 float-right">
-         <input class="search-term-user" style="width:100%" type="text" v-model="fuzzy_input" placeholder="Nom, Prénom, Email..." 
-         onclick="document.getElementById('search-user-result').style.display='block'">
- 
-         <select id="search-user-result" class="list-group" :size="fuzzy_list.length" v-model="selected_users" multiple
-         onmouseout="this.style.display='none'">
-         <option class="list-group-item" v-for="result in fuzzy_list" :value="result.pk">
-             [[result.name]] -
-             [[result.email]] -
-             [[text_role(result.role)]]
-         </option>
-         </select>
-     </div>
- 
-     <input type="button" class="btn col-4 float-right" v-on:click="add_users" value="ajouter">
-     </input>
- </div>
+{% include "plateformeweb/add_user.html" %}
 {% endif %}
 
 <!-- Users that have a role in the organization -->
@@ -290,6 +259,7 @@
       delimiters: ['[[', ']]'],
       el: "#add-user",
       data() {
+        
           return {
               fuzzy_input: "",
               selected_member_type: 0,
@@ -301,6 +271,7 @@
               },
               all_users_in_org: [],
               selected_users: [],
+              seen: false,
           }
       },
       created() {

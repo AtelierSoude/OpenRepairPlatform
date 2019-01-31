@@ -10,7 +10,7 @@
 
 {% block list %}
 
-<div class="{{class}} card-place">
+<div class="{{class}} card">
     <a href="{% url 'place_detail' place.id place.slug %}">
         <img class="img-fluid img-place {{img_class}} " src="{{ place.picture.url }}">
         <div class="card-body {{about_class}}">

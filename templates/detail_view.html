@@ -33,20 +33,20 @@
 </div>
 {% endblock %}
 
-<div class="row container-fluid">
-<section class="col-md-3 bg-white shadow" style=" position: relative; top:-100px;" > 
+<div class="row main-container">
+<section class="col-md-3" style=" position: relative; top:-100px;" > 
         {% block context %} 
         {% endblock context %}
 </section>   
 
 
     <!-- details about -->
-    <section class="col-md-6 pt-3">
+    <section class="col-md-6 mt-3 bg-white">
     {% block about %}
     {% endblock about %}
     </section>
 
-<section class="col-md-3 bg-white shadow" style="" > 
+<section class="col-md-3" style="" > 
             <!-- activity stream -->
             {% block stream %}
             <div class="card">

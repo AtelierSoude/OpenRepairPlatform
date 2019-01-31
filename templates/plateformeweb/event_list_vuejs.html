@@ -11,10 +11,10 @@
 <section id="event-list" class="container-fluid row">
 
 
-    <div class="event-list card-columns">
+    <div class="event-list">
 
-        <div v-for="event in selected_event_list" class="card">
-            {% include "plateformeweb/event_vuejs.html" with img_class="" about_class="col-lg" %}
+        <div v-for="event in selected_event_list" class="row card">
+            {% include "plateformeweb/event_vuejs.html" with img_class="float-left" about_class="col-md-6 float-left" %}
     
     </div>
    <div v-if="event_list.length == 0"><img src="{% static "img/loading-gif.gif" %}"></div>

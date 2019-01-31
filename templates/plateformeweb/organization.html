@@ -5,18 +5,12 @@
 
 {% block list %}
 
-<div class="card {{class}}">
-    <a class="card-link" href="{% url 'organization_detail' organization.id organization.slug %}">
-            <h5 class="card-title card-header">{{ organization.name }}</h5>
-            <h6 class="card-subtitle mb-2 text-muted">{{ organization.is_active }}</h6>
-            <img class="img-fluid img-place {{img_class}} " src="{{ organization.picture.url }}">
-        <div class="card-body">
-            <ul class="list-group list-group-flush">
-                    <li>{{ organization.organizationperson_set.all.count }} participants </li> 
-                    <li>{{ organization.event_set.all.count }} évènements </li> 
-                    <li>{{ organization.place_set.all.count }} lieux </li> 
-            </ul>
-        </div>
+<div class="{{class}}">
+    <a class="card" href="{% url 'organization_detail' organization.id organization.slug %}">
+    <img class="img-place {{img_class}}" src="{{ organization.picture.url }}">
+    <div class="card-body {{about_class}}">
+            <h5 class="card-title">{{ organization.name }}</h5>         
+    </div>
     </a>
 </div>
 

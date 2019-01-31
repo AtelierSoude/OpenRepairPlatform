@@ -13,9 +13,15 @@ body, html, .container, div, .card, ul, p {
   padding: 0px !important;
   margin: 0px !important;
 }
+
 .row {
   margin-right: 0px !important;
   margin-left: 0px !important;
+}
+
+.main-container {
+  margin: 0 auto !important;
+  max-width: 1280px !important;
 }
 
 body {

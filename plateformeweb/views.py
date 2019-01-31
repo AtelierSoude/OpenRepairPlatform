@@ -550,7 +550,6 @@ class EventCreateView(CreateView):
             limited_choices.append([organization.pk, organization.name])
 
         form.fields['organization'].choices = limited_choices
-        form.fields['location'].choices = limited_choices
         # form.fields['organization'].queryset = user_orgs
 
         return form

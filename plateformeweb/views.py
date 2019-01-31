@@ -542,7 +542,6 @@ class EventCreateView(CreateView):
             form.fields[field].widget = forms.HiddenInput()
 
         limited_choices = [["", '---------']]
-        form.fields['location'].choices = limited_choices
         user_orgs = OrganizationPerson.objects.filter(user=self.request.user,
                                                       role__gte=OrganizationPerson.ADMIN)
 
@@ -551,6 +550,7 @@ class EventCreateView(CreateView):
             limited_choices.append([organization.pk, organization.name])
 
         form.fields['organization'].choices = limited_choices
+        form.fields['location'].choices = limited_choices
         # form.fields['organization'].queryset = user_orgs
 
         return form

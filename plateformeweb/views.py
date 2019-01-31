@@ -315,6 +315,7 @@ class ActivityCreateView(ActivityFormView, AjaxCreateView):
         # set owner to current user on creation
     def form_valid(self, form):
         obj = form.save()
+        obj.owner = self.request.user
         action.send(self.request.user, verb=' a créé ', action_object=obj)
         follow(self.request.user, obj, actor_only=False)  
         send_notification(self.request, target_object=obj, target_type="action_object")    
@@ -326,6 +327,7 @@ class ActivityEditView( ActivityFormView, AjaxUpdateView):
     queryset = Activity.objects
 
     def form_valid(self, form):
+        obj.owner = self.request.user
         obj = form.save(commit=False)
         action.send(self.request.user, verb=' a modifié ', action_object=obj)
         send_notification(self.request, target_object=obj, target_type="action_object")    

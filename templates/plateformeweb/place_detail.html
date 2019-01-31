@@ -35,7 +35,7 @@
 {% endblock TitleAndEdit %}
 
 {% block context %}
-    {% include "plateformeweb/place.html"%}
+    {% include "plateformeweb/place.html" with class="sticky-position sticky-top"%}
    <div class="m-3 pt-3 p-2 bg-white"> {% easy_map place.address 100 100 15 %} </div>
 {% endblock context %} 
 

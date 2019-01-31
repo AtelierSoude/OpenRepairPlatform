@@ -5,7 +5,7 @@
 
 
 {% block list %}
-<a :href="event.event_detail_url">
+<a :href="event.event_detail_url" style="text-decoration: none">
     <div v-if="event.available_seats == 0" class="unaccessible">
     </div>
 
@@ -27,23 +27,22 @@
                     </h5>
 
                             <span v-if="event.available_seats == 0" class="badge badge-warning">plus de place</span>
-                            <span v-else class="badge badge-primary">[[ event.available_seats ]] places<span>
-        </div>
+                            <span v-else class="badge badge-primary">[[ event.available_seats ]] places</span>
+    
 
                    <span> organisé par
-                        <a :href="organizations[event.organization_pk].organization_detail_url">
+                      <!--   <a :href="organizations[event.organization_pk].organization_detail_url"></a>-->
                              [[ organizations[event.organization_pk].name ]]
-                        </a>
+                   
                     </span><br>
                     <span>
-                        <a :href="places[event.place_pk].place_detail_url">
+                      <!--   <a :href="places[event.place_pk].place_detail_url">-->
                             {% fontawesome_icon 'map-marker' %}
                             [[places[event.place_pk].truncated_name]]
-                        </a>
                     </span>
        
                 <!-- book -->
-        
+        </div>
                 <button v-if="event.user_in_attendees" :id="event.pk" purpose="cancel" class="m-2 btn btn-danger" onclick="event_list_onclick(this)">
                     Je ne participe plus
                 </button>
@@ -51,5 +50,7 @@
                 <button v-else :id="event.pk" purpose="book" class="m-2 btn btn-primary" onclick="event_list_onclick(this)">
                     Je participe
                 </button>
+
+      
 </a>
 {% endblock list %}

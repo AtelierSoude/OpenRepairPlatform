@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load bootstrap4 app_filters %}
+
+{% block content %}
+  {% include "breadcrumb.html" with current="Évènements" %}
+
+  <section class="container">
+    <div class="row col-md-12 mb-2 mt-2">
+      <div class="card w-100">
+        <div class="card-body">
+          <h5 class="card-title">Filtrer les évènements</h5>
+          <div class="card-text">
+            <form method="GET" class="form-row">
+              {% bootstrap_form search_form  %}
+              <br>
+              <div class="form-group p-2 col mt-auto">
+                <button type="submit" class="btn btn-success btn-block">
+                  <i class="fa fa-search"></i>
+                  Lancer la recherche
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row col-md-12">
+      <div class="card-columns">
+        {% include "event/event_cards.html" with event_list=event_list %}
+      </div>
+      {% if not event_list %}
+        Aucun évènement trouvé pour vos critères de recherche
+      {% endif %}
+    </div>
+
+    {% if is_paginated %}
+      <nav aria-label="Event navigation" class="mt-4">
+        <ul class="pagination justify-content-center">
+          <li class="page-item{% if paginator.has_previous %} disabled{% endif %}">
+            <a class="page-link" href="{% url 'event:list' %}?{% query_transform request page=page_obj.number|add:-1 %}" tabindex="-1">
+              Previous
+            </a>
+          </li>
+
+          {% for page in paginator.page_range %}
+            <li class="page-item{% if page == page_obj.number %} active{% endif %}">
+              <a class="page-link" href="{% url 'event:list' %}?{% query_transform request page=page %}">
+                {{ page }}
+              </a>
+            </li>
+          {% endfor %}
+
+          <li class="page-item{% if paginator.has_next %} disabled{% endif %}">
+            <a class="page-link" href="{% url 'event:list' %}?{% query_transform request page=page_obj.number|add:1 %}">
+              Next
+            </a>
+          </li>
+        </ul>
+      </nav>
+    {% endif %}
+  </section>
+{% endblock %}

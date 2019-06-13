@@ -1,0 +1,78 @@
+/* éléments généraux */
+
+.container-fluid{
+  padding: 0;
+  margin: 0;
+}
+body {
+  background-color: #eef2f6 !important;
+}
+a {
+  color : #49d3be;
+}
+header{
+  z-index:1250 !important;
+}
+
+h1, h2, h3 {
+  color : #083342;
+}
+
+/* Menu */
+
+.navbar {
+  background-color: #083342;
+  padding: 0.3em;
+}
+.navbar ul li a {
+  margin-left: 1em;
+  color: white;
+}
+.navbar .fa, .avatar a, .dropdown-toggle  {
+  color: white;
+}
+.navbar ul li a:hover, .navbar .fa:hover, .avatar a:hover, .dropdown-toggle:hover{
+  color: gray;
+  text-decoration: none;
+}
+.navbar ul li {
+  margin-left: 1em;
+}
+
+/* cards */
+
+.card {
+  border-radius: 0;
+  a.card-link {
+    text-decoration: none;
+    color: inherit;
+  }
+}
+
+/* breadcrumb (chemin navigation) */
+.breadcrumb{
+  font-size: .8em;
+  margin-bottom: 0;
+  border-width: 0;
+  background-color: white;
+}
+
+/* leaflet reset style */
+
+.leaflet-container a {
+  color: #49d3be;
+}
+
+/* Modals */
+
+.modal-content {
+  border-radius: 0;
+  padding: 2em;
+}
+
+/* sizes */
+
+.square-2 {
+  width: 2em;
+  height: 2em;
+}

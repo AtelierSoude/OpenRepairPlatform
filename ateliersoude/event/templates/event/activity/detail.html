@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  {% url "event:activity_list" as activity_list_url %}
+  {% include "breadcrumb.html" with current=activity first_parent_url=activity_list_url first_parent_text="Activités" %}
+  <div class="jumbotron jumbotron-fluid">
+    <div class="container">
+      <h1 class="display-4">{{ activity.name|title }}</h1>
+      {% if is_admin %}
+      <p class="lead">
+        <a class="btn btn-primary btn-sm" href="{% url 'event:activity_edit' activity.pk %}">
+          <i class="fa fa-pencil-alt"></i>
+          Editer
+        </a>
+        <a class="btn btn-danger btn-sm" href="{% url 'event:activity_delete' activity.pk %}">
+          <i class="fa fa-trash-alt"></i>
+          Supprimer
+        </a>
+      </p>
+      {% endif %}
+    </div>
+  </div>
+  <section class="container">
+    <div class="card">
+      {% if activity.picture %}
+        <img class="img-responsive w-100" src="{{ activity.picture.url }}" alt="image activité">
+      {% endif %}
+      <div class="card-body">
+        <h5 class="card-subtitle pb-3 mb-2 mt-2 text-muted border-bottom">
+          {{ activity.name }} -
+          <i class="fa fa-users"></i>
+          <a href="{% url 'user:organization_detail' activity.organization.pk activity.organization.slug %}">
+            {{ activity.organization.name }}
+          </a>
+        </h5>
+        {{ activity.description | safe }}
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-subtitle pb-3 mb-2 mt-2 text-muted border-bottom">Prochaines planifications de cette activité</h5>
+        <ul>
+          {% for event in activity.next_events %}
+            <li><a href="{% url 'event:detail' event.pk event.slug %}">{{ event }}</a></li>
+            {% empty %}
+            <i class="fa fa-calendar-times"></i>
+            Aucun évènement planifié pour le moment
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+{% endblock %}

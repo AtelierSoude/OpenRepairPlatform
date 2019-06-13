@@ -1,0 +1,70 @@
+{% load bootstrap4 app_filters %}
+
+<button class="btn btn-success btn-sm" data-toggle="modal" data-target="#more-info-{{ anonymous_user.pk }}">
+  <i class="fa fa-plus"></i>
+  {% if admin_text %}
+    {{ admin_text }}
+  {% else %}
+    Marquer en présent
+  {% endif %}
+</button>
+<div class="modal" id="more-info-{{ anonymous_user.pk }}" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          {% if anonymous_user %}
+            Compléter les info de {{ anonymous_user }}
+          {% else %}
+            Marquer quelqu'un en "présent" pour l'évènement
+          {% endif %}
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Nous devons garder une trace des personnes présentes aux ateliers, veuillez compléter ces info svp
+        <form
+            {% if anonymous_user %}
+              action="{% url 'user:present_with_more_info' event.pk anonymous_user.pk %}"
+            {% else %}
+              action="{% url 'user:present_create_user' event.pk %}"
+            {% endif %}
+              method="post"
+              class="text-left"
+        >
+          <div class="modal-body">
+            {% csrf_token %}
+            {% bootstrap_form form=form %}
+          </div>
+          <b>Note(s) :</b>
+          <ul>
+            <li>
+              La contribution minimale pour cette organisation est de
+              <span class="badge badge-pill badge-secondary">{{ event.organization.min_fee }}€</span>
+              et la contribution totale conseillée est de
+              <span class="badge badge-pill badge-success">{{ event.organization.advised_fee }}€</span>
+            </li>
+            {% if event.organization.fee_description %}
+              <li>{{ event.organization.fee_description }}</li>
+            {% endif %}
+            {% if anonymous_user and anonymous_user.first_name %}
+              <li>
+                {% filter_orga queryset=user.memberships organization=event.organization as membership %}
+                {% if membership %}
+                  {{ anonymous_user }} a payé <b>{{ membership.current_contribution }}€</b> depuis le {{ membership.first_payment|date:"d F Y" }}
+                {% else %}
+                  {{ anonymous_user }} n'a pas encore contribué pour <span class="badge badge-pill badge-primary">{{ event.organization }}</span>
+                {% endif %}
+              </li>
+            {% endif %}
+          </ul>
+          <div class="modal-footer">
+            <input type="submit" value="Enregistrer" class="btn btn-primary">
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

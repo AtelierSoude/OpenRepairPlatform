@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  {% url "user:organization_detail" condition.organization.pk condition.organization.slug  as organization_url %}
+  {% include "breadcrumb.html" with current=condition.name|add:" - Suppression" first_parent_url=organization_url first_parent_text=condition.organization %}
+  <div class="jumbotron jumbotron-fluid">
+    <div class="container">
+      <h1 class="display-4">
+        Suppression de '{{ condition }}'
+      </h1>
+    </div>
+  </div>
+  <section class="container">
+    <p>
+      <i class="fa fa-exclamation-triangle"></i>
+      Vous êtes sur le point de supprimer la condition <code>'{{ condition }}'</code> géré par <code>'{{ condition.organization }}'</code>. Êtes-vous certain de votre choix ?
+    </p>
+    <form method="post">{% csrf_token %}
+      {{ form.as_p }}
+      <button class="btn btn-danger" type="submit">
+        <i class="fa fa-trash"></i>
+        Oui je suis sûr
+      </button>
+      <a class="btn btn-success" href="{% url 'user:organization_detail' condition.organization.pk condition.organization.slug %}">
+        <i class="fa fa-arrow-left"></i>
+        Non, revenir
+      </a>
+    </form>
+  </section>
+{% endblock %}

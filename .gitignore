@@ -17,7 +17,6 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
 lib64/
 parts/
 sdist/
@@ -145,3 +144,11 @@ bootstrap_done
 node_modules/*
 .vscode
 media
+tmp
+*.min.js
+*.min.css
+ateliersoude/static/css
+ateliersoude_static/
+ateliersoude_media/
+postgres_data/
+cpdb.sh

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  {% url "user:organization_list" as organization_list_url %}
+  {% url "user:organization_detail" organization.pk organization.slug as organization_detail_url %}
+  {% include "breadcrumb.html" with current="Suppression" second_parent_url=organization_list_url second_parent_text="Organisations" first_parent_url=organization_detail_url first_parent_text=organization %}
+
+  <div class="jumbotron jumbotron-fluid">
+    <div class="container">
+      <h1 class="mt-5">Suppression de '{{ organization }}'</h1>
+    </div>
+  </div>
+
+  <section class="container">
+    <p>
+      <i class="fa fa-exclamation-triangle"></i>
+      Vous êtes sur le point de supprimer l'organisation <code>'{{ organization }}'</code>. Êtes-vous certain de votre choix ?
+    </p>
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <input class="btn btn-danger" type="submit" value="Oui je suis sûr">
+    </form>
+  </section>
+{% endblock %}

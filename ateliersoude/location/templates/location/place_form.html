@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load assets %}
+{% load bootstrap4 %}
+
+{% block extra_css %}
+  {% assets "css_autocomplete" %}
+    <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet"/>
+  {% endassets %}
+{% endblock %}
+
+{% block content %}
+  {% url "location:list" as location_list_url %}
+  {% if place %}
+    {% url "location:detail" place.pk place.slug as location_detail_url %}
+    {% include "breadcrumb.html" with current="Mise à jour" second_parent_url=location_list_url second_parent_text="Lieux" first_parent_url=location_detail_url first_parent_text=place %}
+  {% else %}
+    {% include "breadcrumb.html" with current="Création" first_parent_url=location_list_url first_parent_text="Lieux" %}
+  {% endif %}
+  <div class="jumbotron jumbotron-fluid">
+    <div class="container">
+      <h1 class="display-4">
+        {% if place %}
+          Mise à jour de '{{ place }}'
+        {% else %}
+          Création d'un nouveau lieu
+        {% endif %}
+      </h1>
+    </div>
+  </div>
+  <section class="container mt-4">
+    <div class="card p-3">
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <div class="form-group p-2">
+          <button type="submit" class="btn btn-success w-100 p-3">Valider</button>
+        </div>
+      </form>
+    </div>
+  </section>
+{% endblock %}
+
+{% block extra_js %}
+  {{ form.media }}
+  {% assets "js_create_edit_place" %}
+    <script src="{{ ASSET_URL }}"></script>
+  {% endassets %}
+{% endblock %}

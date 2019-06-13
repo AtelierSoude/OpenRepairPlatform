@@ -1,0 +1,25 @@
+{% load thumbnail %}
+
+{% for activity in activities %}
+  <div class="card">
+    <a class="card-link" href="{% url 'event:activity_detail' activity.pk activity.slug %}">
+      {% if activity.picture %}
+      {% thumbnail activity.picture "400" format="PNG" as im %}
+      <img class="card-img-top" src="{{ im.url }}" alt="activité illustration">
+      {% endthumbnail %}
+      {% endif %}
+      <div class="card-body">
+        <h5 class="card-title">{{ activity.name }}</h5>
+        {{ activity.description | safe | truncatewords_html:10 }}
+        <footer class="blockquote-footer">
+          Géré par
+          <a href="{% url 'user:organization_detail' activity.organization.pk activity.organization.slug %}">
+            {{ activity.organization }}
+          </a>
+        </footer>
+      </div>
+    </a>
+  </div>
+{% empty %}
+  Aucune activité trouvée
+{% endfor %}

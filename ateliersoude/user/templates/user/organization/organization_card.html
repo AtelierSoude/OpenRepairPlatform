@@ -1,0 +1,18 @@
+{% load thumbnail %}
+
+{% for organization in organizations %}
+<div class="card">  
+  <a class="card-link" href="{% url 'user:organization_detail' organization.id organization.slug %}">
+    {% if organization.picture %}
+    {% thumbnail organization.picture "400" format="PNG" as im %}
+      <img class="card-img-top" src="{{ im.url }}"/>
+    {% endthumbnail %}
+    {% endif %}
+    <div class="card-body">
+      <h5 class="card-title">{{ organization.name }}</h5>
+    </div>
+  </a>
+</div>
+{% empty %}
+  <div>Aucune organisation n'est inscrite sur le site pour le moment</div>
+{% endfor %}

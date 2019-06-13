@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+  {% include "breadcrumb.html" with current="Déconnecté" %}
+
+<div class="jumbotron jumbotron-fluid">
+  <div class="container">
+    <h1>Vous êtes déconnecté·e</h1>
+  </div>
+</div>
+
+<section class="container">  
+  <div class="row justify-content-md-center">
+    <div class="col-md-10">
+      <a href="{% url 'login'%}">Cliquez ici pour vous reconnecter.</a>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

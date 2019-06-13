@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% load bootstrap4 %}
+
+{% block content %}
+  {% include "breadcrumb.html" with current="Connexion" %}
+
+  <div class="jumbotron jumbotron-fluid">
+    <div class="container">
+      <h1>Se connecter</h1>
+    </div>
+  </div>
+  <section class="container">
+
+    <div class="row justify-content-md-center">
+      <div class="card col-md-8">
+        <div class="card-body">
+          <h4 class="card-title">Identifiez-vous</h4>
+          <form method="post" action="{% url 'login' %}" class="form">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            <div class="form-group p-2">
+              <button type="submit" class="btn btn-success">
+                Connexion
+              </button>
+            </div>
+            <div class="card-link mt-2 text-center">
+              <a href="{% url 'password_reset' %}">Vous avez déjà participé à un évènement ? Inscrivez-vous ici.</a>
+            </div>
+            <div class="card-link mt-2 text-center">
+              <a href="{% url 'user:user_create' %}">Première fois sur le site ? </a>
+            </div>
+            <div class="card-link mt-2 text-center">
+              <a href="{% url 'password_reset' %}">Mot de passe oublié ?</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+{% endblock %}

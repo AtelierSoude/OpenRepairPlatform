@@ -1,0 +1,60 @@
+{% load thumbnail %}
+
+{% for user in users %}
+  <div class="card">
+    <a class="card-link" href="{{ user.get_absolute_url }}">
+      <div class="row text-center" id="square-{{ user.pk }}">
+        <div class="col-12">
+          {% if user.avatar_img %}
+            {% thumbnail user.avatar_img "100x100" crop="center" format="PNG" as im %}
+              <img src="{{ im.url }}" class="m-2 rounded-circle"/>
+            {% endthumbnail %}
+          {% else %}
+            <i class="fa fa-user fa-4x m-4 text-primary"></i>
+          {% endif %}
+        </div>
+        <div class="col-12">
+          <h5 class="mx-auto col-12">
+              {{ user.first_name|capfirst }} {{ user.last_name|capfirst}}
+          </h5>
+        </div>
+      </div>
+    </a>
+    <ul class="list-group list-group-flush">
+      {% if user.member_organizations.all %}
+        <li class="list-group-item">
+          <small> 
+          <i>
+            est membre de : 
+            {{ user.member_organizations.all|join:", " }}
+          </i>
+          </small>
+        </li>
+      {% endif %}
+      {% if user.active_organizations.all %}
+        <li class="list-group-item">
+          <small> 
+          <i>
+            est volontaire de :
+            {{ user.active_organizations.all|join:", " }}
+            {% if user.active_organizations.all and user.volunteer_organizations.all %}, {% endif %}
+            {{ user.volunteer_organizations.all|join:", " }}
+          </i>
+          </small>
+        </li>
+      {% endif %}
+      {% if user.admin_organizations.all %}
+        <li class="list-group-item">
+          <small> 
+          <i>
+            est administrateur de : 
+            {{ user.admin_organizations.all|join:", " }}
+          </i>
+          </small>
+        </li>
+      {% endif %}
+    </ul>
+  </div>
+{% empty %}
+  <div>No users yet.</div>  
+{% endfor %}

@@ -1,0 +1,32 @@
+tests:
+  stage: test
+  image: registry.gitlab.com/hashbangfr/docker_archlinux:python
+  services:
+    - postgres:11  
+  variables:                   
+    DOCKER_TEST: "True"        
+    DJANGO_SETTINGS_MODULE: "ateliersoude.settings.tests"
+  script:
+    - if [ ! -d venv ] ; then virtualenv venv ; fi
+    - ./venv/bin/pip install -U -r requirements.txt
+    - source ./venv/bin/activate
+    - py.test . --create-db
+    - if [ "$CI_COMMIT_REF_NAME" = 'develop' ] ; then diff-cover coverage.xml --fail-under=90 ; exit 0 ; fi
+    - diff-cover coverage.xml --fail-under=90 --compare-branch origin/develop
+  cache:
+    key: "$CI_COMMIT_REF_NAME"
+    paths:
+    - venv
+
+salt:
+  only:
+    refs:
+      - master
+      - develop
+  stage: deploy
+  image: registry.gitlab.com/hashbangfr/docker_archlinux:salt
+  tags:
+    - deploy
+  script: /usr/local/bin/salt-notif.py /gitlabci/build project=${CI_PROJECT_NAME} branch=${CI_BUILD_REF_NAME}
+
+

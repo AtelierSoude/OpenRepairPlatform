@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% load bootstrap4 %}
+
+{% block content %}
+{% url "user:organization_list" as organization_list_url %}
+{% if organization %}
+  {% url "user:organization_detail" organization.pk organization.slug as organization_detail_url %}
+  {% include "breadcrumb.html" with current="Mise à jour" second_parent_url=organization_list_url second_parent_text="Organisations" first_parent_url=organization_detail_url first_parent_text=organization %}
+{% else %}
+  {% include "breadcrumb.html" with current="Création" first_parent_url=organization_list_url first_parent_text="Organisations" %}
+{% endif %}
+
+<div class="jumbotron jumbotron-fluid">
+  <div class="container">
+    <h1>
+      Organisation
+    </h1>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="card p-3">
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {% bootstrap_form form %}
+      <div class="form-group p-2">
+        <input type="submit" value="Valider" class="btn btn-primary">
+      </div>
+    </form>
+  </div>
+
+</div>
+{% endblock %}
+
+
+{% block extra_js %}
+  {{ form.media }}
+{% endblock %}

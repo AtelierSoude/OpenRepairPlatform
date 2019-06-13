@@ -1,0 +1,134 @@
+{% load bootstrap4 %}
+
+<div class="row">
+  
+  <div class="col-xl mb-2">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Les administrateurs</h4>
+        <ul class="list-group list-group-flush">
+          {% for user in organization.admins.all %}
+          <li class="list-group-item">
+          {% if not user.is_visible and not is_admin %}
+          {{ user }}
+          {% else %}
+          <a href="{% url 'user:user_detail' user.pk %}">
+            {{ user }}
+          </a>
+          {% endif %}
+          {% if is_admin %}
+          <form action="{% url 'user:remove_from_admins' organization.pk user.pk %}" class="d-inline">
+            {% csrf_token %}
+            <button type="submit" class="btn badge badge-pill badge-danger" onclick="return confirm('Êtes-vous sûr ?')">&times;</button>
+          </form>
+          {% endif %}
+          </li>
+          {% empty %}
+          <li class="list-group-item">
+          Il n'y a pas d'administrateur associé à cette organisation.
+          </li>
+          {% endfor %}
+        </ul>
+        {% if is_admin %}
+        <form class="mt-2" action="{% url 'user:organization_add_admin' organization.pk %}" method="post">
+          {% csrf_token %}
+          {% bootstrap_form add_admin_form %}
+          <div class="form-group">
+            <button type="submit" class="btn btn-success btn-block">
+              <i class="fa fa-plus"></i>
+              Ajouter cet admin
+            </button>
+          </div>
+        </form>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="col-xl mb-2">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Les actifs</h4>
+        <ul class="list-group list-group-flush">
+          {% for user in organization.actives.all %}
+          <li class="list-group-item">
+          {% if not user.is_visible and not is_admin %}
+            {{ user }}
+          {% else %}
+          <a href="{% url 'user:user_detail' user.pk %}">
+            {{ user }}
+          </a>
+          {% endif %}
+          {% if is_admin %}
+          <form action="{% url 'user:remove_from_actives' organization.pk user.pk %}" class="d-inline">
+            {% csrf_token %}
+            <button type="submit" class="btn badge badge-pill badge-danger" onclick="return confirm('Êtes-vous sûr ?')">&times;</button>
+          </form>
+          {% endif %}
+          </li>
+          {% empty %}
+          <li class="list-group-item">
+          Il n'y a pas de membre volontaire associé à cette organisation.
+          </li>
+          {% endfor %}
+        </ul>
+        {% if is_active %}
+        <form class="mt-2" action="{% url 'user:organization_add_active' organization.pk %}" method="post">
+          {% csrf_token %}
+          {% bootstrap_form add_active_form %}
+          <div class="form-group">
+            <button type="submit" class="btn btn-success btn-block">
+              <i class="fa fa-plus"></i>
+              Ajouter cet actif
+            </button>
+          </div>
+        </form>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="col-xl mb-2">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Les volontaires</h4>
+        <ul class="list-group list-group-flush">
+          {% for user in organization.volunteers.all %}
+          <li class="list-group-item">
+          {% if not user.is_visible and not is_admin %}
+          {{ user }}
+          {% else %}
+          <a href="{% url 'user:user_detail' user.pk %}">
+            {{ user }}
+          </a>
+          {% endif %}
+          {% if is_admin %}
+          <form action="{% url 'user:remove_from_volunteers' organization.pk user.pk %}" class="d-inline">
+            {% csrf_token %}
+            <button type="submit" class="btn badge badge-pill badge-danger" onclick="return confirm('Êtes-vous sûr ?')">&times;</button>
+          </form>
+          {% endif %}
+          </li>
+          {% empty %}
+          <li class="list-group-item">
+          Il n'y a pas de volontaire associé à cette organisation.
+          </li>
+          {% endfor %}
+        </ul>
+        {% if is_active %}
+        <form class="mt-2" action="{% url 'user:organization_add_volunteer' organization.pk %}" method="post">
+          {% csrf_token %}
+          {% bootstrap_form add_volunteer_form %}
+          <div class="form-group">
+            <button type="submit" class="btn btn-success btn-block">
+              <i class="fa fa-plus"></i>
+              Ajouter ce volontaire
+            </button>
+          </div>
+        </form>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+</div>

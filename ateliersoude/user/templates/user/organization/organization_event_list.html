@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  {% url "user:organization_list" as organization_list_url %}
+  {% url "user:organization_detail" organization.pk organization.slug  as organization_url %}
+  {% include "breadcrumb.html" with current="Évènements" first_parent_url=organization_url first_parent_text=organization second_parent_url=organization_list_url second_parent_text="Organisations" %}
+
+  <div class="container">
+    <h1 class="mt-4 mb-4">Tous les évènements liés à {{ organization }}</h1>
+
+    <div class="card-columns">
+      {% include "event/event_cards.html" with event_list=event_list %}
+    </div>
+
+    {% if is_paginated %}
+      <nav aria-label="Event navigation" class="mt-4">
+        <ul class="pagination justify-content-center">
+          <li class="page-item{% if paginator.has_previous %} disabled{% endif %}">
+            <a class="page-link" href="{% url 'user:organization_all_events' organization.pk organization.slug page_obj.number|add:-1 %}" tabindex="-1">
+              Previous
+            </a>
+          </li>
+
+          {% for page in paginator.page_range %}
+            <li class="page-item{% if page == page_obj.number %} active{% endif %}">
+              <a class="page-link" href="{% url 'user:organization_all_events' organization.pk organization.slug page %}">
+                {{ page }}
+              </a>
+            </li>
+          {% endfor %}
+
+          <li class="page-item{% if paginator.has_next %} disabled{% endif %}">
+            <a class="page-link" href="{% url 'user:organization_all_events' organization.pk organization.slug page_obj.number|add:1 %}">
+              Next
+            </a>
+          </li>
+        </ul>
+      </nav>
+    {% endif %}
+  </div>
+{% endblock %}

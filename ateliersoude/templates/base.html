@@ -1,0 +1,53 @@
+{% load static %}
+{% load assets %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Atelier Soudé</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+
+  <!-- FONT -->
+  <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+
+  <!-- Fontawesome -->
+  <link rel="stylesheet" href="{% static 'fontawesome/css/fontawesome-all.min.css' %}">
+
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+
+  <!-- Custom -->
+  {% assets "css_ateliersoude" %}
+    <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet"/>
+  {% endassets %}
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+{% include "menu.html" %}
+
+<div class="container-fluid">
+  {% for message in messages %}
+    <div class="alert alert-{{ message.level_tag }} alert-dismissible fade show mb-0" role="alert">
+      {{ message }}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  {% endfor %}
+</div>
+
+<main class="content-page">
+  {% block content %}{% endblock %}
+</main>
+
+<!-- Script & librairy-->
+<script src="{% static 'bootstrap/js/jquery.min.js' %}"></script>
+<script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+{% block extra_js %}{% endblock %}
+
+</body>
+
+</html>

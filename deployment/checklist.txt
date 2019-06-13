@@ -1,0 +1,4 @@
+
+Before running `build.sh` or `run.sh` please be sure to have:
+- Changed `EMAIL_PASSWORD` in `django/django.env`
+- Changed `SECRET_KEY` in `django/django.env`

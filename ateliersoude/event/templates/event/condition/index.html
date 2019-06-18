@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <section class="container mt-4">
+    {% include 'event/condition/list.html' with conditions=condition_list.all %}
+  </section>
+{% endblock %}

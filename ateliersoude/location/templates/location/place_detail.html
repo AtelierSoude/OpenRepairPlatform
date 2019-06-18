@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load assets %}
+{% load l10n %}
+
+{% block extra_css %}
+  {% assets "css_detail_place" %}
+    <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet"/>
+  {% endassets %}
+{% endblock %}
+
+{% block content %}
+  {% url "location:list" as location_list_url %}
+  {% include "breadcrumb.html" with current=place first_parent_url=location_list_url first_parent_text="Lieux" %}
+  <div class="jumbotron jumbotron-fluid">
+    <div class="container">
+      <h1 class="display-4">{{ place.name|title }}</h1>
+      {% if is_admin %}
+      <p class="lead">
+        <a class="btn btn-primary btn-sm" href="{% url 'location:edit' place.id %}">
+          <i class="fa fa-pencil-alt"></i>
+          Editer ce lieu
+        </a>
+        <a class="btn btn-danger btn-sm" href="{% url 'location:delete' place.id %}">
+          <i class="fa fa-trash-alt"></i>
+          Supprimer ce lieu
+        </a>
+      </p>
+      {% endif %}
+    </div>
+  </div>
+  <section class="container">
+    <div class="card">
+      {% if place.picture %}
+        <img class="img-responsive w-100" src="{{ place.picture.url }}" alt="image_lieu">
+      {% endif %}
+      <div class="card-body">
+        <h5 class="card-subtitle pb-3 mb-2 mt-2 text-muted border-bottom">
+          {{ place.category }} -
+          <small>
+            <i class="fa fa-map-marker"></i>
+            {{ place.address }}
+          </small>
+        </h5>
+        {{ place.description | safe }}
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-subtitle pb-3 mb-2 mt-2 text-muted border-bottom">Prochains évènements en ce lieu</h5>
+        <ul>
+          {% for event in place.future_published_events %}
+            <li><a href="{% url 'event:detail' event.pk event.slug %}">{{ event }}</a></li>
+            {% empty %}
+            <i class="fa fa-calendar-times"></i>
+            Aucun évènement planifié ici pour le moment
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </section>
+  <section class="container-fluid" id="place_map" style="height: 90vh"></section>
+
+{% endblock %}
+
+{% block extra_js %}
+  <script>
+    let latitude = {{ place.latitude|unlocalize }};
+    let longitude = {{ place.longitude|unlocalize }};
+    let placeName = "{{ place.name }}";
+  </script>
+  {% assets "js_detail_place" %}
+    <script src="{{ ASSET_URL }}"></script>
+  {% endassets %}
+{% endblock %}

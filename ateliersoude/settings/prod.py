@@ -1,13 +1,38 @@
-from __future__ import absolute_import # optional, but I like it
+import os
+from .base import *  # noqa
 
-from .common import *
+SECRET_KEY = os.environ["SECRET_KEY"]
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'H/hXAUnb1ZKNGpToim2cg38dxiyHM6b+zB9zozhpTzkP'
+DEBUG = False
 
-# TODO for the address module; change it!
-GOOGLE_API_KEY = "AIzaSyCNZ-rIhY1zyq2LFghBV4x7mUQvtJCOK88"
+ALLOWED_HOSTS = [
+    "127.0.0.1", "localhost", "atelier-soude.fr", "www.atelier-soude.fr",
+]
 
-# STATICFILES_STORAGE disabled in test environement
-STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+STATIC_ROOT = "/srv/static/"
+MEDIA_ROOT = "/srv/media/"
+ASSETS_ROOT = STATIC_ROOT
 
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "ateliersoude",
+        "USER": "ateliersoude",
+        "HOST": "postgres",
+        "PASSWORD": os.getenv("POSTGRES_PASSWORD", "ateliersoude"),
+    }
+}
+
+raven = os.getenv("RAVEN_DNS")
+
+if raven:
+    RAVEN_CONFIG = {"dsn": raven}
+    INSTALLED_APPS += ["raven.contrib.django.raven_compat"]  # noqa
+
+# Email Settings
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "mail.atelier-soude.fr"
+EMAIL_PORT = 25
+EMAIL_HOST_USER = "no-reply@atelier-soude.fr"
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_PASSWORD")

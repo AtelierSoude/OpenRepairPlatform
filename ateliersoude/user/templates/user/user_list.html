@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  {% include "breadcrumb.html" with current="Communauté" %}
+
+<div class="jumbotron jumbotron-fluid">
+  <div class="container">
+    <h1>Utilisateurs</h1>
+  </div>
+</div>
+
+<section class="container">
+  <div class="row col-md-12">
+    <div class="card-columns">
+      {% include 'user/user_card.html' with users=object_list %}
+    </div>
+  </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% load assets %}
+
+{% block title %} {{ block.super }} Lieux {% endblock title %}
+
+{% block extra_css %}
+  {% assets "css_places" %}
+    <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet"/>
+  {% endassets %}
+{% endblock %}
+
+{% block content %}
+  <section class="container-fluid">
+    <div id="place_map"></div>
+  </section>
+{% endblock %}
+
+{% block extra_js %}
+  {% assets "js_places" %}
+    <script src="{{ ASSET_URL }}"></script>
+  {% endassets %}
+{% endblock %}

@@ -1,0 +1,77 @@
+{% block menu %}
+
+<header class="position-relative">
+  <nav class="navbar navbar-expand-lg">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon">
+        <i class="fa fa-bars"></i>
+      </span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+      <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+        <li class="nav-item active">
+        <a href="{% url "homepage" %}">Accueil</a>
+        </li>
+        <li class="nav-item">
+        <a href="{% url "event:list" %}">Évenements</a>
+        </li>
+        <li class="nav-item">
+        <a href="{% url "event:activity_list" %}">Activités</a>
+        </li>
+        <li class="nav-item">
+        <a href="{% url "location:list" %}">Lieux</a>
+        </li>
+        <li class="nav-item">
+        <a href="{% url "user:user_list" %}">Communauté</a>
+        </li>
+        <li class="nav-item">
+        <a href="{% url "user:organization_list" %}">Organisations</a>
+        </li>
+      </ul>
+    </div>
+    <div class="navbar navbar-expand-lg d-flex justify-content-end">
+      {% if not user.is_authenticated %}
+
+        <div class="navbar-brand" >
+        <a class="nav-link mr-3" href="{% url "login" %}">
+          <i class="fa fa-user"></i>
+        </a>
+      </div>
+
+      {% else %}
+
+      <div class="navbar-brand avatar">
+        <a class="nav-link mr-3" href="{{ user.get_absolute_url }}"> {{ user.first_name }}
+          <i class="fa fa-user"></i>
+        </a>
+      </div>
+
+      <!-- Menu dropdown -->
+      <div class="navbar-brand arrow-login">
+        <a class="nav-link mr-3 dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <i class=""></i>
+        </a>
+        <div class="dropdown-menu " aria-labelledby="navbarDropdownMenuLink">
+          <a class="dropdown-item" href="{{ user.get_absolute_url }}"> voir profil </a>
+          {% if user.admin_organizations.all %}
+          <div class="dropdown-divider"></div>
+          {% for organization in user.admin_organizations.all %}
+            <a class="dropdown-item" href="{% url "user:organization_detail" organization.pk organization.slug %}">
+              Gérer {{ organization.name }}
+            </a>
+          {% endfor %}
+          {% endif %}
+
+          <div class="dropdown-divider"></div>
+          <a class="nav-link dropdown-item" href="{% url 'logout' %}" title="Logout">
+            Déconnexion
+          </a>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </nav>
+
+</header>
+
+{% endblock %}

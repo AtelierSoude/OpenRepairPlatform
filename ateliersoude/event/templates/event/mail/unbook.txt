@@ -1,0 +1,10 @@
+{{ user }},
+
+votre annulation pour l'événement {{ event.activity.name }} du {{ event.date_interval_format }} a bien été prise en compte.
+
+{% if book_url %}
+Pour vous réinscrire, veuillez suivre ce lien : {{ book_url }}.
+{% endif %}
+L'évènement en question est accessible ici : {{ event_url }}
+
+{% include 'event/mail/footer.txt' %}

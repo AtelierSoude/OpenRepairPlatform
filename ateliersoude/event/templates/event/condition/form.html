@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+
+
+{% block content %}
+  {% url "user:organization_detail" organization.pk organization.slug  as organization_url %}
+  {% if condition %}
+    {% include "breadcrumb.html" with current=condition.name|add:" - Mise à jour" first_parent_url=organization_url first_parent_text=organization %}
+  {% else %}
+    {% include "breadcrumb.html" with current="Création d'une condition" first_parent_url=organization_url first_parent_text=organization %}
+  {% endif %}
+
+  <div class="jumbotron jumbotron-fluid">
+    <div class="container">
+      <h1 class="display-4">
+        {% if condition %}
+          Mise à jour de '{{ condition.name }}'
+        {% else %}
+          Création d'une nouvelle Condition
+        {% endif %}
+      </h1>
+    </div>
+  </div>
+  <section class="container mt-4">
+    <div class="card p-3">
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <div class="form-group p-2">
+          <button type="submit" class="btn btn-success w-100 p-3">Valider</button>
+        </div>
+      </form>
+    </div>
+  </section>
+{% endblock %}
+
+{% block extra_js %}
+  {{ form.media }}
+{% endblock %}

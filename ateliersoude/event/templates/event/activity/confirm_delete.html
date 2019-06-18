@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  {% url "event:activity_list" as activity_list_url %}
+  {% url "event:activity_detail" activity.pk activity.slug as activity_detail_url %}
+  {% include "breadcrumb.html" with current="Suppression" second_parent_url=activity_list_url second_parent_text="Activités" first_parent_url=activity_detail_url first_parent_text=activity %}
+  <div class="jumbotron jumbotron-fluid">
+    <div class="container">
+      <h1 class="display-4">
+        Suppression de '{{ activity }}'
+      </h1>
+    </div>
+  </div>
+  <section class="container">
+    <p>
+      <i class="fa fa-exclamation-triangle"></i>
+      Vous êtes sur le point de supprimer l'activité <code>'{{ activity }}'</code> reliée à l'association <code>'{{ activity.organization }}'</code>. Êtes-vous certain de votre choix ?
+    </p>
+    <form method="post">{% csrf_token %}
+      {{ form.as_p }}
+      <button class="btn btn-danger" type="submit">
+        <i class="fa fa-trash"></i>
+        Oui je suis sûr
+      </button>
+      <a class="btn btn-success" href="{% url 'event:activity_detail' activity.pk activity.slug %}">
+        <i class="fa fa-arrow-left"></i>
+        Non, revenir
+      </a>
+    </form>
+  </section>
+{% endblock %}

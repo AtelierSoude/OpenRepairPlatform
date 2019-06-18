@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+
+
+{% block content %}
+  {% url "event:activity_list" as activity_list_url %}
+  {% if activity %}
+    {% url "event:activity_detail" activity.pk activity.slug as activity_detail_url %}
+    {% include "breadcrumb.html" with current="Mise à jour" second_parent_url=activity_list_url second_parent_text="Activités" first_parent_url=activity_detail_url first_parent_text=activity %}
+  {% else %}
+    {% include "breadcrumb.html" with current="Création" first_parent_url=activity_list_url first_parent_text="Activités" %}
+  {% endif %}
+  <div class="jumbotron jumbotron-fluid">
+    <div class="container">
+      <h1 class="display-4">
+        {% if activity %}
+          Mise à jour de '{{ activity.name }}'
+        {% else %}
+          Création d'une nouvelle activité
+        {% endif %}
+      </h1>
+    </div>
+  </div>
+  <section class="container mt-4">
+    <div class="card p-3">
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <div class="form-group p-2">
+          <button type="submit" class="btn btn-success w-100 p-3">Valider</button>
+        </div>
+      </form>
+    </div>
+  </section>
+{% endblock %}
+
+{% block extra_js %}
+  {{ form.media }}
+{% endblock %}

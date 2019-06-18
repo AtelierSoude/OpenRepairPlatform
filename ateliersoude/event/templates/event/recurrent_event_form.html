@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% load assets %}
+
+{% block extra_css %}
+  {% assets "css_create_edit_event" %}
+    <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet"/>
+  {% endassets %}
+{% endblock %}
+
+{% block content %}
+  <div class="jumbotron jumbotron-fluid">
+    <div class="container">
+      <h1 class="display-4">
+        {{ orga }} -
+        Création d'un nouvel évènement récurrent
+      </h1>
+    </div>
+  </div>
+  <section class="container mt-4">
+    <div class="card p-3">
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <div class="form-group p-2">
+          <button type="submit" class="btn btn-success w-100 p-3">Valider</button>
+        </div>
+      </form>
+    </div>
+  </section>
+{% endblock %}
+
+{% block extra_js %}
+  {% assets "js_recurrent_event" %}
+    <script src="{{ ASSET_URL }}"></script>
+  {% endassets %}
+{% endblock %}

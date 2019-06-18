@@ -1,0 +1,184 @@
+{% extends 'base.html' %}
+{% load assets %}
+
+{% load app_filters %}
+{% load thumbnail %}
+
+{% block extra_css %}
+  {% assets "css_detail_user" %}
+    <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet"/>
+  {% endassets %}
+{% endblock %}
+
+{% block content %}
+  {% url "user:user_list" as user_list_url %}
+  {% include "breadcrumb.html" with current=object first_parent_url=user_list_url first_parent_text="Communauté" %}
+
+  <div class="jumbotron jumbotron-fluid">
+    <div class="container">
+      <h1>{{ object }}</h1>
+      {% if request.user.pk == object.pk and not object.first_name or not object.last_name or not object.street_address %}
+        <div class="alert alert-warning" role="alert">
+          Pour devenir membre d'une organisation, vous devez renseigner votre Nom, Prénom
+          et Adresse postale.
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="row justify-content-md-center">
+      <div class="col-md-10">
+        <div class="row">
+          <ul class="list-group">
+            {% for organization in object.visitor_organizations.all %}
+              <li class="list-group-item">
+                Visiteur
+                <a href="{% url 'user:organization_detail' organization.pk organization.slug %}">
+                  {{ organization.name }}
+                </a>
+              </li>
+            {% endfor %}
+            {% for organization in object.member_organizations.all %}
+              <li class="list-group-item">
+                Membre
+                <a href="{% url 'user:organization_detail' organization.pk organization.slug %}">
+                  {{ organization.name }}
+                </a>
+              </li>
+            {% endfor %}
+            {% for organization in object.active_organizations.all %}
+              <li class="list-group-item">
+                Membre volontaire
+                <a href="{% url 'user:organization_detail' organization.pk organization.slug %}">
+                  {{ organization.name }}
+                </a>
+              </li>
+            {% endfor %}
+            {% for organization in object.admin_organizations.all %}
+              <li class="list-group-item">
+                Administrateur à
+                <a href="{% url 'user:organization_detail' organization.pk organization.slug %}">
+                  {{ organization.name }}
+                </a>
+              </li>
+            {% endfor %}
+
+            {% if not object.get_organizations %}
+              <p>Ce profil n'est rattaché à aucune organisation</p>
+            {% endif %}
+          </ul>
+        </div>
+        {% if object.pk == request.user.pk %}
+          <div class="row">
+            <a class="mr-3 btn btn-primary" href="{% url "user:user_update" object.pk %}">
+              <i class="fa fa-pencil-square-o 2-xs pt-1"></i>
+              Editer mon profil
+            </a>
+            <a class="btn btn-warning" href="{% url "logout" %}">Deconnexion</a>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+
+
+  <section class="container">
+  <div class="row justify-content-md-center">
+  <section class="col-md-6">
+
+    <div class="card">
+      <div class="card-header text-center">
+        <div class="col-lg">
+          {% if object.avatar_img %}
+            {% thumbnail object.avatar_img "100x100" crop="center" format="PNG" as im %}
+              <img src="{{ im.url }}" class="m-2 rounded-circle"/>
+            {% endthumbnail %}
+          {% else %}
+            <i class="fa fa-user fa-4x m-4 text-primary"></i>
+          {% endif %}
+        </div>
+        <h5 class="mx-auto col-12">
+          {{ object.first_name|capfirst }} {{ object.last_name|capfirst}}
+        </h5>
+      </div>
+      <div class="card-body">
+        <ul class="list-group">
+          <li class="list-group-item">
+            <i class="fa fa-phone pr-2"></i>{{ object.phone_number }}
+          </li>
+          <li class="list-group-item">
+            <i class="fa fa-envelope pr-2"></i>{{ object.email }}
+          </li>
+          <li class="list-group-item">
+            <i class="fa fa-map pr-2"></i>{{ object.street_address }}
+          </li>
+          <li class="list-group-item">
+            <i class="fa fa-birthday-cake pr-2"></i>{{ object.birth_date }}
+          </li>
+          <li class="list-group-item">
+            <i class="fa fa-clock pr-2"></i> Membre depuis le {{ object.date_joined|date:"d F Y" }}
+          </li>
+        </ul>
+      </div>
+    </div>
+
+  </section>
+
+  {% if passed_rendezvous or future_rendezvous %}
+
+    <section class="col-md-6">
+      {% if future_rendezvous %}
+        <h5 class="border-bottom border-gray pb-2">Rendez-vous à venir</h5>
+        <div class="row scrollable">
+          <ul class="list-group w-100">
+            {% for event, status in future_rendezvous %}
+              <li class="list-group-item">
+                <a href="{% url 'event:detail' event.pk event.slug %}">
+                  {{ event.activity.name }} {{ event.date|date:"d F Y" }}
+                </a>
+                {% if status == "organizer" %}
+                <span class="badge badge-pill badge-success">Orga</span>
+                {% else %}
+                  {% if object.pk == request.user.pk %}
+                    {% tokenize user=object event=event action='cancel' as tok %}
+                    <a class="btn btn-error" href="{% url 'event:cancel_reservation' tok %}">
+                      Annuler ma présence
+                    </a>
+                  {% endif %}
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+        <hr>
+      {% endif %}
+
+      <h5 class="border-bottom border-gray pb-2">Rendez-vous passés</h5>
+      <div class="row scrollable">
+        <ul class="list-group w-100">
+          {% for event, status in passed_rendezvous %}
+            <li class="list-group-item">
+              {% if status == "organizer" %}
+                <a href="{% url 'event:detail' event.pk event.slug %}">
+                  {{ event.activity.name }} {{ event.date|date:"d F Y" }}
+                </a>
+                <span class="badge badge-pill badge-success">Orga</span>
+              {% elif status == "absent" %}
+                {{ event.activity.name }} {{ event.date|date:"d F Y" }}
+                <span class="badge badge-pill badge-secondary">Absent</span>
+              {% elif status == "present" %}
+                {{ event.activity.name }} {{ event.date|date:"d F Y" }}
+                <span class="badge badge-pill badge-info">A participé</span>
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </section>
+
+  {% endif %}
+
+
+{% endblock %}

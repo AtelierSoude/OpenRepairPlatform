@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load bootstrap4 assets %}
+
+{% block extra_css %}
+  {% assets "css_autocomplete" %}
+    <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet"/>
+  {% endassets %}
+{% endblock %}
+
+{% block content %}
+  {% url "user:user_list" as user_list_url %}
+  {% if object %}
+    {% url "user:user_detail" object.pk as user_detail_url %}
+    {% include "breadcrumb.html" with current="Mise à jour" second_parent_url=user_detail_url second_parent_text="Communauté" first_parent_url=user_detail_url first_parent_text=object %}
+  {% else %}
+    {% include "breadcrumb.html" with current="Création" first_parent_url=user_list_url first_parent_text="Communauté" %}
+  {% endif %}
+
+  <div class="jumbotron jumbotron-fluid">
+    <div class="container">
+      <h1>Mes informations</h1>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="card p-3">
+      <form method="post" enctype="multipart/form-data">
+        <fieldset>
+          {% csrf_token %}
+          {% bootstrap_form form %}
+          <button type="submit" class="btn btn-primary">Enregistrer</button>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+{% endblock %}
+
+{% block extra_js %}
+  {{ form.media }}
+  {% assets "js_create_edit_user" %}
+    <script src="{{ ASSET_URL }}"></script>
+  {% endassets %}
+{% endblock %}

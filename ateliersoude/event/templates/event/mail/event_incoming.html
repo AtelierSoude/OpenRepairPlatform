@@ -1,0 +1,35 @@
+{{ user }}, <br>
+
+<p>
+  vous avez réservé une place pour {{ event.activity.name }} du {{ event.date_interval_format }}. <br>
+  Le RDV est à '{{ event.location.name }}' ({{ event.location.address }})
+</p>
+
+<p>
+  Tous les détails de l'évènement sont disponibles sur notre site:
+  <a href="{{ event_url }}">
+    {{ event_url }}
+  </a>
+</p>
+
+<p>
+  <b>Rappel de quelques consignes :</b> <br>
+  <br>
+  Pour la réparation, pensez à tester votre appareil chez vous pour vérifier qu'il ne fonctionne toujours pas. <br>
+  Amenez les accessoires nécessaires au fonctionnement de l'appareil (ex: câble d'alimentation, notice, ...). <br>
+  Pas besoin de ramener l'écran de votre PC, on en a sur place. <br>
+  Pour faire vivre l'association, nous demandons à nos adhérents une cotisation de 5€.
+  Sur place nous acceptons les espèces, chèques, cartes bleues ou gonettes. <br>
+  Pour la convivialité, n'hésitez pas à ramener de quoi grignoter ou boire ! :) <br>
+</p>
+
+<p>
+  <b>Nos ateliers ont une capacité de places limitée.</b><br>
+  <br>
+  Si vous ne pouvez finalement pas venir à la date prévue, nous vous serions reconnaissant de nous
+  en faire part en cliquant sur le lien suivant : <a href="{{ cancel_url }}">{{ cancel_url }}</a>,
+  et choisir une autre date si vous le souhaitez.<br>
+
+</p>
+
+{% include 'event/mail/footer.html' %}

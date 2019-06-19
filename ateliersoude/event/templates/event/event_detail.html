@@ -179,6 +179,16 @@
           <div class="card">
             <div class="card-body text-center p-4">
               <a href="{% url "user:user_detail" user.pk %}" class="card-link">
+                  <br>
+                  <span class="badge badge-pill badge-primary">
+                    {% filter_orga queryset=user.memberships organization=event.organization as membership %}
+                    {% if membership %}
+                      {{ membership.current_contribution }}
+                    {% else %}
+                      0
+                    {% endif %}
+                    €
+                  </span>
                 {% if user.avatar_img %}
                   {% thumbnail user.avatar_img "50x50" crop="center" format="PNG" as im %}
                     <img src="{{ im.url }}" class="m-2 rounded-circle"/>
@@ -186,16 +196,7 @@
                   {% else %}
                     <i class="fa fa-user fa-2x m-4 text-primary"></i><br>
                 {% endif %}
-                {{ user }}<br>
-                <span class="badge badge-pill badge-primary">
-                  {% filter_orga queryset=user.memberships organization=event.organization as membership %}
-                  {% if membership %}
-                    {{ membership.current_contribution }}
-                  {% else %}
-                    0
-                  {% endif %}
-                  €
-                </span>
+                {{ user }}
                 <br>
               </a>
               {% if event.has_started and is_active %}
@@ -213,6 +214,20 @@
           <div class="card border border-success">
             <div class="card-body text-center p-4">
               <a href="{% url "user:user_detail" participation.user.pk %}" class="card-link"> 
+                  <span class="badge badge-pill badge-primary">
+                      {% filter_orga queryset=participation.user.memberships organization=event.organization as membership %}
+                      {% if membership %}
+                        {{ membership.current_contribution }}
+                      {% else %}
+                        0
+                      {% endif %}
+                      €
+                    </span>
+                    {% if participation.amount > 0 %}
+                      <span class="badge badge-pill badge-secondary">
+                      + {{ participation.amount }}€
+                      </span>
+                    {% endif %}
                 {% if participation.avatar_img %}
                   {% thumbnail participation.avatar_img "50x50" crop="center" format="PNG" as im %}
                     <img src="{{ im.url }}" class="m-2 rounded-circle"/>
@@ -221,20 +236,6 @@
                     <i class="fa fa-user fa-2x m-4 text-primary"></i><br>
                   {% endif %}
                 {{ participation.user }}
-                <span class="badge badge-pill badge-primary">
-                  {% filter_orga queryset=participation.user.memberships organization=event.organization as membership %}
-                  {% if membership %}
-                    {{ membership.current_contribution }}
-                  {% else %}
-                    0
-                  {% endif %}
-                  €
-                </span>
-                {% if participation.amount > 0 %}
-                  <span class="badge badge-pill badge-secondary">
-                  + {{ participation.amount }}€
-                  </span>
-                {% endif %}
                 <br>
               </a>
               {% if is_active %}
@@ -276,10 +277,11 @@
             {% endif %}
     
       {% if is_active %}
+        {% if event.available_seats > 0 %}
+          {% include "event/register.html" with event=event admin_text="Inscrire" %}
+        {% endif %}
         {% if event.has_started %}
           {% include "event/modal_more_info.html" with form=present_form admin_text="Présent" %}
-        {% else %}
-          {% include "event/register.html" with event=event admin_text="Inscrire" %}
         {% endif %}
       {% endif %}
       </div>

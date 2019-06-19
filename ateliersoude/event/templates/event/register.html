@@ -1,7 +1,7 @@
 {% load app_filters bootstrap4 %}
 
 {% if admin_text or not request.user.is_authenticated %}
-  <button class="btn btn-success" data-toggle="modal" data-target="#reservation{{ event.pk }}">
+  <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#reservation{{ event.pk }}">
   {% if admin_text %}
   <i class="fa fa-plus"></i>
     {{ admin_text }}

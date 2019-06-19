@@ -4,7 +4,7 @@
 {% block content %}
   {% include "breadcrumb.html" with current="Évènements" %}
 
-  <section class="container-fluid position-relative" style="z-index: 10000">
+  <section class="container-fluid position-sticky sticky-top" style="top:70px">
       <div class="col-lg bg-white">
         <div class="collapse" id="search">
           <form method="GET" class="form-row">
@@ -28,7 +28,7 @@
   </section>
 
   <section class="container mt-5">
-      <div class="row col-md-12">
+      <div class="col-md-12">
         <div class="card-columns">
         {% include "event/event_cards.html" with event_list=event_list %}
         </div>

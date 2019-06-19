@@ -16,9 +16,12 @@
   <link rel="stylesheet" href="{% static 'fontawesome/css/fontawesome-all.min.css' %}">
 
   <!-- Bootstrap -->
-  <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+ <!-- <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}"> -->
 
   <!-- Custom -->
+  {% assets "css_custom_bootstrap" %}
+  <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet"/>
+  {% endassets %}
   {% assets "css_ateliersoude" %}
     <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet"/>
   {% endassets %}

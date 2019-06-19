@@ -1,4 +1,5 @@
 /* éléments généraux */
+@import url('https://fonts.googleapis.com/css?family=Inconsolata&display=swap');
 
 .container-fluid{
   padding: 0;
@@ -35,26 +36,31 @@ h1, h2, h3 {
   color: gray;
   text-decoration: none;
 }
-.navbar ul li {
+.navbar ul li a{
   margin-left: 1em;
+  color : #fee56e !important;
 }
 
 /* cards */
 
 .card {
   border-radius: 0;
+  border : 0px;
   a.card-link {
     text-decoration: none;
     color: inherit;
+  }
+  small {
+    color:initial;
   }
 }
 
 /* breadcrumb (chemin navigation) */
 .breadcrumb{
   font-size: .8em;
-  margin-bottom: 0;
+  margin-bottom: 0 !important;
   border-width: 0;
-  background-color: white;
+  background-color: white !important;
 }
 
 /* leaflet reset style */
@@ -67,7 +73,10 @@ h1, h2, h3 {
 
 .modal-content {
   border-radius: 0;
+  margin-top: 20%;
   padding: 2em;
+  z-index:10000 !important;
+  position:relative !important;
 }
 
 /* sizes */
@@ -75,4 +84,13 @@ h1, h2, h3 {
 .square-2 {
   width: 2em;
   height: 2em;
+}
+
+.alert{
+  position: fixed !important;
+  top: 100px;
+  z-index: 10000;
+  box-shadow: 0px 10px 100px black;
+  right: 20px;
+  left: 20px;
 }

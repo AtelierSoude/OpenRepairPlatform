@@ -1,7 +1,7 @@
 {% load app_filters bootstrap4 %}
 
 {% if admin_text or not request.user.is_authenticated %}
-  <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#reservation{{ event.pk }}">
+  <button class="btn btn-success" data-toggle="modal" data-target="#reservation{{ event.pk }}">
   {% if admin_text %}
   <i class="fa fa-plus"></i>
     {{ admin_text }}
@@ -33,9 +33,9 @@
 {% else %}
   {% if request.user in event.registered.all %}
     {% tokenize user=request.user event=event action='cancel' as tok %}
-    <a href="{% url 'event:cancel_reservation' tok %}" class="btn btn-warning btn-sm">Je ne participe plus</a>
+    <a href="{% url 'event:cancel_reservation' tok %}" class="btn btn-warning">Je ne participe plus</a>
   {% elif request.user not in event.presents.all and request.user not in event.organizers.all %}
     {% tokenize user=request.user event=event action='book' as tok %}
-    <a href="{% url 'event:book' tok %}" class="btn btn-success btn-sm">Je participe !</a>
+    <a href="{% url 'event:book' tok %}" class="btn btn-success">Je participe !</a>
   {% endif %}
 {% endif %}

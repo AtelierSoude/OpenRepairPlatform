@@ -96,7 +96,11 @@
               <img src="{{ im.url }}" class="m-2 rounded-circle"/>
             {% endthumbnail %}
           {% else %}
-            <i class="fa fa-user fa-4x m-4 text-primary"></i>
+            <div class="avatar-circle">
+              <span class="initials">
+                  {{ object.first_name|slice:1 }}{{ object.last_name|slice:1}}
+              </span>
+            </div>
           {% endif %}
         </div>
         <h5 class="mx-auto col-12">

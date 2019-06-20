@@ -145,8 +145,9 @@ class EventView(PermissionOrgaContextMixin, DetailView):
 
 class EventListView(ListView):
     model = Event
+    context_object_name = "event_list"
     template_name = "event/event_list.html"
-    paginate_by = 18
+    paginate_by = 3
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

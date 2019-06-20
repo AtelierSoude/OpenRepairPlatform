@@ -1,6 +1,12 @@
 from django_assets import Bundle, register
 
 # SCSS
+
+scss_custom_bootstrap = Bundle(
+    "scss/custom_bootstrap.scss",
+    filters="scss",
+    output="css/custom_bootstrap.css",
+)
 scss_atelier_soude = Bundle(
     "scss/ateliersoude.scss", filters="scss", output="css/ateliersoude.css"
 )
@@ -33,7 +39,7 @@ scss_detail_user = Bundle(
     filters="scss",
     output="css/detail_user.css",
 )
-sss_create_edit_event = Bundle(
+scss_create_edit_event = Bundle(
     "scss/lib/flatpickr.scss",
     filters="scss",
     output="css/create_edit_event.css",
@@ -45,6 +51,11 @@ scss_detail_organization = Bundle(
 )
 
 # CSS minify
+css_custom_bootstrap = Bundle(
+    scss_custom_bootstrap,
+    filters="cssrewrite,cssmin",
+    output="css/custom_bootstrap.min.css",
+)
 css_atelier_soude = Bundle(
     scss_atelier_soude,
     filters="cssrewrite,cssmin",
@@ -74,7 +85,7 @@ css_detail_user = Bundle(
     output="css/detail_user.min.css",
 )
 css_create_edit_event = Bundle(
-    sss_create_edit_event,
+    scss_create_edit_event,
     filters="cssrewrite,cssmin",
     output="css/create_edit_event.min.css",
 )
@@ -154,6 +165,7 @@ js_infinite = Bundle(
     output="js/user/infinite.min.js"
 )
 
+register("css_custom_bootstrap", css_custom_bootstrap)
 register("css_ateliersoude", css_atelier_soude)
 register("css_places", css_places)
 register("css_autocomplete", css_auto_complete)

@@ -1,9 +1,14 @@
 {% extends 'base.html' %}
 {% load assets l10n app_filters %}
+{% load thumbnail %}
+
 
 {% block extra_css %}
   {% assets "css_detail_event" %}
-    <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet"/>
+  <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet"/>
+  {% endassets %}
+  {% assets "css_detail_user" %}
+  <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet"/>
   {% endassets %}
 {% endblock %}
 
@@ -50,7 +55,7 @@
             {% if event.remaining_seats == 0 %}
               <span class="badge badge-warning badge-pill">Complet</span>
             {% else %}
-              Encore
+              Encore  
               <span class="badge badge-info badge-pill">{{ event.remaining_seats }}
                 </span> places disponibles
             {% endif %}
@@ -182,7 +187,17 @@
           <div class="card">
             <div class="card-body text-center p-4">
               <a href="{% url "user:user_detail" user.pk %}" class="card-link">
-                <i class="fa fa-user fa-4x"></i><br>
+                {% if user.avatar_img %}
+                  {% thumbnail user.avatar_img "100x100" crop="center" format="PNG" as im %}
+                    <img src="{{ im.url }}" class="m-2 rounded-circle"/>
+                  {% endthumbnail %}
+                {% else %}
+                  <div class="avatar-circle">
+                    <span class="initials">
+                        {{ user.first_name|slice:1|capfirst }}{{ user.last_name|slice:1|capfirst}}
+                    </span>
+                  </div>
+                {% endif %}<br>
                 {{ user }}
                 <span class="badge badge-pill badge-primary">
                   {% filter_orga queryset=user.memberships organization=event.organization as membership %}

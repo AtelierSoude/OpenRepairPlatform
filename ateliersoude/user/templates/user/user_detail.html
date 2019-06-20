@@ -98,7 +98,7 @@
           {% else %}
             <div class="avatar-circle">
               <span class="initials">
-                  {{ object.first_name|slice:1 }}{{ object.last_name|slice:1}}
+                  {{ object.first_name|slice:1|capfirst }}{{ object.last_name|slice:1|capfirst }}
               </span>
             </div>
           {% endif %}

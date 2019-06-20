@@ -54,8 +54,8 @@
                     {% else %}
                       <i class="fa fa-user fa-4x m-4 text-primary"></i>
                     {% endif %} -->
-                    {% if object.avatar_img %}
-                      {% thumbnail object.avatar_img "100x100" crop="center" format="PNG" as im %}
+                    {% if user.avatar_img %}
+                      {% thumbnail user.avatar_img "100x100" crop="center" format="PNG" as im %}
                         <img src="{{ im.url }}" class="m-2 rounded-circle"/>
                       {% endthumbnail %}
                     {% else %}

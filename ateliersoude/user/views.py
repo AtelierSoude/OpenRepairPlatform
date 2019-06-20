@@ -256,8 +256,15 @@ class UserDetailView(DetailView):
 
 class UserListView(ListView):
     model = CustomUser
+    context_object_name = "users"
     template_name = "user/user_list.html"
-    queryset = CustomUser.objects.filter(is_superuser=False, is_visible=True)
+    paginate_by = 9
+    queryset = (
+        CustomUser
+        .objects
+        .filter(is_superuser=False, is_visible=True)
+        .order_by("last_name")
+    )
 
 
 class OrganizationDetailView(PermissionOrgaContextMixin, DetailView):

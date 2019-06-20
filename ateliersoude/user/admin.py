@@ -44,6 +44,7 @@ class CustomUserAdmin(UserAdmin, SimpleHistoryAdmin):
             },
         ),
     )
+    search_fields = ('first_name', 'last_name', 'email')
 
 
 admin.site.register(CustomUser, CustomUserAdmin)

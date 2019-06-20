@@ -36,13 +36,9 @@
       </h6>
       
       <h6 class="text-muted">
-          {% if event.remaining_seats == 0 %}
-            <span class="badge badge-warning badge-pill">Complet</span>
-          {% else %}
             Encore
             <span class="badge badge-info badge-pill">{{ event.remaining_seats }}
               </span> places disponibles
-          {% endif %}
           <hr>
         </h6>
 

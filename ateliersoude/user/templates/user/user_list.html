@@ -7,6 +7,15 @@
   <script src="{% static 'js/lib/jquery.waypoints.js' %}"></script>
   <script src="{% static 'js/lib/infinite.min.js' %}"></script>
   <script>
+    function background_function() {
+      $(".avatar-circle").each(function (index, element) {
+        if ($(this).css("background-color") === "rgb(0, 139, 139)") {
+          var randomColor = "#"+((1<<24)*Math.random()|0).toString(16);
+          $(this).css("background-color", randomColor);
+        }
+      });
+    }
+    background_function()
     var infinite = new Waypoint.Infinite({
       element: $('.infinite-container')[0],
       onBeforePageLoad: function () {
@@ -14,12 +23,7 @@
       },
       onAfterPageLoad: function ($items) {
         $('.loading').hide();
-        $(".avatar-circle").each(function (index, element) {
-          if ($(this).css("background-color") === "rgb(0, 139, 139)") {
-            var randomColor = "#"+((1<<24)*Math.random()|0).toString(16);
-            $(this).css("background-color", randomColor);
-          }
-        });
+        background_function();
       }
     });
   </script>

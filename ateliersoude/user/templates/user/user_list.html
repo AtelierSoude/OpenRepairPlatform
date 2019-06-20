@@ -14,6 +14,12 @@
       },
       onAfterPageLoad: function ($items) {
         $('.loading').hide();
+        $(".avatar-circle").each(function (index, element) {
+          if ($(this).css("background-color") === "rgb(0, 139, 139)") {
+            var randomColor = "#"+((1<<24)*Math.random()|0).toString(16);
+            $(this).css("background-color", randomColor);
+          }
+        });
       }
     });
   </script>
@@ -28,9 +34,6 @@
 {% block pagetitle %}Blog{% endblock %}
 
 {% block content %}
-  <!-- Infinite scroll -->
-  <script src="{% static 'js/lib/jquery.waypoints.js' %}"></script>
-  <script src="{% static 'js/lib/infinite.min.js' %}"></script>
 
   {% include "breadcrumb.html" with current="Communauté" %}
 
@@ -41,75 +44,7 @@
 </div>
 
   <div class="infinite-container row">
-    {% for user in users %}
-      <div class="infinite-item col-lg-3 col-xs-12">
-          <div class="card mx-2 mb-2">
-              <a class="card-link" href="{{ user.get_absolute_url }}">
-                <div class="row text-center" id="square-{{ user.pk }}">
-                  <div class="col-12">
-                    <!-- {% if user.avatar_img %}
-                      {% thumbnail user.avatar_img "100x100" crop="center" format="PNG" as im %}
-                        <img src="{{ im.url }}" class="m-2 rounded-circle"/>
-                      {% endthumbnail %}
-                    {% else %}
-                      <i class="fa fa-user fa-4x m-4 text-primary"></i>
-                    {% endif %} -->
-                    {% if user.avatar_img %}
-                      {% thumbnail user.avatar_img "100x100" crop="center" format="PNG" as im %}
-                        <img src="{{ im.url }}" class="m-2 rounded-circle"/>
-                      {% endthumbnail %}
-                    {% else %}
-                      <div class="avatar-circle">
-                        <span class="initials">
-                            {{ user.first_name|slice:1|capfirst }}{{ user.last_name|slice:1|capfirst}}
-                        </span>
-                      </div>
-                    {% endif %}
-                  </div>
-                  <div class="col-12">
-                    <h5 class="mx-auto col-12 ">
-                        {{ user.first_name|capfirst }} {{ user.last_name|capfirst}}
-                    </h5>
-                  </div>
-                </div>
-              </a>
-              <ul class="list-group list-group-flush">
-                {% if user.member_organizations.all %}
-                  <li class="list-group-item">
-                    <small> 
-                    <i>
-                      est membre de : 
-                      {{ user.member_organizations.all|join:", " }}
-                    </i>
-                    </small>
-                  </li>
-                {% endif %}
-                {% if user.active_organizations.all %}
-                  <li class="list-group-item">
-                    <small> 
-                    <i>
-                      est volontaire de :
-                      {{ user.active_organizations.all|join:", " }}
-                      {% if user.active_organizations.all and user.volunteer_organizations.all %}, {% endif %}
-                      {{ user.volunteer_organizations.all|join:", " }}
-                    </i>
-                    </small>
-                  </li>
-                {% endif %}
-                {% if user.admin_organizations.all %}
-                  <li class="list-group-item">
-                    <small> 
-                    <i>
-                      est administrateur de : 
-                      {{ user.admin_organizations.all|join:", " }}
-                    </i>
-                    </small>
-                  </li>
-                {% endif %}
-              </ul>
-            </div>
-      </div>
-    {% endfor %}
+    {% include "user/user_card.html" with users=users %}
   </div>
 
   <div class="loading" style="display: none;">

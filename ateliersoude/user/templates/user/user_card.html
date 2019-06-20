@@ -1,7 +1,15 @@
 {% load thumbnail %}
+{% load assets %}
+
+{% block extra_css %}
+  {% assets "css_detail_user" %}
+    <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet"/>
+  {% endassets %}
+{% endblock %}
 
 {% for user in users %}
-  <div class="card">
+<div class="infinite-item col-lg-3 col-xs-12">
+  <div class="card mx-2 mb-2">
     <a class="card-link" href="{{ user.get_absolute_url }}">
       <div class="row text-center" id="square-{{ user.pk }}">
         <div class="col-12">
@@ -10,7 +18,11 @@
               <img src="{{ im.url }}" class="m-2 rounded-circle"/>
             {% endthumbnail %}
           {% else %}
-            <i class="fa fa-user fa-4x m-4 text-primary"></i>
+            <div class="avatar-circle">
+              <span class="initials">
+                  {{ user.first_name|slice:1|capfirst }}{{ user.last_name|slice:1|capfirst }}
+              </span>
+            </div>
           {% endif %}
         </div>
         <div class="col-12">
@@ -55,6 +67,7 @@
       {% endif %}
     </ul>
   </div>
+</div>
 {% empty %}
   <div>No users yet.</div>  
 {% endfor %}

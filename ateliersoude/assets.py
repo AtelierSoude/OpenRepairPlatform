@@ -143,6 +143,16 @@ js_detail_organization = Bundle(
     filters="jsmin",
     output="js/user/detail_organization.min.js",
 )
+js_waypoints = Bundle(
+    "js/lib/jquery.waypoints.js",
+    filters="jsmin",
+    output="js/user/waypoints.min.js"
+)
+js_infinite = Bundle(
+    "js/lib/infinite.min.js",
+    filters="jsmin",
+    output="js/user/infinite.min.js"
+)
 
 register("css_ateliersoude", css_atelier_soude)
 register("css_places", css_places)
@@ -161,3 +171,5 @@ register("js_detail_event", js_detail_event)
 register("js_create_edit_event", js_create_edit_event)
 register("js_recurrent_event", js_recurrent_event)
 register("js_detail_organization", js_detail_organization)
+register("js_waypoints", js_waypoints)
+register("js_infinite", js_infinite)

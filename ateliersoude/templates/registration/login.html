@@ -2,6 +2,7 @@
 
 {% load bootstrap4 %}
 {% load thumbnail %}
+{% load staticfiles %}
 
 {% block content %}
  <!--{% include "breadcrumb.html" with current="Connexion" %} -->
@@ -16,13 +17,23 @@
         <form method="post" action="{% url 'login' %}" class="form">
           {% csrf_token %}
           {% bootstrap_form form %}
+          <div class="mt-4 text-center">
+            <a href="{% url 'password_reset' %}">Mot de passe oublié ?</a>
+          </div>
           <div class="form-group p-2">
             <button type="submit" class="btn btn-success btn-block">
               Connexion
             </button>
-            <div class="mt-4 text-center">
-                <a href="{% url 'password_reset' %}">Mot de passe oublié ?</a>
+            <div class="row justify-content-md-center">
+              <div class="card shadow mt-3 col-lg">
+                <a href="{% url 'password_reset' %}">Vous avez déjà participé à un évènement ? Inscrivez-vous ici.</a>
+              </div>
+          </div>
+          <div class="row justify-content-md-center">
+            <div class="card mt-2 col-lg">
+                <a href="{% url 'user:user_create' %}">Pas de compte ET vous n'avez jamais participé à un évènement sur ce site ? </a>
             </div>
+          </div>
           </div>
         </form>
       </div>
@@ -30,17 +41,7 @@
   </div>  
   </div>
   <div class="col-md-8">
-    Image
-    <div class="row justify-content-md-center">
-        <div class="card shadow border border-success mb-2 col-lg">
-          <a href="{% url 'password_reset' %}">Vous avez déjà participé à un évènement ? Inscrivez-vous ici.</a>
-        </div>
-    </div>
-    <div class="row justify-content-md-center">
-      <div class="card shadow border border-secondary mt-2 col-lg">
-          <a href="{% url 'user:user_create' %}">Pas de compte ET vous n'avez jamais participé à un évènement sur ce site ? </a>
-      </div>
-    </div>
+    <img class='img-fluid' src="{% static "img/login_img.png" %}" alt="Reparons.org"/>
   </div>
 </section>
 

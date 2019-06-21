@@ -1,63 +1,63 @@
 {% extends 'base.html' %}
+{% load static %}
 {% load bootstrap4 app_filters %}
+
+{% block extra_js %}
+  <script src="{% static 'js/lib/jquery.waypoints.js' %}"></script>
+  <script src="{% static 'js/lib/infinite.min.js' %}"></script>
+  <script>
+    var infinite = new Waypoint.Infinite({
+      element: $('.infinite-container')[0],
+      onBeforePageLoad: function () {
+        $('.loading').show();
+      },
+      onAfterPageLoad: function ($items) {
+        $('.loading').hide();
+      }
+    });
+  </script>
+{% endblock %}
 
 {% block content %}
   {% include "breadcrumb.html" with current="Évènements" %}
 
-  <section class="container">
-    <div class="row col-md-12 mb-2 mt-2">
-      <div class="card w-100">
-        <div class="card-body">
-          <h5 class="card-title">Filtrer les évènements</h5>
-          <div class="card-text">
-            <form method="GET" class="form-row">
-              {% bootstrap_form search_form  %}
-              <br>
-              <div class="form-group p-2 col mt-auto">
-                <button type="submit" class="btn btn-success btn-block">
-                  <i class="fa fa-search"></i>
-                  Lancer la recherche
-                </button>
-              </div>
-            </form>
-          </div>
+  <section class="container-fluid position-sticky sticky-top" style="top:70px">
+      <div class="col-lg bg-white">
+        <div class="collapse" id="search">
+          <form method="GET" class="form-row">
+            {% bootstrap_form search_form  %}
+            <br>
+            <div class="form-group p-2 col mt-auto">
+              <button type="submit" class="btn btn-primary btn-block">
+                <span class="">Lancer la recherche</span>
+              </button>
+            </div>
+          </form>
         </div>
-      </div>
+      <a class="text-center d-block" 
+        data-toggle="collapse" href="#search" role="button" aria-expanded="false" aria-controls="search">
+       Faire une recherche 
+       <span class="btn btn-secondary">
+          <i class="fa fa-search"></i>
+       </span>
+      </a>
     </div>
+  </section>
 
-    <div class="row col-md-12">
-      <div class="card-columns">
+  <section class="container mt-5">
+      <div class="col-md-12 row">
+        <div class="card-columns infinite-container">
         {% include "event/event_cards.html" with event_list=event_list %}
-      </div>
+        </div>
       {% if not event_list %}
         Aucun évènement trouvé pour vos critères de recherche
       {% endif %}
     </div>
-
-    {% if is_paginated %}
-      <nav aria-label="Event navigation" class="mt-4">
-        <ul class="pagination justify-content-center">
-          <li class="page-item{% if paginator.has_previous %} disabled{% endif %}">
-            <a class="page-link" href="{% url 'event:list' %}?{% query_transform request page=page_obj.number|add:-1 %}" tabindex="-1">
-              Previous
-            </a>
-          </li>
-
-          {% for page in paginator.page_range %}
-            <li class="page-item{% if page == page_obj.number %} active{% endif %}">
-              <a class="page-link" href="{% url 'event:list' %}?{% query_transform request page=page %}">
-                {{ page }}
-              </a>
-            </li>
-          {% endfor %}
-
-          <li class="page-item{% if paginator.has_next %} disabled{% endif %}">
-            <a class="page-link" href="{% url 'event:list' %}?{% query_transform request page=page_obj.number|add:1 %}">
-              Next
-            </a>
-          </li>
-        </ul>
-      </nav>
-    {% endif %}
   </section>
+
+  <div class="loading" style="display: none;"></div>
+
+  {% if page_obj.has_next %}
+    <a class="infinite-more-link" href="?page={{ page_obj.next_page_number }}">Affichage en cours...</a>
+  {% endif %}
 {% endblock %}

@@ -1,49 +1,66 @@
 {% load thumbnail %}
 
 {% for event in event_list %}
-  <div class="card">
+
+<div class="card infinite-item
+  {% if request.user in event.registered.all or request.user in event.presents.all or request.user in event.organizers.all %}
+  border-success border shadow
+  {% endif %}
+  ">
+  <a class="" href="{% url 'event:detail' event.pk event.slug %}">
+
+          
+      <h5 class="text-muted position-absolute" style="top:05px; right:05px">
+          {% if request.user in event.registered.all or request.user in event.presents.all %}
+            <span class="badge badge-success badge-pill">Inscrit</span>
+          {% endif %}
+          {% if request.user in event.organizers.all %}
+          <span class="badge badge-success badge-pill">Organisateur</span>
+          {% endif %}
+          {% if event.remaining_seats <= 0 %}
+          <span class="badge badge-danger badge-pill">Complet</span>
+          {% endif %}
+      </h5>
+
     {% if event.activity.picture %}
       {% thumbnail event.activity.picture "400" format="PNG" as im %}
         <img class="card-img-top rounded-0" src="{{ im.url }}"/>
       {% endthumbnail %}
     {% endif %}
     <div class="card-body">
-      <h2 class="card-title">{{ event.activity.name }}</h2>
+      <h3 class="card-title">{{ event.activity.name }}</h3>
       <h6 class="card-subtitle text-muted mb-2">
         <small>
           {{ event.date_interval_format }}
         </small>
       </h6>
-      <h6 class="card-subtitle text-muted mb-2">
-        <small>
-          {% if event.remaining_seats <= 0 %}
-          <span class="badge badge-warning badge-pill">Complet</span>
-          {% else %}
-          Encore
-          <span class="badge badge-info badge-pill">{{ event.remaining_seats }}
-          </span> places disponibles
-          {% endif %}
-        </small>
-      </h6>
+      
+      <h6 class="text-muted">
+            Encore
+            <span class="badge badge-info badge-pill">{{ event.remaining_seats }}
+              </span> places disponibles
+          <hr>
+        </h6>
 
+      <small>
       {{ event.activity.description | safe | truncatewords_html:10 }}
-      <p>
-      <a class="btn btn-info btn-sm" href="{% url 'event:detail' event.pk event.slug %}">
-        <i class="fa fa-eye"></i>
-        Voir l'évènement
-      </a>
+      </small>
+    </a>
+
+      <footer class="text-muted text-center">
+
       {% if event.remaining_seats > 0 %}
         {% include "event/register.html" with event=event %}
       {% endif %}
-      </p>
-      <footer class="text-muted">
+      
+      <br>
         {% if event.organization.picture %}
         {% thumbnail event.organization.picture "30x30" crop="left" format="PNG" as im %}
           <img class="img-fluid rounded-circle square-2" src="{{ im.url }}" alt="organization img">
         {% endthumbnail %}
         {% endif %}
-        Organisé par '{{ event.organization }}' à '{{ event.location.name }}'
+        <small>Organisé par '{{ event.organization }}' à '{{ event.location.name }}'</small>
       </footer>
     </div>
-  </div>
+</div>
 {% endfor %}

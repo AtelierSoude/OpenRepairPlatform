@@ -1,4 +1,6 @@
 {% block menu %}
+{% load thumbnail %}
+
 
 <header class="position-sticky sticky-top">
   <nav class="navbar navbar-expand-lg">
@@ -32,17 +34,24 @@
     <div class="navbar navbar-expand-lg d-flex justify-content-end">
       {% if not user.is_authenticated %}
 
-        <div class="navbar-brand" >
-        <a class="nav-link mr-3" href="{% url "login" %}">
-          <i class="fa fa-user"></i>
+        <div class="navbar-brand">
+        <a class="nav-link mr-3 btn btn-secondary" href="{% url "login" %}">
+        Se connecter <i class="fa fa-user text-muted"></i>
         </a>
       </div>
 
       {% else %}
 
       <div class="navbar-brand avatar">
-        <a class="nav-link mr-3" href="{{ user.get_absolute_url }}"> {{ user.first_name }}
-          <i class="fa fa-user"></i>
+        <a class="nav-link mr-3" href="{{ user.get_absolute_url }}"> 
+            {% if user.avatar_img %}
+            {% thumbnail user.avatar_img "30x30" crop="center" format="PNG" as im %}
+              <img src="{{ im.url }}" class="rounded-circle"/>
+            {% endthumbnail %}
+          {% else %}
+            <i class="fa fa-user text-primary"></i>
+          {% endif %}
+          {{ user.first_name }}
         </a>
       </div>
 

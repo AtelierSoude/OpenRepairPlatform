@@ -14,175 +14,225 @@
   {% url "user:user_list" as user_list_url %}
   {% include "breadcrumb.html" with current=object first_parent_url=user_list_url first_parent_text="Communauté" %}
 
-  <div class="jumbotron jumbotron-fluid">
+<div class="container-fluid m-0">
+
+  <section class="row p-0">
+    <div class="text-center bg-secondary col-md-3">
+      <div class="pt-5">
+        {% if object.avatar_img %}
+        {% thumbnail object.avatar_img "100x100" crop="center" format="PNG" as im %}
+          <img src="{{ im.url }}" class="m-2 rounded-circle"/>
+        {% endthumbnail %}
+      {% else %}
+        <div class="avatar-circle">
+          <span class="initials">
+              {{ object.first_name|slice:1|capfirst }}{{ object.last_name|slice:1|capfirst }}
+          </span>
+        </div>
+      {% endif %}
+      </div>
+      {% if object.pk == request.user.pk %}
+      <div class="rco">
+        <a class="btn btn-primary" href="{% url "user:user_update" object.pk %}">
+          <i class="fa fa-pencil-square-o 2-xs pt-1"></i>
+          Editer mon profil
+        </a>
+        <a class="btn btn-warning" href="{% url "logout" %}">Deconnexion</a>
+      </div>
+    {% endif %}
+
+  </div>
+
+  <div class="jumbotron jumbotron-fluid col-md-9 mb-0">
+ 
     <div class="container">
       <h1>{{ object }}</h1>
       {% if request.user.pk == object.pk and not object.first_name or not object.last_name or not object.street_address %}
         <div class="alert alert-warning" role="alert">
-          Pour devenir membre d'une organisation, vous devez renseigner votre Nom, Prénom
+          Pour devenir membre d'une organisation, vous devez renseigner votre Nom, Prénom 
           et Adresse postale.
         </div>
       {% endif %}
-    </div>
-  </div>
+        {% for organization in object.visitor_organizations.all %}
+            Visiteur 
+          <a href="{% url 'user:organization_detail' organization.pk organization.slug %}">
+              {{ organization.name }}
+          </a> / 
+          {% endfor %}
+          {% for organization in object.member_organizations.all %}
+            Membre
+          <a href="{% url 'user:organization_detail' organization.pk organization.slug %}">
+              {{ organization.name }}
+          </a> /
+          {% endfor %}
+          {% for organization in object.volunteer_organizations.all %}
+            Membre actif
+          <a href="{% url 'user:organization_detail' organization.pk organization.slug %}">
+              {{ organization.name }}
+          </a> /
+          {% endfor %}
+          {% for organization in object.admin_organizations.all %}
+            Administrateur à 
+          <a href="{% url 'user:organization_detail' organization.pk organization.slug %}">
+              {{ organization.name }}
+          </a> 
+        {% endfor %}
 
-  <div class="container">
-    <div class="row justify-content-md-center">
-      <div class="col-md-10">
-        <div class="row">
-          <ul class="list-group">
-            {% for organization in object.visitor_organizations.all %}
-              <li class="list-group-item">
-                Visiteur
-                <a href="{% url 'user:organization_detail' organization.pk organization.slug %}">
-                  {{ organization.name }}
-                </a>
-              </li>
-            {% endfor %}
-            {% for organization in object.member_organizations.all %}
-              <li class="list-group-item">
-                Membre
-                <a href="{% url 'user:organization_detail' organization.pk organization.slug %}">
-                  {{ organization.name }}
-                </a>
-              </li>
-            {% endfor %}
-            {% for organization in object.active_organizations.all %}
-              <li class="list-group-item">
-                Membre volontaire
-                <a href="{% url 'user:organization_detail' organization.pk organization.slug %}">
-                  {{ organization.name }}
-                </a>
-              </li>
-            {% endfor %}
-            {% for organization in object.admin_organizations.all %}
-              <li class="list-group-item">
-                Administrateur à
-                <a href="{% url 'user:organization_detail' organization.pk organization.slug %}">
-                  {{ organization.name }}
-                </a>
-              </li>
-            {% endfor %}
-
-            {% if not object.get_organizations %}
-              <p>Ce profil n'est rattaché à aucune organisation</p>
-            {% endif %}
-          </ul>
-        </div>
-        {% if object.pk == request.user.pk %}
-          <div class="row">
-            <a class="mr-3 btn btn-primary" href="{% url "user:user_update" object.pk %}">
-              <i class="fa fa-pencil-square-o 2-xs pt-1"></i>
-              Editer mon profil
-            </a>
-            <a class="btn btn-warning" href="{% url "logout" %}">Deconnexion</a>
-          </div>
+        {% if not object.get_organizations %}
+          <p>Ce profil n'est rattaché à aucune organisation</p>
         {% endif %}
-      </div>
-    </div>
+        <br>
+        <br>
+    <small>{{object.bio | safe}}</small>
+  </div>      
+</div>
+</section>  
+
+<section class="row">
+
+  <div class="nav  bg-light flex-column nav-pills p-4 text-left col-md-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+      <a class="nav-link active" id="v-pills-rdv-tab" data-toggle="pill" href="#v-pills-rdv" role="tab" aria-controls="v-pills-rdv" aria-selected="true">Rendez-vous</a>
+      <a class="nav-link" id="v-pills-membership-tab" data-toggle="pill" href="#v-pills-membership" role="tab" aria-controls="v-pills-membership" aria-selected="false">Adhesions</a>
+      <a class="nav-link" id="v-pills-info-tab" data-toggle="pill" href="#v-pills-info" role="tab" aria-controls="v-pills-info" aria-selected="false">Informations</a>
   </div>
 
+<div class="col-md-9 p-4 tab-content" id="v-pills-tabContent">
 
 
-  <section class="container">
-  <div class="row justify-content-md-center">
-  <section class="col-md-6">
-
-    <div class="card">
-      <div class="card-header text-center">
-        <div class="col-lg">
-          {% if object.avatar_img %}
-            {% thumbnail object.avatar_img "100x100" crop="center" format="PNG" as im %}
-              <img src="{{ im.url }}" class="m-2 rounded-circle"/>
-            {% endthumbnail %}
-          {% else %}
-            <div class="avatar-circle">
-              <span class="initials">
-                  {{ object.first_name|slice:1|capfirst }}{{ object.last_name|slice:1|capfirst }}
-              </span>
-            </div>
-          {% endif %}
-        </div>
-        <h5 class="mx-auto col-12">
-          {{ object.first_name|capfirst }} {{ object.last_name|capfirst}}
-        </h5>
-      </div>
-      <div class="card-body">
-        <ul class="list-group">
-          <li class="list-group-item">
-            <i class="fa fa-phone pr-2"></i>{{ object.phone_number }}
-          </li>
-          <li class="list-group-item">
-            <i class="fa fa-envelope pr-2"></i>{{ object.email }}
-          </li>
-          <li class="list-group-item">
-            <i class="fa fa-map pr-2"></i>{{ object.street_address }}
-          </li>
-          <li class="list-group-item">
-            <i class="fa fa-birthday-cake pr-2"></i>{{ object.birth_date }}
-          </li>
-          <li class="list-group-item">
-            <i class="fa fa-clock pr-2"></i> Membre depuis le {{ object.date_joined|date:"d F Y" }}
-          </li>
-        </ul>
-      </div>
-    </div>
-
-  </section>
-
+  
   {% if passed_rendezvous or future_rendezvous %}
+  <div class="tab-pane fade show active" id="v-pills-rdv" role="tabpanel" aria-labelledby="v-pills-rdv-tab">
 
-    <section class="col-md-6">
       {% if future_rendezvous %}
         <h5 class="border-bottom border-gray pb-2">Rendez-vous à venir</h5>
         <div class="row scrollable">
-          <ul class="list-group w-100">
+            <table class="table table-striped table-hover">
             {% for event, status in future_rendezvous %}
-              <li class="list-group-item">
+              <tr>
+                <th scope="col">
                 <a href="{% url 'event:detail' event.pk event.slug %}">
-                  {{ event.activity.name }} {{ event.date|date:"d F Y" }}
+                  {{ event.activity.name }}
                 </a>
+                </th>
+                <td>
+                  {{ event.date|date:"d F Y" }}
+                </td>
                 {% if status == "organizer" %}
-                <span class="badge badge-pill badge-success">Orga</span>
+                <td>
+                  <span class="badge badge-pill badge-success">Orga</span>
+                </td>
                 {% else %}
                   {% if object.pk == request.user.pk %}
                     {% tokenize user=object event=event action='cancel' as tok %}
-                    <a class="btn btn-error" href="{% url 'event:cancel_reservation' tok %}">
-                      Annuler ma présence
-                    </a>
+                    <td>
+                      <button class="btn btn-danger rounded-circle">
+                        <a class="" href="{% url 'event:cancel_reservation' tok %}">
+                          <i class="fa fa-times"></i>
+                        </a>
+                      </button>
+                    </td>
                   {% endif %}
                 {% endif %}
-              </li>
+              </tr>
             {% endfor %}
-          </ul>
+          </table>
         </div>
-        <hr>
       {% endif %}
+      <hr>
 
-      <h5 class="border-bottom border-gray pb-2">Rendez-vous passés</h5>
+    <h5 class="border-bottom border-gray pb-2">Rendez-vous passés</h5>
       <div class="row scrollable">
-        <ul class="list-group w-100">
+          <table class="table table-striped table-hover">
           {% for event, status in passed_rendezvous %}
-            <li class="list-group-item">
-              {% if status == "organizer" %}
-                <a href="{% url 'event:detail' event.pk event.slug %}">
-                  {{ event.activity.name }} {{ event.date|date:"d F Y" }}
-                </a>
-                <span class="badge badge-pill badge-success">Orga</span>
-              {% elif status == "absent" %}
-                {{ event.activity.name }} {{ event.date|date:"d F Y" }}
-                <span class="badge badge-pill badge-secondary">Absent</span>
-              {% elif status == "present" %}
-                {{ event.activity.name }} {{ event.date|date:"d F Y" }}
-                <span class="badge badge-pill badge-info">A participé</span>
-              {% endif %}
-            </li>
+            <tr>
+              <th scope="col">
+              <a href="{% url 'event:detail' event.pk event.slug %}">
+                {{ event.activity.name }}
+              </a>
+              </th>
+              <td>
+                {{ event.date|date:"d F Y" }}
+              </td>
+              <td>
+                {% if status == "organizer" %}
+                  <span class="badge badge-pill badge-success">Orga</span>
+                {% elif status == "absent" %}
+                  <span class="badge badge-pill badge-secondary">Absent</span>
+                {% elif status == "present" %}
+                  <span class="badge badge-pill badge-info">A participé</span>
+                {% endif %}
+              </td>
+            </tr>
           {% endfor %}
-        </ul>
+        </table>
       </div>
-    </section>
+    {% endif %}
+    <hr>
+  </div>
 
-  {% endif %}
 
+    <div class="tab-pane fade" id="v-pills-membership" role="tabpanel" aria-labelledby="v-pills-membership-tab">
 
+      <h5 class="border-bottom border-gray pb-2">Etat des cotisations</h5>
+
+      <table class="table table-striped table-hover">
+        {% for membership in user.memberships.all %}
+        <tr>
+          <td>
+            <b>{{ membership.organization}}</b>
+          </td>
+          <td>
+            le {{membership.first_payment}}
+          </td>
+          <td>
+            <span class="badge badge-pill badge-success">{{ membership.amount }}€</span>
+          </td>
+          <br>
+        </tr>
+        {% endfor %}
+      </table>
+
+    </div>
+
+  
+
+    <div class="tab-pane fade" id="v-pills-info" role="tabpanel" aria-labelledby="v-pills-info-tab">
+        <div class="row">
+            <div class="col-md-6">
+              <i class="fa fa-phone pr-2"></i><label>Téléphone</label>
+            </div>
+            <div class="col-md-6">
+                <p>{{ object.phone_number }}</p>
+            </div>
+            <div class="col-md-6">
+                <i class="fa fa-envelope pr-2"></i>Adresse mail
+              </div>
+              <div class="col-md-6">
+                  <p>{{ object.email }}</p>
+            </div>
+            <div class="col-md-6">
+                <i class="fa fa-map pr-2"></i>Adresse physique
+              </div>
+              <div class="col-md-6">
+                  <p>{{ object.street_address }}</p>
+            </div>
+            <div class="col-md-6">
+                <i class="fa fa-birthday-cake pr-2"></i>Date d'anniversaire
+              </div>
+              <div class="col-md-6">
+                  <p>{{ object.birth_date }}</p>
+            </div>
+            <div class="col-md-6">
+                <i class="fa fa-clock-cake pr-2"></i>Membre depuis
+              </div>
+              <div class="col-md-6">
+                  <p>le {{ object.date_joined|date:"d F Y" }}</p>
+            </div>
+        </div>
+    </div>
+  </div>
+  
+</section>
+
+</div>
 {% endblock %}

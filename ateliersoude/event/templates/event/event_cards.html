@@ -1,18 +1,27 @@
 {% load thumbnail %}
 
-{% for event in event_list %}
 
 <div class="card infinite-item
   {% if request.user in event.registered.all or request.user in event.presents.all or request.user in event.organizers.all %}
   border-success border shadow
   {% endif %}
   ">
+  <div class="card-header bg-primary"> 
+    <span class="text-secondary">
+      <i class="far fa-calendar-alt"></i>    
+      {{ event.date }} 
+    </span>
+    <small class="float-right text-white">
+      <i class="far fa-clock"></i>  
+      {{ event.starts_at }} à {{ event.ends_at }}
+    </small >
+  </div>
+
   <a class="" href="{% url 'event:detail' event.pk event.slug %}">
 
-          
-      <h5 class="text-muted position-absolute" style="top:05px; right:05px">
-          {% if request.user in event.registered.all or request.user in event.presents.all %}
-            <span class="badge badge-success badge-pill">Inscrit</span>
+      <h5 class="text-muted position-absolute" style="top:45px; right:0px">
+        {% if request.user in event.registered.all or request.user in event.presents.all %}
+          <span class="badge badge-success badge-pill">Inscrit</span>
           {% endif %}
           {% if request.user in event.organizers.all %}
           <span class="badge badge-success badge-pill">Organisateur</span>
@@ -24,43 +33,44 @@
 
     {% if event.activity.picture %}
       {% thumbnail event.activity.picture "400" format="PNG" as im %}
-        <img class="card-img-top rounded-0" src="{{ im.url }}"/>
+        <img class="card-img-top rounded-0" style="" src="{{ im.url }}"/>
       {% endthumbnail %}
     {% endif %}
+
     <div class="card-body">
       <h3 class="card-title">{{ event.activity.name }}</h3>
-      <h6 class="card-subtitle text-muted mb-2">
-        <small>
-          {{ event.date_interval_format }}
-        </small>
-      </h6>
-      
+
       <h6 class="text-muted">
             Encore
             <span class="badge badge-info badge-pill">{{ event.remaining_seats }}
-              </span> places disponibles
-          <hr>
-        </h6>
+              </span> places disponibles 
+      </h6>
+      au lieu '{{ event.location.name }}'
+      <hr>
 
       <small>
       {{ event.activity.description | safe | truncatewords_html:10 }}
       </small>
-    </a>
+  </a>
 
-      <footer class="text-muted text-center">
+    <footer class="text-muted text-center">
 
       {% if event.remaining_seats > 0 %}
         {% include "event/register.html" with event=event %}
       {% endif %}
       
       <br>
+      <br>
+      <div class="col-lg">
         {% if event.organization.picture %}
         {% thumbnail event.organization.picture "30x30" crop="left" format="PNG" as im %}
           <img class="img-fluid rounded-circle square-2" src="{{ im.url }}" alt="organization img">
         {% endthumbnail %}
         {% endif %}
-        <small>Organisé par '{{ event.organization }}' à '{{ event.location.name }}'</small>
-      </footer>
+       
+        <small>Organisé par {{ event.organization }}</small>
+      </div>
+    </footer>
     </div>
 </div>
-{% endfor %}
+

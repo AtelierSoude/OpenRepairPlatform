@@ -36,7 +36,7 @@
         </div>
       <a class="text-center d-block" 
         data-toggle="collapse" href="#search" role="button" aria-expanded="false" aria-controls="search">
-       Faire une recherche 
+       Rechercher parmis les évènements
        <span class="btn btn-secondary">
           <i class="fa fa-search"></i>
        </span>
@@ -44,14 +44,20 @@
     </div>
   </section>
 
-  <section class="container mt-5">
-      <div class="col-md-12 row">
-        <div class="card-columns infinite-container">
-        {% include "event/event_cards.html" with event_list=event_list %}
-        </div>
+  <section class="container mt-3">
+    <div class="col-lg text-center mb-3">
       {% if not event_list %}
         Aucun évènement trouvé pour vos critères de recherche
+      {% else %}
+        {{ event_list.all.count }} résultats pour votre recherche  
       {% endif %}
+    </div>
+      <div class="col-md-12 row no-gutters">
+        <div class="card-columns infinite-container">
+        {% for event in event_list %}
+          {% include "event/event_cards.html" %}
+        {% endfor %}
+        </div>
     </div>
   </section>
 

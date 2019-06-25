@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     "bootstrap4",
     "sorl.thumbnail",
     "tinymce",
+    "import_export",
 ]
 
 

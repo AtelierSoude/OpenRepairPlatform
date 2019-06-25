@@ -3,53 +3,78 @@
 {% block content %}
   {% url "event:activity_list" as activity_list_url %}
   {% include "breadcrumb.html" with current=activity first_parent_url=activity_list_url first_parent_text="Activités" %}
-  <div class="jumbotron jumbotron-fluid">
-    <div class="container">
-      <h1 class="display-4">{{ activity.name|title }}</h1>
-      {% if is_admin %}
-      <p class="lead">
-        <a class="btn btn-primary btn-sm" href="{% url 'event:activity_edit' activity.pk %}">
-          <i class="fa fa-pencil-alt"></i>
-          Editer
-        </a>
-        <a class="btn btn-danger btn-sm" href="{% url 'event:activity_delete' activity.pk %}">
-          <i class="fa fa-trash-alt"></i>
-          Supprimer
-        </a>
-      </p>
-      {% endif %}
-    </div>
-  </div>
-  <section class="container">
-    <div class="card">
+  <div class="jumbotron jumbotron-fluid p-0 mb-0">
+    <div class="container-fluid row no-gutters">
+      <div class="col-md-4">
       {% if activity.picture %}
         <img class="img-responsive w-100" src="{{ activity.picture.url }}" alt="image activité">
       {% endif %}
-      <div class="card-body">
-        <h5 class="card-subtitle pb-3 mb-2 mt-2 text-muted border-bottom">
-          {{ activity.name }} -
-          <i class="fa fa-users"></i>
-          <a href="{% url 'user:organization_detail' activity.organization.pk activity.organization.slug %}">
-            {{ activity.organization.name }}
+      </div>
+      <div class="col-md-8 p-5">
+        <h1 class="display-5">{{ activity.name|title }}</h1>
+        {% if is_admin %}
+        <p class="lead">
+          <a class="btn btn-primary btn-sm" href="{% url 'event:activity_edit' activity.pk %}">
+            <i class="fa fa-pencil-alt"></i>
+            Editer
           </a>
-        </h5>
-        {{ activity.description | safe }}
+          <a class="btn btn-danger btn-sm" href="{% url 'event:activity_delete' activity.pk %}">
+            <i class="fa fa-trash-alt"></i>
+            Supprimer
+          </a>
+        </p>
+        {% endif %}
+        <i class="fa fa-users"></i> créé par
+        <a href="{% url 'user:organization_detail' activity.organization.pk activity.organization.slug %}">
+          {{ activity.organization.name }}
+        </a>
+        <hr>
+        <small>
+            {{ activity.description | safe | truncatewords_html:100 }}
+        </small>
+     </div>
+    </div>
+  </div>
+  <section class="container-fluid row bg-white">
+
+    <div class="col-md-4 pt-5">
+        <h5 class="pb-3 mb-2 mt-2 border-bottom">Prochaines planifications de cette activité</h5>
+        <div class="scrollable">
+
+          {% if activity.next_events %}
+            {% for event in activity.next_events %}
+              <div class="card">
+                  <div class="card-header bg-primary"> 
+                      <span class="text-secondary">
+                        <i class="far fa-calendar-alt"></i>    
+                        {{ event.date }} 
+                      </span>
+                      <small class="float-right text-white">
+                        <i class="far fa-clock"></i>  
+                        {{ event.starts_at }} à {{ event.ends_at }}
+                      </small >
+                  </div>
+                <div class="card-body">
+                    <a href="{% url 'event:detail' event.pk event.slug %}">
+                          {{ event.activity.name }}
+                    </a>
+                  </div>
+                </div>
+            {% endfor %}
+
+          {% else %}
+          Aucun évènement planifié pour le moment
+          {% endif %}
       </div>
     </div>
 
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-subtitle pb-3 mb-2 mt-2 text-muted border-bottom">Prochaines planifications de cette activité</h5>
-        <ul>
-          {% for event in activity.next_events %}
-            <li><a href="{% url 'event:detail' event.pk event.slug %}">{{ event }}</a></li>
-            {% empty %}
-            <i class="fa fa-calendar-times"></i>
-            Aucun évènement planifié pour le moment
-          {% endfor %}
-        </ul>
-      </div>
+    <div class="col-md-6 pt-5">
+        <h5 class="pb-3 mb-2 mt-2 text-muted border-bottom">
+          Description de l'activité
+        </h5>
+        {{ activity.description | safe }}
     </div>
+      
   </section>
 
 {% endblock %}

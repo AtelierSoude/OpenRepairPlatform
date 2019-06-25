@@ -54,9 +54,7 @@
     </div>
       <div class="col-md-12 row no-gutters">
         <div class="card-columns infinite-container">
-        {% for event in event_list %}
-          {% include "event/event_cards.html" %}
-        {% endfor %}
+          {% include "event/event_cards.html" with event_list=event_list %}
         </div>
     </div>
   </section>

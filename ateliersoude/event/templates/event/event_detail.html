@@ -94,8 +94,6 @@
                   <li>La participation est libre / pas de condition d'accès</li>
                 {% endfor %}
               </ul>
-            
-              
             <div class="col-md-6 border">
               <div class="row">
               {% if event.activity.picture %}
@@ -146,7 +144,11 @@
                       <img src="{{ im.url }}" class="m-2 rounded-circle"/>
                     {% endthumbnail %}
                     {% else %}
-                      <i class="fa fa-user fa-2x m-4 text-primary"></i>
+                      <div class="avatar-circle">
+                        <span class="initials">
+                            {{ user.first_name|slice:1|capfirst }}{{ user.last_name|slice:1|capfirst}}
+                        </span>
+                      </div>
                   {% endif %}
                   {{ user }}
                 </div>
@@ -160,7 +162,11 @@
                       <img src="{{ im.url }}" class="m-2 rounded-circle"/>
                     {% endthumbnail %}
                     {% else %}
-                      <i class="fa fa-user fa-2x m-4 text-primary"></i>
+                      <div class="avatar-circle">
+                        <span class="initials">
+                            {{ user.first_name|slice:1|capfirst }}{{ user.last_name|slice:1|capfirst}}
+                        </span>
+                      </div>
                   {% endif %}
                     {{ user }}
                   </div>
@@ -240,7 +246,11 @@
                     <img src="{{ im.url }}" class="m-2 rounded-circle"/>
                   {% endthumbnail %}<br>
                   {% else %}
-                    <i class="fa fa-user fa-2x m-4 text-primary"></i><br>
+                    <div class="avatar-circle">
+                      <span class="initials">
+                          {{ user.first_name|slice:1|capfirst }}{{ user.last_name|slice:1|capfirst}}
+                      </span>
+                    </div>                  
                   {% endif %}
                 {{ participation.user }}
                 <br>

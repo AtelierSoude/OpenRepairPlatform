@@ -4,8 +4,8 @@
 }
 
 .avatar-circle {
-  width: 90px;
-  height: 90px;
+  width: 80px;
+  height: 80px;
   background-color: darkcyan;
   text-align: center;
   border-radius: 50%;
@@ -16,10 +16,9 @@
 
 .initials {
   position: relative;
-  top: 25px; /* 25% of parent */
-  font-size: 50px; /* 50% of parent */
-  line-height: 50px; /* 50% of parent */
+  top: 25%; /* 25% of parent */
+  font-size: 150%; /* 50% of parent */
+  line-height: 150%; /* 50% of parent */
   color: #fff;
-  font-family: "Courier New", monospace;
-  font-weight: bold;
+  font-family: 'Sans Serif';
 }

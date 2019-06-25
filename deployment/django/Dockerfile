@@ -1,6 +1,7 @@
 FROM debian:buster
 
-RUN apt update && apt upgrade -y && apt install -y python3-pip libpq-dev locales locales-all cron
+RUN apt update && apt upgrade -y && apt install -y python3-pip libpq-dev locales locales-all cron rubygems-integration inotify-tools
+RUN gem install sass -v 3.3.14
 RUN pip3 install uwsgi
 
 COPY requirements.txt /

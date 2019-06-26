@@ -3,36 +3,37 @@
 {% block content %}
   {% url "event:activity_list" as activity_list_url %}
   {% include "breadcrumb.html" with current=activity first_parent_url=activity_list_url first_parent_text="Activités" %}
-<div class="container-fluid row no-gutters">
-      <div class="col-md-3">
-      {% if activity.picture %}
-        <img class="img-responsive w-100" src="{{ activity.picture.url }}" alt="image activité">
-      {% endif %}
+<div class="container pt-3">
+  <section class="container-fluid row no-gutters">
+        <div class="col-md-4">
+        {% if activity.picture %}
+          <img class="img-responsive w-100" src="{{ activity.picture.url }}" alt="image activité">
+        {% endif %}
+        </div>
+        <div class="col-md-8 p-5 mb-0">
+            <h1 class="display-5">{{ activity.name|title }}</h1>
+            {% if is_admin %}
+            <p class="lead">
+              <a class="btn btn-primary btn-sm" href="{% url 'event:activity_edit' activity.pk %}">
+                <i class="fa fa-pencil-alt"></i>
+                Editer
+              </a>
+              <a class="btn btn-danger btn-sm" href="{% url 'event:activity_delete' activity.pk %}">
+                <i class="fa fa-trash-alt"></i>
+                Supprimer
+              </a>
+            </p>
+            {% endif %}
+            <i class="fa fa-users"></i> créé par
+            <a href="{% url 'user:organization_detail' activity.organization.pk activity.organization.slug %}">
+              {{ activity.organization.name }}
+            </a>
       </div>
-      <div class="col-md-9 p-5 jumbotron jumbotron-fluid mb-0">
-          <h1 class="display-5">{{ activity.name|title }}</h1>
-          {% if is_admin %}
-          <p class="lead">
-            <a class="btn btn-primary btn-sm" href="{% url 'event:activity_edit' activity.pk %}">
-              <i class="fa fa-pencil-alt"></i>
-              Editer
-            </a>
-            <a class="btn btn-danger btn-sm" href="{% url 'event:activity_delete' activity.pk %}">
-              <i class="fa fa-trash-alt"></i>
-              Supprimer
-            </a>
-          </p>
-          {% endif %}
-          <i class="fa fa-users"></i> créé par
-          <a href="{% url 'user:organization_detail' activity.organization.pk activity.organization.slug %}">
-            {{ activity.organization.name }}
-          </a>
-    </div>
-</div>
+    </section>
 
-  <section class="container-fluid row pt-3">
+  <section class="container-fluid row bg-white">
 
-      <div class="col-md-3">
+      <div class="col-md-4 pt-5">
         <h5 class="">Prochaines dates</h5>
         <hr>
           <div class="scrollable">
@@ -44,7 +45,7 @@
         </div>
       </div>
 
-      <div class="col-md-9">
+      <div class="col-md-8 p-5">
         <h5 class="">
             Description
         </h5>
@@ -53,5 +54,6 @@
       </div>
 
   </section>
+</div>
 
 {% endblock %}

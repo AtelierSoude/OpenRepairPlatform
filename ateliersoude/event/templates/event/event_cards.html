@@ -38,13 +38,13 @@
       <h3 class="card-title">{{ event.activity.name }}</h3>
 
       <h6 class="text-muted">
-            Encore
-            <span class="badge badge-info badge-pill">{{ event.remaining_seats }}
-              </span> places disponibles 
+            Encore <span> {{ event.remaining_seats }}</span> places disponibles 
       </h6>
-      au lieu '{{ event.location.name }}'
+      <div class="text-muted">
+        <i class="fa fa-map-marker-alt"></i>
+        {{ event.location.name }}
+      </div>
       <hr>
-
       <small>
       {{ event.activity.description | safe | truncatewords_html:10 }}
       </small>

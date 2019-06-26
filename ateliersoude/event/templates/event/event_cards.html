@@ -1,7 +1,7 @@
 {% load thumbnail %}
 
 {% for event in event_list %}
-<div class="card infinite-item
+<div class="card infinite-item mb-2
   {% if request.user in event.registered.all or request.user in event.presents.all or request.user in event.organizers.all %}
   border-success border shadow
   {% endif %}
@@ -31,36 +31,41 @@
           {% endif %}
       </h5>
 
-    {% if event.activity.picture %}
-      {% thumbnail event.activity.picture "400" format="PNG" as im %}
-        <img class="card-img-top rounded-0" style="" src="{{ im.url }}"/>
-      {% endthumbnail %}
+    {% if minimal != True %}  
+      {% if event.activity.picture %}
+        {% thumbnail event.activity.picture "400" format="PNG" as im %}
+          <img class="card-img-top rounded-0" style="" src="{{ im.url }}"/>
+        {% endthumbnail %}
+      {% endif %}
     {% endif %}
 
     <div class="card-body">
-      <h3 class="card-title">{{ event.activity.name }}</h3>
+      <h4 class="card-title">{{ event.activity.name }}</h4>
 
       <h6 class="text-muted">
-            Encore
-            <span class="badge badge-info badge-pill">{{ event.remaining_seats }}
-              </span> places disponibles 
+        <span class="badge badge-info badge-pill">{{ event.remaining_seats }}
+        </span> places disponibles 
       </h6>
       au lieu '{{ event.location.name }}'
       <hr>
-
+    
+    {% if minimal != True %}  
       <small>
       {{ event.activity.description | safe | truncatewords_html:10 }}
       </small>
+    {% endif %}
   </a>
 
     <footer class="text-muted text-center">
 
+    {% if minimal != True %}  
       {% if event.remaining_seats > 0 %}
         {% include "event/register.html" with event=event %}
+        <br>
+        <br>
       {% endif %}
-      
-      <br>
-      <br>
+    {% endif %}
+
       <div class="col-lg">
         {% if event.organization.picture %}
         {% thumbnail event.organization.picture "30x30" crop="left" format="PNG" as im %}

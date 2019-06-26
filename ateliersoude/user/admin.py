@@ -2,12 +2,30 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext as _
 from simple_history.admin import SimpleHistoryAdmin
+from import_export import resources
+from import_export.admin import ImportExportModelAdmin
 
 from .models import CustomUser, Organization, Membership
 from .forms import CustomUserChangeForm, CustomUserCreationForm
 
 
-class CustomUserAdmin(UserAdmin, SimpleHistoryAdmin):
+class CustomUserResource(resources.ModelResource):
+    class Meta:
+        model = CustomUser
+
+
+class MembershipResource(resources.ModelResource):
+    class Meta:
+        model = Membership
+
+
+class OrganizationResource(resources.ModelResource):
+    class Meta:
+        model = Organization
+
+
+class CustomUserAdmin(UserAdmin, SimpleHistoryAdmin, ImportExportModelAdmin):
+    resource_class = CustomUserResource
     form = CustomUserChangeForm
     add_form = CustomUserCreationForm
     fieldsets = (
@@ -47,6 +65,14 @@ class CustomUserAdmin(UserAdmin, SimpleHistoryAdmin):
     search_fields = ('first_name', 'last_name', 'email')
 
 
+class MembershipAdmin(ImportExportModelAdmin, SimpleHistoryAdmin):
+    resource_class = MembershipResource
+
+
+class OrganizationAdmin(SimpleHistoryAdmin, ImportExportModelAdmin):
+    resource_class = OrganizationResource
+
+
 admin.site.register(CustomUser, CustomUserAdmin)
-admin.site.register(Organization, SimpleHistoryAdmin)
-admin.site.register(Membership, SimpleHistoryAdmin)
+admin.site.register(Organization, OrganizationAdmin)
+admin.site.register(Membership, MembershipAdmin)

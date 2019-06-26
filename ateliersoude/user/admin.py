@@ -4,6 +4,8 @@ from django.utils.translation import gettext as _
 from simple_history.admin import SimpleHistoryAdmin
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
+from import_export.widgets import ForeignKeyWidget, ManyToManyWidget
+from import_export.fields import Field
 
 from .models import CustomUser, Organization, Membership
 from .forms import CustomUserChangeForm, CustomUserCreationForm
@@ -15,11 +17,48 @@ class CustomUserResource(resources.ModelResource):
 
 
 class MembershipResource(resources.ModelResource):
+    user = Field(
+        column_name="user",
+        attribute="user",
+        widget=ForeignKeyWidget(CustomUser, "id")
+    )
+    organization = Field(
+        column_name="organization",
+        attribute="organization",
+        widget=ForeignKeyWidget(Organization, "id")
+    )
+
     class Meta:
         model = Membership
 
 
 class OrganizationResource(resources.ModelResource):
+    members = Field(
+        column_name="members",
+        attribute="members",
+        widget=ManyToManyWidget(CustomUser)
+    )
+    volunteers = Field(
+        column_name="volunteers",
+        attribute="volunteers",
+        widget=ManyToManyWidget(CustomUser)
+    )
+    visitors = Field(
+        column_name="visitors",
+        attribute="visitors",
+        widget=ManyToManyWidget(CustomUser)
+    )
+    actives = Field(
+        column_name="actives",
+        attribute="actives",
+        widget=ManyToManyWidget(CustomUser)
+    )
+    admins = Field(
+        column_name="admins",
+        attribute="admins",
+        widget=ManyToManyWidget(CustomUser)
+    )
+
     class Meta:
         model = Organization
 

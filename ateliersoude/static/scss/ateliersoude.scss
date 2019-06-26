@@ -8,6 +8,10 @@
 body {
   background-color: #eef2f6 !important;
 }
+.content-page {
+  min-height: 500px;
+  overflow-x:hidden;
+}
 a {
   color : #49d3be;
 }

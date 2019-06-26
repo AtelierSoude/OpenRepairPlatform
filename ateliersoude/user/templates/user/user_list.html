@@ -41,13 +41,13 @@
 
   {% include "breadcrumb.html" with current="Communauté" %}
 
-<div class="jumbotron jumbotron-fluid">
+<div class="jumbotron jumbotron-fluid bg-grey">
   <div class="container">
     <h1>Utilisateurs</h1>
   </div>
 </div>
 
-  <div class="infinite-container row">
+  <div class="card-columns infinite-container container">
     {% include "user/user_card.html" with users=users %}
   </div>
 

@@ -3,15 +3,12 @@
 {% block content %}
   {% include "breadcrumb.html" with current="Déconnecté" %}
 
-<div class="jumbotron jumbotron-fluid">
-  <div class="container">
-    <h1>Vous êtes déconnecté·e</h1>
-  </div>
-</div>
-
-<section class="container">  
+<section class="container-fluid">  
   <div class="row justify-content-md-center">
-    <div class="col-md-10">
+    <div class="h-100 mt-5 text-center">
+      <h3>Vous vous êtes déconnecté :)</h3>
+      <h3 class="text-secondary">A bientôt !</h3>
+      <br>
       <a href="{% url 'login'%}">Cliquez ici pour vous reconnecter.</a>
     </div>
   </div>

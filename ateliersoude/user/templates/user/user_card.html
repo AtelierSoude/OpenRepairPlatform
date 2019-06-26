@@ -8,8 +8,7 @@
 {% endblock %}
 
 {% for user in users %}
-<div class="infinite-item col-lg-3 col-xs-12">
-  <div class="card mx-2 mb-2">
+<div class="infinite-item card">
     <a class="card-link" href="{{ user.get_absolute_url }}">
       <div class="row text-center" id="square-{{ user.pk }}">
         <div class="col-12">
@@ -37,7 +36,7 @@
         <li class="list-group-item">
           <small> 
           <i>
-            est membre de : 
+            Membre de 
             {{ user.member_organizations.all|join:", " }}
           </i>
           </small>
@@ -47,7 +46,7 @@
         <li class="list-group-item">
           <small> 
           <i>
-            est volontaire de :
+            Volontaire à
             {{ user.active_organizations.all|join:", " }}
             {% if user.active_organizations.all and user.volunteer_organizations.all %}, {% endif %}
             {{ user.volunteer_organizations.all|join:", " }}
@@ -59,7 +58,7 @@
         <li class="list-group-item">
           <small> 
           <i>
-            est administrateur de : 
+            Administrateur de
             {{ user.admin_organizations.all|join:", " }}
           </i>
           </small>
@@ -67,7 +66,6 @@
       {% endif %}
     </ul>
   </div>
-</div>
 {% empty %}
   <div>No users yet.</div>  
 {% endfor %}

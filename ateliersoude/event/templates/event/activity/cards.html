@@ -12,7 +12,7 @@
         <h5 class="card-title">{{ activity.name }}</h5>
         {{ activity.description | safe | truncatewords_html:10 }}
         <footer class="blockquote-footer">
-          Géré par
+          Créé par
           <a href="{% url 'user:organization_detail' activity.organization.pk activity.organization.slug %}">
             {{ activity.organization }}
           </a>

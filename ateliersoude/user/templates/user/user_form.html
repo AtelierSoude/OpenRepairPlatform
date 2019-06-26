@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load bootstrap4 assets %}
+{% load bootstrap4 assets static %}
 
 {% block extra_css %}
   {% assets "css_autocomplete" %}
@@ -15,15 +15,13 @@
   {% else %}
     {% include "breadcrumb.html" with current="Création" first_parent_url=user_list_url first_parent_text="Communauté" %}
   {% endif %}
-
-  <div class="jumbotron jumbotron-fluid">
-    <div class="container">
-      <h1>Mes informations</h1>
-    </div>
+  <div class="position-absolute" style="z-index: -1">
+      <img class='img-fluid' src="{% static "img/login_img.png" %}" alt="Reparons.org"/>
   </div>
 
-  <div class="container">
-    <div class="card p-3">
+  <div class="row justify-content-md-center">
+    <div class="card shadow border-success border p-3 m-5">
+        <h1 class="text-center col-lg">Créer un compte</h1>
       <form method="post" enctype="multipart/form-data">
         <fieldset>
           {% csrf_token %}

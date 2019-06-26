@@ -11,7 +11,7 @@ class PlaceResource(resources.ModelResource):
         model = Place
 
 
-class PlaceAdmin(ImportExportModelAdmin,SimpleHistoryAdmin):
+class PlaceAdmin(ImportExportModelAdmin, SimpleHistoryAdmin):
     resource_class = PlaceResource
 
 

@@ -63,7 +63,7 @@ class EventAdmin(ImportExportModelAdmin, SimpleHistoryAdmin):
     resource_class = EventResource
 
 
-class ParticipationAdmin(ImportExportModelAdmin,SimpleHistoryAdmin):
+class ParticipationAdmin(ImportExportModelAdmin, SimpleHistoryAdmin):
     resource_class = ParticipationResource
 
 

@@ -52,6 +52,7 @@
       {{ organization.description | safe }}
     </div>
 
+  <!--
     <h3 class="mt-4">Locaux</h3>
     {% if organization.places.all %}
       <div class="card-columns">
@@ -83,7 +84,7 @@
     {% else %}
       <div>Il n'y a pas de local associé à cette organisation.</div>
     {% endif %}
-
+    -->
 
     <h3 class="mt-4">Membres volontaires</h3>
 
@@ -149,10 +150,12 @@
       </div>
     {% endif %}
 
+  <!-- 
     <h3 class="mt-4">Activités</h3>
     <div class="card-columns">
       {% include "event/activity/cards.html" with activities=organization.activities.all %}
     </div>
+  -->
     {% if is_admin %}
       <div class="dropdown-divider mb-4"></div>
       <div class="row m-4">

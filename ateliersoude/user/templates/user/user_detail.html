@@ -185,7 +185,7 @@
           <br>
         {% endfor %}
         {% for event, amount in passed_participations reversed %}
-            {% if event.organization == membership.organization %}
+            {% if event.organization == membership.organization and amount != 0 %}
             <tr>
               <td>
                 le {{ event.date|date:"d F Y" }}

@@ -1,7 +1,7 @@
 {% load thumbnail %}
 
 {% for event in event_list %}
-<div class="card infinite-item mb-2
+<div class="card infinite-item
   {% if request.user in event.registered.all or request.user in event.presents.all or request.user in event.organizers.all %}
   border-success border shadow
   {% endif %}

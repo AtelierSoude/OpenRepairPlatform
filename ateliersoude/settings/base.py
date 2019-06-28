@@ -48,6 +48,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.middleware.locale.LocaleMiddleware",
     "simple_history.middleware.HistoryRequestMiddleware",
+    "ateliersoude.event.middleware.middleware.ForceLangMiddleware"
 ]
 
 ROOT_URLCONF = "ateliersoude.urls"

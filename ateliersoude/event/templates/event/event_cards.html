@@ -9,7 +9,7 @@
   <div class="card-header bg-primary"> 
     <span class="text-secondary">
       <i class="far fa-calendar-alt"></i>    
-      {{ event.date }} 
+      {{ event.date|date:"l j F Y " }} 
     </span>
     <small class="float-right text-white">
       <i class="far fa-clock"></i>  

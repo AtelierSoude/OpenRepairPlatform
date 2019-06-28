@@ -31,11 +31,15 @@
     </div>
   </div>
 {% else %}
-  {% if request.user in event.registered.all %}
-    {% tokenize user=request.user event=event action='cancel' as tok %}
-    <a href="{% url 'event:cancel_reservation' tok %}" class="btn btn-warning">Je ne participe plus</a>
-  {% elif request.user not in event.presents.all and request.user not in event.organizers.all %}
-    {% tokenize user=request.user event=event action='book' as tok %}
-    <a href="{% url 'event:book' tok %}" class="btn btn-success">Je participe !</a>
+  {% if event.remaining_seats != 0 %}
+    {% if request.user in event.registered.all %}
+      {% tokenize user=request.user event=event action='cancel' as tok %}
+      <a href="{% url 'event:cancel_reservation' tok %}" class="btn btn-warning">Je ne participe plus</a>
+    {% elif request.user not in event.presents.all and request.user not in event.organizers.all %}
+      {% tokenize user=request.user event=event action='book' as tok %}
+      <a href="{% url 'event:book' tok %}" class="btn btn-success">Je participe !</a>
+    {% endif %}
+  {% else %}
+    <a class="btn btn-outline-danger"> Complet</a>
   {% endif %}
 {% endif %}

@@ -201,3 +201,6 @@ class Participation(models.Model):
 
     class Meta:
         unique_together = (("user", "event"),)
+
+    def __str__(self):
+        return self.user.first_name + " " + str(self.event)

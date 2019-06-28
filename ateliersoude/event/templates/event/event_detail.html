@@ -18,7 +18,7 @@
       {% url "event:list" as event_list_url %}
   {% include "breadcrumb.html" with current=event first_parent_url=event_list_url first_parent_text="Évènements" %}
   <div class="container p-4">
-      <h3>{{ event }}</h3>
+      <h3>{{ event.activity }} du {{ event.date }}</h3>
       <p class="lead">
         - Organisé par
         <a href="{% url 'user:organization_detail' event.organization.id event.organization.slug %}">
@@ -33,7 +33,7 @@
 
             <p>
                 <i class="fa fa-calendar-alt"></i> 
-                Début le {{ event.date_interval_format }} 
+                Le {{ event.date|date:"l j F Y " }} de {{ event.starts_at }} à {{ event.ends_at }}
             </p>
 
           <h6 class="text-muted">

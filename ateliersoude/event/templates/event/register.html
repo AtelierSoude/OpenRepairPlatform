@@ -1,35 +1,39 @@
 {% load app_filters bootstrap4 %}
 
 {% if admin_text or not request.user.is_authenticated %}
-  <button class="btn btn-success" data-toggle="modal" data-target="#reservation{{ event.pk }}">
-  {% if admin_text %}
-  <i class="fa fa-plus"></i>
-    {{ admin_text }}
-  {% else %}
-    Je participe !
-  {% endif %}
-  </button>
-  <div class="modal" id="reservation{{ event.pk }}" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Réserver</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+  {% if event.remaining_seats != 0 %}
+    <button class="btn btn-success" data-toggle="modal" data-target="#reservation{{ event.pk }}">
+    {% if admin_text %}
+    <i class="fa fa-plus"></i>
+      {{ admin_text }}
+    {% else %}
+      Je participe !
+    {% endif %}
+    </button>
+    <div class="modal" id="reservation{{ event.pk }}" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Réserver</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form action="{% url 'user:create_and_book' %}?event={{ event.pk }}" method="post">
+            <div class="modal-body">
+              {% csrf_token %}
+              {% bootstrap_form form=register_form %}
+            </div>
+            <div class="modal-footer">
+              <input type="submit" value="Réserver" class="btn btn-primary"/>
+            </div>
+          </form>
         </div>
-        <form action="{% url 'user:create_and_book' %}?event={{ event.pk }}" method="post">
-          <div class="modal-body">
-            {% csrf_token %}
-            {% bootstrap_form form=register_form %}
-          </div>
-          <div class="modal-footer">
-            <input type="submit" value="Réserver" class="btn btn-primary"/>
-          </div>
-        </form>
       </div>
     </div>
-  </div>
+  {% else %}
+    <a class="btn btn-outline-danger"> Complet</a>
+  {% endif %}
 {% else %}
   {% if event.remaining_seats != 0 %}
     {% if request.user in event.registered.all %}
@@ -37,7 +41,7 @@
       <a href="{% url 'event:cancel_reservation' tok %}" class="btn btn-warning">Je ne participe plus</a>
     {% elif request.user not in event.presents.all and request.user not in event.organizers.all %}
       {% tokenize user=request.user event=event action='book' as tok %}
-      <a href="{% url 'event:book' tok %}" class="btn btn-success">Je participe !</a>
+      <a href="{% url 'event:book' tok %}" class="btn btn-success">Je participe ! {{ event.remaining_seats }}</a>
     {% endif %}
   {% else %}
     <a class="btn btn-outline-danger"> Complet</a>

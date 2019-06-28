@@ -26,9 +26,6 @@
           {% if request.user in event.organizers.all %}
           <span class="badge badge-success badge-pill">Organisateur</span>
           {% endif %}
-          {% if event.remaining_seats <= 0 %}
-          <span class="badge badge-danger badge-pill">Complet</span>
-          {% endif %}
       </h5>
 
     {% if minimal != True %}  
@@ -43,36 +40,28 @@
       <h4 class="card-title">{{ event.activity.name }}</h4>
 
       <h6 class="text-muted">
-        <span class="badge badge-info badge-pill">{{ event.remaining_seats }}
-        </span> places disponibles 
+        Encore <span> {{ event.remaining_seats }}</span> places disponibles 
       </h6>
-      au lieu '{{ event.location.name }}'
+      <div class="text-muted">
+        <i class="fa fa-map-marker-alt"></i>
+        {{ event.location.name }}
+      </div>
       <hr>
-    
-    {% if minimal != True %}  
       <small>
       {{ event.activity.description | safe | truncatewords_html:10 }}
       </small>
-    {% endif %}
   </a>
 
     <footer class="text-muted text-center">
-
-    {% if minimal != True %}  
-      {% if event.remaining_seats > 0 %}
         {% include "event/register.html" with event=event %}
-        <br>
-        <br>
-      {% endif %}
-    {% endif %}
-
+      <br>
+      <br>
       <div class="col-lg">
         {% if event.organization.picture %}
         {% thumbnail event.organization.picture "30x30" crop="left" format="PNG" as im %}
           <img class="img-fluid rounded-circle square-2" src="{{ im.url }}" alt="organization img">
         {% endthumbnail %}
         {% endif %}
-       
         <small>Organisé par {{ event.organization }}</small>
       </div>
     </footer>

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load bootstrap4 %}
 
-{% load assets app_filters %}
+{% load assets app_filters thumbnail %}
 
 {% block extra_css %}
   {% assets "css_detail_organization" %}
@@ -13,160 +13,184 @@
   {% url "user:organization_list" as organization_list_url %}
   {% include "breadcrumb.html" with current=organization first_parent_url=organization_list_url first_parent_text="Organisations" %}
 
-  <div class="jumbotron jumbotron-fluid">
-    <div class="container">
-      <h1>{{ organization.name }}</h1>
-      {% if is_admin %}
-        <a class="btn btn-success btn-sm" href="{% url 'user:organization_update' organization.id %}">
-          <i class="fa fa-pencil-alt"></i> Editer
-        </a>
-        <a class="btn btn-danger btn-sm" href="{% url 'user:organization_delete' organization.id %}">
-          <i class="fa fa-trash"></i> Supprimer
-        </a>
-        <a class="btn btn-primary btn-sm" href="{% url 'event:condition_create' organization.pk %}" title="create condition">
-          <i class="fa fa-plus-circle"></i> Créer une condition d'accès
-        </a>
-        <a class="btn btn-primary btn-sm" href="{% url 'event:activity_create' organization.pk %}" title="activity place">
-          <i class="fa fa-plus-circle"></i> Ajouter une activité
-        </a>
-        <a href="{% url 'location:create' organization.pk %}" class="btn btn-info btn-sm">
-          <i class="fa fa-plus-circle"></i> Ajouter un local
-        </a>
-      {% endif %}
-      {% if is_active %}
-        <a class="btn btn-primary btn-sm{% if not organization.activities.all %} disabled{% endif %}" href="{% url 'event:create' organization.id %}">
-          <i class="fa fa-plus-circle"></i> Créer un évènement
-        </a>
-        <a class="btn btn-primary btn-sm{% if not organization.activities.all %} disabled{% endif %}" href="{% url 'event:recurrent_create' organization.id %}">
-          <i class="fa fa-plus-circle"></i> Créer un évènement récurrent
-        </a>
-      {% endif %}
-    </div>
-  </div>
+<div class="container">
 
-
-  <section class="container">
-
-    <h3>Description</h3>
-    <div>
-      {{ organization.description | safe }}
-    </div>
-
-  <!--
-    <h3 class="mt-4">Locaux</h3>
-    {% if organization.places.all %}
-      <div class="card-columns">
-        {% for place in organization.places.all %}
-          <div class="card">  
-            <a class="card-link" href="{% url 'location:detail' place.pk place.slug %}">
-              <div class="card-body">
-                <h4 class="card-title">{{ place.name }}</h4>
-                <h6 class="card-subtitle mb-2 text-muted">{{ place.address }}</h6>
-                <span class="badge badge-secondary">{{ place.category }}</span>
-                {{ place.description | safe | truncatewords_html:10 }}
-              </div>
-              {% if is_admin %}
-                <div class="card-footer">
-                  <a class="btn btn-info btn-sm" href="{% url 'location:edit' place.id %}">
-                    <i class="fa fa-pencil-alt"></i>
-                    Editer ce lieu
-                  </a>
-                  <a class="btn btn-danger btn-sm" href="{% url 'location:delete' place.id %}">
-                    <i class="fa fa-trash-alt"></i>
-                    Supprimer ce lieu
-                  </a>
-                </div>
+  <section class="row p-0">
+        <div class="text-center bg-secondary col-md-3">
+          <div class="pt-5">
+              {% if organization.picture %}
+                {% thumbnail object.picture "100x100" crop="center" format="PNG" as im %}
+                  <img src="{{ im.url }}" class="m-2 rounded-circle"/>
+                {% endthumbnail %}
               {% endif %}
-            </a>
-          </div>
-        {% endfor %}
-      </div>
-    {% else %}
-      <div>Il n'y a pas de local associé à cette organisation.</div>
-    {% endif %}
-    -->
-
-    <h3 class="mt-4">Membres volontaires</h3>
-
-
-    {% include 'user/organization/manage_user.html' %}
-
-    <div class="row mt-2">
-      <div class="col-sm">
-        <div class="card">
-          <div class="card-body">
-            <h4 class="card-title">Les membres</h4>
-            <ul class="list-group list-group-flush">
-              {% for membership in organization.memberships.all %}
-                {% if membership.user.is_visible or is_volunteer %}
-                <li class="list-group-item">
-                  <a href="{% url 'user:user_detail' membership.user.pk %}">
-                    {{ membership.user }}
-                  </a>
-                  {% if membership.current_contribution > 0 %}
-                    (A donné
-                      <span class="badge badge-pill badge-secondary">
-                      {{ membership.current_contribution }}€
-                      </span>
-                    depuis le {{ membership.first_payment|date:"d F Y" }})
-                  {% endif %}
-                  <button class="btn btn-success btn-sm" 
-                          data-toggle="modal" 
-                          data-target="#more-info-{{ membership.user.pk }}">
-                    <i class="fa fa-plus"></i>
-                    Mettre à jour le membre
-                  </button>
-                </li>
-                {% include "user/organization/modal_more_info.html" with anonymous_user=membership.user form=add_member_form|initial:membership.user %}
-                {% endif %}
-                {% empty %}
-                <li class="list-group-item">
-                  Il n'y a pas de membre visible dans cette organisation
-                </li>
-              {% endfor %}
-              <button class="btn btn-success btn-sm" 
-                      data-toggle="modal" 
-                      data-target="#more-info-">
-                <i class="fa fa-plus"></i>
-                Ajouter un membre
-              </button>
-              {% include "user/organization/modal_more_info.html" with form=add_member_form %}
-            </ul>
           </div>
         </div>
-      </div>
+
+    <div class="jumbotron jumbotron-fluid col-md-9 mb-0">
+        <h1>{{ organization.name }}</h1>
+        {% if is_admin %}
+          <a class="btn btn-success btn-sm" href="{% url 'user:organization_update' organization.id %}">
+            <i class="fa fa-pencil-alt"></i> Editer
+          </a>
+          <a class="btn btn-danger btn-sm" href="{% url 'user:organization_delete' organization.id %}">
+            <i class="fa fa-trash"></i> Supprimer
+          </a>
+        {% endif %}
+        <small>{{organization.description | safe | truncatewords_html:50 }}</small>
     </div>
-
-    {% if events or has_hidden_events %}
-      <h3 class="mt-4">Prochains évènements</h3>
-      {% if is_volunteer %}
-        <a href="{% url 'user:organization_all_events' organization.pk organization.slug page %}" class="btn btn-sm btn-info">
-          <i class="fa fa-search"></i>
-          Voir tous les évènements
-        </a>
-      {% endif %}
-      <div class="card-columns">
-        {% include "event/event_cards.html" with event_list=events %}
-      </div>
-    {% endif %}
-
-  <!-- 
-    <h3 class="mt-4">Activités</h3>
-    <div class="card-columns">
-      {% include "event/activity/cards.html" with activities=organization.activities.all %}
-    </div>
-  -->
-    {% if is_admin %}
-      <div class="dropdown-divider mb-4"></div>
-      <div class="row m-4">
-        <h4>Conditions d'accès</h4>
-      </div>
-      <div class="card-columns">
-        {% include 'event/condition/list.html' with conditions=organization.conditions.all %}
-      </div>
-    {% endif %}
-
   </section>
+  
+<section class="row h-100">
+
+        <div class="nav  bg-light flex-column nav-pills p-4 text-left col-md-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+            <a class="nav-link active" id="v-pills-rdv-tab" data-toggle="pill" href="#v-pills-about" role="tab" aria-controls="v-pills-rdv" aria-selected="true">A propos</a>
+            <a class="nav-link" id="v-pills-events-tab" data-toggle="pill" href="#v-pills-events" role="tab" aria-controls="v-pills-events" aria-selected="false">Evènements</a>
+            <a class="nav-link" id="v-pills-members-tab" data-toggle="pill" href="#v-pills-members" role="tab" aria-controls="v-pills-members" aria-selected="false">Membres</a>
+            <a class="nav-link" id="v-pills-controls-tab" data-toggle="pill" href="#v-pills-controls" role="tab" aria-controls="v-pills-controls" aria-selected="false">Contrôles</a>
+        </div>
+      
+  <div class="col-md-9 p-4 tab-content" id="v-pills-tabContent">
+      
+      <div class="tab-pane fade show active" id="v-pills-about" role="tabpanel" aria-labelledby="v-pills-abot-tab">
+          <h3>Description</h3>
+          <div>
+            {{ organization.description | safe }}
+          </div>
+          <h3 class="mt-4">Activités</h3>
+          <div class="card-columns">
+            {% include "event/activity/cards.html" with activities=organization.activities.all %}
+          </div>
+          <h3 class="mt-4">Locaux</h3>
+      {% if organization.places.all %}
+        <div class="card-columns">
+          {% for place in organization.places.all %}
+            <div class="card">  
+              <a class="card-link" href="{% url 'location:detail' place.pk place.slug %}">
+                <div class="card-body">
+                  <h4 class="card-title">{{ place.name }}</h4>
+                  <h6 class="card-subtitle mb-2 text-muted">{{ place.address }}</h6>
+                  <span class="badge badge-secondary">{{ place.category }}</span>
+                  {{ place.description | safe | truncatewords_html:10 }}
+                </div>
+                {% if is_admin %}
+                  <div class="card-footer">
+                    <a class="btn btn-info btn-sm" href="{% url 'location:edit' place.id %}">
+                      <i class="fa fa-pencil-alt"></i>
+                      Editer ce lieu
+                    </a>
+                    <a class="btn btn-danger btn-sm" href="{% url 'location:delete' place.id %}">
+                      <i class="fa fa-trash-alt"></i>
+                      Supprimer ce lieu
+                    </a>
+                  </div>
+                {% endif %}
+              </a>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div>Il n'y a pas de local associé à cette organisation.</div>
+      {% endif %}      
+      </div>
+
+      <div class="tab-pane fade show" id="v-pills-events" role="tabpanel" aria-labelledby="v-pills-events-tab">
+        {% if events or has_hidden_events %}
+        <h3 class="mt-4">Prochains évènements</h3>
+        {% if is_volunteer %}
+          <a href="{% url 'user:organization_all_events' organization.pk organization.slug page %}" class="btn btn-sm btn-info">
+            <i class="fa fa-search"></i>
+            Voir tous les évènements
+          </a>
+        {% endif %}
+        <div class="card-columns">
+          {% include "event/event_cards.html" with event_list=events minimal=True %}
+        </div>
+      {% endif %}
+      </div>
+
+
+    <div class="tab-pane fade show" id="v-pills-members" role="tabpanel" aria-labelledby="v-pills-members-tab">
+        {% include 'user/organization/manage_user.html' %}
+        <div class="row mt-2">
+            <div class="col-sm">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Les membres</h4>
+                  <ul class="list-group list-group-flush">
+                    {% for membership in organization.memberships.all %}
+                      {% if membership.user.is_visible or is_volunteer %}
+                      <li class="list-group-item">
+                        <a href="{% url 'user:user_detail' membership.user.pk %}">
+                          {{ membership.user }}
+                        </a>
+                        {% if membership.current_contribution > 0 %}
+                          (A donné
+                            <span class="badge badge-pill badge-secondary">
+                            {{ membership.current_contribution }}€
+                            </span>
+                          depuis le {{ membership.first_payment|date:"d F Y" }})
+                        {% endif %}
+                        <button class="btn btn-success btn-sm" 
+                                data-toggle="modal" 
+                                data-target="#more-info-{{ membership.user.pk }}">
+                          <i class="fa fa-plus"></i>
+                          Mettre à jour le membre
+                        </button>
+                      </li>
+                      {% include "user/organization/modal_more_info.html" with anonymous_user=membership.user form=add_member_form|initial:membership.user %}
+                      {% endif %}
+                      {% empty %}
+                      <li class="list-group-item">
+                        Il n'y a pas de membre visible dans cette organisation
+                      </li>
+                    {% endfor %}
+                    <button class="btn btn-success btn-sm" 
+                            data-toggle="modal" 
+                            data-target="#more-info-">
+                      <i class="fa fa-plus"></i>
+                      Ajouter un membre
+                    </button>
+                    {% include "user/organization/modal_more_info.html" with form=add_member_form %}
+                  </ul>
+              </div>
+          </div>
+        </div>
+      </div> 
+    </div>
+
+      <div class="tab-pane fade show" id="v-pills-controls" role="tabpanel" aria-labelledby="v-pills-controls-tab">
+            {% if is_admin %}
+              <a class="btn btn-primary btn-sm" href="{% url 'event:condition_create' organization.pk %}" title="create condition">
+                <i class="fa fa-plus-circle"></i> Créer une condition d'accès
+              </a>
+              <a class="btn btn-primary btn-sm" href="{% url 'event:activity_create' organization.pk %}" title="activity place">
+                <i class="fa fa-plus-circle"></i> Ajouter une activité
+              </a>
+              <a href="{% url 'location:create' organization.pk %}" class="btn btn-info btn-sm">
+                <i class="fa fa-plus-circle"></i> Ajouter un local
+              </a>
+            {% endif %}
+            {% if is_active %}
+              <a class="btn btn-primary btn-sm{% if not organization.activities.all %} disabled{% endif %}" href="{% url 'event:create' organization.id %}">
+                <i class="fa fa-plus-circle"></i> Créer un évènement
+              </a>
+              <a class="btn btn-primary btn-sm{% if not organization.activities.all %} disabled{% endif %}" href="{% url 'event:recurrent_create' organization.id %}">
+                <i class="fa fa-plus-circle"></i> Créer un évènement récurrent
+              </a>
+            {% endif %}
+          {% if is_admin %}
+          <div class="dropdown-divider mb-4"></div>
+          <div class="row m-4">
+            <h4>Conditions d'accès</h4>
+          </div>
+          <div class="card-columns">
+            {% include 'event/condition/list.html' with conditions=organization.conditions.all %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+</div>
 
 {% endblock %}
 

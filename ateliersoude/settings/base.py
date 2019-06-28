@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     "sorl.thumbnail",
     "tinymce",
     "import_export",
+    "initial_avatars",
 ]
 
 

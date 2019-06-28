@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load assets l10n app_filters %}
 {% load thumbnail %}
+{% load initialavatar %}
 
 
 {% block extra_css %}
@@ -143,12 +144,8 @@
                     {% thumbnail user.avatar_img "50x50" crop="center" format="PNG" as im %}
                       <img src="{{ im.url }}" class="m-2 rounded-circle"/>
                     {% endthumbnail %}
-                    {% else %}
-                      <div class="avatar-circle">
-                        <span class="initials">
-                            {{ user.first_name|slice:1|capfirst }}{{ user.last_name|slice:1|capfirst}}
-                        </span>
-                      </div>
+                  {% else %}
+                    {% get_initial_avatar user 100 'circle' %}
                   {% endif %}
                   {{ user }}
                 </div>
@@ -162,11 +159,7 @@
                       <img src="{{ im.url }}" class="m-2 rounded-circle"/>
                     {% endthumbnail %}
                     {% else %}
-                      <div class="avatar-circle">
-                        <span class="initials">
-                            {{ user.first_name|slice:1|capfirst }}{{ user.last_name|slice:1|capfirst}}
-                        </span>
-                      </div>
+                      {% get_initial_avatar user 100 'circle' %}
                   {% endif %}
                     {{ user }}
                   </div>
@@ -203,11 +196,7 @@
                     <img src="{{ im.url }}" class="m-2 rounded-circle"/>
                   {% endthumbnail %}
                 {% else %}
-                  <div class="avatar-circle">
-                    <span class="initials">
-                        {{ user.first_name|slice:1|capfirst }}{{ user.last_name|slice:1|capfirst}}
-                    </span>
-                  </div>
+                  {% get_initial_avatar user 100 'circle' %}
                 {% endif %}<br>
                 {{ user }}
                 <br>
@@ -246,11 +235,7 @@
                     <img src="{{ im.url }}" class="m-2 rounded-circle"/>
                   {% endthumbnail %}<br>
                   {% else %}
-                    <div class="avatar-circle">
-                      <span class="initials">
-                          {{ user.first_name|slice:1|capfirst }}{{ user.last_name|slice:1|capfirst}}
-                      </span>
-                    </div>                  
+                    {% get_initial_avatar user 100 'circle' %}
                   {% endif %}
                 {{ participation.user }}
                 <br>

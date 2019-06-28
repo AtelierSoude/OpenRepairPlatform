@@ -43,14 +43,32 @@
 <section class="row h-100">
 
         <div class="nav  bg-light flex-column nav-pills p-4 text-left col-md-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-            <a class="nav-link active" id="v-pills-rdv-tab" data-toggle="pill" href="#v-pills-about" role="tab" aria-controls="v-pills-rdv" aria-selected="true">A propos</a>
-            <a class="nav-link" id="v-pills-events-tab" data-toggle="pill" href="#v-pills-events" role="tab" aria-controls="v-pills-events" aria-selected="false">Evènements</a>
-            <a class="nav-link" id="v-pills-members-tab" data-toggle="pill" href="#v-pills-members" role="tab" aria-controls="v-pills-members" aria-selected="false">Membres</a>
-            <a class="nav-link" id="v-pills-controls-tab" data-toggle="pill" href="#v-pills-controls" role="tab" aria-controls="v-pills-controls" aria-selected="false">Contrôles</a>
+            <a class="nav-link active" id="v-pills-events-tab" data-toggle="pill" href="#v-pills-events" role="tab" aria-controls="v-pills-events" aria-selected="false">Evènements</a>
+            <a class="nav-link" id="v-pills-about-tab" data-toggle="pill" href="#v-pills-about" role="tab" aria-controls="v-pills-rdv" aria-selected="true">A propos</a>
+            <a class="nav-link" id="v-pills-community-tab" data-toggle="pill" href="#v-pills-community" role="tab" aria-controls="v-pills-community" aria-selected="false">Communauté</a>
+            {% if is_active %}
+              <a class="nav-link" id="v-pills-controls-tab" data-toggle="pill" href="#v-pills-controls" role="tab" aria-controls="v-pills-controls" aria-selected="false">Contrôles</a>
+            {% endif %}
         </div>
       
   <div class="col-md-9 p-4 tab-content" id="v-pills-tabContent">
       
+
+      <div class="tab-pane fade show" id="v-pills-events" role="tabpanel" aria-labelledby="v-pills-events-tab">
+          {% if events or has_hidden_events %}
+          <h3>Prochains évènements</h3>
+          {% if is_volunteer %}
+            <a href="{% url 'user:organization_all_events' organization.pk organization.slug page %}" class="btn btn-sm btn-info">
+              <i class="fa fa-search"></i>
+              Voir tous les évènements
+            </a>
+          {% endif %}
+          <div class="card-columns">
+            {% include "event/event_cards.html" with event_list=events minimal=True %}
+          </div>
+        {% endif %}
+      </div>
+
       <div class="tab-pane fade show active" id="v-pills-about" role="tabpanel" aria-labelledby="v-pills-abot-tab">
           <h3>Description</h3>
           <div>
@@ -93,29 +111,14 @@
       {% endif %}      
       </div>
 
-      <div class="tab-pane fade show" id="v-pills-events" role="tabpanel" aria-labelledby="v-pills-events-tab">
-        {% if events or has_hidden_events %}
-        <h3 class="mt-4">Prochains évènements</h3>
-        {% if is_volunteer %}
-          <a href="{% url 'user:organization_all_events' organization.pk organization.slug page %}" class="btn btn-sm btn-info">
-            <i class="fa fa-search"></i>
-            Voir tous les évènements
-          </a>
-        {% endif %}
-        <div class="card-columns">
-          {% include "event/event_cards.html" with event_list=events minimal=True %}
-        </div>
-      {% endif %}
-      </div>
-
-
-    <div class="tab-pane fade show" id="v-pills-members" role="tabpanel" aria-labelledby="v-pills-members-tab">
+    <div class="tab-pane fade show" id="v-pills-community" role="tabpanel" aria-labelledby="v-pills-community-tab">
         {% include 'user/organization/manage_user.html' %}
-        <div class="row mt-2">
+        <div class="row">
+          <h4 class="ml-2 col-lg">{{ organization.memberships.all.count }} membres</h4>
             <div class="col-sm">
+              {% if is_active %}
               <div class="card">
                 <div class="card-body">
-                  <h4 class="card-title">Les membres</h4>
                   <ul class="list-group list-group-flush">
                     {% for membership in organization.memberships.all %}
                       {% if membership.user.is_visible or is_volunteer %}
@@ -154,10 +157,17 @@
                   </ul>
               </div>
           </div>
+        {% else %}
+        <br>
+        <div class="col-lg">
+          Vous n'avez pas les droits pour voir les membres de {{organization.name}}
+        </div>
+         {% endif %}
         </div>
       </div> 
     </div>
 
+    {% if is_active %}
       <div class="tab-pane fade show" id="v-pills-controls" role="tabpanel" aria-labelledby="v-pills-controls-tab">
             {% if is_admin %}
               <a class="btn btn-primary btn-sm" href="{% url 'event:condition_create' organization.pk %}" title="create condition">
@@ -189,6 +199,7 @@
         {% endif %}
       </div>
     </div>
+  {% endif %}
   </section>
 </div>
 

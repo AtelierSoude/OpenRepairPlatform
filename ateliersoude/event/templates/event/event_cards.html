@@ -26,9 +26,6 @@
           {% if request.user in event.organizers.all %}
           <span class="badge badge-success badge-pill">Organisateur</span>
           {% endif %}
-          {% if event.remaining_seats <= 0 %}
-          <span class="badge badge-danger badge-pill">Complet</span>
-          {% endif %}
       </h5>
 
     {% if minimal != True %}  
@@ -63,6 +60,8 @@
         {% include "event/register.html" with event=event %}
         <br>
         <br>
+      {% else %}
+      <a class="btn btn-outline-danger"> Complet</a>
       {% endif %}
     {% endif %}
 

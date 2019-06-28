@@ -2,7 +2,7 @@
 
   <div class="row">
     <div class="">
-      <h4 class="ml-2 col-lg">Les administrateurs</h4>
+      <h4 class="ml-2 col-lg">{{ organization.admins.all.count }} administrateurs</h4>
       <div class="card-columns">
         {% include "user/user_card.html" with users=organization.admins.all admin_remove_controls=True %}
       </div>
@@ -24,7 +24,7 @@
   
 
   <div class="">
-      <h4 class="ml-2 col-lg">Les actifs</h4>
+      <h4 class="ml-2 col-lg">{{ organization.actives.all.count }} actifs</h4>
        <div class="card-columns">
         {% include "user/user_card.html" with users=organization.actives.all active_remove_controls=True %}
 <!--
@@ -55,7 +55,7 @@
 
 
   <div class="">
-      <h4 class="ml-2 col-lg">Les volontaires</h4>
+      <h4 class="ml-2 col-lg">{{ organization.volunteers.all.count }} volontaires</h4>
       <div class="card-columns">
         {% include "user/user_card.html" with users=organization.volunteers.all volunteer_remove_controls=True %}
       </div>

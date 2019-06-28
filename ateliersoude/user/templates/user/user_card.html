@@ -1,5 +1,6 @@
 {% load thumbnail %}
 {% load assets %}
+{% load initialavatar %}
 
 {% block extra_css %}
   {% assets "css_detail_user" %}
@@ -17,11 +18,7 @@
               <img src="{{ im.url }}" class="m-2 rounded-circle"/>
             {% endthumbnail %}
           {% else %}
-            <div class="avatar-circle">
-              <span class="initials">
-                  {{ user.first_name|slice:1|capfirst }}{{ user.last_name|slice:1|capfirst }}
-              </span>
-            </div>
+            {% get_initial_avatar user 100 'circle' %}
           {% endif %}
         </div>
         <div class="col-12">

@@ -112,60 +112,10 @@
       </div>
 
     <div class="tab-pane fade show" id="v-pills-community" role="tabpanel" aria-labelledby="v-pills-community-tab">
+      <div class="row">
         {% include 'user/organization/manage_user.html' %}
-        <div class="row">
-          <h4 class="ml-2 col-lg">{{ organization.memberships.all.count }} membres</h4>
-            <div class="col-sm">
-              {% if is_active %}
-              <div class="card">
-                <div class="card-body">
-                  <ul class="list-group list-group-flush">
-                    {% for membership in organization.memberships.all %}
-                      {% if membership.user.is_visible or is_volunteer %}
-                      <li class="list-group-item">
-                        <a href="{% url 'user:user_detail' membership.user.pk %}">
-                          {{ membership.user }}
-                        </a>
-                        {% if membership.current_contribution > 0 %}
-                          (A donné
-                            <span class="badge badge-pill badge-secondary">
-                            {{ membership.current_contribution }}€
-                            </span>
-                          depuis le {{ membership.first_payment|date:"d F Y" }})
-                        {% endif %}
-                        <button class="btn btn-success btn-sm" 
-                                data-toggle="modal" 
-                                data-target="#more-info-{{ membership.user.pk }}">
-                          <i class="fa fa-plus"></i>
-                          Mettre à jour le membre
-                        </button>
-                      </li>
-                      {% include "user/organization/modal_more_info.html" with anonymous_user=membership.user form=add_member_form|initial:membership.user %}
-                      {% endif %}
-                      {% empty %}
-                      <li class="list-group-item">
-                        Il n'y a pas de membre visible dans cette organisation
-                      </li>
-                    {% endfor %}
-                    <button class="btn btn-success btn-sm" 
-                            data-toggle="modal" 
-                            data-target="#more-info-">
-                      <i class="fa fa-plus"></i>
-                      Ajouter un membre
-                    </button>
-                    {% include "user/organization/modal_more_info.html" with form=add_member_form %}
-                  </ul>
-              </div>
-          </div>
-        {% else %}
-        <br>
-        <div class="col-lg">
-          Vous n'avez pas les droits pour voir les membres de {{organization.name}}
-        </div>
-         {% endif %}
-        </div>
-      </div> 
     </div>
+  </div>
 
     {% if is_active %}
       <div class="tab-pane fade show" id="v-pills-controls" role="tabpanel" aria-labelledby="v-pills-controls-tab">

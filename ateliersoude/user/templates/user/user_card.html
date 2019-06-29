@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% for user in users %}
- <!-- {% if user.is_visible %} -->
+
   <div class="card mx-2 mb-2">
     <a class="card-link" href="{{ user.get_absolute_url }}">
       <div class="row text-center" id="square-{{ user.pk }}">
@@ -95,7 +95,7 @@
 
     </ul>
   </div>
-<!-- {% endif %} -->
+
 {% empty %}
   <div class="col-lg">Pas encore d'utilisateur</div>  
 {% endfor %}

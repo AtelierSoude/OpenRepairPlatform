@@ -67,6 +67,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         null=True,
         blank=True,
     )
+
+    username = ""
+
     bio = CleanHTMLField(_("bio"), blank=True, default="")
 
     is_staff = models.BooleanField(

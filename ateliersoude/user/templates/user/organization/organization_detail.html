@@ -54,7 +54,7 @@
   <div class="col-md-9 p-4 tab-content" id="v-pills-tabContent">
       
 
-      <div class="tab-pane fade show" id="v-pills-events" role="tabpanel" aria-labelledby="v-pills-events-tab">
+      <div class="tab-pane fade show active" id="v-pills-events" role="tabpanel" aria-labelledby="v-pills-events-tab">
           {% if events or has_hidden_events %}
           <h3>Prochains évènements</h3>
           {% if is_volunteer %}
@@ -69,7 +69,7 @@
         {% endif %}
       </div>
 
-      <div class="tab-pane fade show active" id="v-pills-about" role="tabpanel" aria-labelledby="v-pills-abot-tab">
+      <div class="tab-pane fade show" id="v-pills-about" role="tabpanel" aria-labelledby="v-pills-abot-tab">
           <h3>Description</h3>
           <div>
             {{ organization.description | safe }}

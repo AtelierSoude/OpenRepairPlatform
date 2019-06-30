@@ -34,14 +34,12 @@
           {% else %}
             {% if user.first_name %}
               {% get_initial_avatar user 75 'circle' %}
-            {% else %}
-              {% get_initial_avatar user.email 75 'circle' %}
             {% endif %}
           {% endif %}
         </div>
         <div class="col-12">
           <h5 class="mx-auto col-12">
-              {{ user.first_name|capfirst }} {{ user.last_name|capfirst}}
+              {{ user}}
           </h5>
         </div>
       </div>

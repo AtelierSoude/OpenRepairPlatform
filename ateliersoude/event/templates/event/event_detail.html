@@ -176,8 +176,6 @@
                       {% else %}
                         {% if participation.user.first_name %}
                           {% get_initial_avatar participation.user 75 'circle' %}
-                        {% else %}
-                          {% get_initial_avatar participation.user.email 75 'circle' %}
                         {% endif %}
                       {% endif %}
                     </div>

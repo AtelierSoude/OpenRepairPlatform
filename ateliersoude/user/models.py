@@ -123,6 +123,13 @@ class Organization(models.Model):
     description = CleanHTMLField(
         verbose_name=_("Activity description"), default=""
     )
+    email = models.EmailField(
+        max_length=200, verbose_name=_("Organization mail address"), blank=True)
+    website = models.URLField(
+        max_length=200, verbose_name=_("Organization website mail"), blank=True)
+    phone_number = models.CharField(
+        _("Organization phone number"), max_length=10, blank=True, default="-"
+    )
     picture = models.ImageField(
         verbose_name=_("Image"),
         upload_to="organizations/",

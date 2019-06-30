@@ -15,6 +15,7 @@ from django.views.generic import (
     DeleteView,
     RedirectView,
 )
+from django.template.loader import render_to_string
 
 from ateliersoude import utils
 from ateliersoude.event.models import Event
@@ -163,6 +164,15 @@ class AddMemberToOrganization(HasActivePermissionMixin, RedirectView):
         paid = form.cleaned_data["amount_paid"]
         Membership.objects.create(
             organization=self.organization, user=user, amount=paid
+        )
+        msg_plain = render_to_string("user/mail/membership.html", context=locals())
+        msg_html = render_to_string("user/mail/membership.html", context=locals())
+        send_mail(
+            f"Vous êtes désormais membre de - {organization}",
+            msg_plain,
+            "no-reply@atelier-soude.fr",
+            [user.email],
+            html_message=msg_html,
         )
         messages.success(self.request, f"Vous avez ajouté {user} avec succes.")
         return url

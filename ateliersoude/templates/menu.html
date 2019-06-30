@@ -1,5 +1,6 @@
 {% block menu %}
 {% load thumbnail %}
+{% load initialavatar %}
 
 
 <header class="position-sticky sticky-top">
@@ -44,17 +45,17 @@
 
       <div class="navbar-brand avatar">
         <a class="nav-link mr-3" href="{{ user.get_absolute_url }}"> 
-            {% if user.avatar_img %}
-            {% thumbnail user.avatar_img "30x30" crop="center" format="PNG" as im %}
-              <img src="{{ im.url }}" class="rounded-circle"/>
+          {% if user.avatar_img %}
+            {% thumbnail user.avatar_img "50x50" crop="center" format="PNG" as im %}
+              <img src="{{ im.url }}" class="m-2 rounded-circle"/>
             {% endthumbnail %}
           {% else %}
-          <div class="avatar-circle" style="width:30px; line-height: 30px;">
-            <span class="initials">
-                {{ user.first_name|slice:1|capfirst }}{{ user.last_name|slice:1|capfirst }}
-            </span>
-          </div>
-        {% endif %}
+            {% if user.first_name %}
+              {% get_initial_avatar user 50 'circle' %}
+            {% else %}
+              {% get_initial_avatar user.email 50 'circle' %}
+            {% endif %}
+          {% endif %}
           {{ user.first_name }}
         </a>
       </div>

@@ -134,85 +134,22 @@
 <section class="col-md-6 p-4">
     <h5 class="mt-4"> {{ event.organizers.all.count }} Animateur·trice·s</h5>
     <hr>
-    <div class="row">
-        {% for user in event.organizers.all %}
-          <div class="col-md-3 p-2">
-            {% if not user.is_visible and not is_admin %}
-              <div class="card">
-                <div class="card-body text-center p-4">
-                  {% if user.avatar_img %}
-                    {% thumbnail user.avatar_img "50x50" crop="center" format="PNG" as im %}
-                      <img src="{{ im.url }}" class="m-2 rounded-circle"/>
-                    {% endthumbnail %}
-                  {% else %}
-                    {% get_initial_avatar user 100 'circle' %}
-                  {% endif %}
-                  {{ user }}
-                </div>
-              </div>
-            {% else %}
-              <div class="card">
-                <a href="{% url "user:user_detail" user.pk %}" class="card-link">
-                  <div class="card-body text-center p-4">
-                  {% if user.avatar_img %}
-                    {% thumbnail user.avatar_img "50x50" crop="center" format="PNG" as im %}
-                      <img src="{{ im.url }}" class="m-2 rounded-circle"/>
-                    {% endthumbnail %}
-                    {% else %}
-                      {% get_initial_avatar user 100 'circle' %}
-                  {% endif %}
-                    {{ user }}
-                  </div>
-                </a>
-              </div>
-            {% endif %}
-          </div>
-        {% endfor %}
-        </div>
-    
-        <h5 class="mt-4"> {{ event.registered.all.count|add:event.presents.all.count }} Participant·e·s</h5>
-        <hr>
+    <div class="card-columns">
+      {% include "user/user_card.html" with users=event.organizers.all %}
+    </div>
+
+    <h5 class="mt-4"> {{ event.registered.all.count|add:event.presents.all.count }} Participant·e·s</h5>
+    <hr>
 
   {% if is_volunteer %}
   
-    <div class="row">
-      {% for user in event.registered.all %}
-        <div class="col-md-4 col-lg-3 p-2">
-          <div class="card">
-            <div class="card-body text-center p-4">
-              <a href="{% url "user:user_detail" user.pk %}" class="card-link">
-                  <br>
-                  <span class="badge badge-pill badge-primary">
-                    {% filter_orga queryset=user.memberships organization=event.organization as membership %}
-                    {% if membership %}
-                      {{ membership.current_contribution }}
-                    {% else %}
-                      0
-                    {% endif %}
-                    €
-                  </span>
-                {% if user.avatar_img %}
-                  {% thumbnail user.avatar_img "100x100" crop="center" format="PNG" as im %}
-                    <img src="{{ im.url }}" class="m-2 rounded-circle"/>
-                  {% endthumbnail %}
-                {% else %}
-                  {% get_initial_avatar user 100 'circle' %}
-                {% endif %}<br>
-                {{ user }}
-                <br>
-              </a>
-              {% if event.has_started and is_active %}
-              {% include "event/modal_more_info.html" with anonymous_user=user form=present_form|initial:user %}
-              {% endif %}
-            </div>
-          </div>
-        </div>
-      {% endfor %}
+    <div class="card-columns">
+      {% include "user/user_card.html" with users=event.registered.all event_control=True %}
     </div>
 
-    <div class="row">
+    <div class="card-columns">
+
       {% for participation in event.participations.all %}
-        <div class="col-md-4 col-lg-3 p-2">
           <div class="card border border-success">
             <div class="card-body text-center p-4">
               <a href="{% url "user:user_detail" participation.user.pk %}" class="card-link"> 
@@ -230,16 +167,27 @@
                       + {{ participation.amount }}€
                       </span>
                     {% endif %}
-                {% if participation.avatar_img %}
-                  {% thumbnail participation.avatar_img "50x50" crop="center" format="PNG" as im %}
-                    <img src="{{ im.url }}" class="m-2 rounded-circle"/>
-                  {% endthumbnail %}<br>
-                  {% else %}
-                    {% get_initial_avatar user 100 'circle' %}
-                  {% endif %}
-                {{ participation.user }}
-                <br>
-              </a>
+                <div class="row text-center" id="square-{{ participation.user.pk }}">
+                    <div class="col-12 mb-1">
+                      {% if user.avatar_img %}
+                        {% thumbnail user.avatar_img "100x100" crop="center" format="PNG" as im %}
+                          <img src="{{ im.url }}" class="m-2 rounded-circle"/>
+                        {% endthumbnail %}
+                      {% else %}
+                        {% if participation.user.first_name %}
+                          {% get_initial_avatar participation.user 75 'circle' %}
+                        {% else %}
+                          {% get_initial_avatar participation.user.email 75 'circle' %}
+                        {% endif %}
+                      {% endif %}
+                    </div>
+                    <div class="col-12">
+                      <h5 class="mx-auto col-12">
+                          {{ participation.user.first_name|capfirst }} {{ participation.user.last_name|capfirst}}
+                      </h5>
+                    </div>
+                </div>
+            </a>
               {% if is_active %}
                 {% tokenize user=participation.user event=event action='absent' as tok %}
                 <a href="{% url 'event:user_absent' tok %}" class="btn btn-danger btn-sm">
@@ -248,7 +196,6 @@
               {% endif %}
             </div>
           </div>
-        </div>
       {% endfor %}
     </div>
 
@@ -256,8 +203,6 @@
     <hr>
     <ul>
     <li>Total des cotisations perçues: {{ total_fees }}€</li>
-    <li>Membres présents : {{ event.presents.all|length }}</li>
-    <li>Nombre d'organisateurs: {{ event.organizers.all|length }}</li>
     </ul>
 
     <div class="fixed-bottom m-4" style="right:0px; left:initial">

@@ -133,3 +133,6 @@ forms.FORM_GROUP_CLASS += " p-2"
 
 # django messages settings
 MESSAGE_TAGS = {messages.ERROR: "danger"}
+
+# Avatar Innitials Settings 
+AVATAR_COLORS = ((254, 229, 110), (8, 51, 66),(43, 230, 171),)

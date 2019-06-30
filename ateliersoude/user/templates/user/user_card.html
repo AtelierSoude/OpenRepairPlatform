@@ -1,5 +1,5 @@
 {% load thumbnail %}
-{% load assets %}
+{% load assets l10n app_filters %}
 {% load initialavatar %}
 
 {% block extra_css %}
@@ -10,16 +10,33 @@
 
 {% for user in users %}
 
-  <div class="card mx-2 mb-2">
+  <div class="card mx-2 p-2">
     <a class="card-link" href="{{ user.get_absolute_url }}">
+
+      {% if event_control == True %}
+        <span class="badge badge-pill badge-primary">
+            {% filter_orga queryset=user.memberships organization=event.organization as membership %}
+            {% if membership %}
+              {{ membership.current_contribution }}
+            {% else %}
+              0
+            {% endif %}
+            €
+          </span>
+      {% endif %}
+
       <div class="row text-center" id="square-{{ user.pk }}">
-        <div class="col-12">
+        <div class="col-12 mb-1">
           {% if user.avatar_img %}
             {% thumbnail user.avatar_img "100x100" crop="center" format="PNG" as im %}
               <img src="{{ im.url }}" class="m-2 rounded-circle"/>
             {% endthumbnail %}
           {% else %}
-            {% get_initial_avatar user 100 'circle' %}
+            {% if user.first_name %}
+              {% get_initial_avatar user 75 'circle' %}
+            {% else %}
+              {% get_initial_avatar user.email 75 'circle' %}
+            {% endif %}
           {% endif %}
         </div>
         <div class="col-12">
@@ -29,7 +46,13 @@
         </div>
       </div>
     </a>
-    <ul class="list-group list-group-flush">
+    {% if event_control == True %}
+      {% if event.has_started and is_active %}
+      {% include "event/modal_more_info.html" with anonymous_user=user form=present_form|initial:user %}
+      {% endif %}
+    {% endif %}
+  <!--
+    <ul class="list-group">
       {% if user.member_organizations.all %}
         <li class="list-group-item">
           <small> 
@@ -62,12 +85,12 @@
           </small>
         </li>
       {% endif %}
-
+      -->
       {% if admin_remove_controls == True %}
         {% if is_admin %}
           <form action="{% url 'user:remove_from_admins' organization.pk user.pk %}" class="d-inline">
             {% csrf_token %}
-            <button type="submit" class="btn badge badge-pill badge-danger" onclick="return confirm('Êtes-vous sûr ?')">&times;</button>
+            <button type="submit" class="btn badge badge-pill badge-danger float-right" onclick="return confirm('Êtes-vous sûr ?')">&times;</button>
           </form>
         {% endif %}
       {% endif %}
@@ -76,7 +99,7 @@
        {% if is_admin %}
         <form action="{% url 'user:remove_from_actives' organization.pk user.pk %}" class="d-inline">
           {% csrf_token %}
-          <button type="submit" class="btn badge badge-pill badge-danger" onclick="return confirm('Êtes-vous sûr ?')">&times;</button>
+          <button type="submit" class="btn badge badge-pill badge-danger float-right" onclick="return confirm('Êtes-vous sûr ?')">&times;</button>
         </form>
        {% endif %}
       {% endif %}
@@ -85,7 +108,7 @@
         {% if is_admin %}
         <form action="{% url 'user:remove_from_volunteers' organization.pk user.pk %}" class="d-inline">
           {% csrf_token %}
-          <button type="submit" class="btn badge badge-pill badge-danger" onclick="return confirm('Êtes-vous sûr ?')">&times;</button>
+          <button type="submit" class="btn badge badge-pill badge-danger float-right" onclick="return confirm('Êtes-vous sûr ?')">&times;</button>
         </form>
         {% endif %}
       {% endif %}

@@ -53,15 +53,14 @@
   </a>
 
     <footer class="text-muted text-center">
+      {% if event.remaining_seats <= 0 %}
         {% include "event/register.html" with event=event %}
         <br>
         <br>
       {% else %}
       <a class="btn btn-outline-danger"> Complet</a>
       {% endif %}
-    {% endif %}
-
->>>>>>> style_all_app
+    
       <div class="col-lg">
         {% if event.organization.picture %}
         {% thumbnail event.organization.picture "30x30" crop="left" format="PNG" as im %}

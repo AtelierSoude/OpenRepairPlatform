@@ -19,7 +19,7 @@
 
   <a class="" href="{% url 'event:detail' event.pk event.slug %}">
 
-      <h5 class="text-muted position-absolute" style="top:45px; right:0px">
+      <h5 class="text-muted position-absolute" style="top:47px; right:0px">
         {% if request.user in event.registered.all or request.user in event.presents.all %}
           <span class="badge badge-success badge-pill">Inscrit</span>
           {% endif %}
@@ -36,7 +36,7 @@
       {% endif %}
     {% endif %}
 
-    <div class="card-body">
+    <div class="card-body mt-4">
       <h4 class="card-title">{{ event.activity.name }}</h4>
 
       <h6 class="text-muted">

@@ -74,6 +74,26 @@
           <div>
             {{ organization.description | safe }}
           </div>
+          <div class="row">
+              <div class="col-md-6">
+                <i class="fa fa-phone pr-2"></i><label>Téléphone</label>
+              </div>
+              <div class="col-md-6">
+                  <p>{{ organization.phone_number }}</p>
+              </div>
+              <div class="col-md-6">
+                  <i class="fa fa-envelope pr-2"></i>Adresse mail
+                </div>
+                <div class="col-md-6">
+                    <p>{{ object.email }}</p>
+              </div>
+              <div class="col-md-6">
+                  <i class="fa fa-map pr-2"></i>Site internet
+                </div>
+                <div class="col-md-6">
+                    <a href="{{organization.website}}">{{ organization.website }}</a>
+              </div>
+          </div>
           <h3 class="mt-4">Activités</h3>
           <div class="card-columns">
             {% include "event/activity/cards.html" with activities=organization.activities.all %}

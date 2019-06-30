@@ -9,7 +9,8 @@
 {% endblock %}
 
 {% for user in users %}
-<div class="infinite-item card">
+
+  <div class="card mx-2 mb-2">
     <a class="card-link" href="{{ user.get_absolute_url }}">
       <div class="row text-center" id="square-{{ user.pk }}">
         <div class="col-12">
@@ -61,8 +62,37 @@
           </small>
         </li>
       {% endif %}
+
+      {% if admin_remove_controls == True %}
+        {% if is_admin %}
+          <form action="{% url 'user:remove_from_admins' organization.pk user.pk %}" class="d-inline">
+            {% csrf_token %}
+            <button type="submit" class="btn badge badge-pill badge-danger" onclick="return confirm('Êtes-vous sûr ?')">&times;</button>
+          </form>
+        {% endif %}
+      {% endif %}
+
+      {% if active_remove_controls == True %}
+       {% if is_admin %}
+        <form action="{% url 'user:remove_from_actives' organization.pk user.pk %}" class="d-inline">
+          {% csrf_token %}
+          <button type="submit" class="btn badge badge-pill badge-danger" onclick="return confirm('Êtes-vous sûr ?')">&times;</button>
+        </form>
+       {% endif %}
+      {% endif %}
+
+      {% if volunteer_remove_controls == True %}
+        {% if is_admin %}
+        <form action="{% url 'user:remove_from_volunteers' organization.pk user.pk %}" class="d-inline">
+          {% csrf_token %}
+          <button type="submit" class="btn badge badge-pill badge-danger" onclick="return confirm('Êtes-vous sûr ?')">&times;</button>
+        </form>
+        {% endif %}
+      {% endif %}
+
     </ul>
   </div>
+
 {% empty %}
-  <div>No users yet.</div>  
+  <div class="col-lg">Pas encore d'utilisateur</div>  
 {% endfor %}

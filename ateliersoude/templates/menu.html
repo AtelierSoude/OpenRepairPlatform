@@ -49,8 +49,12 @@
               <img src="{{ im.url }}" class="rounded-circle"/>
             {% endthumbnail %}
           {% else %}
-            <i class="fa fa-user text-primary"></i>
-          {% endif %}
+          <div class="avatar-circle" style="width:30px; line-height: 30px;">
+            <span class="initials">
+                {{ user.first_name|slice:1|capfirst }}{{ user.last_name|slice:1|capfirst }}
+            </span>
+          </div>
+        {% endif %}
           {{ user.first_name }}
         </a>
       </div>

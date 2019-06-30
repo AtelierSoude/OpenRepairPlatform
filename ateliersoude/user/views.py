@@ -18,7 +18,7 @@ from django.views.generic import (
 from django.template.loader import render_to_string
 
 from ateliersoude import utils
-from ateliersoude.event.models import Event
+from ateliersoude.event.models import Event, Participation
 from ateliersoude.event.templatetags.app_filters import tokenize
 from ateliersoude.event.views import add_present
 from ateliersoude.mixins import (
@@ -241,6 +241,11 @@ class UserDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         user = context["object"]
         registered = list(user.registered_events.all())
+        participations = list(Participation.objects.filter(user=user))
+        context["passed_participations"] = (
+            [(participation.event, participation.amount
+            ) for participation in participations]
+        )
         context["passed_rendezvous"] = (
             [(event, "present") for event in user.presents_events.all()]
             + [(event, "absent") for event in registered if event.has_ended]

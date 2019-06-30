@@ -168,28 +168,35 @@
   </div>
 
 
-    <div class="tab-pane fade" id="v-pills-membership" role="tabpanel" aria-labelledby="v-pills-membership-tab">
+  <div class="tab-pane fade" id="v-pills-membership" role="tabpanel" aria-labelledby="v-pills-membership-tab">
+    <h3 class="border-bottom border-gray pb-2">Etat des cotisations</h3>
 
-      <h5 class="border-bottom border-gray pb-2">Etat des cotisations</h5>
-
+    {% for membership in object.memberships.all %}
+      <h5 class="border-bottom border-gray pb-2">{{ membership.organization }}
+      <small>depuis le {{ membership.first_payment|date:"d F Y" }}</small>
+      <span class="badge badge-pill badge-success float-right">{{ membership.amount }}€</span></h5>
       <table class="table table-striped table-hover">
-        {% for membership in object.memberships.all %}
-        <tr>
-          <td>
-            <b>{{ membership.organization}}</b>
-          </td>
-          <td>
-            le {{membership.first_payment}}
-          </td>
-          <td>
-            <span class="badge badge-pill badge-success">{{ membership.amount }}€</span>
-          </td>
+        {% for membership in membership.history.all %}
+          cotisation modifiée le : {{ membership.history_date }}
+          montant renseigné : {{ membership.amount }}€
           <br>
-        </tr>
+        {% endfor %}
+        {% for event, amount in passed_participations reversed %}
+            {% if event.organization == membership.organization and amount != 0 %}
+            <tr>
+              <td>
+                le {{ event.date|date:"d F Y" }}
+              </td>
+              <td>
+                {{ amount }}€
+              </td>
+            </tr>
+          {% endif %}
         {% endfor %}
       </table>
+    {% endfor %}
 
-    </div>
+  </div>
 
   
 

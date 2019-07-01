@@ -176,7 +176,7 @@ class EventListView(ListView):
             queryset = queryset.filter(
                 date__gte=form.cleaned_data["starts_after"]
             )
-        return queryset
+        return queryset.order_by("date")
 
 
 class EventFormView(HasActivePermissionMixin):

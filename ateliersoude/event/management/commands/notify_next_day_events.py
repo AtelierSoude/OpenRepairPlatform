@@ -17,7 +17,10 @@ class Command(BaseCommand):
     help = "Send email to all registered users the day before the event"
 
     def add_arguments(self, parser):
-        parser.add_argument("website_url", help="ex: http://dev.atelier-soude.fr")
+        parser.add_argument(
+            "website_url",
+            help="ex: http://dev.atelier-soude.fr"
+        )
 
     def handle(self, *args, **options):
         base_url = options["website_url"]
@@ -48,11 +51,10 @@ class Command(BaseCommand):
                     "event/mail/event_incoming.html", context=locals()
                 )
 
-                _mail(
+                send_mail(
                     f"C'est demain - {event.activity.name}",
                     msg_plain,
                     "no-reply@atelier-soude.fr",
                     [user.email],
                     html_message=msg_html,
                 )
-send

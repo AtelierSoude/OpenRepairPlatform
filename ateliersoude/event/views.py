@@ -153,6 +153,7 @@ class EventListView(ListView):
         context = super().get_context_data(**kwargs)
         context["search_form"] = EventSearchForm(self.request.GET)
         context["register_form"] = CustomUserEmailForm
+        context["results_number"] = self.get_queryset().count()
         return context
 
     def get_queryset(self):

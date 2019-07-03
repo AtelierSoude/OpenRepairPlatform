@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load static %}
+{% load static i18n l10n %}
 {% load bootstrap4 app_filters %}
 
 {% block extra_js %}
@@ -25,7 +25,7 @@
       <div class="col-lg bg-white">
         <div class="collapse" id="search">
           <form method="GET" class="form-row">
-            {% bootstrap_form search_form  %}
+              {% bootstrap_form search_form %}
             <br>
             <div class="form-group p-2 col mt-auto">
               <button type="submit" class="btn btn-primary btn-block">
@@ -36,7 +36,7 @@
         </div>
       <a class="text-center d-block" 
         data-toggle="collapse" href="#search" role="button" aria-expanded="false" aria-controls="search">
-       Rechercher parmis les évènements
+       Rechercher parmi les évènements
        <span class="btn btn-secondary">
           <i class="fa fa-search"></i>
        </span>
@@ -46,14 +46,14 @@
 
   <section class="container pt-3">
     <div class="col-lg text-center mb-3">
-      {% if not event_list %}
+      {% if results_number == 0 %}
         Aucun évènement trouvé pour vos critères de recherche
       {% else %}
-        {{ event_list.all.count }} résultats pour votre recherche  
+        {{ results_number }} résultats pour votre recherche
       {% endif %}
     </div>
       <div class="col-md-12 row no-gutters">
-        <div class="card-columns infinite-container">
+        <div class="row infinite-container">
           {% include "event/event_cards.html" with event_list=event_list %}
         </div>
     </div>

@@ -1,5 +1,6 @@
 from datetime import date
 from django.contrib import messages
+from django.core.mail import send_mail
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.db.models import Q
@@ -165,10 +166,16 @@ class AddMemberToOrganization(HasActivePermissionMixin, RedirectView):
         Membership.objects.create(
             organization=self.organization, user=user, amount=paid
         )
-        msg_plain = render_to_string("user/mail/membership.html", context=locals())
-        msg_html = render_to_string("user/mail/membership.html", context=locals())
+        msg_plain = render_to_string(
+            "mail/membership.html",
+            context=locals()
+        )
+        msg_html = render_to_string(
+            "mail/membership.html",
+            context=locals()
+        )
         send_mail(
-            f"Vous êtes désormais membre de - {organization}",
+            f"Vous êtes désormais membre de - {self.organization}",
             msg_plain,
             "no-reply@atelier-soude.fr",
             [user.email],
@@ -243,8 +250,10 @@ class UserDetailView(DetailView):
         registered = list(user.registered_events.all())
         participations = list(Participation.objects.filter(user=user))
         context["passed_participations"] = (
-            [(participation.event, participation.amount
-            ) for participation in participations]
+            [
+                (participation.event, participation.amount)
+                for participation in participations
+            ]
         )
         context["passed_rendezvous"] = (
             [(event, "present") for event in user.presents_events.all()]

@@ -211,10 +211,12 @@ class EventSearchForm(forms.Form):
     starts_after = forms.DateField(
         widget=forms.DateInput(attrs={"type": "date"}, format="%Y-%m-%d"),
         required=False,
+        label="Commence après le"
     )
     starts_before = forms.DateField(
         widget=forms.DateInput(attrs={"type": "date"}, format="%Y-%m-%d"),
         required=False,
+        label="Commence avant le"
     )
 
     def __init__(self, *args, **kwargs):
@@ -223,16 +225,28 @@ class EventSearchForm(forms.Form):
         self.fields["place"] = forms.ModelChoiceField(
             required=False,
             queryset=Place.objects.filter(events__in=future_events).distinct(),
+            label="Lieu",
         )
         self.fields["organization"] = forms.ModelChoiceField(
             required=False,
             queryset=Organization.objects.filter(
                 events__in=future_events
             ).distinct(),
+            label="Organisateur",
         )
         self.fields["activity"] = forms.ModelChoiceField(
             required=False,
             queryset=Activity.objects.filter(
                 events__in=future_events
             ).distinct(),
+            label="Activité"
+        )
+        self.order_fields(
+            [
+                'organization',
+                'place',
+                'activity',
+                'starts_after',
+                'starts_before'
+            ]
         )

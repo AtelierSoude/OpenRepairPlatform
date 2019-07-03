@@ -8,6 +8,7 @@ class CleanHTMLField(HTMLField):
         value = super().clean(value, model_instance).replace("\r", "")
         value = value.replace("<br />", "<br>")
         ALLOWED_TAGS = [
+            "a",
             "p",
             "br",
             "b",
@@ -24,6 +25,7 @@ class CleanHTMLField(HTMLField):
         ]
         ALLOWED_ATTRS = [
             "style"
+            "href"
         ]
         ALLOWED_STYLES = [
             "text-decoration",

@@ -69,7 +69,16 @@ def test_organization_create(client_log, custom_user):
     )
     response = client_log.post(
         reverse("user:organization_create"),
-        {"name": "Test", "description": "Orga test", "picture": upload_image},
+        {
+            "name": "Test",
+            "description":
+            """
+                <h1> Test </h1>
+                <strong> gras </strong>
+                <u style="text-decoration-line: underline;"> sdfsdf </u>
+            """,
+            "picture": upload_image
+        },
     )
     assert response.status_code == 302
     assert "/admin/login/?next=" in response.url
@@ -80,7 +89,16 @@ def test_organization_create(client_log, custom_user):
     )
     response = client_log.post(
         reverse("user:organization_create"),
-        {"name": "Test", "description": "Orga test", "picture": upload_image},
+        {
+            "name": "Test",
+            "description":
+            """
+                <h1> Test </h1>
+                <strong> gras </strong>
+                <u style="text-decoration-line: underline;"> sdfsdf </u>
+            """,
+            "picture": upload_image
+        },
     )
     assert "organization" in response.url
     assert Organization.objects.count() == 1

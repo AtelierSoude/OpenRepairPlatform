@@ -24,6 +24,12 @@ def event_recurrent_data(
     user2 = custom_user_factory()
     user3 = custom_user_factory()
     user4 = custom_user_factory()
+    custom_date = timezone.now()
+    end_date = datetime.datetime(
+        custom_date.year,
+        custom_date.month+3,
+        custom_date.day+2
+    )
     organization.actives.add(user1, user2, user3, user4)
     return {
         "activity": activity.pk,
@@ -33,21 +39,21 @@ def event_recurrent_data(
         "location": place.pk,
         "organization": organization,
         "recurrent_type": "MONTHLY",
-        "date": timezone.now().date().strftime("%Y-%m-%d"),
+        "date": custom_date.date().strftime("%Y-%m-%d"),
         "days": ["MO", "TH"],
         "weeks": ["1", "2"],
         "starts_at": (
-            (timezone.now() + datetime.timedelta(hours=4))
+            (custom_date + datetime.timedelta(hours=4))
             .time()
             .strftime("%H:%M")
         ),
         "ends_at": (
-            (timezone.now() + datetime.timedelta(hours=7))
+            (custom_date + datetime.timedelta(hours=7))
             .time()
             .strftime("%H:%M")
         ),
         "end_date": (
-            (timezone.now() + datetime.timedelta(days=90))
+            (end_date)
             .date()
             .strftime("%Y-%m-%d")
         ),

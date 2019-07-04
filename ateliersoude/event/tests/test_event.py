@@ -7,7 +7,7 @@ from django.utils import timezone
 
 from ateliersoude.event.models import Event
 from ateliersoude.user.factories import USER_PASSWORD
-from ateliersoude.user.models import CustomUser, Membership
+from ateliersoude.user.models import CustomUser, Membership, Fee
 
 pytestmark = pytest.mark.django_db
 
@@ -471,6 +471,8 @@ def test_close_event(
     )
     assert organization.members.count() == 2
     assert CustomUser.objects.count() == 5
+    assert Fee.objects.count() == 0
+
     resp = client.post(reverse("event:close", args=[event.pk]))
     assert resp.status_code == 302
     client.login(email=member.email, password=USER_PASSWORD)
@@ -493,6 +495,7 @@ def test_close_event(
     assert membership_member.amount == 15
     assert membership_member2.amount == 10
     assert organization.members.count() == 3
+    assert Fee.objects.count() == 3
     assert CustomUser.objects.count() == 4
 
 

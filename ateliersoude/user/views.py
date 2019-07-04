@@ -26,7 +26,7 @@ from ateliersoude.mixins import (
     HasVolunteerPermissionMixin,
 )
 from ateliersoude.user.mixins import PermissionOrgaContextMixin
-from ateliersoude.user.models import CustomUser, Organization, Membership
+from ateliersoude.user.models import CustomUser, Organization, Membership, Fee
 from ateliersoude.utils import get_future_published_events
 
 from .forms import (
@@ -164,6 +164,9 @@ class AddMemberToOrganization(HasActivePermissionMixin, RedirectView):
         Membership.objects.create(
             organization=self.organization, user=user, amount=paid
         )
+        Fee.objects.create(
+            amount=paid, user=user, organization=self.organization
+        )
         messages.success(self.request, f"Vous avez ajouté {user} avec succes.")
         return url
 
@@ -180,6 +183,11 @@ class UpdateMemberView(HasActivePermissionMixin, UpdateView):
         )
         membership.amount += form.cleaned_data["amount_paid"]
         membership.save()
+        Fee.objects.create(
+            amount=form.cleaned_data["amount_paid"],
+            user=user,
+            organization=self.organization,
+        )
         return super().form_valid(form)
 
     def get_success_url(self, *args, **kwargs):

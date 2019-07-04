@@ -197,3 +197,17 @@ class Membership(models.Model):
 
     class Meta:
         unique_together = (("user", "organization"),)
+
+
+class Fee(models.Model):
+    date = models.DateField(default=timezone.now)
+    amount = models.PositiveIntegerField(default=0)
+    user = models.ForeignKey(
+        CustomUser, on_delete=models.CASCADE, related_name="fees"
+    )
+    organization = models.ForeignKey(
+        Organization, on_delete=models.CASCADE, related_name="fees"
+    )
+
+    def __str__(self):
+        return f"{self.user} - {self.date} - {self.amount}"

@@ -8,7 +8,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
 
 from ateliersoude.user.factories import USER_PASSWORD
-from ateliersoude.user.models import Organization
+from ateliersoude.user.models import Organization, Fee
 
 pytestmark = pytest.mark.django_db
 FILES_DIR = join(dirname(abspath(__file__)), "files")
@@ -455,6 +455,7 @@ def test_add_member_to_organization(custom_user_factory, client, organization):
     organization.admins.add(admin)
     assert client.login(email=admin.email, password=USER_PASSWORD)
     assert organization.admins.count() == 1
+    assert Fee.objects.count() == 0
     response = client.post(
         reverse(
             "user:organization_add_member", kwargs={"pk": organization.pk}
@@ -473,6 +474,7 @@ def test_add_member_to_organization(custom_user_factory, client, organization):
         kwargs={"pk": organization.pk, "slug": organization.slug},
     )
     assert organization.members.count() == 1
+    assert Fee.objects.count() == 1
 
 
 def test_re_add_member_to_organization(
@@ -514,6 +516,7 @@ def test_update_member_to_organization(
     membership_factory(user=user, organization=organization, amount=1)
     assert client.login(email=admin.email, password=USER_PASSWORD)
     assert organization.admins.count() == 1
+    assert Fee.objects.count() == 0
     response = client.post(
         reverse(
             "user:organization_update_member",
@@ -536,3 +539,4 @@ def test_update_member_to_organization(
     assert user.first_name == "Michel"
     assert user.memberships.first().amount == 6
     assert organization.members.count() == 1
+    assert Fee.objects.count() == 1

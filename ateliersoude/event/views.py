@@ -275,6 +275,13 @@ class AbsentView(RedirectView):
             ).first()
             if contribution:
                 contribution.amount -= participation.amount
+                fee = Fee.objects.filter(
+                    organization=event.organization,
+                    user=participation.user,
+                    date=event.date,
+                    amount=participation.amount,
+                )
+                fee.delete()
                 contribution.save()
         event.presents.remove(user)
         messages.success(self.request, f"{user} a été marqué comme absent !")

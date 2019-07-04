@@ -38,9 +38,12 @@
 
     <div class="card-body mt-4">
       <h4 class="card-title">{{ event.activity.name }}</h4>
-
       <h6 class="text-muted">
-        Encore <span> {{ event.remaining_seats }}</span> places disponibles 
+        {% if event.is_free %}
+          Pas de limite de place
+        {% else %}
+          Encore <span> {{ event.remaining_seats }}</span> places disponibles
+        {% endif %}
       </h6>
       <div class="text-muted">
         <i class="fa fa-map-marker-alt"></i>
@@ -60,7 +63,6 @@
       {% else %}
       <a class="btn btn-outline-danger"> Complet</a>
       {% endif %}
-    
       <div class="col-lg">
         {% if event.organization.picture %}
         {% thumbnail event.organization.picture "30x30" crop="left" format="PNG" as im %}

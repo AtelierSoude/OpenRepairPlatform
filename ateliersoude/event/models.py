@@ -137,6 +137,7 @@ class Event(models.Model):
     location = models.ForeignKey(
         Place, on_delete=models.SET_NULL, null=True, related_name="events"
     )
+    is_free = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     history = HistoricalRecords()

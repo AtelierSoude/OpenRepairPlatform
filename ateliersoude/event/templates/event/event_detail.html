@@ -38,12 +38,16 @@
             </p>
 
           <h6 class="text-muted">
-            {% if event.remaining_seats == 0 %}
-              <span class="badge badge-warning badge-pill">Complet</span>
+            {% if event.is_free %}
+              <span class="badge badge-info badge-pill">Pas de limite de place</span>
             {% else %}
-              Encore  
-              <span class="badge badge-info badge-pill">{{ event.remaining_seats }}
-                </span> places disponibles
+              {% if event.remaining_seats == 0 %}
+                <span class="badge badge-warning badge-pill">Complet</span>
+              {% else %}
+                Encore  
+                <span class="badge badge-info badge-pill">{{ event.remaining_seats }}
+                  </span> places disponibles
+              {% endif %}
             {% endif %}
             {% if request.user in event.registered.all or request.user in event.presents.all %}
               <span class="badge badge-success badge-pill">Inscrit</span>

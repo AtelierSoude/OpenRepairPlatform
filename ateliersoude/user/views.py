@@ -78,6 +78,21 @@ class UserCreateAndBookView(CreateView):
             email=self.request.POST.get("email", "invalid email")
         ).first()
         if self.object:
+            event = Event.objects.get(id=self.request.GET.get("event"))
+            organizers = event.organizers.all()
+            if self.object in organizers:
+                messages.error(
+                    self.request,
+                    "Vous existez déjà comme animateur de cet événement"
+                )
+                return redirect(
+                    reverse(
+                        'event:detail',
+                        kwargs={
+                            "pk": request.GET["event"],
+                            "slug": event.activity.slug
+                        })
+                )
             return redirect(self.get_success_url())
         return super().post(request, *args, **kwargs)
 

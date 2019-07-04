@@ -138,6 +138,19 @@ def test_anonymous_user_create_already_exists(client, event, custom_user):
     assert event.pk == event_from_token.pk
 
 
+def test_anonymous_user_create_is_organizer(client, event, custom_user):
+    event.organizers.add(custom_user)
+    event.save()
+    response = client.post(
+        reverse("user:create_and_book") + f"?event={event.pk}",
+        {"email": custom_user.email},
+    )
+    user = CustomUser.objects.first()
+    assert response.status_code == 302
+    assert user.pk == custom_user.pk
+    assert user not in event.registered.all()
+
+
 def test_anonymous_get_user_create(client, event_factory, organization):
     in_two_hours = timezone.now() + datetime.timedelta(hours=2)
     two_hours_ago = timezone.now() - datetime.timedelta(hours=2)

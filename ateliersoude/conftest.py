@@ -17,6 +17,7 @@ from ateliersoude.user.factories import (
     CustomUserFactory,
     OrganizationFactory,
     MembershipFactory,
+    FeeFactory,
 )
 
 register(CustomUserFactory)
@@ -28,6 +29,7 @@ register(EventFactory)
 register(PublishedEventFactory)
 register(MembershipFactory)
 register(ParticipationFactory)
+register(FeeFactory)
 
 
 @pytest.fixture

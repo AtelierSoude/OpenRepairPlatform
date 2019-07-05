@@ -21,15 +21,15 @@ class CleanHTMLField(HTMLField):
             "ol",
             "li",
             "div",
-            "span"
+            "span",
         ]
         ALLOWED_ATTRS = [
-            "style"
-            "href"
+            "style",
+            "href",
         ]
         ALLOWED_STYLES = [
             "text-decoration",
-            "text-decoration-line"
+            "text-decoration-line",
         ]
         cleaned_value = bleach.clean(
             value,

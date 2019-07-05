@@ -46,6 +46,7 @@ class EventForm(ModelForm):
             "activity",
             "location",
             "available_seats",
+            "is_free",
             "date",
             "starts_at",
             "ends_at",

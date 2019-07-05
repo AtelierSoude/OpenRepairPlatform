@@ -1,7 +1,9 @@
 {% load app_filters bootstrap4 %}
 
 {% if admin_text or not request.user.is_authenticated %}
-  {% if event.remaining_seats != 0 %}
+  {% if event.is_free %}
+    <a class="btn btn-outline-warning">Événement sans réservation</a>
+  {% elif event.remaining_seats != 0 %}
     <button class="btn btn-success" data-toggle="modal" data-target="#reservation{{ event.pk }}">
     {% if admin_text %}
     <i class="fa fa-plus"></i>
@@ -35,7 +37,9 @@
     <a class="btn btn-outline-danger"> Complet</a>
   {% endif %}
 {% else %}
-  {% if event.remaining_seats != 0 %}
+  {% if event.is_free %}
+    <a class="btn btn-outline-warning">Événement sans réservation</a>
+  {% elif event.remaining_seats != 0 %}
     {% if request.user in event.registered.all %}
       {% tokenize user=request.user event=event action='cancel' as tok %}
       <a href="{% url 'event:cancel_reservation' tok %}" class="btn btn-warning">Je ne participe plus</a>

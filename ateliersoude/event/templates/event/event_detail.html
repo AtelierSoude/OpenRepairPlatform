@@ -56,8 +56,9 @@
             <span class="badge badge-success badge-pill">Organisateur</span>
             {% endif %}
           </h6>
-
-          {% include "event/register.html" with event=event %}
+          {% if not event.is_free %}
+            {% include "event/register.html" with event=event %}
+          {% endif %}
           {% if is_active and user not in event.registered.all %}
             <form
                 {% if user in event.organizers.all %}
@@ -109,7 +110,7 @@
   
                 <small class="">
                   {{event.activity.name}}
-                 <!-- {{ event.activity.description | safe }} -->
+                 {{ event.activity.description | safe }}
                 </small>
               </div>
 
@@ -136,110 +137,114 @@
 </section>
 
 <section class="col-md-6 p-4">
+  {% if event.is_free %}
+    <h5> L'événement </h5>
+    <div>
+      {{ event.activity.description | safe }}
+    </div>
+  {% endif %}
     <h5 class="mt-4"> {{ event.organizers.all.count }} Animateur·trice·s</h5>
     <hr>
     <div class="card-columns">
       {% include "user/user_card.html" with users=event.organizers.all %}
     </div>
-
+  {% if not event.is_free %}
     <h5 class="mt-4"> {{ event.registered.all.count|add:event.presents.all.count }} Participant·e·s</h5>
     <hr>
-
-  {% if is_volunteer %}
-  
-    <div class="card-columns">
-      {% include "user/user_card.html" with users=event.registered.all event_control=True %}
-    </div>
-
-    <div class="card-columns">
-
-      {% for participation in event.participations.all %}
-          <div class="card border border-success">
-            <div class="card-body text-center p-4">
-              <a href="{% url "user:user_detail" participation.user.pk %}" class="card-link"> 
-                  <span class="badge badge-pill badge-primary">
-                      {% filter_orga queryset=participation.user.memberships organization=event.organization as membership %}
-                      {% if membership %}
-                        {{ membership.current_contribution }}
-                      {% else %}
-                        0
-                      {% endif %}
-                      €
-                    </span>
-                    {% if participation.amount > 0 %}
-                      <span class="badge badge-pill badge-secondary">
-                      + {{ participation.amount }}€
-                      </span>
-                    {% endif %}
-                <div class="row text-center" id="square-{{ participation.user.pk }}">
-                    <div class="col-12 mb-1">
-                      {% if user.avatar_img %}
-                        {% thumbnail user.avatar_img "100x100" crop="center" format="PNG" as im %}
-                          <img src="{{ im.url }}" class="m-2 rounded-circle"/>
-                        {% endthumbnail %}
-                      {% else %}
-                        {% if participation.user.first_name %}
-                          {% get_initial_avatar participation.user 75 'circle' %}
-                        {% endif %}
-                      {% endif %}
-                    </div>
-                    <div class="col-12">
-                      <h5 class="mx-auto col-12">
-                          {{ participation.user.first_name|capfirst }} {{ participation.user.last_name|capfirst}}
-                      </h5>
-                    </div>
-                </div>
-            </a>
-              {% if is_active %}
-                {% tokenize user=participation.user event=event action='absent' as tok %}
-                <a href="{% url 'event:user_absent' tok %}" class="btn btn-danger btn-sm">
-                  <i class="fa fa-minus"></i>
-                </a>
-              {% endif %}
-            </div>
-          </div>
-      {% endfor %}
-    </div>
-
-    <h5 class="mt-4">Quelques statistiques sur l'évènement</h5>
-    <hr>
-    <ul>
-    <li>Total des cotisations perçues: {{ total_fees }}€</li>
-    </ul>
-
-    <div class="fixed-bottom m-4" style="right:0px; left:initial">
-        <div class="lead">
-            {% if is_active %}
-            <a href="{% url 'event:edit' event.pk %}" class="btn btn-warning rounded-circle"><i class="fa fa-pencil-alt"></i></a>
-            {% endif %}
-            {% if is_admin %}
-            <a href="{% url 'event:delete' event.pk %}" class="btn btn-danger rounded-circle"><i class="fa fa-trash"></i></a>
-            {% endif %}
-            {% if is_active %}
-              <form action="{% url 'event:close' event.pk %}" method="post" class="d-inline">
-                {% csrf_token %}
-                <button class="btn btn-sm btn-info btn-sm" type="submit" onclick="return confirm('Êtes-vous sûrs de vouloir clôturer l\'évènement?')">
-                  <i class="fa fa-calendar-check"></i>
-                  Clôturer
-                </button>
-              </form>
-            {% endif %}
-    
-      {% if is_active %}
-        {% if event.available_seats > 0 %}
-          {% include "event/register.html" with event=event admin_text="Inscrire" %}
-        {% endif %}
-        {% if event.has_started %}
-          {% include "event/modal_more_info.html" with form=present_form admin_text="Présent" %}
-        {% endif %}
-      {% endif %}
+    {% if is_volunteer %}
+      <div class="card-columns">
+        {% include "user/user_card.html" with users=event.registered.all event_control=True %}
       </div>
-    </div>
 
+      <div class="card-columns">
+
+        {% for participation in event.participations.all %}
+            <div class="card border border-success">
+              <div class="card-body text-center p-4">
+                <a href="{% url "user:user_detail" participation.user.pk %}" class="card-link"> 
+                    <span class="badge badge-pill badge-primary">
+                        {% filter_orga queryset=participation.user.memberships organization=event.organization as membership %}
+                        {% if membership %}
+                          {{ membership.current_contribution }}
+                        {% else %}
+                          0
+                        {% endif %}
+                        €
+                      </span>
+                      {% if participation.amount > 0 %}
+                        <span class="badge badge-pill badge-secondary">
+                        + {{ participation.amount }}€
+                        </span>
+                      {% endif %}
+                  <div class="row text-center" id="square-{{ participation.user.pk }}">
+                      <div class="col-12 mb-1">
+                        {% if user.avatar_img %}
+                          {% thumbnail user.avatar_img "100x100" crop="center" format="PNG" as im %}
+                            <img src="{{ im.url }}" class="m-2 rounded-circle"/>
+                          {% endthumbnail %}
+                        {% else %}
+                          {% if participation.user.first_name %}
+                            {% get_initial_avatar participation.user 75 'circle' %}
+                          {% endif %}
+                        {% endif %}
+                      </div>
+                      <div class="col-12">
+                        <h5 class="mx-auto col-12">
+                            {{ participation.user.first_name|capfirst }} {{ participation.user.last_name|capfirst}}
+                        </h5>
+                      </div>
+                  </div>
+              </a>
+                {% if is_active %}
+                  {% tokenize user=participation.user event=event action='absent' as tok %}
+                  <a href="{% url 'event:user_absent' tok %}" class="btn btn-danger btn-sm">
+                    <i class="fa fa-minus"></i>
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+        {% endfor %}
+      </div>
+
+      <h5 class="mt-4">Quelques statistiques sur l'évènement</h5>
+      <hr>
+      <ul>
+      <li>Total des cotisations perçues: {{ total_fees }}€</li>
+      </ul>
+
+      <div class="fixed-bottom m-4" style="right:0px; left:initial">
+          <div class="lead">
+              {% if is_active %}
+              <a href="{% url 'event:edit' event.pk %}" class="btn btn-warning rounded-circle"><i class="fa fa-pencil-alt"></i></a>
+              {% endif %}
+              {% if is_admin %}
+              <a href="{% url 'event:delete' event.pk %}" class="btn btn-danger rounded-circle"><i class="fa fa-trash"></i></a>
+              {% endif %}
+              {% if is_active %}
+                <form action="{% url 'event:close' event.pk %}" method="post" class="d-inline">
+                  {% csrf_token %}
+                  <button class="btn btn-sm btn-info btn-sm" type="submit" onclick="return confirm('Êtes-vous sûrs de vouloir clôturer l\'évènement?')">
+                    <i class="fa fa-calendar-check"></i>
+                    Clôturer
+                  </button>
+                </form>
+              {% endif %}
+
+        {% if is_active %}
+          {% if event.available_seats > 0 %}
+            {% include "event/register.html" with event=event admin_text="Inscrire" %}
+          {% endif %}
+          {% if event.has_started %}
+            {% include "event/modal_more_info.html" with form=present_form admin_text="Présent" %}
+          {% endif %}
+        {% endif %}
+        </div>
+      </div>
     {% else %}
-    <p>Pour voir les participations vous devez être membre actif de l'organisation </p>
+      <p>Pour voir les participations vous devez être membre actif de l'organisation </p>
     {% endif %}
-  </section>
+  {% endif %}
+</section>
 </div>
 {% endblock %}
 

@@ -58,8 +58,6 @@
     <footer class="text-muted text-center">
       {% if event.remaining_seats > 0 %}
         {% include "event/register.html" with event=event %}
-        <br>
-        <br>
       {% else %}
       <a class="btn btn-outline-danger"> Complet</a>
       {% endif %}

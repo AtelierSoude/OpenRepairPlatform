@@ -19,6 +19,11 @@ urlpatterns = [
         "api/location/",
         include("ateliersoude.location.api_urls", namespace="api_location"),
     ),
+    path(
+        "<slug>/",
+        views.OrganizationDetailView.as_view(),
+        name="organization_detail",
+    ),
     path(r"tinymce/", include("tinymce.urls")),
 ]
 

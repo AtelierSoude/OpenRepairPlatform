@@ -2,7 +2,7 @@
 
 {% for organization in organizations %}
 <div class="card">  
-  <a class="card-link" href="{% url 'user:organization_detail' organization.id organization.slug %}">
+  <a class="card-link" href="{% url 'organization_detail' organization.slug %}">
     {% if organization.picture %}
     {% thumbnail organization.picture "400" format="PNG" as im %}
       <img class="card-img-top" src="{{ im.url }}"/>

@@ -1,4 +1,3 @@
-from datetime import date
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.contrib.admin.views.decorators import staff_member_required
@@ -27,9 +26,7 @@ from ateliersoude.mixins import (
     HasActivePermissionMixin,
     HasVolunteerPermissionMixin,
 )
-from ateliersoude.user.mixins import PermissionOrgaContextMixin
 from ateliersoude.user.models import CustomUser, Organization, Membership
-from ateliersoude.utils import get_future_published_events
 
 from .forms import (
     UserUpdateForm,
@@ -163,11 +160,7 @@ class AddMemberToOrganization(HasActivePermissionMixin, RedirectView):
             email=self.request.POST["email"]
         ).first()
         url = reverse(
-            "user:organization_detail",
-            kwargs={
-                "pk": self.organization.pk,
-                "slug": self.organization.slug,
-            },
+            "organization_detail", kwargs={"slug": self.organization.slug},
         )
         if user in self.organization.members.all():
             messages.warning(self.request, "L'utilisateur est déjà membre.")
@@ -219,11 +212,7 @@ class UpdateMemberView(HasActivePermissionMixin, UpdateView):
             self.request, f"Vous avez mis à jour {self.object} avec succes."
         )
         return reverse(
-            "user:organization_detail",
-            kwargs={
-                "pk": self.organization.pk,
-                "slug": self.organization.slug,
-            },
+            "organization_detail", kwargs={"slug": self.organization.slug},
         )
 
 
@@ -306,36 +295,6 @@ class UserListView(ListView):
     )
 
 
-class OrganizationDetailView(PermissionOrgaContextMixin, DetailView):
-    model = Organization
-    template_name = "user/organization/organization_detail.html"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["users"] = [
-            (f"{user.email} ({user.first_name} {user.last_name})", user.email)
-            for user in CustomUser.objects.all()
-        ]
-        all_events = self.object.events.all()
-        context["events"] = list(get_future_published_events(all_events))
-        if context["is_volunteer"]:
-            context["has_hidden_events"] = all_events.count() > 0
-            past_events = all_events.filter(date__lt=date.today()).order_by(
-                "date"
-            )
-            context["page"] = past_events.count() // EVENTS_PER_PAGE + 1
-        context["register_form"] = CustomUserEmailForm
-        context["add_admin_form"] = CustomUserEmailForm(auto_id="id_admin_%s")
-        context["add_active_form"] = CustomUserEmailForm(
-            auto_id="id_active_%s"
-        )
-        context["add_volunteer_form"] = CustomUserEmailForm(
-            auto_id="id_volunteer_%s"
-        )
-        context["add_member_form"] = MoreInfoCustomUserForm
-        return context
-
-
 class OrganizationEventsListView(HasVolunteerPermissionMixin, ListView):
     model = Event
     paginate_by = EVENTS_PER_PAGE
@@ -406,11 +365,7 @@ class AddUserToOrganization(HasAdminPermissionMixin, RedirectView):
             .first()
         )
         redirect_url = reverse(
-            "user:organization_detail",
-            kwargs={
-                "pk": self.organization.pk,
-                "slug": self.organization.slug,
-            },
+            "organization_detail", kwargs={"slug": self.organization.slug},
         )
 
         if not user:
@@ -470,11 +425,7 @@ class RemoveUserFromOrganization(HasAdminPermissionMixin, RedirectView):
         )
 
         return reverse(
-            "user:organization_detail",
-            kwargs={
-                "pk": self.organization.pk,
-                "slug": self.organization.slug,
-            },
+            "organization_detail", kwargs={"slug": self.organization.slug},
         )
 
 

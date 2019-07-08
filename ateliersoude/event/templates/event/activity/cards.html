@@ -13,7 +13,7 @@
         {{ activity.description | safe | truncatewords_html:10 }}
         <footer class="blockquote-footer">
           Créé par
-          <a href="{% url 'user:organization_detail' activity.organization.pk activity.organization.slug %}">
+          <a href="{% url 'organization_detail' activity.organization.slug %}">
             {{ activity.organization }}
           </a>
         </footer>

@@ -36,11 +36,6 @@ urlpatterns = [
         name="organization_all_events",
     ),
     path(
-        "organization/<int:pk>/<slug>/",
-        views.OrganizationDetailView.as_view(),
-        name="organization_detail",
-    ),
-    path(
         "organization/<int:pk>/",
         views.OrganizationDeleteView.as_view(),
         name="organization_delete",

@@ -26,7 +26,7 @@ def event_recurrent_data(
     user4 = custom_user_factory()
     organization.actives.add(user1, user2, user3, user4)
     fix_date = datetime.datetime(
-        2019, 7, 4, 14, 19, 5, tzinfo=timezone.tzinfo()
+        3019, 7, 4, 14, 19, 5, tzinfo=timezone.tzinfo()
     )
     return {
         "activity": activity.pk,

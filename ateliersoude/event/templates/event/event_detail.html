@@ -39,7 +39,7 @@
 
           <h6 class="text-muted">
             {% if event.is_free %}
-              <span class="badge badge-info badge-pill">Pas de limite de place</span>
+              <span class="badge badge-info badge-pill">Sans réservation</span>
             {% else %}
               {% if event.remaining_seats == 0 %}
                 <span class="badge badge-warning badge-pill">Complet</span>
@@ -100,25 +100,28 @@
                   <li>La participation est libre / pas de condition d'accès</li>
                 {% endfor %}
               </ul>
-            <div class="col-md-6 border">
-              <div class="row">
-              {% if event.activity.picture %}
-                <img class="img-responsive col-md-6 h-100" src="{{ event.activity.picture.url }}" alt="activity illustration">
-              {% endif %}
-  
-              <div class="col-md-6">
-  
-                <small class="">
-                  {{event.activity.name}}
-                 {{ event.activity.description | safe }}
-                </small>
-              </div>
 
-              <a href="{% url 'event:activity_detail' event.activity.pk event.activity.slug %}" class="btn btn-primary btn-sm col-md-12 float-right">
-                  <i class="fa fa-eye"></i>
-              </a>
+            {% if not event.is_free %}
+              <div class="col-md-6 border">
+                <div class="row">
+                {% if event.activity.picture %}
+                  <img class="img-responsive col-md-6 h-100" src="{{ event.activity.picture.url }}" alt="activity illustration">
+                {% endif %}
+    
+                <div class="col-md-6">
+    
+                  <small class="">
+                    {{event.activity.name}}
+                  {{ event.activity.description | safe }}
+                  </small>
+                </div>
+
+                <a href="{% url 'event:activity_detail' event.activity.pk event.activity.slug %}" class="btn btn-primary btn-sm col-md-12 float-right">
+                    <i class="fa fa-eye"></i>
+                </a>
+              </div>
             </div>
-          </div>
+          {% endif %}
         </div>
     </div>
   </div>
@@ -136,20 +139,31 @@
   </div>
 </section>
 
-<section class="col-md-6 p-4">
+<section class="col-md-6 no-gutters p-0">
   {% if event.is_free %}
-    <h5> L'événement </h5>
-    <div>
-      {{ event.activity.description | safe }}
+    {% if event.activity.picture %}
+      <div class="col-lg h-25 overflow-hidden">
+        <img class="img-fluid position-relative" style="top:-100px" src="{{ event.activity.picture.url }}" alt="activity illustration">
+      </div>
+    {% endif %}
+    <div class="col-lg pb-0 pl-4 pr-4 pt-4">
+      <h5> L'événement </h5>
+      <div>
+        {{ event.activity.description | safe | truncatewords_html:50 }}
+        <a href="{% url 'event:activity_detail' event.activity.pk event.activity.slug %}">
+          En savoir plus ...
+        </a>
+      </div>
     </div>
   {% endif %}
+  <div class="col-lg p-4">
     <h5 class="mt-4"> {{ event.organizers.all.count }} Animateur·trice·s</h5>
     <hr>
     <div class="card-columns">
       {% include "user/user_card.html" with users=event.organizers.all %}
     </div>
   {% if not event.is_free %}
-    <h5 class="mt-4"> {{ event.registered.all.count|add:event.presents.all.count }} Participant·e·s</h5>
+    <h5> {{ event.registered.all.count|add:event.presents.all.count }} Participant·e·s</h5>
     <hr>
     {% if is_volunteer %}
       <div class="card-columns">
@@ -244,6 +258,7 @@
       <p>Pour voir les participations vous devez être membre actif de l'organisation </p>
     {% endif %}
   {% endif %}
+  </div>
 </section>
 </div>
 {% endblock %}

@@ -150,10 +150,10 @@
       <h5> L'événement </h5>
       <div>
         {{ event.activity.description | safe | truncatewords_html:50 }}
+        <a href="{% url 'event:activity_detail' event.activity.pk event.activity.slug %}">
+          En savoir plus ...
+        </a>
       </div>
-      <a href="{% url 'event:activity_detail' event.activity.pk event.activity.slug %}" class="float-left">
-        En savoir plus ...
-      </a>
     </div>
   {% endif %}
   <div class="col-lg p-4">

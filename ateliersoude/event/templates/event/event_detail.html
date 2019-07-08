@@ -149,8 +149,11 @@
     <div class="col-lg pb-0 pl-4 pr-4 pt-4">
       <h5> L'événement </h5>
       <div>
-        {{ event.activity.description | safe }}
+        {{ event.activity.description | safe | truncatewords_html:50 }}
       </div>
+      <a href="{% url 'event:activity_detail' event.activity.pk event.activity.slug %}" class="float-left">
+        En savoir plus ...
+      </a>
     </div>
   {% endif %}
   <div class="col-lg p-4">

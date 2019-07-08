@@ -52,8 +52,6 @@
           {% else %}
             {% if user.first_name %}
               {% get_initial_avatar user 50 'circle' %}
-            {% else %}
-              {% get_initial_avatar user.email 50 'circle' %}
             {% endif %}
           {% endif %}
           {{ user.first_name }}

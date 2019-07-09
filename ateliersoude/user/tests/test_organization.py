@@ -430,7 +430,6 @@ def test_remove_volunteer_from_organization(
 
 
 def test_extended_event_list(client, custom_user, event_factory, organization):
-    import pdb; pdb.set_trace()
     for _ in range(13):
         event_factory(organization=organization)
     path = reverse(

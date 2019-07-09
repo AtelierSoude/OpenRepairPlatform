@@ -25,7 +25,7 @@
             </p>
             {% endif %}
             <i class="fa fa-users"></i> créé par
-            <a href="{% url 'user:organization_detail' activity.organization.pk activity.organization.slug %}">
+            <a href="{% url 'organization_detail' activity.organization.slug %}">
               {{ activity.organization.name }}
             </a>
       </div>

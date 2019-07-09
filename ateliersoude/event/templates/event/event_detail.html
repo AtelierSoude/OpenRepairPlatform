@@ -22,7 +22,7 @@
       <h3>{{ event.activity }} du {{ event.date }}</h3>
       <p class="lead">
         - Organisé par
-        <a href="{% url 'user:organization_detail' event.organization.id event.organization.slug %}">
+        <a href="{% url 'organization_detail' event.organization.slug %}">
           {{ event.organization.name }}
         </a>
       </p>

@@ -14,7 +14,7 @@ USER_PASSWORD = "hackmeplease2048"
 
 
 class OrganizationFactory(DjangoModelFactory):
-    name = faker.word()
+    name = factory.Sequence(lambda n: f"{faker.word()} #{n}")
     picture = LazyAttribute(
         lambda _: ContentFile(
             ImageField()._make_data({"width": 1024, "height": 768}),

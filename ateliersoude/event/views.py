@@ -53,7 +53,7 @@ class ConditionFormView(HasAdminPermissionMixin):
 
     def get_success_url(self):
         orga = self.object.organization
-        return reverse("user:organization_detail", args=[orga.pk, orga.slug])
+        return reverse("organization_detail", args=[orga.slug])
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)

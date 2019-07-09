@@ -137,7 +137,10 @@ class Organization(models.Model):
         upload_to="organizations/",
         validators=[validate_image],
     )
-    slug = models.SlugField(default="")
+    slug = models.SlugField(
+        default="",
+        unique=True
+    )
     visitors = models.ManyToManyField(
         CustomUser, related_name="visitor_organizations", blank=True
     )
@@ -174,10 +177,7 @@ class Organization(models.Model):
         return super().save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return reverse(
-            "user:organization_detail",
-            kwargs={"pk": self.pk, "slug": self.slug},
-        )
+        return reverse("organization_detail", kwargs={"slug": self.slug})
 
     @property
     def actives_or_more(self):

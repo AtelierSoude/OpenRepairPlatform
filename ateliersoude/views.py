@@ -20,7 +20,6 @@ class HomeView(TemplateView):
 class OrganizationDetailView(PermissionOrgaContextMixin, DetailView):
     model = Organization
     template_name = "organization_detail.html"
-    pk_url_kwarg = 'slug'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

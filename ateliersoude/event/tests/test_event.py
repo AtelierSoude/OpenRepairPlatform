@@ -355,7 +355,8 @@ def test_book_no_more_room_by_anonymous(client, event, custom_user):
 
 
 def test_book_no_more_room_by_active_volunteer_or_admin(
-        client, event, custom_user):
+        client, user_log_staff, event, custom_user):
+    client.login(email=user_log_staff.email, password=USER_PASSWORD)
     o = event.organization
     container = [o.actives, o.volunteers, o.admins]
     for status in container:
@@ -363,7 +364,7 @@ def test_book_no_more_room_by_active_volunteer_or_admin(
         event.registered.set([])
         event.save()
         [status.set([]) for status in container]
-        status.add(custom_user)
+        status.add(user_log_staff)
         o.save()
         nb_registered = Event.objects.first().registered.count()
         assert nb_registered == 0

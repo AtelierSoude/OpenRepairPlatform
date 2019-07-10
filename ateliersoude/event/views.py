@@ -358,8 +358,9 @@ class BookView(RedirectView):
             next_url = reverse("event:detail", args=[event.id, event.slug])
 
         if (
-            (event.remaining_seats <= 0) and
-            (user not in (event.organization.actives.all()))
+            event.remaining_seats <= 0 and
+            user not in (event.organization.actives.all()) and
+            user not in (event.organization.volunteers.all())
         ):
             messages.error(
                 self.request,

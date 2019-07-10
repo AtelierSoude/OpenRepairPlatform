@@ -357,7 +357,10 @@ class BookView(RedirectView):
         if not utils.is_valid_path(next_url):
             next_url = reverse("event:detail", args=[event.id, event.slug])
 
-        if event.remaining_seats <= 0:
+        if (
+            (event.remaining_seats <= 0) and
+            (user not in (event.organization.actives.all()))
+        ):
             messages.error(
                 self.request,
                 "Désolé, il n'y a plus de place "

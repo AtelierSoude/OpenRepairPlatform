@@ -121,7 +121,7 @@
                 </a>
               </div>
             </div>
-          {% endif %}
+            {% endif %}
         </div>
     </div>
   </div>
@@ -229,10 +229,10 @@
       <div class="fixed-bottom m-4" style="right:0px; left:initial">
           <div class="lead">
               {% if is_active %}
-              <a href="{% url 'event:edit' event.pk %}" class="btn btn-warning rounded-circle"><i class="fa fa-pencil-alt"></i></a>
+                <a href="{% url 'event:edit' event.pk %}" class="btn btn-warning rounded-circle"><i class="fa fa-pencil-alt"></i></a>
               {% endif %}
               {% if is_admin %}
-              <a href="{% url 'event:delete' event.pk %}" class="btn btn-danger rounded-circle"><i class="fa fa-trash"></i></a>
+                <a href="{% url 'event:delete' event.pk %}" class="btn btn-danger rounded-circle"><i class="fa fa-trash"></i></a>
               {% endif %}
               {% if is_active %}
                 <form action="{% url 'event:close' event.pk %}" method="post" class="d-inline">
@@ -245,9 +245,7 @@
               {% endif %}
 
         {% if is_active %}
-          {% if event.available_seats > 0 %}
-            {% include "event/register.html" with event=event admin_text="Inscrire" %}
-          {% endif %}
+          {% include "event/register.html" with event=event admin_text="Inscrire" %}
           {% if event.has_started %}
             {% include "event/modal_more_info.html" with form=present_form admin_text="Présent" %}
           {% endif %}

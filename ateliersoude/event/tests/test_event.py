@@ -337,7 +337,7 @@ def test_book_wrong_token(client):
     assert resp["Location"] == reverse("event:list")
 
 
-def test_book_no_more_room(client, event, custom_user):
+def test_book_no_more_room_by_anonymous(client, event, custom_user):
     event.available_seats = 0
     event.save()
     nb_registered = Event.objects.first().registered.count()
@@ -352,6 +352,25 @@ def test_book_no_more_room(client, event, custom_user):
     )
     nb_registered = Event.objects.first().registered.count()
     assert nb_registered == 0
+
+
+def test_book_no_more_room_by_active(client, event, custom_user):
+    event.available_seats = 0
+    event.save()
+    event.organization.actives.add(custom_user)
+    event.organization.save()
+    nb_registered = Event.objects.first().registered.count()
+    assert nb_registered == 0
+    token = signing.dumps(
+        {"user_id": custom_user.id, "event_id": event.id}, salt="book"
+    )
+    resp = client.get(reverse("event:book", args=[token]))
+    assert resp.status_code == 302
+    assert resp["Location"] == reverse(
+        "event:detail", args=[event.id, event.slug]
+    )
+    nb_registered = Event.objects.first().registered.count()
+    assert nb_registered == 1
 
 
 def test_book(client, event, custom_user):

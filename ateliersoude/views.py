@@ -12,6 +12,7 @@ from ateliersoude.utils import get_future_published_events
 from ateliersoude.user.forms import CustomUserEmailForm, MoreInfoCustomUserForm
 EVENTS_PER_PAGE = 6
 
+
 class HomeView(TemplateView):
     template_name = "home.html"
 

@@ -360,7 +360,8 @@ class BookView(RedirectView):
         if (
             event.remaining_seats <= 0 and
             user not in (event.organization.actives.all()) and
-            user not in (event.organization.volunteers.all())
+            user not in (event.organization.volunteers.all()) and
+            user not in (event.organization.admins.all())
         ):
             messages.error(
                 self.request,

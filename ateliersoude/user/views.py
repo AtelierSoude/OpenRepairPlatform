@@ -175,11 +175,11 @@ class AddMemberToOrganization(HasActivePermissionMixin, RedirectView):
             organization=self.organization, user=user, amount=paid
         )
         msg_plain = render_to_string(
-            "mail/membership.txt",
+            "user/mail/membership.txt",
             context=locals()
         )
         msg_html = render_to_string(
-            "mail/membership.html",
+            "user/mail/membership.html",
             context=locals()
         )
         send_mail(

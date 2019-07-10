@@ -41,7 +41,7 @@
             {% if event.is_free %}
               <span class="badge badge-info badge-pill">Sans réservation</span>
             {% else %}
-              {% if event.remaining_seats == 0 %}
+              {% if event.remaining_seats <= 0 %}
                 <span class="badge badge-warning badge-pill">Complet</span>
               {% else %}
                 Encore  

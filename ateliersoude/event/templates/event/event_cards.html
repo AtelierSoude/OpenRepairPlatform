@@ -41,8 +41,10 @@
       <h6 class="text-muted">
         {% if event.is_free %}
           Sans réservation
-        {% else %}
+        {% elif event.remaining_seats > 0 %}
           Encore <span> {{ event.remaining_seats }}</span> places disponibles
+        {% else %}
+          Plus de place disponible
         {% endif %}
       </h6>
       <div class="text-muted">

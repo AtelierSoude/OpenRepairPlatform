@@ -374,6 +374,7 @@ class BookView(RedirectView):
 
         event.registered.add(user)
 
+        conditions = event.conditions.all()
         unbook_token = tokenize(user, event, "cancel")
         cancel_url = reverse("event:cancel_reservation", args=[unbook_token])
         cancel_url = self.request.build_absolute_uri(cancel_url)

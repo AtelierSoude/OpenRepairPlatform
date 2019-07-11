@@ -354,42 +354,30 @@ def test_book_no_more_room_by_anonymous(client, event, custom_user):
     assert nb_registered == 0
 
 
-def test_book_no_more_room_by_active(client, event, custom_user):
-    event.available_seats = 0
-    event.save()
-    event.organization.actives.add(custom_user)
-    event.organization.save()
-    nb_registered = Event.objects.first().registered.count()
-    assert nb_registered == 0
-    token = signing.dumps(
-        {"user_id": custom_user.id, "event_id": event.id}, salt="book"
-    )
-    resp = client.get(reverse("event:book", args=[token]))
-    assert resp.status_code == 302
-    assert resp["Location"] == reverse(
-        "event:detail", args=[event.id, event.slug]
-    )
-    nb_registered = Event.objects.first().registered.count()
-    assert nb_registered == 1
-
-
-def test_book_no_more_room_by_volunteer(client, event, custom_user):
-    event.available_seats = 0
-    event.save()
-    event.organization.volunteers.add(custom_user)
-    event.organization.save()
-    nb_registered = Event.objects.first().registered.count()
-    assert nb_registered == 0
-    token = signing.dumps(
-        {"user_id": custom_user.id, "event_id": event.id}, salt="book"
-    )
-    resp = client.get(reverse("event:book", args=[token]))
-    assert resp.status_code == 302
-    assert resp["Location"] == reverse(
-        "event:detail", args=[event.id, event.slug]
-    )
-    nb_registered = Event.objects.first().registered.count()
-    assert nb_registered == 1
+def test_book_no_more_room_by_active_volunteer_or_admin(
+        client, user_log_staff, event, custom_user):
+    client.login(email=user_log_staff.email, password=USER_PASSWORD)
+    o = event.organization
+    container = [o.actives, o.volunteers, o.admins]
+    for status in container:
+        event.available_seats = 0
+        event.registered.set([])
+        event.save()
+        [status.set([]) for status in container]
+        status.add(user_log_staff)
+        o.save()
+        nb_registered = Event.objects.first().registered.count()
+        assert nb_registered == 0
+        token = signing.dumps(
+            {"user_id": custom_user.id, "event_id": event.id}, salt="book"
+        )
+        resp = client.get(reverse("event:book", args=[token]))
+        assert resp.status_code == 302
+        assert resp["Location"] == reverse(
+            "event:detail", args=[event.id, event.slug]
+        )
+        nb_registered = Event.objects.first().registered.count()
+        assert nb_registered == 1
 
 
 def test_book(client, event, custom_user):

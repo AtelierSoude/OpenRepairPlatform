@@ -344,6 +344,7 @@ class CancelReservationView(RedirectView):
 class BookView(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         token = kwargs["token"]
+        is_authorized = False
         try:
             event, user = _load_token(token, "book")
         except Exception:
@@ -353,15 +354,22 @@ class BookView(RedirectView):
             )
             return reverse("event:list")
 
+        try:
+            id_current_user = self.request.user.id
+            current_user = CustomUser.objects.get(id=id_current_user)
+            if current_user in (event.organization.actives.all().union(
+                event.organization.volunteers.all(),
+                event.organization.admins.all()
+            )):
+                is_authorized = True
+        except Exception:
+            pass
+
         next_url = self.request.GET.get("redirect")
         if not utils.is_valid_path(next_url):
             next_url = reverse("event:detail", args=[event.id, event.slug])
 
-        if (
-            event.remaining_seats <= 0 and
-            user not in (event.organization.actives.all()) and
-            user not in (event.organization.volunteers.all())
-        ):
+        if event.remaining_seats <= 0 and not is_authorized:
             messages.error(
                 self.request,
                 "Désolé, il n'y a plus de place "

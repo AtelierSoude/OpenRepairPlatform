@@ -174,10 +174,9 @@ class AddMemberToOrganization(HasActivePermissionMixin, RedirectView):
         Membership.objects.create(
             organization=self.organization, user=user, amount=paid
         )
-        msg_plain = render_to_string("mail/membership.txt",context=locals()
-        )
-        msg_html = render_to_string("mail/membership.html",context=locals()
-        )
+
+        msg_plain = render_to_string("user/mail/membership.txt",context=locals())
+        msg_html = render_to_string("user/mail/membership.html",context=locals())
         subject = f"Vous êtes désormais membre de - {self.organization} !"
 
         send_mail(

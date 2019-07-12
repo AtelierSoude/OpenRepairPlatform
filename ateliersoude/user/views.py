@@ -171,24 +171,26 @@ class AddMemberToOrganization(HasActivePermissionMixin, RedirectView):
             form = MoreInfoCustomUserForm(self.request.POST)
         user = form.save()
         paid = form.cleaned_data["amount_paid"]
+
         Membership.objects.create(
             organization=self.organization, user=user, amount=paid
         )
-        msg_plain = render_to_string(
-            "mail/membership.html",
-            context=locals()
-        )
-        msg_html = render_to_string(
-            "mail/membership.html",
-            context=locals()
-        )
-        send_mail(
-            f"Vous êtes désormais membre de - {self.organization}",
-            msg_plain,
-            "no-reply@atelier-soude.fr",
-            [user.email],
-            html_message=msg_html,
-        )
+        
+      #  organization = self.organization 
+
+      #  date = user.memberships.first().first_payment
+
+      #  msg_plain = render_to_string("user/mail/membership.txt",context=locals())
+      #  msg_html = render_to_string("user/mail/membership.html",context=locals())
+      #  subject = f"Vous êtes désormais membre de - {organization} !"
+
+      # send_mail(
+      #     subject,
+      #      msg_plain,
+      #      "no-reply@atelier-soude.fr",
+      #      [user.email],
+      #      html_message=msg_html,
+      #  )
         messages.success(self.request, f"Vous avez ajouté {user} avec succes.")
         return url
 

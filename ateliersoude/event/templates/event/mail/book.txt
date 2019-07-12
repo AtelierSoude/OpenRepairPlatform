@@ -10,9 +10,27 @@ Informations pratiques:
 - Pour la réparation, pensez à tester votre appareil chez vous pour vérifier qu'il ne fonctionne toujours pas.
 - Amenez les accessoires nécessaires au fonctionnement de l'appareil (ex: câble d'alimentation, notice, ...).
 - Pas besoin de ramener l'écran de votre PC, on en a sur place.
-- Pour faire vivre l'association, nous demandons à nos adhérents une cotisation de 5€.
-- Sur place nous acceptons les espèces, chèques, cartes bleues ou gonettes.
-- Pour la convivialité, n'hésitez pas à ramener de quoi grignoter ou boire ! :)
+ Pour la réparation, pensez à tester votre appareil chez vous pour vérifier qu'il ne fonctionne toujours pas. <br>
+  Amenez les accessoires nécessaires au fonctionnement de l'appareil (ex: câble d'alimentation, notice, ...). <br>
+  Pas besoin de ramener l'écran de votre PC, on en a sur place. <br>
+
+  Quelles sont les conditions de participation ?
+
+  Pour participer, assurez vous de : 
+
+{% for condition in conditions %}
+    {% if condition.price > 0 %}
+          {{ condition.price }}€
+    {% else %}
+    {% endif %}
+      {{ condition.description | safe }}
+{% empty %}
+    La participation est libre / pas de condition d'accès
+{% endfor %}
+
+Sur place nous acceptons les espèces, chèques ou gonettes. 
+Pour la convivialité, n'hésitez pas à ramener de quoi grignoter ou boire ! :) 
+
 
 Nos ateliers ont une capacité de places limitée:
 Si vous ne pouvez finalement pas venir à la date prévue, nous vous serions reconnaissant de nous

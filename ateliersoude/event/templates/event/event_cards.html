@@ -7,6 +7,16 @@
   {% endif %}
   ">
   <div class="card-header bg-primary"> 
+    {% if minimal == True %}  
+    <small class="text-secondary">
+      <i class="far fa-calendar-alt"></i>    
+      {{ event.date|date:"l j F Y " }} <br>
+      <span class="text-white">
+        <i class="far fa-clock"></i>  
+        {{ event.starts_at }} à {{ event.ends_at }}
+      </span>
+    </small>
+    {% else %}
     <span class="text-secondary">
       <i class="far fa-calendar-alt"></i>    
       {{ event.date|date:"l j F Y " }} 
@@ -14,7 +24,8 @@
     <small class="float-right text-white">
       <i class="far fa-clock"></i>  
       {{ event.starts_at }} à {{ event.ends_at }}
-    </small >
+    </small>
+    {% endif %}
   </div>
 
   <a class="" href="{% url 'event:detail' event.pk event.slug %}">
@@ -36,7 +47,7 @@
       {% endif %}
     {% endif %}
 
-    <div class="card-body mt-4">
+    <div class="card-body mt-1">
       <h4 class="card-title">{{ event.activity.name }}</h4>
       <h6 class="text-muted">
         {% if event.is_free %}

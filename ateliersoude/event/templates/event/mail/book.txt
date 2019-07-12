@@ -14,7 +14,7 @@ Informations pratiques:
   Amenez les accessoires nécessaires au fonctionnement de l'appareil (ex: câble d'alimentation, notice, ...). <br>
   Pas besoin de ramener l'écran de votre PC, on en a sur place. <br>
 
-  <b>Quelles sont les conditions de participation ?</b>
+  Quelles sont les conditions de participation ?
 
   Pour participer, assurez vous de : 
 
@@ -29,7 +29,7 @@ Informations pratiques:
 {% endfor %}
 
 Sur place nous acceptons les espèces, chèques ou gonettes. 
-  Pour la convivialité, n'hésitez pas à ramener de quoi grignoter ou boire ! :) 
+Pour la convivialité, n'hésitez pas à ramener de quoi grignoter ou boire ! :) 
 
 
 Nos ateliers ont une capacité de places limitée:

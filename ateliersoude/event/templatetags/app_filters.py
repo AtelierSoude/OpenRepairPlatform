@@ -1,6 +1,8 @@
 from django import template
 from django.core import signing
 
+from ateliersoude.user.models import Fee
+
 register = template.Library()
 
 
@@ -27,3 +29,8 @@ def query_transform(request, **kwargs):
     for k, v in kwargs.items():
         updated[k] = v
     return updated.urlencode()
+
+
+@register.simple_tag
+def organization_fees(organization, user):
+    return Fee.objects.filter(organization=organization, user=user)

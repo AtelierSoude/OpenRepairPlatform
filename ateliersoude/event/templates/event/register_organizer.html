@@ -1,0 +1,27 @@
+{% load app_filters bootstrap4 %}
+
+<button class="btn btn-success" data-toggle="modal" data-target="#add_organizer{{ event_to_organize.pk }}">
+    <i class="fa fa-plus"></i>
+    Inscrire un animateur
+</button>
+<div class="modal" id="add_organizer{{ event_to_organize.pk }}" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title">Ajouter un animateur</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+        <form action="{% url 'user:organizer_book' %}?event={{ event_to_organize.pk }}" method="post">
+            <div class="modal-body">
+                {% csrf_token %}
+                {% bootstrap_form form=register_form %}
+            </div>
+            <div class="modal-footer">
+                <input type="submit" value="Réserver" class="btn btn-primary"/>
+            </div>
+        </form>
+    </div>
+    </div>
+</div>

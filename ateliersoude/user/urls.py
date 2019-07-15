@@ -16,6 +16,11 @@ urlpatterns = [
         name="create_and_book",
     ),
     path(
+        "organizer_book/",
+        views.OrganizerBookView.as_view(),
+        name="organizer_book"
+    ),
+    path(
         "organizations/",
         views.OrganizationListView.as_view(),
         name="organization_list",

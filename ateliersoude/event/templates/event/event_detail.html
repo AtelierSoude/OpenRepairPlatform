@@ -246,6 +246,7 @@
 
         {% if is_active %}
           {% include "event/register.html" with event=event admin_text="Inscrire" %}
+          {% include "event/register_organizer.html" with event_to_organize=event %}
           {% if event.has_started %}
             {% include "event/modal_more_info.html" with form=present_form admin_text="Présent" %}
           {% endif %}

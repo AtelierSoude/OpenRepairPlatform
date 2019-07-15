@@ -104,6 +104,46 @@ class UserCreateAndBookView(CreateView):
         )
 
 
+class OrganizerBookView(RedirectView):
+    model = CustomUser
+    form_class = CustomUserEmailForm
+    http_method_names = ["post"]
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.model.objects.filter(
+            email=self.request.POST.get("email", "invalid email")
+        ).first()
+        event = Event.objects.get(id=self.request.GET.get("event"))
+        if self.object and self.object in (
+            event.organization.admins.all()
+            .union(
+                event.organization.actives.all(),
+                event.organization.volunteers.all()
+            )
+        ) and self.object not in event.registered.all():
+            if self.object in event.organizers.all():
+                messages.error(
+                    self.request,
+                    "Vous existez déjà comme animateur de cet événement"
+                )
+            else:
+                messages.success(
+                    self.request,
+                    str(self.object) + "rajouté comme animateur de l'événement"
+                )
+                event.organizers.add(self.object)
+                event.save()
+            return redirect(self.get_success_url(event))
+        messages.error(
+            self.request,
+            "Impossible de rajouter ce membre"
+        )
+        return redirect(self.get_success_url(event))
+
+    def get_success_url(self, event):
+        return event.get_absolute_url()
+
+
 class PresentMoreInfoView(UserPassesTestMixin, UpdateView):
     model = CustomUser
     form_class = MoreInfoCustomUserForm

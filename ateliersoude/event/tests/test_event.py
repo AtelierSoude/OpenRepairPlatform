@@ -406,6 +406,28 @@ def test_book_redirect(client, event, custom_user):
     assert resp["Location"] == reverse("location:list")
 
 
+def test_organizer_book(
+    client, organization, event_factory, custom_user_factory
+):
+    user = custom_user_factory()
+    active = custom_user_factory()
+    organization.actives.add(active)
+    event = event_factory(organization=organization)
+    assert event.organizers.count() == 0
+    for email, organizers_nb in zip(
+        [user.email, active.email, active.email], [0, 1, 1]
+    ):
+        resp = client.post(
+            reverse("user:organizer_book") + f"?event={event.pk}",
+            {"email": email}
+        )
+        assert resp.status_code == 302
+        assert resp["Location"] == reverse(
+            "event:detail", args=[event.id, event.slug]
+        )
+        assert event.organizers.count() == organizers_nb
+
+
 def test_user_absent_wrong_token(client):
     token = signing.dumps({"user_id": 1, "event_id": 2}, salt="unknown")
     resp = client.get(reverse("event:user_absent", args=[token]))

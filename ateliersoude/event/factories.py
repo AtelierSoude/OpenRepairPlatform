@@ -15,7 +15,9 @@ faker = Factory.create()
 
 class ConditionFactory(DjangoModelFactory):
     name = factory.Sequence(lambda n: f"Name {faker.word()} #{n}")
-    description = factory.Sequence(lambda n: f"descr: {faker.text()} #{n}")
+    description = factory.Sequence(
+        lambda n: f"descr: {faker.text()[:50]} #{n}"
+    )
     organization = factory.SubFactory(OrganizationFactory)
     price = random.randrange(100, 1000) / 100
 

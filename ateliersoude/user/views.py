@@ -78,7 +78,7 @@ class UserCreateAndBookView(CreateView):
             if self.object in organizers:
                 messages.error(
                     self.request,
-                    "Vous existez déjà comme animateur de cet événement"
+                    "Cette personne est déjà animateur de l'événement"
                 )
                 return redirect(
                     reverse(
@@ -121,13 +121,12 @@ class OrganizerBookView(RedirectView):
         ) and self.object not in event.registered.all():
             if self.object in event.organizers.all():
                 messages.error(
-                    self.request,
-                    "Vous existez déjà comme animateur de cet événement"
+                    self.request,"Vous existez déjà comme animateur de cet événement"
                 )
             else:
                 messages.success(
                     self.request,
-                    str(self.object) + "rajouté comme animateur de l'événement"
+                    str(self.object) + " rajouté comme animateur de l'événement"
                 )
                 event.organizers.add(self.object)
                 event.save()

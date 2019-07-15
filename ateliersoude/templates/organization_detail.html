@@ -55,17 +55,17 @@
       
 
       <div class="tab-pane fade show active" id="v-pills-events" role="tabpanel" aria-labelledby="v-pills-events-tab">
-          {% if events or has_hidden_events %}
+        {% if events or has_hidden_events %}
           <h3>Prochains évènements</h3>
-          {% if is_volunteer %}
-            <a href="{% url 'user:organization_all_events' organization.pk organization.slug page %}" class="btn btn-sm btn-info">
-              <i class="fa fa-search"></i>
-              Voir tous les évènements
-            </a>
-          {% endif %}
           <div class="card-columns">
             {% include "event/event_cards.html" with event_list=events minimal=True %}
           </div>
+          {% if is_volunteer %}
+          <a href="{% url 'user:organization_all_events' organization.pk organization.slug page %}" class="btn btn-success">
+            <i class="fa fa-search"></i>
+            Voir tous les évènements
+          </a>
+          {% endif %}
         {% endif %}
       </div>
 

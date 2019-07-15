@@ -13,7 +13,10 @@ class Command(BaseCommand):
     help = "Publish non published events"
 
     def add_arguments(self, parser):
-        parser.add_argument("website_url", help="ex: https://atelier-soude.fr")
+        parser.add_argument(
+            "website_url",
+            help="ex: http://dev.atelier-soude.fr:8000"
+        )
 
     def handle(self, *args, **options):
         base_url = options["website_url"]
@@ -35,8 +38,8 @@ class Command(BaseCommand):
                     "event/mail/event_published.html", context=locals()
                 )
                 send_mail(
-                    f"Ton asso organise un évènement - {event.activity.name} "
-                    f"- rensigne tes disponibilités",
+                    f" {event.organization} organise {event.slug} "
+                    f"- seras-tu présent ?",
                     msg_plain,
                     "no-reply@atelier-soude.fr",
                     [user.email],

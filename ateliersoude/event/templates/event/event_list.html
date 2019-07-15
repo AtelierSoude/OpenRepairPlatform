@@ -52,8 +52,8 @@
         {{ results_number }} résultats pour votre recherche
       {% endif %}
     </div>
-      <div class="col-md-12 row no-gutters">
-        <div class="row infinite-container">
+      <div class="row no-gutters">
+        <div class="infinite-container card-columns">
           {% include "event/event_cards.html" with event_list=event_list %}
         </div>
     </div>

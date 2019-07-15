@@ -9,6 +9,7 @@ from ateliersoude.event.templatetags.app_filters import (
     initial,
     filter_orga,
     query_transform,
+    organization_fees,
 )
 from ateliersoude.user.forms import MoreInfoCustomUserForm
 
@@ -47,6 +48,13 @@ def test_query_transform():
     request = HttpRequest()
     request.GET["test"] = "coucou"
     request.GET["page"] = 10
-    assert query_transform(
-        request, page=11, add="3&",
-    ) == "test=coucou&page=11&add=3%26"
+    assert (
+        query_transform(request, page=11, add="3&")
+        == "test=coucou&page=11&add=3%26"
+    )
+
+
+def test_organization_fees(organization, custom_user, fee_factory):
+    fee = fee_factory(user=custom_user, organization=organization, amount=8)
+    tags = organization_fees(organization, custom_user)
+    assert fee in tags

@@ -1,5 +1,4 @@
 from django.contrib import messages
-from django.core.mail import send_mail
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.db.models import Q
@@ -15,7 +14,6 @@ from django.views.generic import (
     DeleteView,
     RedirectView,
 )
-from django.template.loader import render_to_string
 
 from ateliersoude import utils
 from ateliersoude.event.models import Event, Participation
@@ -26,7 +24,7 @@ from ateliersoude.mixins import (
     HasActivePermissionMixin,
     HasVolunteerPermissionMixin,
 )
-from ateliersoude.user.models import CustomUser, Organization, Membership
+from ateliersoude.user.models import CustomUser, Organization, Membership, Fee
 
 from .forms import (
     UserUpdateForm,
@@ -211,23 +209,12 @@ class AddMemberToOrganization(HasActivePermissionMixin, RedirectView):
             form = MoreInfoCustomUserForm(self.request.POST)
         user = form.save()
         paid = form.cleaned_data["amount_paid"]
+
         Membership.objects.create(
             organization=self.organization, user=user, amount=paid
         )
-        msg_plain = render_to_string(
-            "mail/membership.html",
-            context=locals()
-        )
-        msg_html = render_to_string(
-            "mail/membership.html",
-            context=locals()
-        )
-        send_mail(
-            f"Vous êtes désormais membre de - {self.organization}",
-            msg_plain,
-            "no-reply@atelier-soude.fr",
-            [user.email],
-            html_message=msg_html,
+        Fee.objects.create(
+            amount=paid, user=user, organization=self.organization
         )
         messages.success(self.request, f"Vous avez ajouté {user} avec succes.")
         return url
@@ -245,6 +232,11 @@ class UpdateMemberView(HasActivePermissionMixin, UpdateView):
         )
         membership.amount += form.cleaned_data["amount_paid"]
         membership.save()
+        Fee.objects.create(
+            amount=form.cleaned_data["amount_paid"],
+            user=user,
+            organization=self.organization,
+        )
         return super().form_valid(form)
 
     def get_success_url(self, *args, **kwargs):

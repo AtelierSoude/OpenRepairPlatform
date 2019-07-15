@@ -36,7 +36,7 @@ from ateliersoude.mixins import (
 )
 from ateliersoude.user.mixins import PermissionOrgaContextMixin
 from ateliersoude.user.forms import CustomUserEmailForm, MoreInfoCustomUserForm
-from ateliersoude.user.models import CustomUser, Membership
+from ateliersoude.user.models import CustomUser, Membership, Fee
 
 logger = logging.getLogger(__name__)
 
@@ -131,8 +131,7 @@ class EventView(PermissionOrgaContextMixin, DetailView):
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         ctx["users"] = [
-            (f"{user.email} ({user.first_name} {user.last_name})",
-             user.email)
+            (f"{user.email} ({user.first_name} {user.last_name})", user.email)
             for user in CustomUser.objects.all()
         ]
         ctx["register_form"] = CustomUserEmailForm
@@ -278,6 +277,13 @@ class AbsentView(RedirectView):
             ).first()
             if contribution:
                 contribution.amount -= participation.amount
+                fee = Fee.objects.filter(
+                    organization=event.organization,
+                    user=participation.user,
+                    date=event.date,
+                    amount=participation.amount,
+                )
+                fee.delete()
                 contribution.save()
         event.presents.remove(user)
         messages.success(self.request, f"{user} a été marqué comme absent !")
@@ -386,6 +392,7 @@ class BookView(RedirectView):
 
         event.registered.add(user)
 
+        conditions = event.conditions.all()
         unbook_token = tokenize(user, event, "cancel")
         cancel_url = reverse("event:cancel_reservation", args=[unbook_token])
         cancel_url = self.request.build_absolute_uri(cancel_url)
@@ -430,6 +437,11 @@ class CloseEventView(HasActivePermissionMixin, RedirectView):
         for participation in event.participations.all():
             contribution, created = Membership.objects.get_or_create(
                 user=participation.user, organization=event.organization
+            )
+            Fee.objects.create(
+                amount=participation.amount,
+                user=participation.user,
+                organization=event.organization,
             )
             if participation.saved:
                 amount = 0

@@ -1,0 +1,3 @@
+{{ user }},
+
+Tu es désormais membre de {{organization}}, depuis le {{date}}. Tu as donné {{paid}}€ pour ta première adhésion. 

@@ -1,3 +1,0 @@
-{{ user }},
-
-tu es désormais membre de {{organization}}, depuis le {{membership.date}}. Et tu as donné {{paid}}

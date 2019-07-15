@@ -24,13 +24,10 @@ def event_recurrent_data(
     user2 = custom_user_factory()
     user3 = custom_user_factory()
     user4 = custom_user_factory()
-    custom_date = timezone.now()
-    end_date = datetime.datetime(
-        custom_date.year,
-        custom_date.month+3,
-        custom_date.day+2
-    )
     organization.actives.add(user1, user2, user3, user4)
+    fix_date = datetime.datetime(
+        3019, 7, 4, 14, 19, 5, tzinfo=timezone.tzinfo()
+    )
     return {
         "activity": activity.pk,
         "available_seats": 12,
@@ -39,21 +36,17 @@ def event_recurrent_data(
         "location": place.pk,
         "organization": organization,
         "recurrent_type": "MONTHLY",
-        "date": custom_date.date().strftime("%Y-%m-%d"),
+        "date": fix_date.date().strftime("%Y-%m-%d"),
         "days": ["MO", "TH"],
         "weeks": ["1", "2"],
         "starts_at": (
-            (custom_date + datetime.timedelta(hours=4))
-            .time()
-            .strftime("%H:%M")
+            (fix_date + datetime.timedelta(hours=4)).time().strftime("%H:%M")
         ),
         "ends_at": (
-            (custom_date + datetime.timedelta(hours=7))
-            .time()
-            .strftime("%H:%M")
+            (fix_date + datetime.timedelta(hours=7)).time().strftime("%H:%M")
         ),
         "end_date": (
-            (end_date)
+            (fix_date + datetime.timedelta(days=90))
             .date()
             .strftime("%Y-%m-%d")
         ),
@@ -106,7 +99,7 @@ def test_event_create(client, user_log, event_recurrent_data):
     )
     events = Event.objects.all()
     assert response.status_code == 302
-    assert len(events) == 12
+    assert len(events) == 11
     assert response["Location"] == reverse("event:list")
 
 

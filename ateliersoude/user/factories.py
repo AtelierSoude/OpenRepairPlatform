@@ -7,7 +7,7 @@ from factory.django import DjangoModelFactory, ImageField
 
 from faker import Factory
 
-from ateliersoude.user.models import Organization, CustomUser, Membership
+from ateliersoude.user.models import Organization, CustomUser, Membership, Fee
 
 faker = Factory.create()
 USER_PASSWORD = "hackmeplease2048"
@@ -47,3 +47,12 @@ class MembershipFactory(DjangoModelFactory):
 
     class Meta:
         model = Membership
+
+
+class FeeFactory(DjangoModelFactory):
+    user = factory.SubFactory(CustomUserFactory)
+    organization = factory.SubFactory(OrganizationFactory)
+    amount = faker.random_number()
+
+    class Meta:
+        model = Fee

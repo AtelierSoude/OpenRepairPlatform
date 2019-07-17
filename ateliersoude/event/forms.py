@@ -80,18 +80,18 @@ class RecurrentEventForm(forms.ModelForm):
     date = forms.DateField(
         initial=dt.today(),
         widget=forms.DateInput(attrs={"type": "date"}, format="%Y-%m-%d"),
-        label="La date de début",
+        label="Date de début",
     )
     end_date = forms.DateField(
         widget=forms.DateInput(attrs={"type": "date"}, format="%Y-%m-%d"),
-        label="La date de fin",
+        label="Date de fin",
     )
     period_before_publish = forms.ChoiceField(
         choices=[
             (1, "1 jour avant"),
             (2, "2 jours avant"),
             (7, "Une semaine avant"),
-            (14, "Deux semaine avant"),
+            (14, "Deux semaines avant"),
         ],
         label="Publication",
     )

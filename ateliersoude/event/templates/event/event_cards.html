@@ -39,12 +39,10 @@
           {% endif %}
       </h5>
 
-    {% if minimal != True %}  
-      {% if event.activity.picture %}
+    {% if minimal != True and event.activity.picture %}
         {% thumbnail event.activity.picture "400" format="PNG" as im %}
-          <img class="card-img-top rounded-0" style="" src="{{ im.url }}"/>
+          <img class="card-img-top rounded-0" src="{{ im.url }}"/>
         {% endthumbnail %}
-      {% endif %}
     {% endif %}
 
     <div class="card-body mt-1">

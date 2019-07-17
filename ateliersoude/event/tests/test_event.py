@@ -406,6 +406,63 @@ def test_book_redirect(client, event, custom_user):
     assert resp["Location"] == reverse("location:list")
 
 
+def test_organizer_book_user_not_authorized(
+    client, organization, event_factory, custom_user_factory
+):
+    user = custom_user_factory()
+    admin_user = custom_user_factory()
+    organization.admins.add(admin_user)
+    event = event_factory(organization=organization)
+    assert event.organizers.count() == 0
+    resp = client.post(
+        reverse("user:organizer_book", args=[event.pk]) + f"?event={event.pk}",
+        {"email": admin_user.email}
+    )
+    assert resp.status_code == 302
+    assert "/accounts/login" in resp.url
+    client.login(email=user.email, password=USER_PASSWORD)
+    resp = client.post(
+        reverse("user:organizer_book", args=[event.pk]) + f"?event={event.pk}",
+        {"email": admin_user.email}
+    )
+    assert resp.status_code == 403
+    event.refresh_from_db()
+    assert event.organizers.count() == 0
+
+
+def test_organizer_book_user_authorized(
+    client, organization, event_factory, custom_user_factory
+):
+    logged = volunteer, active, admin = custom_user_factory.create_batch(3)
+    organizers = user1, user2, user3, nobody = \
+        custom_user_factory.create_batch(4)
+    organization.members.add(nobody)
+    organization.volunteers.set([volunteer, user1, user2, user3])
+    organization.actives.add(active)
+    organization.admins.add(admin)
+    event = event_factory(organization=organization)
+    assert event.organizers.count() == 0
+    for allowed_user, organizer in zip(logged, organizers):
+        client.login(email=allowed_user.email, password=USER_PASSWORD)
+        resp = client.post(
+            reverse("user:organizer_book", args=[event.pk])
+            + f"?event={event.pk}",
+            {"email": nobody.email}
+        )
+        assert resp.status_code == 302
+        resp = client.post(
+            reverse("user:organizer_book", args=[event.pk])
+            + f"?event={event.pk}",
+            {"email": organizer.email}
+        )
+        assert resp.status_code == 302
+        assert resp["Location"] == reverse(
+            "event:detail", args=[event.pk, event.slug]
+        )
+    event.refresh_from_db()
+    assert event.organizers.count() == 3
+
+
 def test_user_absent_wrong_token(client):
     token = signing.dumps({"user_id": 1, "event_id": 2}, salt="unknown")
     resp = client.get(reverse("event:user_absent", args=[token]))

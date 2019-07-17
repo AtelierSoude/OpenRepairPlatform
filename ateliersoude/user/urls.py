@@ -16,7 +16,7 @@ urlpatterns = [
         name="create_and_book",
     ),
     path(
-        "organizer_book/",
+        "organizer_book/<int:pk>/",
         views.OrganizerBookView.as_view(),
         name="organizer_book"
     ),

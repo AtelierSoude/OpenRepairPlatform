@@ -27,8 +27,8 @@ class OrganizationFactory(DjangoModelFactory):
 
 
 class CustomUserFactory(DjangoModelFactory):
-    first_name = faker.word()
-    last_name = faker.word()
+    first_name = factory.Sequence(lambda n: f"{faker.word()}")
+    last_name = factory.Sequence(lambda n: f"{faker.word()}")
 
     class Meta:
         model = CustomUser

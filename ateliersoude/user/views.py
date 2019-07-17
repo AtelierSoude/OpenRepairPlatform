@@ -102,44 +102,38 @@ class UserCreateAndBookView(CreateView):
         )
 
 
-class OrganizerBookView(RedirectView):
-    model = CustomUser
+class OrganizerBookView(HasVolunteerPermissionMixin, RedirectView):
+    model = Event
     form_class = CustomUserEmailForm
     http_method_names = ["post"]
 
     def post(self, request, *args, **kwargs):
-        self.object = self.model.objects.filter(
+        new_organizer = CustomUser.objects.filter(
             email=self.request.POST.get("email", "invalid email")
         ).first()
-        event = Event.objects.get(id=self.request.GET.get("event"))
-        if self.object and self.object in (
-            event.organization.admins.all()
-            .union(
-                event.organization.actives.all(),
-                event.organization.volunteers.all()
-            )
-        ) and self.object not in event.registered.all():
-            if self.object in event.organizers.all():
+        event = self.model.objects.get(id=kwargs["pk"])
+        if new_organizer and new_organizer in (
+            self.organization.actives_or_more.all()
+            .union(self.organization.volunteers.all())
+            .difference(event.registered.all())
+        ):
+            if new_organizer in event.organizers.all():
                 messages.error(
-                    self.request,
-                    "Vous existez déjà comme animateur de cet événement"
+                    request,
+                    str(new_organizer) +
+                    " est déjà animateur.trice de cet événement"
                 )
             else:
                 messages.success(
-                    self.request,
-                    str(self.object) + "rajouté comme animateur de l'événement"
+                    request,
+                    str(new_organizer) +
+                    " rajouté.e comme animateur.trice de cet événement"
                 )
-                event.organizers.add(self.object)
-                event.save()
-            return redirect(self.get_success_url(event))
-        messages.error(
-            self.request,
-            "Impossible de rajouter ce membre"
-        )
-        return redirect(self.get_success_url(event))
-
-    def get_success_url(self, event):
-        return event.get_absolute_url()
+            event.organizers.add(new_organizer)
+            event.save()
+            return redirect(event.get_absolute_url())
+        messages.error(self.request, "Impossible de rajouter cette personne")
+        return redirect(event.get_absolute_url())
 
 
 class PresentMoreInfoView(UserPassesTestMixin, UpdateView):

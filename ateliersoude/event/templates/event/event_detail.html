@@ -244,7 +244,7 @@
                 </form>
               {% endif %}
 
-        {% if is_active %}
+        {% if is_volunteer %}
           {% include "event/register.html" with event=event admin_text="Inscrire" %}
           {% include "event/register_organizer.html" with event_to_organize=event %}
           {% if event.has_started %}

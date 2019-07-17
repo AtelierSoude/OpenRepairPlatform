@@ -13,7 +13,7 @@
             <span aria-hidden="true">&times;</span>
         </button>
         </div>
-        <form action="{% url 'user:organizer_book' %}?event={{ event_to_organize.pk }}" method="post">
+        <form action="{% url 'user:organizer_book' event_to_organize.pk %}?event={{ event_to_organize.pk }}" method="post">
             <div class="modal-body">
                 {% csrf_token %}
                 {% bootstrap_form form=register_form %}

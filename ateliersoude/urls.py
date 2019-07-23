@@ -24,6 +24,11 @@ urlpatterns = [
         views.OrganizationDetailView.as_view(),
         name="organization_detail",
     ),
+    path(
+        "<str:orga_slug>/members/",
+        views.OrganizationMembersView.as_view(),
+        name="organization_admin",
+    ),
     path(r"tinymce/", include("tinymce.urls")),
 ]
 

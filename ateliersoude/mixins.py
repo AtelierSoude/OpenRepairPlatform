@@ -30,7 +30,10 @@ class HasOrganizationPermission(UserPassesTestMixin):
 
     def set_organization(self):
         orga_pk = self.kwargs.get("orga_pk")
-        if orga_pk:
+        orga_slug = self.kwargs.get("orga_slug")
+        if orga_slug:
+            orga = get_object_or_404(Organization, slug=orga_slug)
+        elif orga_pk:
             orga = get_object_or_404(Organization, pk=orga_pk)
         elif self.model == Organization:
             orga = get_object_or_404(Organization, pk=self.kwargs.get("pk"))

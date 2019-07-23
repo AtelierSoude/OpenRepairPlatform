@@ -1,9 +1,11 @@
 from datetime import date
 from django.views.generic import (
     TemplateView,
-    DetailView
+    DetailView,
+    ListView
 )
 from ateliersoude.user.mixins import PermissionOrgaContextMixin
+from ateliersoude.mixins import HasAdminPermissionMixin
 from ateliersoude.user.models import (
     CustomUser,
     Organization
@@ -28,7 +30,9 @@ class OrganizationDetailView(PermissionOrgaContextMixin, DetailView):
             for user in CustomUser.objects.all()
         ]
         all_events = self.object.events.all()
-        context["events"] = list(get_future_published_events(all_events))
+        context["events"] = list(
+            get_future_published_events(all_events, self.object)
+        )
         if context["is_volunteer"]:
             context["has_hidden_events"] = all_events.count() > 0
             past_events = all_events.filter(date__lt=date.today()).order_by(
@@ -44,4 +48,15 @@ class OrganizationDetailView(PermissionOrgaContextMixin, DetailView):
             auto_id="id_volunteer_%s"
         )
         context["add_member_form"] = MoreInfoCustomUserForm
+        return context
+
+
+class OrganizationMembersView(HasAdminPermissionMixin, ListView):
+    model = CustomUser
+    template_name = "organization_members.html"
+    paginate_by = 10
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["organization"] = self.organization
         return context

@@ -192,7 +192,7 @@ class AddMemberToOrganization(HasActivePermissionMixin, RedirectView):
             email=self.request.POST["email"]
         ).first()
         url = reverse(
-            "organization_detail", kwargs={"slug": self.organization.slug},
+            "organization_page", kwargs={"slug": self.organization.slug},
         )
         if user in self.organization.members.all():
             messages.warning(self.request, "L'utilisateur est déjà membre.")
@@ -238,7 +238,7 @@ class UpdateMemberView(HasActivePermissionMixin, UpdateView):
             self.request, f"Vous avez mis à jour {self.object} avec succes."
         )
         return reverse(
-            "organization_detail", kwargs={"slug": self.organization.slug},
+            "organization_page", kwargs={"slug": self.organization.slug},
         )
 
 
@@ -391,7 +391,7 @@ class AddUserToOrganization(HasAdminPermissionMixin, RedirectView):
             .first()
         )
         redirect_url = reverse(
-            "organization_detail", kwargs={"slug": self.organization.slug},
+            "organization_page", kwargs={"slug": self.organization.slug},
         )
 
         if not user:
@@ -451,7 +451,7 @@ class RemoveUserFromOrganization(HasAdminPermissionMixin, RedirectView):
         )
 
         return reverse(
-            "organization_detail", kwargs={"slug": self.organization.slug},
+            "organization_page", kwargs={"slug": self.organization.slug},
         )
 
 

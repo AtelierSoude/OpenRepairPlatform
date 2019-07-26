@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static bootstrap4 %}
+
+{% load assets app_filters thumbnail %}
+
+{% block extra_css %}
+  {% assets "css_detail_organization" %}
+    <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet"/>
+  {% endassets %}
+{% endblock %}
+
+{% block content %}
+  {% url "user:organization_list" as organization_list_url %}
+  {% include "breadcrumb.html" with current=organization first_parent_url=organization_list_url first_parent_text="Organisations" %}
+
+<div class="container">
+
+  <section class="row p-0">
+        <div class="text-center bg-secondary col-md-3">
+          <div class="pt-5">
+              {% if organization.picture %}
+                {% thumbnail object.picture "100x100" crop="center" format="PNG" as im %}
+                  <img src="{{ im.url }}" class="m-2 rounded-circle"/>
+                {% endthumbnail %}
+              {% endif %}
+          </div>
+        </div>
+    <div class="jumbotron jumbotron-fluid col-md-9 mb-0">
+        <h1>{{ organization.name }}</h1>
+        {% if is_admin %}
+          <a class="btn btn-success btn-sm" href="{% url 'user:organization_update' organization.pk %}">
+            <i class="fa fa-pencil-alt"></i> Editer
+          </a>
+          <a class="btn btn-danger btn-sm" href="{% url 'user:organization_delete' organization.pk %}">
+            <i class="fa fa-trash"></i> Supprimer
+          </a>
+        {% endif %}
+        <small>{{organization.description | safe | truncatewords_html:50 }}</small>
+    </div>
+  </section>
+  
+  <section class="row h-100">
+
+    <div class="nav bg-light flex-column nav-pills p-4 text-left col-md-3">
+        <a class="nav-link" href="{% url 'organization_events' organization.slug %}">Evènements</a>
+        <a class="nav-link" href="{% url 'organization_details' organization.slug %}">À propos</a>
+        <a class="nav-link" href={% url 'organization_members' organization.slug %}>Communauté</a>
+        {% if is_active %}
+          <a class="nav-link" href="{% url 'organization_controls' organization.slug %}">Contrôles</a>
+        {% endif %}
+    </div>
+        
+    <div class="col-md-9 p-4 tab-content" id="v-pills-tabContent">
+      {% block menu_content %}
+      {% endblock menu_content %}
+    </div>
+  </section>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+  {% comment %} {{ users|json_script:"users-data" }} {% endcomment %}
+  {% assets "js_detail_organization" %}
+    <script src="{{ ASSET_URL }}"></script>
+  {% endassets %}
+{% endblock %}

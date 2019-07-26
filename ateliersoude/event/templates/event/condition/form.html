@@ -3,7 +3,7 @@
 
 
 {% block content %}
-  {% url "organization_detail" organization.slug  as organization_url %}
+  {% url "organization_page" organization.slug  as organization_url %}
   {% if condition %}
     {% include "breadcrumb.html" with current=condition.name|add:" - Mise à jour" first_parent_url=organization_url first_parent_text=organization %}
   {% else %}

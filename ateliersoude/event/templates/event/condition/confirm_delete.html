@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  {% url "organization_detail" condition.organization.slug  as organization_url %}
+  {% url "organization_page" condition.organization.slug  as organization_url %}
   {% include "breadcrumb.html" with current=condition.name|add:" - Suppression" first_parent_url=organization_url first_parent_text=condition.organization %}
   <div class="jumbotron jumbotron-fluid">
     <div class="container">
@@ -21,7 +21,7 @@
         <i class="fa fa-trash"></i>
         Oui je suis sûr
       </button>
-      <a class="btn btn-success" href="{% url 'organization_detail' condition.organization.slug %}">
+      <a class="btn btn-success" href="{% url 'organization_page' condition.organization.slug %}">
         <i class="fa fa-arrow-left"></i>
         Non, revenir
       </a>

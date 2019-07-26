@@ -1,5 +1,60 @@
-{% extends 'base.html' %}
+{% extends 'organization_page.html' %}
 {% load static bootstrap4 %}
+
+{% block menu_content %}
+  <section class="container-fluid position-sticky sticky-top" style="top:40px">
+    <div class="col-lg bg-white">
+      <div id="search">
+        <form method="GET" class="form-row">
+            {% bootstrap_form search_form %}
+          <br>
+          <div class="form-group p-2 col mt-auto">
+            <button type="submit" class="btn btn-primary btn-block">
+              <span class="">Lancer la recherche</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    <a class="text-center d-block" 
+      data-toggle="collapse" href="#search" role="button" aria-expanded="false" aria-controls="search">
+    Rechercher parmi les membres
+    <span class="btn btn-secondary">
+        <i class="fa fa-search"></i>
+    </span>
+    </a>
+  </div>
+  </section>
+  <table class="table infinite-container">
+      <thead>
+        <tr>
+          <th scope="col">Nom</th>
+          <th scope="col">Prénom</th>
+          <th scope="col">Statut</th>
+        </tr>
+      </thead>
+      <tbody class="infinite-item" >
+        {% for user in members %}
+        <tr>
+          <td>{{ user.last_name }}</td>
+          <td> {{ user.first_name }}</td>
+          <td>
+            {% if user in organization.members.all %} Adhérent
+            {% elif user in organization.volunteers.all%} Volontaire
+            {% elif user in organization.actives.all%} Actif
+            {% elif user in organization.admins.all %}Administrateur
+            {% endif %}
+          </td>
+        </tr>
+        {% empty %}
+          Pas de gens...
+        {% endfor %}
+      </tbody>
+  </table>
+  
+  {% if page_obj.has_next %}
+    <a class="infinite-more-link" href="?page={{ page_obj.next_page_number }}"></a>
+  {% endif %}
+{% endblock menu_content %}
 
 {% block extra_js %}
   <script src="{% static 'js/lib/jquery.waypoints.js' %}"></script>
@@ -15,43 +70,4 @@
       }
     });
   </script>
-{% endblock %}
-
-{% block content %}
-  <div class="jumbotron jumbotron-fluid">
-    <div class="container">
-      <h1>Membres de {{ organization }}</h1>
-    </div>
-  </div>
-
-    <table class="table infinite-container">
-        <thead class="thead-dark">
-          <tr>
-            <th scope="col">Nom</th>
-            <th scope="col">Prénom</th>
-            <th scope="col">Statut</th>
-          </tr>
-        </thead>
-        <tbody class="infinite-item" >
-          {% for user in object_list %}
-          <tr>
-            <td>{{ user.first_name }}</td>
-            <td> {{ user.last_name }}</td>
-            <td>
-              {% if user in organization.members.all %} Adhérent
-              {% elif user in organization.volunteers.all%} Volontaire
-              {% elif user in organization.actives.all%} Actif
-              {% elif user in organization.admins.all %}Administrateur
-              {% endif %}
-            </td>
-          </tr>
-          {% empty %}
-            Pas de gens...
-          {% endfor %}
-        </tbody>
-    </table>
-
-  {% if page_obj.has_next %}
-    <a class="infinite-more-link" href="?page={{ page_obj.next_page_number }}">Affichage en cours...</a>
-  {% endif %}
-{% endblock content %}
+{% endblock extra_js %}

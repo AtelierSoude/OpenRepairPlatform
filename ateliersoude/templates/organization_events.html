@@ -1,0 +1,51 @@
+{% extends 'organization_page.html' %}
+{% load static %}
+
+{% block menu_content %}
+  <table class="table infinite-container">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">Lieu</th>
+          <th scope="col">Date</th>
+          <th scope="col">Places restantes</th>
+          <th scope="col"> Détails </th>
+        </tr>
+      </thead>
+      <tbody class="infinite-item">
+        {% for event in events %}
+        <tr>
+          <td>{{ event.location }}</td>
+          <td class="{% if event.date <= today %}bg-primary{% else %}bg-secondary{% endif %}">{{ event.date }}</td>
+          <td>
+            {% if event.is_free %}
+              Illimité
+            {% else %}
+              {{ event.remaining_seats}}
+            {% endif %}
+          </td>
+          <td><a class="btn btn-success" href="{% url 'event:detail' event.pk event.activity.slug %}">Détails</a></td>
+        </tr>
+        {% empty %}
+        {% endfor %}
+      </tbody>
+  </table>
+  {% if page_obj.has_next %}
+    <a class="infinite-more-link" href="?page={{ page_obj.next_page_number }}"></a>
+  {% endif %}
+{% endblock menu_content %}
+
+{% block extra_js %}
+  <script src="{% static 'js/lib/jquery.waypoints.js' %}"></script>
+  <script src="{% static 'js/lib/infinite.min.js' %}"></script>
+  <script>
+    var infinite = new Waypoint.Infinite({
+      element: $('.infinite-container')[0],
+      onBeforePageLoad: function () {
+        $('.loading').show();
+      },
+      onAfterPageLoad: function ($items) {
+        $('.loading').hide();
+      }
+    });
+  </script>
+{% endblock %}

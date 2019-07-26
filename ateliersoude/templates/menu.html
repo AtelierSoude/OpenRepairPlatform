@@ -68,7 +68,7 @@
           {% if user.admin_organizations.all %}
           <div class="dropdown-divider"></div>
           {% for organization in user.admin_organizations.all %}
-            <a class="dropdown-item" href="{% url "organization_detail" organization.slug %}">
+            <a class="dropdown-item" href="{% url "organization_page" organization.slug %}">
               Gérer {{ organization.name }}
             </a>
           {% endfor %}

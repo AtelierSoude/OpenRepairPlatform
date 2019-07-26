@@ -177,7 +177,7 @@ class Organization(models.Model):
         return super().save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return reverse("organization_detail", kwargs={"slug": self.slug})
+        return reverse("organization_page", kwargs={"slug": self.slug})
 
     @property
     def actives_or_more(self):

@@ -161,7 +161,7 @@ def test_anonymous_get_user_create(client, event_factory, organization):
     )
     response = client.get(
         reverse(
-            "organization_detail", kwargs={"slug": organization.slug},
+            "organization_page", kwargs={"slug": organization.slug},
         )
     )
     assert response.status_code == 200

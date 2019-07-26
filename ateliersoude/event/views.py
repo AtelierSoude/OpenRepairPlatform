@@ -53,7 +53,7 @@ class ConditionFormView(HasAdminPermissionMixin):
 
     def get_success_url(self):
         orga = self.object.organization
-        return reverse("organization_detail", args=[orga.slug])
+        return reverse("organization_page", args=[orga.slug])
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
@@ -64,11 +64,11 @@ class ConditionFormView(HasAdminPermissionMixin):
 class ConditionCreateView(
     RedirectQueryParamView, ConditionFormView, CreateView
 ):
-    success_message = "La Condition a bien été créée"
+    success_message = "La condition a bien été créée"
 
 
 class ConditionEditView(RedirectQueryParamView, ConditionFormView, UpdateView):
-    success_message = "La Condition a bien été mise à jour"
+    success_message = "La condition a bien été mise à jour"
 
 
 class ConditionDeleteView(HasAdminPermissionMixin, DeleteView):

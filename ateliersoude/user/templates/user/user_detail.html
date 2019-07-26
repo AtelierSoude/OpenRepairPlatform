@@ -52,25 +52,25 @@
       {% endif %}
         {% for organization in object.visitor_organizations.all %}
             Visiteur 
-          <a href="{% url 'organization_detail' organization.slug %}">
+          <a href="{% url 'organization_page' organization.slug %}">
               {{ organization.name }}
           </a> / 
           {% endfor %}
           {% for organization in object.member_organizations.all %}
             Membre
-          <a href="{% url 'organization_detail' organization.slug %}">
+          <a href="{% url 'organization_page' organization.slug %}">
               {{ organization.name }}
           </a> /
           {% endfor %}
           {% for organization in object.volunteer_organizations.all %}
             Membre actif
-          <a href="{% url 'organization_detail' organization.slug %}">
+          <a href="{% url 'organization_page' organization.slug %}">
               {{ organization.name }}
           </a> /
           {% endfor %}
           {% for organization in object.admin_organizations.all %}
             Administrateur à 
-          <a href="{% url 'organization_detail' organization.slug %}">
+          <a href="{% url 'organization_page' organization.slug %}">
               {{ organization.name }}
           </a> 
         {% endfor %}

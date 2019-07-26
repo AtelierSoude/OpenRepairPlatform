@@ -27,7 +27,7 @@ class Condition(models.Model):
 
     def get_absolute_url(self):
         return reverse(
-            "organization_detail",
+            "organization_page",
             kwargs={"slug": self.organization.slug},
         )
 

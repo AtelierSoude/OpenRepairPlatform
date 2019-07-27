@@ -101,6 +101,14 @@
                       <i class="fa fa-plus"></i>
                       Mettre à jour le membre
                     </button>
+                    <ul>
+                      {% organization_fees organization membership.user as fees %}
+                      {% for fee in fees %}
+                        <li>
+                          {{ fee.date }} - {{ fee.amount }} €
+                        </li>
+                      {% endfor %}
+                    </ul>
                   </li>
                   {% include "user/organization/modal_more_info.html" with anonymous_user=membership.user form=add_member_form|initial:membership.user %}
                   {% endif %}

@@ -85,7 +85,7 @@ class OrganizationControlsView(
     template_name = "organization_controls.html"
 
     def get_object(self, *args, **kwargs):
-        return self.model.objects.get(slug=self.kwargs["orga_slug"])
+        return self.model.objects.get(slug=self.organization.slug)
 
 
 class OrganizationEventsView(HasActivePermissionMixin, ListView):

@@ -20,38 +20,77 @@ def test_organization_list(client, organization):
     assert response.context_data["object_list"].count() == 1
 
 
-def test_organization_page(client, organization):
+def test_organization_page(client, organization, user_log):
+    organization.admins.add(user_log)
+    client.login(email=user_log.email, password=USER_PASSWORD)
     response = client.get(
-        reverse("organization_page", kwargs={"slug": organization.slug})
+        reverse("organization_page", kwargs={"orga_slug": organization.slug})
     )
     assert response.status_code == 200
 
 
-def test_organization_page_admin(
-    client, user_log, organization, event_factory, published_event_factory
+def test_organization_members_view(
+    client, organization, user_log, custom_user_factory
 ):
-    unpublished_event = event_factory(organization=organization)
-    published_event = published_event_factory(organization=organization)
+    members = custom_user_factory.create_batch(10)
+    organization.members.set(members)
+    organization.admins.add(user_log)
     client.login(email=user_log.email, password=USER_PASSWORD)
     response = client.get(
         reverse(
-            "organization_page", kwargs={"slug": organization.slug},
+            "organization_members",
+            kwargs={"orga_slug": organization.slug}
         )
     )
-    html = response.content.decode()
-    assert html.count("Organisé par") == 1
-    assert published_event.get_absolute_url() in html
-    assert unpublished_event.get_absolute_url() not in html
+    assert response.status_code == 200
+    assert set(list(response.context_data["members"])) == (
+        set(list(organization.members.all()))
+    )
+
+
+def test_organization_controls_view(client, organization, user_log):
     organization.admins.add(user_log)
+    client.login(email=user_log.email, password=USER_PASSWORD)
     response = client.get(
         reverse(
-            "organization_page", kwargs={"slug": organization.slug},
+            "organization_controls",
+            kwargs={"orga_slug": organization.slug}
         )
     )
-    assert response.context["page"] == 1
-    assert user_log.email in {
-        user[1] for user in response.context_data["users"]
-    }
+    assert response.status_code == 200
+
+
+def test_organization_events_view(
+    client, organization, user_log, event_factory
+):
+    organization.admins.add(user_log)
+    events = event_factory.create_batch(10, organization=organization)
+    client.login(email=user_log.email, password=USER_PASSWORD)
+    response = client.get(
+        reverse(
+            "organization_events",
+            kwargs={"orga_slug": organization.slug}
+        )
+    )
+    assert response.status_code == 200
+    assert set(list(response.context_data["events"])) == set(list(events))
+    assert response.context_data["search_form"]
+    assert response.context_data["organization"]
+    assert response.context_data["today"]
+
+
+def test_organization_details_view(
+    client, organization, user_log, place_factory
+):
+    organization.actives.add(user_log)
+    client.login(email=user_log.email, password=USER_PASSWORD)
+    response = client.get(
+        reverse(
+            "organization_details",
+            kwargs={"orga_slug": organization.slug}
+        )
+    )
+    assert response.status_code == 200
 
 
 def test_organization_create(client_log, custom_user):
@@ -114,7 +153,7 @@ def test_organization_update(client_log, organization):
     assert response.status_code == 302
     organization.refresh_from_db()
     assert response.url == reverse(
-        "organization_page", kwargs={"slug": organization.slug},
+        "organization_page", kwargs={"orga_slug": organization.slug},
     )
     assert organization.name == "Test Orga"
 
@@ -156,7 +195,7 @@ def test_add_admin_to_organization(custom_user_factory, client, organization):
     )
     assert response.status_code == 302
     assert response.url == reverse(
-        "organization_page", kwargs={"slug": organization.slug},
+        "organization_page", kwargs={"orga_slug": organization.slug},
     )
     assert organization.admins.count() == 2
 
@@ -200,7 +239,7 @@ def test_add_active_to_organization(custom_user_factory, client, organization):
     )
     assert response.status_code == 302
     assert response.url == reverse(
-        "organization_page", kwargs={"slug": organization.slug},
+        "organization_page", kwargs={"orga_slug": organization.slug},
     )
     actives = organization.actives.all()
     assert len(actives) == 1
@@ -224,7 +263,7 @@ def test_add_admin_to_actives_of_organization(
     )
     assert response.status_code == 302
     assert response.url == reverse(
-        "organization_page", kwargs={"slug": organization.slug},
+        "organization_page", kwargs={"orga_slug": organization.slug},
     )
     assert organization.actives.count() == 0
 
@@ -245,7 +284,7 @@ def test_add_active_to_admins_of_organization(
     )
     assert response.status_code == 302
     assert response.url == reverse(
-        "organization_page", kwargs={"slug": organization.slug},
+        "organization_page", kwargs={"orga_slug": organization.slug},
     )
     assert organization.actives.count() == 0
     assert organization.admins.count() == 2
@@ -284,7 +323,7 @@ def test_remove_active_from_organization(
     )
     assert response.status_code == 302
     assert response.url == reverse(
-        "organization_page", kwargs={"slug": organization.slug},
+        "organization_page", kwargs={"orga_slug": organization.slug},
     )
     assert organization.actives.count() == 0
 
@@ -306,7 +345,7 @@ def test_remove_admin_from_organization(
     )
     assert response.status_code == 302
     assert response.url == reverse(
-        "organization_page", kwargs={"slug": organization.slug},
+        "organization_page", kwargs={"orga_slug": organization.slug},
     )
     assert organization.admins.count() == 1
 
@@ -340,7 +379,7 @@ def test_add_volunteer_to_organization(
     )
     assert response.status_code == 302
     assert response.url == reverse(
-        "organization_page", kwargs={"slug": organization.slug},
+        "organization_page", kwargs={"orga_slug": organization.slug},
     )
     volunteers = organization.volunteers.all()
     assert len(volunteers) == 1
@@ -364,7 +403,7 @@ def test_add_admin_to_volunteers_of_organization(
     )
     assert response.status_code == 302
     assert response.url == reverse(
-        "organization_page", kwargs={"slug": organization.slug},
+        "organization_page", kwargs={"orga_slug": organization.slug},
     )
     assert organization.volunteers.count() == 0
 
@@ -385,7 +424,7 @@ def test_add_volunteer_to_admins_of_organization(
     )
     assert response.status_code == 302
     assert response.url == reverse(
-        "organization_page", kwargs={"slug": organization.slug},
+        "organization_page", kwargs={"orga_slug": organization.slug},
     )
     assert organization.volunteers.count() == 0
     assert organization.admins.count() == 2
@@ -424,7 +463,7 @@ def test_remove_volunteer_from_organization(
     )
     assert response.status_code == 302
     assert response.url == reverse(
-        "organization_page", kwargs={"slug": organization.slug},
+        "organization_page", kwargs={"orga_slug": organization.slug},
     )
     assert organization.volunteers.count() == 0
 
@@ -472,7 +511,7 @@ def test_add_member_to_organization(custom_user_factory, client, organization):
     )
     assert response.status_code == 302
     assert response.url == reverse(
-        "organization_page", kwargs={"slug": organization.slug},
+        "organization_page", kwargs={"orga_slug": organization.slug},
     )
     assert organization.members.count() == 1
     assert Fee.objects.count() == 1
@@ -501,7 +540,7 @@ def test_re_add_member_to_organization(
     )
     assert response.status_code == 302
     assert response.url == reverse(
-        "organization_page", kwargs={"slug": organization.slug},
+        "organization_page", kwargs={"orga_slug": organization.slug},
     )
     assert user.first_name != "Michel"
     assert organization.members.count() == 1
@@ -532,7 +571,7 @@ def test_update_member_to_organization(
     )
     assert response.status_code == 302
     assert response.url == reverse(
-        "organization_page", kwargs={"slug": organization.slug},
+        "organization_page", kwargs={"orga_slug": organization.slug},
     )
     user.refresh_from_db()
     assert user.first_name == "Michel"

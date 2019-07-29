@@ -463,6 +463,32 @@ def test_organizer_book_user_authorized(
     assert event.organizers.count() == 3
 
 
+def test_organizer_book_organizer_already_registered(
+    client, organization, event_factory, custom_user_factory
+):
+    organizer, admin = custom_user_factory.create_batch(2)
+    organization.volunteers.set([admin, organizer])
+    event = event_factory(organization=organization)
+    assert event.organizers.count() == 0
+    client.login(email=admin.email, password=USER_PASSWORD)
+    resp = client.post(
+        reverse("user:organizer_book", args=[event.pk])
+        + f"?event={event.pk}",
+        {"email": organizer.email}
+    )
+    assert resp.status_code == 302
+    resp = client.post(
+        reverse("user:organizer_book", args=[event.pk]) + f"?event={event.pk}",
+        {"email": organizer.email}
+    )
+    assert resp.status_code == 302
+    assert resp["Location"] == reverse(
+        "event:detail", args=[event.pk, event.slug]
+    )
+    event.refresh_from_db()
+    assert event.organizers.count() == 1
+
+
 def test_user_absent_wrong_token(client):
     token = signing.dumps({"user_id": 1, "event_id": 2}, salt="unknown")
     resp = client.get(reverse("event:user_absent", args=[token]))

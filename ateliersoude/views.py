@@ -12,7 +12,11 @@ from ateliersoude.user.models import (
 )
 from ateliersoude.event.models import Event
 from ateliersoude.utils import get_future_published_events
-from ateliersoude.user.forms import CustomUserEmailForm, MoreInfoCustomUserForm
+from ateliersoude.user.forms import (
+    CustomUserEmailForm,
+    MoreInfoCustomUserForm,
+    CustomUserForm
+)
 from ateliersoude.event.forms import EventSearchForm
 from datetime import datetime
 EVENTS_PER_PAGE = 6
@@ -67,14 +71,26 @@ class OrganizationMembersView(
     context_object_name = "members"
     object = Organization.objects.first()
     paginate_by = 20
+    http_methods_name = ["get"]
 
     def get_queryset(self):
-        return self.organization.members.all().order_by("last_name")
+        queryset = self.organization.members.all().order_by("last_name")
+        form = CustomUserForm(self.request.GET)
+        if form.is_valid():
+            queryset = queryset.filter(
+                first_name=form.cleaned_data["main_field"].split()[0],
+                last_name=form.cleaned_data["main_field"].split()[1]
+            )
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["organization"] = self.organization
-        context["search_form"] = CustomUserEmailForm
+        context["search_form"] = CustomUserForm
+        context["users"] = [
+            (f"{user.first_name} {user.last_name}")
+            for user in self.get_queryset()
+        ]
         return context
 
 

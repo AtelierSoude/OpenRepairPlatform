@@ -59,7 +59,7 @@
 {% endblock %}
 
 {% block extra_js %}
-  {% comment %} {{ users|json_script:"users-data" }} {% endcomment %}
+  {{ users|json_script:"users" }}
   {% assets "js_detail_organization" %}
     <script src="{{ ASSET_URL }}"></script>
   {% endassets %}

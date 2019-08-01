@@ -1,28 +1,17 @@
 {% extends 'organization_page.html' %}
-{% load static bootstrap4 %}
+{% load static bootstrap4 assets %}
 
 {% block menu_content %}
   <section class="container-fluid position-sticky sticky-top" style="top:40px">
     <div class="col-lg bg-white">
-      <div id="search">
         <form method="GET" class="form-row">
             {% bootstrap_form search_form %}
-          <br>
           <div class="form-group p-2 col mt-auto">
             <button type="submit" class="btn btn-primary btn-block">
               <span class="">Lancer la recherche</span>
             </button>
-          </div>
         </form>
-      </div>
-    <a class="text-center d-block" 
-      data-toggle="collapse" href="#search" role="button" aria-expanded="false" aria-controls="search">
-    Rechercher parmi les membres
-    <span class="btn btn-secondary">
-        <i class="fa fa-search"></i>
-    </span>
-    </a>
-  </div>
+    </div>
   </section>
   <table class="table infinite-container">
       <thead>
@@ -30,9 +19,10 @@
           <th scope="col">Nom</th>
           <th scope="col">Prénom</th>
           <th scope="col">Statut</th>
+          <th scope="col">Cotisation</th>
         </tr>
       </thead>
-      <tbody class="infinite-item" >
+      <tbody class="infinite-item">
         {% for user in members %}
         <tr>
           <td>{{ user.last_name }}</td>
@@ -44,6 +34,14 @@
             {% elif user in organization.admins.all %}Administrateur
             {% endif %}
           </td>
+          <td>
+            {% for membership in user.memberships.all %}
+              {% if membership.organization == organization %}
+                {{ membership.current_contribution }}
+              {% endif%}
+            {% endfor %}
+          </td>
+          <td><a class="btn btn-success" href="{% url 'user:user_detail' user.pk %}">Détails</a></td>
         </tr>
         {% empty %}
           Pas de gens...
@@ -57,6 +55,7 @@
 {% endblock menu_content %}
 
 {% block extra_js %}
+  {{  users|json_script:"users-data"}}
   <script src="{% static 'js/lib/jquery.waypoints.js' %}"></script>
   <script src="{% static 'js/lib/infinite.min.js' %}"></script>
   <script>
@@ -70,4 +69,7 @@
       }
     });
   </script>
+  {% assets "js_detail_organization" %}
+    <script src="{{ ASSET_URL }}"></script>
+  {% endassets %}
 {% endblock extra_js %}

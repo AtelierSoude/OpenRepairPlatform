@@ -3,7 +3,7 @@
 
 {% block menu_content %}
   <section class="container position-sticky sticky-top" style="top:40px">
-    <h2 class="text-center pt-4">Les membres de {{organization}}</h2>
+    <h2 class="text-center pt-4">{{ members.all.count }} membres</h2>
   </section>
 
   <section class="container card">
@@ -46,9 +46,7 @@
               {% endfor %}
             </td>
             <td><a class="btn btn-success" href="{% url 'user:user_detail' user.pk %}">Détails</a></td>
-          </tr>
-          {% empty %}
-            Pas de gens...
+          </tr>   
           {% endfor %}
         </tbody>
     </table>

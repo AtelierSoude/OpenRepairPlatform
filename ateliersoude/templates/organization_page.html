@@ -11,7 +11,9 @@
 
 {% block content %}
 <div class="container-fluid position-absolute">
-  {% if is_active %}
+    {% url "user:organization_list" as organization_list_url %}
+    {% include "breadcrumb.html" with current=organization first_parent_url=organization_list_url first_parent_text="Organisations" %}
+    {% if is_active %}
     <nav class="nav nav-pills nav-justified bg-secondary position-sticky sticky-top">
         <a class="nav-link {% if request.path == '/' %} active {% endif %}" 
         href="{% url 'organization_page' organization.slug %}">Page</a> <!-- change this -->
@@ -21,18 +23,14 @@
         href="{% url 'organization_members' organization.slug %}">Membres</a>
         <a class="nav-link {% if 'controls' in request.path %} active {% endif %}"
         href="{% url 'organization_controls' organization.slug %}">Modifier</a>
-        <a class="nav-link disabled" href="#">Disabled</a>
-      </nav>
-  {% else %}
-    {% url "user:organization_list" as organization_list_url %}
-    {% include "breadcrumb.html" with current=organization first_parent_url=organization_list_url first_parent_text="Organisations" %}
-  {% endif %}
+    </nav>
+    {% endif %}
 
 <div class="tab-content row no-gutters" id="v-pills-tabContent">
   {% block menu_content %}
   <section class="p-0 text-center col-md-3">
     <div class="position-absolute" style="width:100%; height:100%">
-      <div class="position-sticky sticky-top">
+      <div class="position-sticky sticky-top fixed_sidedar">
           <div class="pt-5">
               {% if organization.picture %}
                 {% thumbnail object.picture "150x150" crop="center" format="PNG" as im %}
@@ -41,7 +39,6 @@
               {% endif %}
           </div>
           <h2>{{ organization.name }}</h2>
-
         <div class="nav flex-column nav-pills p-4 text-left" id="v-pills-tab" role="tablist" aria-orientation="vertical">
             <a class="nav-link active" id="v-pills-about-tab" data-toggle="pill" href="#v-pills-about" role="tab" aria-controls="v-pills-rdv" aria-selected="true">A propos</a>
             <a class="nav-link" id="v-pills-events-tab" data-toggle="pill" href="#v-pills-events" role="tab" aria-controls="v-pills-events" aria-selected="false">Evènements</a>
@@ -85,25 +82,58 @@
               <i class="fa fa-pencil-alt"></i> Editer
             </a></h4>
           {% endif %}
-          <div class="card p-4">
-              <div class="col-md-6">
-                <i class="fa fa-phone pr-2"></i><label>Téléphone</label>
-              </div>
-              <div class="col-md-6">
-                  <p>{{ organization.phone_number }}</p>
-              </div>
-              <div class="col-md-6">
-                  <i class="fa fa-envelope pr-2"></i>Adresse mail
-                </div>
-                <div class="col-md-6">
-                    <p>{{ object.email }}</p>
-              </div>
-              <div class="col-md-6">
-                  <i class="fa fa-map pr-2"></i>Site internet
-                </div>
-                <div class="col-md-6">
-                    <a href="{{organization.website}}">{{ organization.website }}</a>
-              </div>
+        <div class="card p-4">
+          <div class="row">
+            <div class="col-md-6">
+              <i class="fa fa-phone pr-2"></i><label>Téléphone</label>
+            </div>
+            <div class="col-md-6">
+              {% if organization.phone_number %}
+                <p>{{ organization.phone_number }}</p>
+              {% else %}
+                Non renseigné
+              {% endif %}
+            </div>
+            <div class="col-md-6">
+              <i class="fa fa-envelope pr-2"></i>Adresse mail
+            </div>
+            <div class="col-md-6">
+              {% if object.email %}
+                <p>{{ object.email }}</p>
+              {% else %}
+                Non renseigné
+              {% endif %}
+            </div>
+            <div class="col-md-6">
+              <i class="fa fa-map pr-2"></i>Site internet
+            </div>
+            <div class="col-md-6">
+              {% if organization.website %}
+                <a href="{{organization.website}}">{ organization.website }}</a>
+              {% else %}
+                  Non renseigné
+              {% endif %}
+            </div>
+            {% if organization.advised_fee %}
+            <div class="col-md-6">
+              <p class="mt-1">
+                {% if organization.fee_description %}
+                  {{ organization.fee_description }}
+                {% else %}
+                  L'adhésion est de 
+                {% endif %}
+              </p>
+            </div>
+            <div class="col-md-6">
+              <span class="badge badge-pill badge-secondary">
+                {% if organization.min_fee %}
+                  {{ organization.min_fee }}-{
+                {% endif %}    
+                {{ organization.advised_fee }}€
+              </span>
+            </div>
+            {% endif %}
+          </div>
         </div>
         <h4 class="mt-4">Activités</h4>
         <div class="card-columns">

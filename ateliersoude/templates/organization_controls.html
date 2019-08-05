@@ -1,40 +1,40 @@
 {% extends 'organization_page.html' %}
 
 {% block menu_content %}
-
-{% if is_admin %}
-<a class="btn btn-success btn-sm" href="{% url 'user:organization_update' organization.pk %}">
-  <i class="fa fa-pencil-alt"></i> Editer
-</a>
-<a class="btn btn-danger btn-sm" href="{% url 'user:organization_delete' organization.pk %}">
-  <i class="fa fa-trash"></i> Supprimer
-</a>
-{% endif %}
-
-
-    {% if is_active %}
-      <div>
-        {% if is_admin %}
-          <a class="btn btn-primary btn-sm" href="{% url 'event:condition_create' organization.pk %}" title="create condition">
-            <i class="fa fa-plus-circle"></i> Créer une condition d'accès
+  {% if is_active %}
+    <div class="container">
+      {% if is_admin %}
+        <h4 class="mt-4">Informations</h4>
+        <div class="card p-4">
+        <a class="btn btn-success btn-sm" href="{% url 'user:organization_update' organization.pk %}">
+            <i class="fa fa-pencil-alt"></i> Editer
+        </a>
+        </div>
+        <h4 class="mt-4">Activités, lieux</h4>
+        <div class="card p-4">
+        <a class="btn btn-primary btn mb-2" href="{% url 'event:activity_create' organization.pk %}" title="activity place">
+          <i class="fa fa-plus-circle"></i> Ajouter une activité
+        </a>
+        <a href="{% url 'location:create' organization.pk %}" class="btn btn-primary btn">
+          <i class="fa fa-plus-circle"></i> Ajouter un lieu
+        </a>
+        </div>
+        <h4 class="mt-4">Conditions d'accès</h4>
+        <div class="card p-4">
+          <a class="btn btn-primary btn float-right" href="{% url 'event:condition_create' organization.pk %}" title="create condition">
+              <i class="fa fa-plus-circle"></i> Ajouter
           </a>
-          <a class="btn btn-primary btn-sm" href="{% url 'event:activity_create' organization.pk %}" title="activity place">
-            <i class="fa fa-plus-circle"></i> Ajouter une activité
-          </a>
-          <a href="{% url 'location:create' organization.pk %}" class="btn btn-info btn-sm">
-            <i class="fa fa-plus-circle"></i> Ajouter un lieu
-          </a>
-          <div class="dropdown-divider mb-4"></div>
           <div class="card-columns">
             {% include 'event/condition/list.html' with conditions=organization.conditions.all %}
           </div>
-        {% endif %}
-        <a class="btn btn-primary btn-sm{% if not organization.activities.all %} disabled{% endif %}" href="{% url 'event:create' organization.id %}">
-          <i class="fa fa-plus-circle"></i> Créer un évènement
-        </a>
-        <a class="btn btn-primary btn-sm{% if not organization.activities.all %} disabled{% endif %}" href="{% url 'event:recurrent_create' organization.id %}">
-          <i class="fa fa-plus-circle"></i> Créer un évènement récurrent
-        </a>
-      </div>
-    {% endif %}
+        </div>
+        <h4 class="mt-4">Supprimer</h4>
+        <div class="card p-4">
+          <a class="btn btn-danger col-lg" href="{% url 'user:organization_delete' organization.pk %}">
+              <i class="fa fa-trash"></i> Supprimer l'organisation
+          </a>
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
 {% endblock menu_content %}

@@ -4,6 +4,17 @@
 {% block menu_content %}
 <section class="container">
     <h2 class="text-center p-2">Les évènements de {{organization}}</h2>
+
+<!-- todo : if is active -->
+      <div>
+        <a class="btn btn-primary btn-sm{% if not organization.activities.all %} disabled{% endif %}" href="{% url 'event:create' organization.id %}">
+          <i class="fa fa-plus-circle"></i> Créer un évènement
+        </a>
+        <a class="btn btn-primary btn-sm{% if not organization.activities.all %} disabled{% endif %}" href="{% url 'event:recurrent_create' organization.id %}">
+          <i class="fa fa-plus-circle"></i> Créer un évènement récurrent
+        </a>
+      </div>
+
   <table class="table infinite-container">
       <thead class="thead-dark">
         <tr>

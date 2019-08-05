@@ -3,7 +3,10 @@
 
 {% block menu_content %}
   <section class="container position-sticky sticky-top" style="top:40px">
-    <h2 class="text-center p-2">Les membres de {{organization}}</h2>
+    <h2 class="text-center pt-4">Les membres de {{organization}}</h2>
+  </section>
+
+  <section class="container card">
     <div class="col-lg bg-white">
         <form method="GET" class="form-row float-right">
             {% bootstrap_form search_form %}
@@ -13,8 +16,6 @@
             </button>
         </form>
     </div>
-  </section>
-  <section class="container">
     <table class="table infinite-container">
         <thead class="bg-primary">
           <tr class="text-white">

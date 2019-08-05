@@ -2,52 +2,56 @@
 {% load static bootstrap4 assets %}
 
 {% block menu_content %}
-  <section class="container-fluid position-sticky sticky-top" style="top:40px">
+  <section class="container position-sticky sticky-top" style="top:40px">
+    <h2 class="text-center p-2">Les membres de {{organization}}</h2>
     <div class="col-lg bg-white">
-        <form method="GET" class="form-row">
+        <form method="GET" class="form-row float-right">
             {% bootstrap_form search_form %}
-          <div class="form-group p-2 col mt-auto">
+          <div class="form-group p-2 mt-auto">
             <button type="submit" class="btn btn-primary btn-block">
-              <span class="">Lancer la recherche</span>
+              <span class="">Chercher un membre</span>
             </button>
         </form>
     </div>
   </section>
-  <table class="table infinite-container">
-      <thead>
-        <tr>
-          <th scope="col">Nom</th>
-          <th scope="col">Prénom</th>
-          <th scope="col">Statut</th>
-          <th scope="col">Cotisation</th>
-        </tr>
-      </thead>
-      <tbody class="infinite-item">
-        {% for user in members %}
-        <tr>
-          <td>{{ user.last_name }}</td>
-          <td> {{ user.first_name }}</td>
-          <td>
-            {% if user in organization.members.all %} Adhérent
-            {% elif user in organization.volunteers.all%} Volontaire
-            {% elif user in organization.actives.all%} Actif
-            {% elif user in organization.admins.all %}Administrateur
-            {% endif %}
-          </td>
-          <td>
-            {% for membership in user.memberships.all %}
-              {% if membership.organization == organization %}
-                {{ membership.current_contribution }}
-              {% endif%}
-            {% endfor %}
-          </td>
-          <td><a class="btn btn-success" href="{% url 'user:user_detail' user.pk %}">Détails</a></td>
-        </tr>
-        {% empty %}
-          Pas de gens...
-        {% endfor %}
-      </tbody>
-  </table>
+  <section class="container">
+    <table class="table infinite-container">
+        <thead class="bg-primary">
+          <tr class="text-white">
+            <th scope="col">Nom</th>
+            <th scope="col">Prénom</th>
+            <th scope="col">Statut</th>
+            <th scope="col">Cotisation</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody class="infinite-item">
+          {% for user in members %}
+          <tr>
+            <td>{{ user.last_name }}</td>
+            <td> {{ user.first_name }}</td>
+            <td>
+              {% if user in organization.members.all %} Adhérent
+              {% elif user in organization.volunteers.all%} Volontaire
+              {% elif user in organization.actives.all%} Actif
+              {% elif user in organization.admins.all %}Administrateur
+              {% endif %}
+            </td>
+            <td>
+              {% for membership in user.memberships.all %}
+                {% if membership.organization == organization %}
+                  {{ membership.current_contribution }} €
+                {% endif%}
+              {% endfor %}
+            </td>
+            <td><a class="btn btn-success" href="{% url 'user:user_detail' user.pk %}">Détails</a></td>
+          </tr>
+          {% empty %}
+            Pas de gens...
+          {% endfor %}
+        </tbody>
+    </table>
+  </section>
   
   {% if page_obj.has_next %}
     <a class="infinite-more-link" href="?page={{ page_obj.next_page_number }}"></a>

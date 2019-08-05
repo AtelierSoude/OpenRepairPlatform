@@ -10,51 +10,141 @@
 {% endblock %}
 
 {% block content %}
-  {% url "user:organization_list" as organization_list_url %}
-  {% include "breadcrumb.html" with current=organization first_parent_url=organization_list_url first_parent_text="Organisations" %}
+<div class="container-fluid position-absolute">
+  {% if is_active %}
+    <nav class="nav nav-pills nav-justified bg-secondary position-sticky sticky-top">
+        <a class="nav-link {% if request.path == '/' %} active {% endif %}" 
+        href="{% url 'organization_page' organization.slug %}">Page</a> <!-- change this -->
+        <a class="nav-link {% if 'events' in request.path %} active {% endif %}" 
+        href="{% url 'organization_events' organization.slug %}">Evenements</a>
+        <a class="nav-link {% if 'members' in request.path %} active {% endif %}"
+        href="{% url 'organization_members' organization.slug %}">Membres</a>
+        <a class="nav-link {% if 'controls' in request.path %} active {% endif %}"
+        href="{% url 'organization_controls' organization.slug %}">Modifier</a>
+        <a class="nav-link disabled" href="#">Disabled</a>
+      </nav>
+  {% else %}
+    {% url "user:organization_list" as organization_list_url %}
+    {% include "breadcrumb.html" with current=organization first_parent_url=organization_list_url first_parent_text="Organisations" %}
+  {% endif %}
 
-<div class="container">
-
-  <section class="row p-0">
-        <div class="text-center bg-secondary col-md-3">
+<div class="tab-content row no-gutters" id="v-pills-tabContent">
+  {% block menu_content %}
+  <section class="p-0 text-center col-md-3">
+    <div class="position-absolute" style="width:100%; height:100%">
+      <div class="position-sticky sticky-top">
           <div class="pt-5">
               {% if organization.picture %}
-                {% thumbnail object.picture "100x100" crop="center" format="PNG" as im %}
+                {% thumbnail object.picture "150x150" crop="center" format="PNG" as im %}
                   <img src="{{ im.url }}" class="m-2 rounded-circle"/>
                 {% endthumbnail %}
               {% endif %}
           </div>
+          <h2>{{ organization.name }}</h2>
+
+        <div class="nav flex-column nav-pills p-4 text-left" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+            <a class="nav-link active" id="v-pills-about-tab" data-toggle="pill" href="#v-pills-about" role="tab" aria-controls="v-pills-rdv" aria-selected="true">A propos</a>
+            <a class="nav-link" id="v-pills-events-tab" data-toggle="pill" href="#v-pills-events" role="tab" aria-controls="v-pills-events" aria-selected="false">Evènements</a>
+            <a class="nav-link" id="v-pills-community-tab" data-toggle="pill" href="#v-pills-community" role="tab" aria-controls="v-pills-community" aria-selected="false">Communauté</a>
         </div>
-    <div class="jumbotron jumbotron-fluid col-md-9 mb-0">
-        <h1>{{ organization.name }}</h1>
-        {% if is_admin %}
-          <a class="btn btn-success btn-sm" href="{% url 'user:organization_update' organization.pk %}">
-            <i class="fa fa-pencil-alt"></i> Editer
-          </a>
-          <a class="btn btn-danger btn-sm" href="{% url 'user:organization_delete' organization.pk %}">
-            <i class="fa fa-trash"></i> Supprimer
-          </a>
-        {% endif %}
-        <small>{{organization.description | safe | truncatewords_html:50 }}</small>
+      </div>
     </div>
   </section>
   
-  <section class="row h-100">
-
-    <div class="nav bg-light flex-column nav-pills p-4 text-left col-md-3">
-        <a class="nav-link" href="{% url 'organization_events' organization.slug %}">Evènements</a>
-        <a class="nav-link" href="{% url 'organization_details' organization.slug %}">À propos</a>
-        <a class="nav-link" href={% url 'organization_members' organization.slug %}>Communauté</a>
-        {% if is_active %}
-          <a class="nav-link" href="{% url 'organization_controls' organization.slug %}">Contrôles</a>
+  <section class="h-100 col-md-9 p-4">
+    <div class="tab-content" id="v-pills-tabContent">
+      <div class="tab-pane fade show" id="v-pills-events" role="tabpanel" aria-labelledby="v-pills-events-tab">
+        {% if events or has_hidden_events %}
+          <h4>Prochains évènements</h4>
+          <div class="card-columns">
+            {% for event in event_list %}
+              {% include "event/event_cards.html" with minimal=True %}
+            {% empty %}
+            <div class="card p-4">
+              Aucuns évènements à venir
+            </div>
+            {% endfor %}
+          </div>
+          {% if is_volunteer %}
+          <a href="{% url 'user:organization_all_events' organization.pk organization.slug page %}" class="btn btn-success">
+            <i class="fa fa-search"></i>
+            Voir tous les évènements
+          </a>
+          {% endif %}
         {% endif %}
+      </div>
+
+      <div class="tab-pane fade show active" id="v-pills-about" role="tabpanel" aria-labelledby="v-pills-abot-tab">
+        <h4 class="mt-4">Description</h4>
+          <div class="card p-4">
+            {{ organization.description | safe }}
+          </div>
+        <h4 class="mt-4">Informations</h4>
+          <div class="card p-4">
+              <div class="col-md-6">
+                <i class="fa fa-phone pr-2"></i><label>Téléphone</label>
+              </div>
+              <div class="col-md-6">
+                  <p>{{ organization.phone_number }}</p>
+              </div>
+              <div class="col-md-6">
+                  <i class="fa fa-envelope pr-2"></i>Adresse mail
+                </div>
+                <div class="col-md-6">
+                    <p>{{ object.email }}</p>
+              </div>
+              <div class="col-md-6">
+                  <i class="fa fa-map pr-2"></i>Site internet
+                </div>
+                <div class="col-md-6">
+                    <a href="{{organization.website}}">{{ organization.website }}</a>
+              </div>
+        </div>
+        <h4 class="mt-4">Activités</h4>
+        <div class="card-columns">
+          {% include "event/activity/cards.html" with activities=organization.activities.all %}
+        </div>
+        <h3 class="mt-4">Locaux</h3>
+        {% if organization.places.all %}
+        <div class="card-columns">
+          {% for place in organization.places.all %}
+            <div class="card">  
+              <a class="card-link" href="{% url 'location:detail' place.pk place.slug %}">
+                <div class="card-body">
+                  <h4 class="card-title">{{ place.name }}</h4>
+                  <h6 class="card-subtitle mb-2 text-muted">{{ place.address }}</h6>
+                  <span class="badge badge-secondary">{{ place.category }}</span>
+                  {{ place.description | safe | truncatewords_html:10 }}
+                </div>
+                {% if is_admin %}
+                  <div class="card-footer">
+                    <a class="btn btn-info btn-sm" href="{% url 'location:edit' place.id %}">
+                      <i class="fa fa-pencil-alt"></i>
+                      Editer ce lieu
+                    </a>
+                    <a class="btn btn-danger btn-sm" href="{% url 'location:delete' place.id %}">
+                      <i class="fa fa-trash-alt"></i>
+                      Supprimer ce lieu
+                    </a>
+                  </div>
+                {% endif %}
+              </a>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div>Il n'y a pas de local associé à cette organisation.</div>
+      {% endif %}      
     </div>
-        
-    <div class="col-md-9 p-4 tab-content" id="v-pills-tabContent">
-      {% block menu_content %}
-      {% endblock menu_content %}
+
+    <div class="tab-pane fade show" id="v-pills-community" role="tabpanel" aria-labelledby="v-pills-community-tab">
+      <div class="">
+          {% include 'user/organization/manage_user.html' %}
+      </div>
     </div>
   </section>
+  {% endblock menu_content %}
+
 </div>
 {% endblock %}
 

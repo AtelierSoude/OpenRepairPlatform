@@ -1,6 +1,17 @@
 {% extends 'organization_page.html' %}
 
 {% block menu_content %}
+
+{% if is_admin %}
+<a class="btn btn-success btn-sm" href="{% url 'user:organization_update' organization.pk %}">
+  <i class="fa fa-pencil-alt"></i> Editer
+</a>
+<a class="btn btn-danger btn-sm" href="{% url 'user:organization_delete' organization.pk %}">
+  <i class="fa fa-trash"></i> Supprimer
+</a>
+{% endif %}
+
+
     {% if is_active %}
       <div>
         {% if is_admin %}

@@ -108,10 +108,14 @@ h1, h2, h3, h4, h5 {
   h3{
       font-size:1.4rem;
   }
-}
-
-@media screen and (max-width: 576px) {
   .fixed_sidedar{
     position: initial !important;
   }
+  .header_detail_page{
+    height: 400px;
+  }
+}
+
+@media screen and (max-width: 576px) {
+
 }

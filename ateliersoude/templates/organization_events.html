@@ -8,43 +8,60 @@
   <div class="card p-4">
 <!-- todo : if is active -->
     <div class="float-right pb-4 col-lg text-center">
-      <a class="btn btn-primary {% if not organization.activities.all %} disabled{% endif %}" href="{% url 'event:create' organization.id %}">
+      <a class="btn btn-primary m-2 {% if not organization.activities.all %} disabled{% endif %}" href="{% url 'event:create' organization.id %}">
         <i class="fa fa-plus-circle"></i> Créer un évènement
       </a>
-      <a class="btn btn-success {% if not organization.activities.all %} disabled{% endif %}" href="{% url 'event:recurrent_create' organization.id %}">
+      <a class="btn btn-success m-2 {% if not organization.activities.all %} disabled{% endif %}" href="{% url 'event:recurrent_create' organization.id %}">
         <i class="fa fa-plus-circle"></i> Créer un évènement récurrent
       </a>
     </div>
-
-  <table class="table infinite-container">
-      <thead class="bg-primary">
-        <tr class="text-white">
-          <th scope="col">Date</th>
-          <th scope="col">Type</th>
-          <th scope="col">Lieu</th>
-          <th scope="col">Places restantes</th>
-        </tr>
-      </thead>
-      <tbody class="infinite-item">
-        {% for event in events %}
-        <tr class="{% if event.date <= today %}bg-light text-muted{% else %}bg-white{% endif %}">
-            <td class="">{{ event.date }}</td>
-            <td>
-              <a href="{% url 'event:detail' event.pk event.activity.slug %}">{{ event.activity }}</a></td>
-            <td>{{ event.location }}</td>
-            <td>
-              {% if event.is_free %}
-                Illimité
-              {% else %}
-                {{ event.remaining_seats}}
-              {% endif %}
-            </td>
-        </tr>
-        {% empty %}
-        Pas d'évènements 
-        {% endfor %}
-      </tbody>
-  </table>
+  <div class="table-responsive">
+    <table class="table infinite-container">
+        <thead class="bg-primary">
+            <tr>
+              <th scope="col"><small class="text-white">Date</small></th>
+              <th scope="col"><small class="text-white">Type</small></th>
+              <th scope="col"><small class="text-white">Lieu</small></th>
+              <th scope="col"><small class="text-white">Places</small></th>
+            </tr>
+          </thead>
+        <tbody class="infinite-item">
+          {% for event in events %}
+            {% ifchanged %}
+              <tr>
+                <td colspan="4" class="bg-light">
+                  <b>{{ event.date|date:"F" }}</b>
+                </td>
+              </tr>
+            {% endifchanged %}
+            <tr class="{% if event.date <= today %}bg-light text-muted{% else %}bg-white{% endif %}">
+              <td class="">
+                <small>{{ event.date }}</small>
+              </td>
+              <td>
+                <a href="{% url 'event:detail' event.pk event.activity.slug %}">
+                  <small>{{ event.activity }}</small>
+                </a>
+              </td>
+              <td>
+                <small>{{ event.location }}</small>
+              </td>
+              <td>
+                <small>
+                  {% if event.is_free %}
+                    Illimité
+                  {% else %}
+                    {{ event.remaining_seats}}
+                  {% endif %}
+                </small>
+              </td>
+            </tr>
+          {% empty %}
+          Pas d'évènements 
+          {% endfor %}
+        </tbody>
+    </table>
+  </div>
   {% if page_obj.has_next %}
     <a class="infinite-more-link" href="?page={{ page_obj.next_page_number }}"></a>
   {% endif %}

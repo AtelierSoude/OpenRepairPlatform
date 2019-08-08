@@ -1,5 +1,5 @@
 {% extends 'organization_page.html' %}
-{% load static bootstrap4 assets %}
+{% load static bootstrap4 assets thumbnail initialavatar %}
 
 {% block menu_content %}
   <section class="container position-sticky sticky-top" style="top:40px">
@@ -16,40 +16,66 @@
             </button>
         </form>
     </div>
-    <table class="table infinite-container">
-        <thead class="bg-primary">
-          <tr class="text-white">
-            <th scope="col">Nom</th>
-            <th scope="col">Prénom</th>
-            <th scope="col">Statut</th>
-            <th scope="col">Cotisation</th>
-            <th scope="col"></th>
-          </tr>
-        </thead>
-        <tbody class="infinite-item">
-          {% for user in members %}
-          <tr>
-            <td>{{ user.last_name }}</td>
-            <td> {{ user.first_name }}</td>
-            <td>
-              {% if user in organization.members.all %} Adhérent
-              {% elif user in organization.volunteers.all%} Volontaire
-              {% elif user in organization.actives.all%} Actif
-              {% elif user in organization.admins.all %}Administrateur
-              {% endif %}
-            </td>
-            <td>
-              {% for membership in user.memberships.all %}
-                {% if membership.organization == organization %}
-                  {{ membership.current_contribution }} €
-                {% endif%}
-              {% endfor %}
-            </td>
-            <td><a class="btn btn-success" href="{% url 'user:user_detail' user.pk %}">Détails</a></td>
-          </tr>   
-          {% endfor %}
-        </tbody>
-    </table>
+    <div class="table-responsive">
+      <table class="table infinite-container">
+          <thead class="bg-primary">
+            <tr>
+              <th scope="col"><small class="text-white">Nom</small></th>
+              <th scope="col"><small class="text-white">statut</small></th>
+              <th scope="col"><small class="text-white">Cotisation</small></th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody class="infinite-item">
+            {% for user in members %}
+            {% ifchanged %}
+              <tr>
+                <td colspan="4" class="bg-light">
+                  <b>{{ user.last_name|make_list|first }}</b>
+                </td>
+              </tr>
+            {% endifchanged %}
+            <tr>
+              <td>
+                <a class="" href="{% url 'user:user_detail' user.pk %}">
+                  {% if user.avatar_img %}
+                    {% thumbnail user.avatar_img "30x30" crop="center" format="PNG" as im %}
+                      <img src="{{ im.url }}" class="m-2 rounded-circle"/>
+                    {% endthumbnail %}
+                  {% else %}
+                    {% if user.first_name %}
+                      {% get_initial_avatar user 30 'circle' %}
+                    {% endif %}
+                  {% endif %}
+                  <small>{{ user }}</small>
+                </a>
+              </td>
+              <td>
+                <small>
+                  {% if user in organization.members.all %} Adhérent
+                  {% elif user in organization.volunteers.all%} Volontaire
+                  {% elif user in organization.actives.all%} Actif
+                  {% elif user in organization.admins.all %}Administrateur
+                  {% endif %}
+                </small>
+              </td>
+              <td>
+                <span class="badge badge-pill badge-success">
+                  {% for membership in user.memberships.all %}
+                    {% if membership.organization == organization %}
+                      {{ membership.current_contribution }} €
+                    {% endif%}
+                  {% endfor %}
+                </span>
+              </td>
+              <td>
+                Mettre à jour
+              </td>
+            </tr>   
+            {% endfor %}
+          </tbody>
+      </table>
+    </div>
   </section>
   
   {% if page_obj.has_next %}

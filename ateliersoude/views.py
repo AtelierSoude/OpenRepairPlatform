@@ -51,6 +51,7 @@ class OrganizationPageView(
                 "date"
             )
             context["page"] = past_events.count() // EVENTS_PER_PAGE + 1
+        context["page_tab"]= 'active'
         context["register_form"] = CustomUserEmailForm
         context["add_admin_form"] = CustomUserEmailForm(auto_id="id_admin_%s")
         context["add_active_form"] = CustomUserEmailForm(
@@ -85,6 +86,7 @@ class OrganizationMembersView(
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context["members_tab"]= 'active'
         context["organization"] = self.organization
         context["search_form"] = CustomUserForm
         context["users"] = [
@@ -103,6 +105,11 @@ class OrganizationControlsView(
     def get_object(self, *args, **kwargs):
         return self.model.objects.get(slug=self.organization.slug)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["controls_tab"]= 'active'
+        return context
+
 
 class OrganizationEventsView(HasActivePermissionMixin, ListView):
     model = Event
@@ -118,6 +125,7 @@ class OrganizationEventsView(HasActivePermissionMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context["events_tab"]= 'active'
         context["organization"] = self.organization
         context["search_form"] = self.form_class
         context["today"] = datetime.date(datetime.now())

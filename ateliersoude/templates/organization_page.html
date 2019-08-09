@@ -15,20 +15,20 @@
     {% include "breadcrumb.html" with current=organization first_parent_url=organization_list_url first_parent_text="Organisations" %}
     {% if is_active %}
     <nav class="nav nav-pills justify-content-center bg-secondary position-sticky sticky-top">
-        <a class="nav-link {% if request.path == '/' %} active {% endif %}" 
+        <a class="nav-link {{ page_tab }}" 
         href="{% url 'organization_page' organization.slug %}">
         Page</a> <!-- change this -->
-        <a class="text-center nav-link {% if 'events' in request.path %} active {% endif %}" 
+        <a class="text-center nav-link {{ events_tab }}" 
         href="{% url 'organization_events' organization.slug %}">
           <i style="font-size: 22px" class="fas fa-calendar-alt d-none d-sm-block d-md-none d-block"></i>    
           <span class="d-none d-sm-none d-md-block">Evenements</span>
         </a>
-        <a class="text-center nav-link {% if 'members' in request.path %} active {% endif %}"
+        <a class="text-center nav-link {{ members_tab }}"
         href="{% url 'organization_members' organization.slug %}">
         <i style="font-size: 22px" class="fas fa-users d-none d-sm-block d-md-none d-block"></i>    
           <span class="d-none d-sm-none d-md-block">Membres</span>
         </a>
-        <a class="text-center nav-link {% if 'controls' in request.path %} active {% endif %}"
+        <a class="text-center nav-link {{ controls_tab }}"
         href="{% url 'organization_controls' organization.slug %}">
           <i style="font-size: 22px" class="fas fa-cog d-none d-sm-block d-md-none d-block"></i>    
           <span class="d-none d-sm-none d-md-block">Modifier</span>

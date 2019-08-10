@@ -51,7 +51,7 @@ class CustomUserEmailForm(forms.ModelForm):
 
 class CustomUserForm(forms.Form):
     main_field = forms.CharField(
-        label="Rentrez votre recherche",
+        label="Rechercher un utilisateur",
         max_length=100
     )
 

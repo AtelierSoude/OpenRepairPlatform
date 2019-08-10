@@ -2,8 +2,8 @@
 {% load static bootstrap4 assets thumbnail initialavatar %}
 
 {% block menu_content %}
-  <section class="container position-sticky sticky-top" style="top:40px">
-    <h2 class="text-center pt-4">{{ members.all.count }} membres</h2>
+  <section class="container">
+    <h2 class="text-center p-4">Membres adhérents de {{organization}}</h2>
   </section>
 
   <section class="container card">
@@ -12,7 +12,7 @@
             {% bootstrap_form search_form %}
           <div class="form-group p-2 mt-auto">
             <button type="submit" class="btn btn-primary btn-block">
-              <span class="">Chercher un membre</span>
+              <span class=""><i class="fa fa-search"></i></span>
             </button>
         </form>
     </div>
@@ -52,21 +52,31 @@
               </td>
               <td>
                 <small>
-                  {% if user in organization.members.all %} Adhérent
-                  {% elif user in organization.volunteers.all%} Volontaire
-                  {% elif user in organization.actives.all%} Actif
-                  {% elif user in organization.admins.all %}Administrateur
-                  {% endif %}
+                  {% for membership in user.memberships.all %}
+                    {% if membership.organization == organization %}
+                      {% if membership.current_contribution == 0 %} 
+                        <span class="text-danger" >Pas à jour</span>
+                      {% elif membership.current_contribution >= organization.advised_fee %}
+                        <span class="text-success" >A jour </span>
+                      {% else %}
+                        <span class="text-warning" >Incomplet </span>
+                      {% endif %}
+                    {% endif %}
+                  {% endfor %}
                 </small>
               </td>
               <td>
-                <span class="badge badge-pill badge-success">
-                  {% for membership in user.memberships.all %}
-                    {% if membership.organization == organization %}
-                      {{ membership.current_contribution }} €
-                    {% endif%}
-                  {% endfor %}
-                </span>
+                {% for membership in user.memberships.all %}
+                  {% if membership.organization == organization %}
+                    {% if membership.current_contribution == 0 %} 
+                      <span class="badge badge-pill badge-danger" >{{membership.current_contribution}}€</span>
+                    {% elif membership.current_contribution >= organization.advised_fee %}
+                      <span class="badge badge-pill badge-success" >{{membership.current_contribution}}€</span>
+                    {% else %}
+                      <span class="badge badge-pill badge-warning" >{{membership.current_contribution}}€</span>
+                    {% endif %}
+                  {% endif %}
+                {% endfor %}
               </td>
               <td>
                 Mettre à jour

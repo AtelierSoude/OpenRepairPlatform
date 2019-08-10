@@ -5,14 +5,14 @@
 <section class="container">
   <h2 class="text-center p-2">{{organization.events.all.count}} évènements</h2>
 
-  <div class="card p-4">
+  <div class="card p-2">
 <!-- todo : if is active -->
     <div class="float-right pb-4 col-lg text-center">
       <a class="btn btn-primary m-2 {% if not organization.activities.all %} disabled{% endif %}" href="{% url 'event:create' organization.id %}">
-        <i class="fa fa-plus-circle"></i> Créer un évènement
+        <i class="fa fa-plus-circle"></i> évènement
       </a>
       <a class="btn btn-success m-2 {% if not organization.activities.all %} disabled{% endif %}" href="{% url 'event:recurrent_create' organization.id %}">
-        <i class="fa fa-plus-circle"></i> Créer un évènement récurrent
+        <i class="fa fa-plus-circle"></i> événement récurrent
       </a>
     </div>
   <div class="table-responsive">
@@ -30,30 +30,47 @@
             {% ifchanged %}
               <tr>
                 <td colspan="4" class="bg-light">
-                  <b>{{ event.date|date:"F" }}</b>
+                  <b>{{ event.date|date:"F" }} {{event.date|date:"Y" }}</b>
                 </td>
               </tr>
             {% endifchanged %}
             <tr class="{% if event.date <= today %}bg-light text-muted{% else %}bg-white{% endif %}">
-              <td class="">
-                <small>{{ event.date }}</small>
+              <td>
+                <div class="row border-secondary border text-center">
+                  <span class="col-12 bg-secondary">
+                    {{ event.date|date:"N"|upper }}
+                  </span>
+                  <span class="col-12">
+                    {{ event.date|date:"d" }}
+                  </span>
+                </div>
               </td>
               <td>
                 <a href="{% url 'event:detail' event.pk event.activity.slug %}">
-                  <small>{{ event.activity }}</small>
+                  <b>{{ event.activity }}</b>
                 </a>
               </td>
               <td>
                 <small>{{ event.location }}</small>
               </td>
               <td>
-                <small>
-                  {% if event.is_free %}
-                    Illimité
+                {% if event.is_free %}
+                  Illimité
+                {% else %}
+                <span
+                class="
+                  {% if event.remaining_seats <= 0 %}
+                    text-danger
+                  {% elif event.remaining_seats == event.available_seats %}
+                    text-success
                   {% else %}
-                    {{ event.remaining_seats}}
+                    text-warning
                   {% endif %}
-                </small>
+                  ">
+                <i class="fas fa-users"></i>    
+                  {{ event.remaining_seats}}
+                </span>
+                {% endif %}
               </td>
             </tr>
           {% empty %}

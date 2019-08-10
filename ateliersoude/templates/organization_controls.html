@@ -1,4 +1,5 @@
 {% extends 'organization_page.html' %}
+{% load static %}
 
 {% block menu_content %}
   {% if is_active %}
@@ -47,7 +48,4 @@
       $("#breadcrumb").sticky({topSpacing:0});
     });
   </script>
-  {% assets "js_detail_organization" %}
-    <script src="{{ ASSET_URL }}"></script>
-  {% endassets %}
 {% endblock extra_js %}

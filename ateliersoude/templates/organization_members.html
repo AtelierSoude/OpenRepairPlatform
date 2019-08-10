@@ -84,6 +84,13 @@
 {% endblock menu_content %}
 
 {% block extra_js %}
+  <script>
+    $(document).ready(function(){
+      $("#h_nav").sticky({topSpacing:40});
+      $("#side_nav").sticky({topSpacing:80});
+      $("#breadcrumb").sticky({topSpacing:0});
+    });
+  </script>
   {{  users|json_script:"users-data"}}
   <script src="{% static 'js/lib/jquery.waypoints.js' %}"></script>
   <script src="{% static 'js/lib/infinite.min.js' %}"></script>

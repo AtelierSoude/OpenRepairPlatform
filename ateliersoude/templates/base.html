@@ -27,7 +27,7 @@
   {% endassets %}
   {% block extra_css %}{% endblock %}
 </head>
-<body>
+<body class="bg-grey">
 {% include "menu.html" %}
 
 <div class="container-fluid">
@@ -107,8 +107,13 @@
 <!-- Script & librairy-->
 <script src="{% static 'bootstrap/js/jquery.min.js' %}"></script>
 <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'js/lib/sticky_polyfill.js' %}"></script>
 
-{% block extra_js %}{% endblock %}
+{% block extra_js %}
+{% assets "js_base" %}
+    <script src="{{ ASSET_URL }}"></script>
+{% endassets %}
+{% endblock %}
 
 </body>
 

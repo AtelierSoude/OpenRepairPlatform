@@ -19,11 +19,18 @@ header{
 h1, h2, h3, h4, h5 {
   color : #083342;
 }
+h4 {
+  z-index: 0;
+}
+
 .bg-grey { 
   background-color: #eef2f6 !important;
 }
 /* Menu */
 
+.header_detail_page, #h_nav, #breadcrumb {
+  z-index: 2 !important;
+}
 .navbar {
   background-color: #083342;
   padding: 0.3em;
@@ -64,6 +71,7 @@ h1, h2, h3, h4, h5 {
   margin-bottom: 0 !important;
   border-width: 0;
   background-color: white !important;
+  z-index: 2;
 }
 
 /* leaflet reset style */
@@ -112,6 +120,7 @@ h1, h2, h3, h4, h5 {
   }
   .header_detail_page{
     height: 200px;
+    z-index: 2;
   }
   #side_nav{
     background-color: #fee56e !important; 

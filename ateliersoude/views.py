@@ -1,4 +1,3 @@
-from datetime import date
 from django.views.generic import (
     TemplateView,
     DetailView,
@@ -11,7 +10,6 @@ from ateliersoude.user.models import (
     Organization
 )
 from ateliersoude.event.models import Event
-from ateliersoude.utils import get_future_published_events
 from ateliersoude.user.forms import (
     CustomUserEmailForm,
     MoreInfoCustomUserForm,
@@ -33,34 +31,7 @@ class OrganizationPageView(
     template_name = "organization_page.html"
 
     def get_object(self, *args, **kwargs):
-        return Organization.objects.get(slug=self.kwargs["orga_slug"])
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["users"] = [
-            (f"{user.email} ({user.first_name} {user.last_name})", user.email)
-            for user in CustomUser.objects.all()
-        ]
-        all_events = self.object.events.all()
-        context["events"] = list(
-            get_future_published_events(all_events, self.object)
-        )
-        if context["is_volunteer"]:
-            context["has_hidden_events"] = all_events.count() > 0
-            past_events = all_events.filter(date__lt=date.today()).order_by(
-                "date"
-            )
-            context["page"] = past_events.count() // EVENTS_PER_PAGE + 1
-        context["register_form"] = CustomUserEmailForm
-        context["add_admin_form"] = CustomUserEmailForm(auto_id="id_admin_%s")
-        context["add_active_form"] = CustomUserEmailForm(
-            auto_id="id_active_%s"
-        )
-        context["add_volunteer_form"] = CustomUserEmailForm(
-            auto_id="id_volunteer_%s"
-        )
-        context["add_member_form"] = MoreInfoCustomUserForm
-        return context
+        return self.organization
 
 
 class OrganizationMembersView(
@@ -69,18 +40,19 @@ class OrganizationMembersView(
     model = CustomUser
     template_name = "organization_members.html"
     context_object_name = "members"
-    object = Organization.objects.first()
     paginate_by = 20
-    http_methods_name = ["get"]
 
     def get_queryset(self):
+        self.object = self.organization
         queryset = self.organization.members.all().order_by("last_name")
         form = CustomUserForm(self.request.GET)
         if form.is_valid():
-            queryset = queryset.filter(
-                first_name=form.cleaned_data["main_field"].split()[0],
-                last_name=form.cleaned_data["main_field"].split()[1]
-            )
+            main_field = form.cleaned_data["main_field"]
+            if main_field:
+                queryset = queryset.filter(
+                    first_name=form.cleaned_data["main_field"].split()[0],
+                    last_name=form.cleaned_data["main_field"].split()[1]
+                )
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -91,6 +63,7 @@ class OrganizationMembersView(
             (f"{user.first_name} {user.last_name}")
             for user in self.get_queryset()
         ]
+        context["add_member_form"] = MoreInfoCustomUserForm
         return context
 
 
@@ -101,7 +74,23 @@ class OrganizationControlsView(
     template_name = "organization_controls.html"
 
     def get_object(self, *args, **kwargs):
-        return self.model.objects.get(slug=self.organization.slug)
+        return self.organization
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context["emails"] = [
+            (f"{user.email} ({user.first_name} {user.last_name})", user.email)
+            for user in CustomUser.objects.all()
+        ]
+        context["add_admin_form"] = CustomUserEmailForm(auto_id="id_admin_%s")
+        context["add_active_form"] = CustomUserEmailForm(
+            auto_id="id_active_%s"
+        )
+        context["add_volunteer_form"] = CustomUserEmailForm(
+            auto_id="id_volunteer_%s"
+        )
+        context["add_member_form"] = MoreInfoCustomUserForm
+        return context
 
 
 class OrganizationEventsView(HasActivePermissionMixin, ListView):

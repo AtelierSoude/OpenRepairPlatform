@@ -43,9 +43,7 @@ def test_organization_members_view(
         )
     )
     assert response.status_code == 200
-    assert set(list(response.context_data["members"])) == (
-        set(list(organization.members.all()))
-    )
+    assert set(list(members)) == set(list(organization.members.all()))
 
 
 def test_organization_controls_view(client, organization, user_log):
@@ -571,7 +569,7 @@ def test_update_member_to_organization(
     )
     assert response.status_code == 302
     assert response.url == reverse(
-        "organization_page", kwargs={"orga_slug": organization.slug},
+        "organization_members", kwargs={"orga_slug": organization.slug},
     )
     user.refresh_from_db()
     assert user.first_name == "Michel"

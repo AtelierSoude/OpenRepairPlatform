@@ -1,5 +1,5 @@
 {% extends 'organization_page.html' %}
-{% load static bootstrap4 assets %}
+{% load static bootstrap4 assets app_filters %}
 
 {% block menu_content %}
   <section class="container-fluid position-sticky sticky-top" style="top:40px">
@@ -8,7 +8,7 @@
             {% bootstrap_form search_form %}
           <div class="form-group p-2 col mt-auto">
             <button type="submit" class="btn btn-primary btn-block">
-              <span class="">Lancer la recherche</span>
+              <span>Lancer la recherche</span>
             </button>
         </form>
     </div>
@@ -31,17 +31,24 @@
             {% if user in organization.members.all %} Adhérent
             {% elif user in organization.volunteers.all%} Volontaire
             {% elif user in organization.actives.all%} Actif
-            {% elif user in organization.admins.all %}Administrateur
+            {% elif user in organization.admins.all %} Administrateur
             {% endif %}
           </td>
-          <td>
-            {% for membership in user.memberships.all %}
-              {% if membership.organization == organization %}
-                {{ membership.current_contribution }}
-              {% endif%}
-            {% endfor %}
-          </td>
-          <td><a class="btn btn-success" href="{% url 'user:user_detail' user.pk %}">Détails</a></td>
+          {% for membership in user.memberships.all %}
+            {% if membership.organization == organization %}
+            <td>{{ membership.current_contribution }}</td>
+            <td><a class="btn btn-success" href="{% url 'user:user_detail' user.pk %}">Détails</a></td>
+            <td>
+              <button class="btn btn-success btn-sm" 
+                      data-toggle="modal" 
+                      data-target="#more-info-{{ membership.user.pk }}">
+                <i class="fa fa-plus"></i>
+                Mettre à jour le membre
+              </button>
+              {% include "user/organization/modal_more_info.html" with object=organization anonymous_user=user form=add_member_form|initial:user %}
+            </td>
+            {% endif%}
+          {% endfor %}
         </tr>
         {% empty %}
           Pas de gens...
@@ -55,7 +62,8 @@
 {% endblock menu_content %}
 
 {% block extra_js %}
-  {{  users|json_script:"users-data"}}
+  {{ emails|json_script:"emails-data" }}
+  {{ users|json_script:"members-data" }}
   <script src="{% static 'js/lib/jquery.waypoints.js' %}"></script>
   <script src="{% static 'js/lib/infinite.min.js' %}"></script>
   <script>

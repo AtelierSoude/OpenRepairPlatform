@@ -29,7 +29,7 @@
         >
           <div class="modal-body">
             {% csrf_token %}
-            {% bootstrap_form form=form %}
+            {% bootstrap_form form=form|initial:anonymous_user %}
           </div>
           {% if object.fee_description %}
             <p>{{ object.fee_description }}</p>

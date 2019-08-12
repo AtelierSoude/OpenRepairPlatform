@@ -1,4 +1,5 @@
 {% extends 'organization_page.html' %}
+{% load assets %}
 
 {% block menu_content %}
     {% if is_active %}
@@ -26,4 +27,13 @@
         </a>
       </div>
     {% endif %}
+
+    {% include 'user/organization/manage_user.html' %}
 {% endblock menu_content %}
+
+{% block extra_js %}
+{{ emails|json_script:"emails-data" }}
+{% assets "js_detail_organization" %}
+<script src="{{ ASSET_URL }}"></script>
+{% endassets %}
+{% endblock extra_js %}

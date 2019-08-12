@@ -29,7 +29,7 @@
 
       if (options.icon) {
         div.innerHTML = this._createInner();
-        div.id = options.myCustomId;
+        div.dataset.location = options.myCustomId;
       }
 
       if (options.bgPos) {

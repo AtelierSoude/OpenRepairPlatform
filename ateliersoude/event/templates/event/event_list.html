@@ -28,18 +28,21 @@
     </div>
   </section>
 
-  <section class="container pt-3">
-    <div class="col-lg text-center mb-3">
-      {% if results_number == 0 %}
-        Aucun évènement trouvé pour vos critères de recherche
-      {% else %}
-        {{ results_number }} résultats pour votre recherche
-      {% endif %}
-    </div>
-      <div class="row no-gutters">
+  <section class="container-fluid no-gutters pt-3 row">
+    <div class="col-md-6 no-gutters">
+        <div class="col-lg text-center mb-3">
+            {% if results_number == 0 %}
+              Aucun évènement trouvé pour vos critères de recherche
+            {% else %}
+              {{ results_number }} résultats pour votre recherche
+            {% endif %}
+          </div>
         <div class="infinite-container card-columns">
           {% include "event/event_cards.html" with event_list=event_list %}
         </div>
+    </div>
+    <div class="col-md-6">
+      {% include "location/place_list.html" %}
     </div>
   </section>
 
@@ -53,6 +56,24 @@
 {% block extra_js %}
   <script src="{% static 'js/lib/jquery.waypoints.js' %}"></script>
   <script src="{% static 'js/lib/infinite.min.js' %}"></script>
+
+  <script>
+      $(document).ready(function(){
+        $(".card").hover(
+          function() {
+            var location_id = $(this).data("location");
+            $(".awesome-marker[data-location='" + location_id +"' ]").addClass("awesome-marker_hover");
+          }
+        );
+        $(".card").mouseleave(
+          function() {
+            var location_id = $(this).data("location");
+            $(".awesome-marker[data-location='" + location_id +"' ]").removeClass("awesome-marker_hover");
+          }
+        );
+      });
+    </script>
+
   <script>
     var infinite = new Waypoint.Infinite({
       element: $('.infinite-container')[0],

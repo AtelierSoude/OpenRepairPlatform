@@ -5,7 +5,7 @@
   {% if request.user in event.registered.all or request.user in event.presents.all or request.user in event.organizers.all %}
   border-success border shadow
   {% endif %}
-  ">
+  " data-location="{{event.location.pk}}">
   <div class="card-header bg-primary"> 
     {% if minimal == True %}  
     <small class="text-secondary">

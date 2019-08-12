@@ -15,25 +15,29 @@
   {% else %}
     {% include "breadcrumb.html" with current="Création" first_parent_url=user_list_url first_parent_text="Communauté" %}
   {% endif %}
-  <div class="position-absolute" style="z-index: -1">
-      <img class='img-fluid' src="{% static "img/login_img.png" %}" alt="Reparons.org"/>
-  </div>
-
+<div class="container-fluid bg-white">
   <div class="row justify-content-md-center">
-    <div class="card shadow border-success border p-3 m-5">
-        <h1 class="text-center col-lg">Créer un compte</h1>
+    <div class="card p-3 mt-2">
+        <h1 class="text-center col-lg bg-white">Créer un compte</h1>
       <form method="post" enctype="multipart/form-data">
         <fieldset>
           {% csrf_token %}
           {% bootstrap_form form %}
-          <button type="submit" class="btn btn-primary">Enregistrer</button>
+          <button type="submit" class="btn btn-success btn-block">Enregistrer</button>
         </fieldset>
       </form>
     </div>
   </div>
+</div>
 {% endblock %}
 
 {% block extra_js %}
+<script>
+    $(document).ready(function(){
+      $("#breadcrumb").sticky({topSpacing:0});
+      $("h1").sticky({topSpacing:40});
+    });
+</script>
   {{ form.media }}
   {% assets "js_create_edit_user" %}
     <script src="{{ ASSET_URL }}"></script>

@@ -46,18 +46,6 @@ def test_organization_members_view(
     assert set(list(members)) == set(list(organization.members.all()))
 
 
-def test_organization_controls_view(client, organization, user_log):
-    organization.admins.add(user_log)
-    client.login(email=user_log.email, password=USER_PASSWORD)
-    response = client.get(
-        reverse(
-            "organization_controls",
-            kwargs={"orga_slug": organization.slug}
-        )
-    )
-    assert response.status_code == 200
-
-
 def test_organization_events_view(
     client, organization, user_log, event_factory
 ):

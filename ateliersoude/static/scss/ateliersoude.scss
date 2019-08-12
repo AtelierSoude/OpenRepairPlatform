@@ -5,9 +5,6 @@
   padding: 0;
   margin: 0;
 }
-body {
-  background-color: #eef2f6 !important;
-}
 .content-page {
   min-height: 500px;
   overflow-x:hidden;
@@ -22,9 +19,18 @@ header{
 h1, h2, h3, h4, h5 {
   color : #083342;
 }
+h4 {
+  z-index: 0;
+}
 
+.bg-grey { 
+  background-color: #eef2f6 !important;
+}
 /* Menu */
 
+.header_detail_page, #h_nav, #breadcrumb, #jumbotron {
+  z-index: 2 !important;
+}
 .navbar {
   background-color: #083342;
   padding: 0.3em;
@@ -65,6 +71,7 @@ h1, h2, h3, h4, h5 {
   margin-bottom: 0 !important;
   border-width: 0;
   background-color: white !important;
+  z-index: 2;
 }
 
 /* leaflet reset style */
@@ -107,5 +114,50 @@ h1, h2, h3, h4, h5 {
 @media screen and (max-width: 768px) {
   h3{
       font-size:1.4rem;
+  }
+  .fixed_sidedar{
+    position: initial !important;
+  }
+  .header_detail_page{
+    height: 200px;
+    z-index: 2;
+  }
+  #side_nav{
+    background-color: #fee56e !important; 
+    width:100%;
+  }
+  .header_detail_page_picture{
+    float: left;
+    padding-top: 10px !important;
+    img{
+      width: 75px;
+      height: auto;
+      margin: 0px !important;
+    }
+  }
+  .header_detail_page_title{
+    float: left;
+    font-size: 18px;
+    padding-top: 10px !important;
+    line-height: 75px;
+  }
+  #v-pills-tab{
+    width:100%;
+    padding: 0px !important;
+    a{
+      font-size: 12px;
+      color: #083342;
+    }
+    a.active{
+      color : #FFF;
+    }
+  }
+
+}
+
+@media screen and (max-width: 576px) {
+  .container{
+    margin: 0px !important;
+    padding: 0px !important;
   }
 }

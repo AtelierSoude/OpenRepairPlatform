@@ -2,11 +2,15 @@
 {% load static bootstrap4 assets app_filters %}
 
 {% block menu_content %}
-  <section class="container-fluid position-sticky sticky-top" style="top:40px">
+  <section class="container">
+    <h2 class="text-center p-4">Membres adhérents de {{organization}}</h2>
+  </section>
+
+  <section class="container card">
     <div class="col-lg bg-white">
-        <form method="GET" class="form-row">
+        <form method="GET" class="form-row float-right">
             {% bootstrap_form search_form %}
-          <div class="form-group p-2 col mt-auto">
+          <div class="form-group p-2 mt-auto">
             <button type="submit" class="btn btn-primary btn-block">
               <span>Lancer la recherche</span>
             </button>
@@ -62,7 +66,6 @@
 {% endblock menu_content %}
 
 {% block extra_js %}
-  {{ emails|json_script:"emails-data" }}
   {{ users|json_script:"members-data" }}
   <script src="{% static 'js/lib/jquery.waypoints.js' %}"></script>
   <script src="{% static 'js/lib/infinite.min.js' %}"></script>

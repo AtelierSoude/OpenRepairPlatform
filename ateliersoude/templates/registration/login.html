@@ -7,13 +7,20 @@
 {% block content %}
  <!--{% include "breadcrumb.html" with current="Connexion" %} -->
 
-<section class="container-fluid row">
-  <div class="col-md-4 bg-white">
-    <div class="h-100 text-center">
-      <div class="card col-lg">
+<section class="container-fluid row bg-white">
+  <div class="col-md-12 text-center mb-4">
+      <img class="mt-5 mb-5" width="100px" height="100px">
+      <h2 class="card-title">Bienvenue ! </h2>
+      <small>Se connecter ou <a href="{% url 'user:user_create' %}">Créer un compte</a></small>
+  </div>
+  <div class="col-md-6 border-right text-center d-flex justify-content-center mb-5">
+    <div class="col-md-12 d-block d-sm-block d-md-none d-lg-none" id="display_form">
+        <button class="btn btn-success btn-block">
+            Connexion
+        </button>
+    </div>
+    <div class="card col-md-8 d-none d-sm-none d-md-block" id="form">
         <div class="card-body">
-            <img class="mt-5 mb-5" width="100px" height="100px">
-        <h2 class="card-title">Connexion</h2>
         <form method="post" action="{% url 'login' %}" class="form">
           {% csrf_token %}
           {% bootstrap_form form %}
@@ -24,25 +31,35 @@
             <button type="submit" class="btn btn-success btn-block">
               Connexion
             </button>
-            <div class="row justify-content-md-center">
-              <div class="card shadow mt-3 col-lg">
-                <a href="{% url 'password_reset' %}">Vous avez déjà participé à un évènement ? Inscrivez-vous ici.</a>
-              </div>
-          </div>
-          <div class="row justify-content-md-center">
-            <div class="card mt-2 col-lg">
-                <a href="{% url 'user:user_create' %}">Pas de compte ET vous n'avez jamais participé à un évènement sur ce site ? </a>
-            </div>
-          </div>
           </div>
         </form>
       </div>
-    </div>
-  </div>  
+    </div>  
   </div>
-  <div class="col-md-8">
-    <img class='img-fluid' src="{% static "img/login_img.png" %}" alt="Reparons.org"/>
+  <div class="col-md-6 text-center d-flex justify-content-center">
+    <div class="col-md-8 pt-1 card">
+      <div class="card-body">
+        <b>Vous avez déjà participé <br> à un évènement sur le site ?</b>
+        <br>
+        <br>
+        <a class="btn btn-warning btn-block" href="{% url 'password_reset' %}">Activez votre compte !</a>
+        <br>
+        <span>Sinon....</span>
+        <br>
+        <a class="btn btn-primary btn-block" href="{% url 'user:user_create' %}">Créer un compte </a>
+      </div>
+    </div>
   </div>
 </section>
+
+{% block extra_js %}
+<script>
+$("#display_form").on('click', function(event){
+  $("#form").removeClass('d-none');
+  $("#form").removeClass('d-sm-none');
+  $("#display_form").remove();
+});
+</script>
+{% endblock extra_js %}
 
 {% endblock %}

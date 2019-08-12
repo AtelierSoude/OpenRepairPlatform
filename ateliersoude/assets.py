@@ -97,6 +97,11 @@ css_detail_organization = Bundle(
 
 
 # JS minify
+js_base = Bundle(
+    "js/lib/sticky_polyfill.js",
+    filters="jsmin",
+    output="js/sticky_polyfill.min.js",
+)
 js_places = Bundle(
     "js/lib/leaflet.js",
     "js/places/leaflet_custom.js",
@@ -175,6 +180,7 @@ register("css_detail_user", css_detail_user)
 register("css_create_edit_event", css_create_edit_event)
 register("css_detail_organization", css_detail_organization)
 
+register("js_base", js_base)
 register("js_places", js_places)
 register("js_create_edit_place", js_create_edit_place)
 register("js_create_edit_user", js_create_edit_user)

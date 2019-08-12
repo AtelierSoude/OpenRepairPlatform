@@ -16,6 +16,7 @@ class PlaceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Place
         fields = [
+            "pk",
             "picture",
             "get_absolute_url",
             "orga_url",

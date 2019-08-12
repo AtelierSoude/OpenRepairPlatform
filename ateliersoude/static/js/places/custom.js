@@ -21,12 +21,6 @@ function popup_message(place){
     return message;
 }
 
-var blueMarker = L.AwesomeMarkers.icon({
-    prefix: 'fa',
-    icon: 'home',
-    markerColor: 'darkblue'
-});
-
 var place_map = L.map('place_map').setView([45.76, 4.84], 14);
 
 L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
@@ -43,7 +37,13 @@ fetch('/api/location/place-list/')
     .then(function(res){ return res.json(); })
     .then(function(places){
         places.forEach(function(place){
-            let marker = L.marker([place.latitude, place.longitude], {icon: blueMarker}).addTo(place_map);
+            var blueMarker = L.AwesomeMarkers.icon({
+                prefix: 'fa',
+                icon: 'home',
+                markerColor: 'darkblue',
+                myCustomId: place.pk,
+            });
+            let marker = L.marker([place.latitude, place.longitude], {icon: blueMarker, myCustomId: place.pk}).addTo(place_map);
             marker.bindPopup(popup_message(place));
         });
     });

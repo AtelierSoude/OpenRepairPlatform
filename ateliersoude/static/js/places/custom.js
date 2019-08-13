@@ -21,7 +21,7 @@ function popup_message(place){
     return message;
 }
 
-var place_map = L.map('place_map').setView([45.76, 4.84], 14);
+var place_map = L.map('place_map').setView([45.76, 4.84], 13);
 
 L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',

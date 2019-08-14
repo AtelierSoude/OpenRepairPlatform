@@ -70,12 +70,12 @@
                 class="d-inline">
               {% csrf_token %}
               {% if user in event.organizers.all %}
-              <button class="btn btn-warning" type="submit">
-                Je n'organise plus
+              <button class="btn btn-warning btn-block" type="submit">
+                je n'anime plus
               </button>
               {% else %}
-              <button class="btn btn-primary" type="submit">
-                J'organise
+              <button class="btn btn-primary btn-block" type="submit">
+                J'anime
               </button>
               {% endif %}
             </form>
@@ -112,7 +112,7 @@
     
                   <small class="">
                     {{event.activity.name}}
-                  {{ event.activity.description | safe }}
+                  {{ event.activity.description | safe | truncatewords_html:10 }}
                   </small>
                 </div>
 

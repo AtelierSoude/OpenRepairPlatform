@@ -36,7 +36,7 @@ h4 {
   background-color: #083342;
   padding: 0.3em;
   position: relative;
-  z-index: 2 !important;
+  z-index: 4 !important;
 }
 .navbar ul li a {
   margin-left: 1em;
@@ -54,8 +54,15 @@ h4 {
   color : #fee56e !important;
 }
 
-/* cards */
+.navbar-brand.avatar{
+  margin: 0px !important;
+}
 
+
+/* cards */
+.event_list_cards{
+ column-count: 2;
+}
 .card {
   border-radius: 0;
   border : 0px;
@@ -66,6 +73,13 @@ h4 {
   small {
     color:initial;
   }
+}
+
+.event_img {
+  object-fit: none; 
+  object-position: center; 
+  width: 100%;
+  max-height: 150px;
 }
 
 /* breadcrumb (chemin navigation) */
@@ -167,6 +181,9 @@ h4 {
       color : #FFF;
     }
   }
+  .event_list_cards{
+    column-count: 1;
+   }
 
 }
 

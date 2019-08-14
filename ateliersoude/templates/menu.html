@@ -46,17 +46,17 @@
       {% else %}
 
       <div class="navbar-brand avatar">
-        <a class="nav-link mr-3" href="{{ user.get_absolute_url }}"> 
+        <a class="nav-link" href="{{ user.get_absolute_url }}"> 
           {% if user.avatar_img %}
-            {% thumbnail user.avatar_img "50x50" crop="center" format="PNG" as im %}
-              <img src="{{ im.url }}" class="m-2 rounded-circle"/>
+            {% thumbnail user.avatar_img "35x35" crop="center" format="PNG" as im %}
+              <img src="{{ im.url }}" class="rounded-circle"/>
             {% endthumbnail %}
           {% else %}
             {% if user.first_name %}
-              {% get_initial_avatar user 50 'circle' %}
+              {% get_initial_avatar user 35 'circle' %}
             {% endif %}
           {% endif %}
-          {{ user.first_name }}
+         <small>{{ user.first_name }}</small> 
         </a>
       </div>
 

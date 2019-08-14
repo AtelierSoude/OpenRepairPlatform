@@ -63,13 +63,11 @@ class OrganizationMembersView(
         self.object = self.organization
         queryset = self.organization.members.all().order_by("last_name")
         form = CustomUserForm(self.request.GET)
-        if form.is_valid():
-            main_field = form.cleaned_data["main_field"]
-            if main_field:
-                queryset = queryset.filter(
-                    first_name=form.cleaned_data["main_field"].split()[0],
-                    last_name=form.cleaned_data["main_field"].split()[1]
-                )
+        if form.is_valid() and form.cleaned_data["main_field"]:
+            queryset = queryset.filter(
+                first_name=form.cleaned_data["main_field"].split()[0],
+                last_name=form.cleaned_data["main_field"].split()[1]
+            )
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -85,7 +83,9 @@ class OrganizationMembersView(
         return context
 
 
-class OrganizationEventsView(HasActivePermissionMixin, ListView):
+class OrganizationEventsView(
+    HasActivePermissionMixin, PermissionOrgaContextMixin, ListView
+        ):
     model = Event
     template_name = "organization_events.html"
     context_object_name = "events"
@@ -93,6 +93,7 @@ class OrganizationEventsView(HasActivePermissionMixin, ListView):
     form_class = EventSearchForm
 
     def get_queryset(self):
+        self.object = self.organization
         return self.model.objects.filter(
             organization=self.organization
         ).order_by("-date")

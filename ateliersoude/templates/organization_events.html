@@ -3,10 +3,10 @@
 
 {% block menu_content %}
 <section class="container">
-  <h2 class="text-center p-4">{{organization.events.all.count}} évènements</h2>
+  <h2 class="text-center p-4">{{organization.events.all.count}} évènements
+</h2>
 
   <div class="card p-2">
-<!-- todo : if is active -->
     <div class="float-right pb-4 col-lg text-center">
       <a class="btn btn-primary m-2 {% if not organization.activities.all %} disabled{% endif %}" href="{% url 'event:create' organization.id %}">
         <i class="fa fa-plus-circle"></i> évènement

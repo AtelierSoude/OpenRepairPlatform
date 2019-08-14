@@ -6,6 +6,8 @@ from django.contrib.auth import get_user
 from django.core.files import File
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
+from django.utils import timezone
+from datetime import timedelta
 
 from ateliersoude.user.factories import USER_PASSWORD
 from ateliersoude.user.models import Organization, Fee
@@ -538,7 +540,11 @@ def test_update_member_to_organization(
     admin = custom_user_factory()
     organization.admins.add(admin)
     user = custom_user_factory()
-    membership_factory(user=user, organization=organization, amount=1)
+    membership = membership_factory(
+        user=user,
+        organization=organization,
+        amount=1
+    )
     assert client.login(email=admin.email, password=USER_PASSWORD)
     assert organization.admins.count() == 1
     assert Fee.objects.count() == 0
@@ -555,12 +561,34 @@ def test_update_member_to_organization(
             "amount_paid": 5,
         },
     )
+    membership.refresh_from_db()
     assert response.status_code == 302
     assert response.url == reverse(
         "organization_members", kwargs={"orga_slug": organization.slug},
     )
     user.refresh_from_db()
     assert user.first_name == "Michel"
-    assert user.memberships.first().amount == 6
+    assert membership.amount == 6
     assert organization.members.count() == 1
     assert Fee.objects.count() == 1
+
+    # Test first_payment update
+    membership.first_payment = timezone.now() - timedelta(days=400)
+    membership.save()
+    response = client.post(
+        reverse(
+            "user:organization_update_member",
+            kwargs={"orga_pk": organization.pk, "pk": user.pk},
+        ),
+        {
+            "email": user.email,
+            "first_name": "Michel",
+            "last_name": "Miche",
+            "street_address": "11 rue du test",
+            "amount_paid": 5,
+        },
+    )
+    membership.refresh_from_db()
+    assert response.status_code == 302
+    assert membership.current_contribution == 5
+    assert membership.amount == 5

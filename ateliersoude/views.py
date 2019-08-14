@@ -47,7 +47,7 @@ class OrganizationPageView(
             auto_id="id_volunteer_%s"
         )
         context["add_member_form"] = MoreInfoCustomUserForm
-        context["controls_tab"] = 'active'
+        context["page_tab"] = 'active'
         return context
 
 
@@ -104,6 +104,21 @@ class OrganizationEventsView(
         context["organization"] = self.organization
         context["search_form"] = self.form_class
         context["today"] = datetime.date(datetime.now())
+        return context
+
+
+class OrganizationControlsView(
+    HasActivePermissionMixin, PermissionOrgaContextMixin, DetailView
+        ):
+    model = Organization
+    template_name = "organization_controls.html"
+
+    def get_object(self, *args, **kwargs):
+        return self.model.objects.get(slug=self.organization.slug)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["controls_tab"]= 'active'
         return context
 
 

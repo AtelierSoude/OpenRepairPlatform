@@ -1,5 +1,5 @@
 {% extends 'organization_page.html' %}
-{% load static bootstrap4 assets thumbnail initialavatar %}
+{% load static bootstrap4 assets thumbnail initialavatar app_filters %}
 
 {% block menu_content %}
   <section class="container">
@@ -27,7 +27,7 @@
             </tr>
           </thead>
           <tbody class="infinite-item">
-            {% for user in members %}
+          {% for user in members %}
             {% ifchanged %}
               <tr>
                 <td colspan="4" class="bg-light">
@@ -65,9 +65,9 @@
                   {% endfor %}
                 </small>
               </td>
+              {% for membership in user.memberships.all %}
+                {% if membership.organization == organization %}
               <td>
-                {% for membership in user.memberships.all %}
-                  {% if membership.organization == organization %}
                     {% if membership.current_contribution == 0 %} 
                       <span class="badge badge-pill badge-danger" >{{membership.current_contribution}}€</span>
                     {% elif membership.current_contribution >= organization.advised_fee %}
@@ -75,14 +75,24 @@
                     {% else %}
                       <span class="badge badge-pill badge-warning" >{{membership.current_contribution}}€</span>
                     {% endif %}
-                  {% endif %}
-                {% endfor %}
               </td>
               <td>
-                Mettre à jour
+                <button class="btn btn-success btn-sm" 
+                        data-toggle="modal" 
+                        data-target="#more-info-{{ membership.user.pk }}">
+                  <i class="fa fa-plus"></i>
+                  Mettre à jour
+                </button>
+                {% include "user/organization/modal_more_info.html" with object=organization anonymous_user=user form=add_member_form|initial:user %}
               </td>
+                {% endif %}
+              {% endfor %}
             </tr>   
-            {% endfor %}
+          {% empty %}
+            <tr>
+              <td>Pas de membres</td>
+            </tr>
+          {% endfor %}
           </tbody>
       </table>
     </div>
@@ -101,7 +111,7 @@
       $("#breadcrumb").sticky({topSpacing:0});
     });
   </script>
-  {{  users|json_script:"users-data"}}
+  {{  users|json_script:"members-data"}}
   <script src="{% static 'js/lib/jquery.waypoints.js' %}"></script>
   <script src="{% static 'js/lib/infinite.min.js' %}"></script>
   <script>

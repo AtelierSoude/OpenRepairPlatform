@@ -13,7 +13,7 @@
 <div class="container-fluid">
     {% url "user:organization_list" as organization_list_url %}
     {% include "breadcrumb.html" with current=organization first_parent_url=organization_list_url first_parent_text="Organisations" %}
-    {% include "organization_menu.html" %}
+    {% include "organization_menu.html" with organization=organization%}
   <div class="container">
     <div class="tab-content row no-gutters" id="v-pills-tabContent">
       {% block menu_content %}

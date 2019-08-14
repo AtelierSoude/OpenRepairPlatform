@@ -25,17 +25,39 @@
                     <img src="{{ im.url }}" class="m-2 rounded-circle"/>
                   {% endthumbnail %}
                 {% endif %}
-            </div>
+            </div> 
             <h2 class="pt-5 header_detail_page_title">{{ organization.name }}</h2>
           <div class="nav flex-md-column flex-sm-row nav-pills justify-content-center p-4 text-left" id="v-pills-tab" role="tablist" aria-orientation="vertical">
               <a class="nav-link active" id="v-pills-about-tab" data-toggle="pill" href="#v-pills-about" role="tab" aria-controls="v-pills-rdv" aria-selected="true">Informations générales</a>
-              <a class="nav-link" id="v-pills-manage-tab" data-toggle="pill" href="#v-pills-manage" role="tab" aria-controls="v-pills-manage" aria-selected="false">Gestion des bénévoles</a>
+              <a class="nav-link" id="v-pills-events-tab" data-toggle="pill" href="#v-pills-events" role="tab" aria-controls="v-pills-events" aria-selected="false">Evènements</a>
+              <a class="nav-link" id="v-pills-community-tab" data-toggle="pill" href="#v-pills-community" role="tab" aria-controls="v-pills-community" aria-selected="false">Membres actifs</a>
           </div>
         </div>
       </section>
       <section class="h-100 col-md-9 p-4">
         <div class="tab-content" id="v-pills-tabContent">
-          <div class="tab-pane fade show active" id="v-pills-about" role="tabpanel" aria-labelledby="v-pills-abot-tab">
+            <div class="tab-pane fade show" id="v-pills-events" role="tabpanel" aria-labelledby="v-pills-events-tab">
+                {% if events or has_hidden_events %}
+                  <h4>Prochains évènements</h4>
+                  <div class="card-columns">
+                    {% for event in event_list %}
+                      {% include "event/event_cards.html" with minimal=True %}
+                    {% empty %}
+                    <div class="card p-4">
+                      Aucuns évènements à venir
+                    </div>
+                    {% endfor %}
+                  </div>
+                  {% if is_volunteer %}
+                  <a href="{% url 'user:organization_all_events' organization.pk organization.slug page %}" class="btn btn-success">
+                    <i class="fa fa-search"></i>
+                    Voir tous les évènements
+                  </a>
+                  {% endif %}
+                {% endif %}
+              </div>    
+
+            <div class="tab-pane fade show active" id="v-pills-about" role="tabpanel" aria-labelledby="v-pills-about-tab">
             <h4 class="mt-4">Informations  
               {% if is_admin %}
                 <a class="btn btn-success btn-sm float-right" href="{% url 'user:organization_update' organization.pk %}">
@@ -137,7 +159,7 @@
           {% endif %}
         </div>
 
-        <div class="tab-pane fade show" id="v-pills-manage" role="tabpanel" aria-labelledby="v-pills-manage-tab">
+        <div class="tab-pane fade show" id="v-pills-community" role="tabpanel" aria-labelledby="v-pills-community-tab">
           <div class="">
               {% include 'user/organization/manage_user.html' %}
           </div>

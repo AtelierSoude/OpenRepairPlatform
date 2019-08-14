@@ -1,11 +1,11 @@
 {% load thumbnail %}
 
 {% for organization in organizations %}
-<div class="card">  
-  <a class="card-link" href="{% url 'organization_detail' organization.slug %}">
+<div class="card text-center col-sm-12">  
+  <a class="card-link text-center" href="{% url 'organization_page' organization.slug %}">
     {% if organization.picture %}
-    {% thumbnail organization.picture "400" format="PNG" as im %}
-      <img class="card-img-top" src="{{ im.url }}"/>
+    {% thumbnail organization.picture "250" format="PNG" as im %}
+      <img class="d-inline" src="{{ im.url }}"/>
     {% endthumbnail %}
     {% endif %}
     <div class="card-body">

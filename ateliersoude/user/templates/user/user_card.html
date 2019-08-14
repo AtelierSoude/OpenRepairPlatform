@@ -28,12 +28,12 @@
       <div class="row text-center" id="square-{{ user.pk }}">
         <div class="col-12 mb-1">
           {% if user.avatar_img %}
-            {% thumbnail user.avatar_img "100x100" crop="center" format="PNG" as im %}
+            {% thumbnail user.avatar_img "50x50" crop="center" format="PNG" as im %}
               <img src="{{ im.url }}" class="m-2 rounded-circle"/>
             {% endthumbnail %}
           {% else %}
             {% if user.first_name %}
-              {% get_initial_avatar user 75 'circle' %}
+              {% get_initial_avatar user 50 'circle' %}
             {% endif %}
           {% endif %}
         </div>

@@ -2,22 +2,6 @@
 {% load static i18n l10n %}
 {% load bootstrap4 app_filters %}
 
-{% block extra_js %}
-  <script src="{% static 'js/lib/jquery.waypoints.js' %}"></script>
-  <script src="{% static 'js/lib/infinite.min.js' %}"></script>
-  <script>
-    var infinite = new Waypoint.Infinite({
-      element: $('.infinite-container')[0],
-      onBeforePageLoad: function () {
-        $('.loading').show();
-      },
-      onAfterPageLoad: function ($items) {
-        $('.loading').hide();
-      }
-    });
-  </script>
-{% endblock %}
-
 {% block content %}
   {% include "breadcrumb.html" with current="Évènements" %}
 
@@ -64,4 +48,20 @@
   {% if page_obj.has_next %}
     <a class="infinite-more-link" href="?page={{ page_obj.next_page_number }}">Affichage en cours...</a>
   {% endif %}
+{% endblock %}
+
+{% block extra_js %}
+  <script src="{% static 'js/lib/jquery.waypoints.js' %}"></script>
+  <script src="{% static 'js/lib/infinite.min.js' %}"></script>
+  <script>
+    var infinite = new Waypoint.Infinite({
+      element: $('.infinite-container')[0],
+      onBeforePageLoad: function () {
+        $('.loading').show();
+      },
+      onAfterPageLoad: function ($items) {
+        $('.loading').hide();
+      }
+    });
+  </script>
 {% endblock %}

@@ -1,0 +1,49 @@
+{% extends 'organization_page.html' %}
+{% load assets %}
+
+{% block menu_content %}
+  {% if is_active %}
+    <div class="container">
+      {% if is_admin %}
+        <h4 class="mt-4">Informations</h4>
+        <div class="card p-4">
+        <a class="btn btn-success btn-sm" href="{% url 'user:organization_update' organization.pk %}">
+            <i class="fa fa-pencil-alt"></i> Editer
+        </a>
+        </div>
+        <h4 class="mt-4">Activités, lieux</h4>
+        <div class="card p-4">
+        <a class="btn btn-primary btn mb-2" href="{% url 'event:activity_create' organization.pk %}" title="activity place">
+          <i class="fa fa-plus-circle"></i> Ajouter une activité
+        </a>
+        <a href="{% url 'location:create' organization.pk %}" class="btn btn-primary btn">
+          <i class="fa fa-plus-circle"></i> Ajouter un lieu
+        </a>
+        </div>
+        <h4 class="mt-4">Conditions d'accès</h4>
+        <div class="card p-4">
+          <a class="btn btn-primary btn float-right" href="{% url 'event:condition_create' organization.pk %}" title="create condition">
+              <i class="fa fa-plus-circle"></i> Ajouter
+          </a>
+          <div class="card-columns">
+            {% include 'event/condition/list.html' with conditions=organization.conditions.all %}
+          </div>
+        {% endif %}
+        <a class="btn btn-primary btn-sm{% if not organization.activities.all %} disabled{% endif %}" href="{% url 'event:create' organization.id %}">
+          <i class="fa fa-plus-circle"></i> Créer un évènement
+        </a>
+        <a class="btn btn-primary btn-sm{% if not organization.activities.all %} disabled{% endif %}" href="{% url 'event:recurrent_create' organization.id %}">
+          <i class="fa fa-plus-circle"></i> Créer un évènement récurrent
+        </a>
+      </div>
+    {% endif %}
+
+    {% include 'user/organization/manage_user.html' %}
+{% endblock menu_content %}
+
+{% block extra_js %}
+{{ emails|json_script:"emails-data" }}
+{% assets "js_detail_organization" %}
+<script src="{{ ASSET_URL }}"></script>
+{% endassets %}
+{% endblock extra_js %}

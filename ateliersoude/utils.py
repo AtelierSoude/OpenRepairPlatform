@@ -18,7 +18,7 @@ def validate_image(image):
         )
 
 
-def get_future_published_events(events_objects):
+def get_future_published_events(events_objects, organization=None):
     """Filters the events to fetch only the future published events"""
     return (
         events_objects.filter(published=True)

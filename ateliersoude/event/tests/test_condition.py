@@ -63,7 +63,7 @@ def test_condition_delete(client, user_log, condition_factory):
     assert Condition.objects.count() == 0
     assert response.status_code == 302
     assert response["Location"] == reverse(
-        "organization_detail",
+        "organization_page",
         args=[condition.organization.slug],
     )
 
@@ -115,7 +115,7 @@ def test_condition_create(client, user_log, condition_data, organization):
     assert len(conditions) == 1
     orga = conditions[0].organization
     assert response["Location"] == reverse(
-        "organization_detail", args=[orga.slug]
+        "organization_page", args=[orga.slug]
     )
 
 
@@ -181,7 +181,7 @@ def test_condition_update(
     orga = conditions[0].organization
     assert conditions[0].name == "cond_name2"
     assert response["Location"] == reverse(
-        "organization_detail", args=[orga.slug]
+        "organization_page", args=[orga.slug]
     )
 
 

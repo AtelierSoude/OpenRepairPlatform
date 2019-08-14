@@ -4,8 +4,8 @@
 {% block content %}
   {% include "breadcrumb.html" with current="Organisations" %}
 
-  <div class="jumbotron jumbotron-fluid">
-    <div class="container">
+  <div class="jumbotron jumbotron-fluid" id="jumbotron">
+    <div class="container text-center">
       <h1>Organisations</h1>
       {% if user.is_staff %}
       <a class="btn btn-success btn-sm" href="{% url 'user:organization_create' %}">
@@ -17,10 +17,19 @@
 
   <section class="container">
     <div class="row col-md-12">
-      <div class="card-columns">
+      <div class="card-columns m-auto pt-2">
         {% include 'user/organization/organization_card.html' with organizations=object_list %}
       </div>
     </div>
   </section>
 
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  $(document).ready(function(){
+    $("#jumbotron").sticky({topSpacing:40});
+    $("#breadcrumb").sticky({topSpacing:0});
+  });
+</script>
 {% endblock %}

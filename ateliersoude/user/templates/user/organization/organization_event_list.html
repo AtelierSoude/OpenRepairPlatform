@@ -2,7 +2,7 @@
 
 {% block content %}
   {% url "user:organization_list" as organization_list_url %}
-  {% url "organization_detail" organization.slug  as organization_url %}
+  {% url "organization_page" organization.slug  as organization_url %}
   {% include "breadcrumb.html" with current="Évènements" first_parent_url=organization_url first_parent_text=organization second_parent_url=organization_list_url second_parent_text="Organisations" %}
 
   <div class="container">

@@ -5,6 +5,7 @@ from django.db.models import Q
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
+from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views.generic import (
     CreateView,
@@ -14,6 +15,7 @@ from django.views.generic import (
     DeleteView,
     RedirectView,
 )
+from datetime import timedelta
 
 from ateliersoude import utils
 from ateliersoude.event.models import Event, Participation
@@ -192,7 +194,7 @@ class AddMemberToOrganization(HasActivePermissionMixin, RedirectView):
             email=self.request.POST["email"]
         ).first()
         url = reverse(
-            "organization_detail", kwargs={"slug": self.organization.slug},
+            "organization_page", kwargs={"orga_slug": self.organization.slug},
         )
         if user in self.organization.members.all():
             messages.warning(self.request, "L'utilisateur est déjà membre.")
@@ -224,7 +226,11 @@ class UpdateMemberView(HasActivePermissionMixin, UpdateView):
         membership = Membership.objects.get(
             organization=self.organization, user=user
         )
-        membership.amount += form.cleaned_data["amount_paid"]
+        if membership.first_payment < timezone.now() - timedelta(days=365):
+            membership.first_payment = timezone.now()
+            membership.amount = form.cleaned_data["amount_paid"]
+        else:
+            membership.amount += form.cleaned_data["amount_paid"]
         membership.save()
         Fee.objects.create(
             amount=form.cleaned_data["amount_paid"],
@@ -235,10 +241,11 @@ class UpdateMemberView(HasActivePermissionMixin, UpdateView):
 
     def get_success_url(self, *args, **kwargs):
         messages.success(
-            self.request, f"Vous avez mis à jour {self.object} avec succes."
+            self.request, f"Vous avez mis à jour {self.object} avec succès."
         )
         return reverse(
-            "organization_detail", kwargs={"slug": self.organization.slug},
+            "organization_members",
+            kwargs={"orga_slug": self.organization.slug},
         )
 
 
@@ -391,7 +398,7 @@ class AddUserToOrganization(HasAdminPermissionMixin, RedirectView):
             .first()
         )
         redirect_url = reverse(
-            "organization_detail", kwargs={"slug": self.organization.slug},
+            "organization_page", kwargs={"orga_slug": self.organization.slug},
         )
 
         if not user:
@@ -451,7 +458,7 @@ class RemoveUserFromOrganization(HasAdminPermissionMixin, RedirectView):
         )
 
         return reverse(
-            "organization_detail", kwargs={"slug": self.organization.slug},
+            "organization_page", kwargs={"orga_slug": self.organization.slug},
         )
 
 

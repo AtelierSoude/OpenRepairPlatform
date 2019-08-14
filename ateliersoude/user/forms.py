@@ -49,6 +49,13 @@ class CustomUserEmailForm(forms.ModelForm):
         fields = ["email"]
 
 
+class CustomUserForm(forms.Form):
+    main_field = forms.CharField(
+        label="Rechercher un utilisateur",
+        max_length=100
+    )
+
+
 class MoreInfoCustomUserForm(forms.ModelForm):
     amount_paid = forms.IntegerField(min_value=0, initial=0)
 

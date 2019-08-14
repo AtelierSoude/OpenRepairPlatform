@@ -1,0 +1,86 @@
+{% extends 'organization_page.html' %}
+{% load static bootstrap4 assets app_filters %}
+
+{% block menu_content %}
+  <section class="container">
+    <h2 class="text-center p-4">Membres adhérents de {{organization}}</h2>
+  </section>
+
+  <section class="container card">
+    <div class="col-lg bg-white">
+        <form method="GET" class="form-row float-right">
+            {% bootstrap_form search_form %}
+          <div class="form-group p-2 mt-auto">
+            <button type="submit" class="btn btn-primary btn-block">
+              <span>Lancer la recherche</span>
+            </button>
+        </form>
+    </div>
+  </section>
+  <table class="table infinite-container">
+      <thead>
+        <tr>
+          <th scope="col">Nom</th>
+          <th scope="col">Prénom</th>
+          <th scope="col">Statut</th>
+          <th scope="col">Cotisation</th>
+        </tr>
+      </thead>
+      <tbody class="infinite-item">
+        {% for user in members %}
+        <tr>
+          <td>{{ user.last_name }}</td>
+          <td> {{ user.first_name }}</td>
+          <td>
+            {% if user in organization.members.all %} Adhérent
+            {% elif user in organization.volunteers.all%} Volontaire
+            {% elif user in organization.actives.all%} Actif
+            {% elif user in organization.admins.all %} Administrateur
+            {% endif %}
+          </td>
+          {% for membership in user.memberships.all %}
+            {% if membership.organization == organization %}
+            <td>{{ membership.current_contribution }}</td>
+            <td><a class="btn btn-success" href="{% url 'user:user_detail' user.pk %}">Détails</a></td>
+            <td>
+              <button class="btn btn-success btn-sm" 
+                      data-toggle="modal" 
+                      data-target="#more-info-{{ membership.user.pk }}">
+                <i class="fa fa-plus"></i>
+                Mettre à jour le membre
+              </button>
+              {% include "user/organization/modal_more_info.html" with object=organization anonymous_user=user form=add_member_form|initial:user %}
+            </td>
+            {% endif%}
+          {% endfor %}
+        </tr>
+        {% empty %}
+          Pas de gens...
+        {% endfor %}
+      </tbody>
+  </table>
+  
+  {% if page_obj.has_next %}
+    <a class="infinite-more-link" href="?page={{ page_obj.next_page_number }}"></a>
+  {% endif %}
+{% endblock menu_content %}
+
+{% block extra_js %}
+  {{ users|json_script:"members-data" }}
+  <script src="{% static 'js/lib/jquery.waypoints.js' %}"></script>
+  <script src="{% static 'js/lib/infinite.min.js' %}"></script>
+  <script>
+    var infinite = new Waypoint.Infinite({
+      element: $('.infinite-container')[0],
+      onBeforePageLoad: function () {
+        $('.loading').show();
+      },
+      onAfterPageLoad: function ($items) {
+        $('.loading').hide();
+      }
+    });
+  </script>
+  {% assets "js_detail_organization" %}
+    <script src="{{ ASSET_URL }}"></script>
+  {% endassets %}
+{% endblock extra_js %}

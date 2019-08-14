@@ -151,9 +151,14 @@ def test_anonymous_user_create_is_organizer(client, event, custom_user):
     assert user not in event.registered.all()
 
 
-def test_anonymous_get_user_create(client, event_factory, organization):
+def test_anonymous_get_user_create(
+    client, event_factory, organization, custom_user_factory
+        ):
+    user = custom_user_factory()
+    organization.admins.add(user)
     in_two_hours = timezone.now() + datetime.timedelta(hours=2)
     two_hours_ago = timezone.now() - datetime.timedelta(hours=2)
+    client.login(email=user.email, password=USER_PASSWORD)
     event_factory(
         organization=organization,
         starts_at=in_two_hours,
@@ -161,7 +166,7 @@ def test_anonymous_get_user_create(client, event_factory, organization):
     )
     response = client.get(
         reverse(
-            "organization_detail", kwargs={"slug": organization.slug},
+            "organization_page", kwargs={"orga_slug": organization.slug},
         )
     )
     assert response.status_code == 200

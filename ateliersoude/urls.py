@@ -20,9 +20,24 @@ urlpatterns = [
         include("ateliersoude.location.api_urls", namespace="api_location"),
     ),
     path(
-        "<slug>/",
-        views.OrganizationDetailView.as_view(),
-        name="organization_detail",
+        "<str:orga_slug>/",
+        views.OrganizationPageView.as_view(),
+        name="organization_page",
+    ),
+    path(
+        "<str:orga_slug>/members/",
+        views.OrganizationMembersView.as_view(),
+        name="organization_members",
+    ),
+    path(
+        "<str:orga_slug>/details/",
+        views.OrganizationDetailsView.as_view(),
+        name="organization_details"
+    ),
+    path(
+        "<str:orga_slug>/events/",
+        views.OrganizationEventsView.as_view(),
+        name="organization_events"
     ),
     path(r"tinymce/", include("tinymce.urls")),
 ]

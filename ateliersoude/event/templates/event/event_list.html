@@ -52,8 +52,8 @@
     <a class="infinite-more-link" href="?page={{ page_obj.next_page_number }}">Affichage en cours...</a>
   {% endif %}
 
-  <div class="d-block d-md-none d-lg-none position-fixed bg-white text-center" style="bottom: 0px; width:100%" id="map_show" id="map_show">
-    <a class="btn btn-success">Map</a>
+  <div class="d-block d-md-none d-lg-none position-fixed bg-white text-center" style="bottom: 0px; width:100%">
+    <a class="btn btn-success" id="map_show">Afficher la map</a>
   </div>
 {% endblock %}
 
@@ -71,15 +71,22 @@
 <script>
       $(document).ready(function(){
         $("#map_show").click(function() {
-            $("#place_map").addClass("d-block");
+          if($("#place_map").hasClass("d-block")){  
+            $(this).html("Afficher la Map");
+            $("#place_map").removeClass("d-block")
+          } else {
+            $(this).html("Cacher la Map");
+            $("#place_map").addClass("d-block")
+          }
         });
       });
     </script>
 </script>
 
   <script>
-    $(document).load(setInterval(function() {
-        $(".card").hover(
+
+$(document).ready(function() {
+    $(".card").hover(
           function() {
             var location_id = $(this).data("location");
             $(this).addClass("shadow");
@@ -93,7 +100,27 @@
             $(".awesome-marker[data-location='" + location_id +"' ]").removeClass("awesome-marker_hover");
           }
         );
-      }),);
+  });
+
+var waypoint = new Waypoint({
+  element: $('.card')[0],
+  handler: function(shadows) {
+    $(".card").hover(
+          function() {
+            var location_id = $(this).data("location");
+            $(this).addClass("shadow");
+            $(".awesome-marker[data-location='" + location_id +"' ]").addClass("awesome-marker_hover");
+          }
+        );
+        $(".card").mouseleave(
+          function() {
+            var location_id = $(this).data("location");
+            $(this).removeClass("shadow");
+            $(".awesome-marker[data-location='" + location_id +"' ]").removeClass("awesome-marker_hover");
+          }
+        );
+  }
+})
     </script>
 
   <script>

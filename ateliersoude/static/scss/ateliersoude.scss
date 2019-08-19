@@ -32,6 +32,7 @@ h4 {
   z-index: 2 !important;
   position: relative;
 }
+
 .navbar {
   background-color: #083342;
   padding: 0.3em;
@@ -96,7 +97,7 @@ h4 {
 #place_map {
   right:0px; 
   top:40px; 
-  z-index: 1 !important;
+  z-index: 0 !important;
 }
 .leaflet-left{
   top:150px !important;

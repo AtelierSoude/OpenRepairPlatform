@@ -1,7 +1,7 @@
 {% load thumbnail %}
 
 {% for event in event_list %}
-<div class="card infinite-item mb-4" data-location="{{event.location.pk}}">
+<div class="card infinite-item mb-4" data-location="{{event.location.pk|escape}}">
   <div class="card-header bg-primary"> 
 
   <span class="text-secondary">

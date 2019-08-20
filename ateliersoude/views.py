@@ -118,7 +118,7 @@ class OrganizationControlsView(
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["controls_tab"]= 'active'
+        context["controls_tab"] = 'active'
         return context
 
 

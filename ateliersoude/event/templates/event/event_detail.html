@@ -18,7 +18,8 @@
   <section class="col-md-6 bg-white">
       {% url "event:list" as event_list_url %}
   {% include "breadcrumb.html" with current=event first_parent_url=event_list_url first_parent_text="Évènements" %}
-  <div class="container p-4">
+
+    <div class="container p-4 bg-white" id="event_title">
       <h3>{{ event.activity }} du {{ event.date }}</h3>
       <p class="lead">
         - Organisé par
@@ -28,15 +29,13 @@
       </p>
     </div>
 
-  <div class="p-2">
-      <div class="row pl-3 pr-3">
+    <div class="row pl-3 pr-3">
         <div class="col-lg-12">
-
+          <div id="event_about" class="bg-white">
             <p>
                 <i class="fa fa-calendar-alt"></i> 
                 Le {{ event.date|date:"l j F Y " }} de {{ event.starts_at }} à {{ event.ends_at }}
             </p>
-
           <h6 class="text-muted">
             {% if event.is_free %}
               <span class="badge badge-info badge-pill">Sans réservation</span>
@@ -82,6 +81,7 @@
 
           {% endif %}
           <hr>
+      </div>
         
         <div class="row">
               
@@ -136,7 +136,6 @@
         <div style="height:100%; min-height: 200px" id="event_map"></div>
     </div>
 
-  </div>
 </section>
 
 <section class="col-md-6 no-gutters p-0">
@@ -268,6 +267,15 @@
       const longitude = {{ event.location.longitude|unlocalize }};
       const latitude = {{ event.location.latitude|unlocalize }};
   </script>
+
+<script>
+    $(document).ready(function(){
+      $("#breadcrumb").sticky({topSpacing:0});
+      $("#event_title").sticky({topSpacing:60});
+      $("#event_about").sticky({topSpacing:160});
+    });
+  </script>
+
   {% assets "js_detail_event" %}
     <script src="{{ ASSET_URL }}"></script>
   {% endassets %}

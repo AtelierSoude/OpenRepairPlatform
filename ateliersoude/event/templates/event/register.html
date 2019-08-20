@@ -1,10 +1,10 @@
 {% load app_filters bootstrap4 %}
 
-{% if admin_text or not request.user.is_authenticated %}
+{% if admin_text %}
   {% if event.is_free %}
     <a class="btn btn-outline-warning">Événement sans réservation</a>
   {% else %}
-    <button class="btn btn-success" data-toggle="modal" data-target="#reservation{{ event.pk }}">
+    <button class="btn btn-success btn-block" data-toggle="modal" data-target="#reservation{{ event.pk }}">
       {% if admin_text %}
         <i class="fa fa-plus"></i>
         {{ admin_text }}

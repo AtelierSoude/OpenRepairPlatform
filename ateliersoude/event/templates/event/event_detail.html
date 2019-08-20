@@ -19,7 +19,7 @@
       {% url "event:list" as event_list_url %}
   {% include "breadcrumb.html" with current=event first_parent_url=event_list_url first_parent_text="Évènements" %}
 
-    <div class="container p-4 bg-white" id="event_title">
+    <div class="container pl-4 pr-4 pt-2 bg-white" id="event_about">
       <h3>{{ event.activity }} du {{ event.date }}</h3>
       <p class="lead">
         - Organisé par
@@ -27,64 +27,59 @@
           {{ event.organization.name }}
         </a>
       </p>
+      <p>
+          <i class="fa fa-calendar-alt"></i> 
+          Le {{ event.date|date:"l j F Y " }} de {{ event.starts_at }} à {{ event.ends_at }}
+      </p>
+    <h6 class="text-muted">
+      {% if event.is_free %}
+        <span class="badge badge-info badge-pill">Sans réservation</span>
+      {% else %}
+        {% if event.remaining_seats <= 0 %}
+          <span class="badge badge-warning badge-pill">Complet</span>
+        {% else %}
+          Encore  
+          <span class="badge badge-info badge-pill">{{ event.remaining_seats }}
+            </span> places disponibles
+        {% endif %}
+      {% endif %}
+      {% if request.user in event.registered.all or request.user in event.presents.all %}
+        <span class="badge badge-success badge-pill">Inscrit</span>
+      {% endif %}
+      {% if request.user in event.organizers.all %}
+      <span class="badge badge-success badge-pill">Organisateur</span>
+      {% endif %}
+    </h6>
+    {% if not event.is_free %}
+      {% include "event/register.html" with event=event %}
+    {% endif %}
+    {% if is_active and user not in event.registered.all %}
+      <form
+          {% if user in event.organizers.all %}
+          action="{% url 'event:remove_active' event.pk %}"
+          {% else %}
+          action="{% url 'event:add_active' event.pk %}"
+          {% endif %}
+          method="post"
+          class="d-inline">
+        {% csrf_token %}
+        {% if user in event.organizers.all %}
+        <button class="btn btn-warning btn-block" type="submit">
+          je n'anime plus
+        </button>
+        {% else %}
+        <button class="btn btn-primary btn-block" type="submit">
+          J'anime
+        </button>
+        {% endif %}
+      </form>
+
+    {% endif %}
+      <hr>
     </div>
 
-    <div class="row pl-3 pr-3">
-        <div class="col-lg-12">
-          <div id="event_about" class="bg-white">
-            <p>
-                <i class="fa fa-calendar-alt"></i> 
-                Le {{ event.date|date:"l j F Y " }} de {{ event.starts_at }} à {{ event.ends_at }}
-            </p>
-          <h6 class="text-muted">
-            {% if event.is_free %}
-              <span class="badge badge-info badge-pill">Sans réservation</span>
-            {% else %}
-              {% if event.remaining_seats <= 0 %}
-                <span class="badge badge-warning badge-pill">Complet</span>
-              {% else %}
-                Encore  
-                <span class="badge badge-info badge-pill">{{ event.remaining_seats }}
-                  </span> places disponibles
-              {% endif %}
-            {% endif %}
-            {% if request.user in event.registered.all or request.user in event.presents.all %}
-              <span class="badge badge-success badge-pill">Inscrit</span>
-            {% endif %}
-            {% if request.user in event.organizers.all %}
-            <span class="badge badge-success badge-pill">Organisateur</span>
-            {% endif %}
-          </h6>
-          {% if not event.is_free %}
-            {% include "event/register.html" with event=event %}
-          {% endif %}
-          {% if is_active and user not in event.registered.all %}
-            <form
-                {% if user in event.organizers.all %}
-                action="{% url 'event:remove_active' event.pk %}"
-                {% else %}
-                action="{% url 'event:add_active' event.pk %}"
-                {% endif %}
-                method="post"
-                class="d-inline">
-              {% csrf_token %}
-              {% if user in event.organizers.all %}
-              <button class="btn btn-warning btn-block" type="submit">
-                je n'anime plus
-              </button>
-              {% else %}
-              <button class="btn btn-primary btn-block" type="submit">
-                J'anime
-              </button>
-              {% endif %}
-            </form>
-
-          {% endif %}
-          <hr>
-      </div>
-        
-        <div class="row">
-              
+    <div class="col-lg-12">
+        <div class="row p-4">
               <ul class="col-md-6">
                   <b>Condition(s) de venue:</b>
                 {% for condition in event.conditions.all %}
@@ -94,10 +89,10 @@
                         {{ condition.price }}€</span> 
                       {% else %}
                       {% endif %}
-                    {{ condition.description | safe }}
+                    <small>{{ condition.description | safe }}</small>
                   </li>
                   {% empty %}
-                  <li>La participation est libre / pas de condition d'accès</li>
+                  <li><small>La participation est libre / pas de condition d'accès</small></li>
                 {% endfor %}
               </ul>
 
@@ -105,14 +100,13 @@
               <div class="col-md-6 border">
                 <div class="row">
                 {% if event.activity.picture %}
-                  <img class="img-responsive col-md-6 h-100" src="{{ event.activity.picture.url }}" alt="activity illustration">
+                  <img class="img-responsive col-md-6 h-100 p-0" src="{{ event.activity.picture.url }}" alt="activity illustration">
                 {% endif %}
     
                 <div class="col-md-6">
-    
+                  <b>{{event.activity.name}}</b>
                   <small class="">
-                    {{event.activity.name}}
-                  {{ event.activity.description | safe | truncatewords_html:10 }}
+                  {{ event.activity.description | safe | truncatewords_html:7 }}
                   </small>
                 </div>
 
@@ -124,7 +118,7 @@
             {% endif %}
         </div>
     </div>
-  </div>
+
   <hr>
     <div class="col-lg">
       <p class="text-center">
@@ -271,8 +265,7 @@
 <script>
     $(document).ready(function(){
       $("#breadcrumb").sticky({topSpacing:0});
-      $("#event_title").sticky({topSpacing:60});
-      $("#event_about").sticky({topSpacing:160});
+      $("#event_about").sticky({topSpacing:40});
     });
   </script>
 

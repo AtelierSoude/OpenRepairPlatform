@@ -185,6 +185,12 @@ h4 {
   .event_list_cards{
     column-count: 1;
    }
+  #event_about {
+    padding:25px !important;
+  }
+  #event_map {
+    z-index: 1;
+  }
 
 }
 

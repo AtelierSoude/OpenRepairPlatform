@@ -20,9 +20,18 @@
   {% include "breadcrumb.html" with current=event first_parent_url=event_list_url first_parent_text="Évènements" %}
 
     <div class="container pl-4 pr-4 pt-2 bg-white" id="event_about">
-      <h3>{{ event.activity }} du {{ event.date }}</h3>
+      <h3 class="">{{ event.activity }} du {{ event.date }}      
+        <div class="lead float-right ml-2">
+        {% if is_active %}
+          <a href="{% url 'event:edit' event.pk %}" class="btn btn-warning rounded-circle"><i class="fa fa-pencil-alt"></i></a>
+        {% endif %}
+        {% if is_admin %}
+          <a href="{% url 'event:delete' event.pk %}" class="btn btn-danger rounded-circle"><i class="fa fa-trash"></i></a>
+        {% endif %}
+        </div>
+      </h3>
       <p class="lead">
-        - Organisé par
+         Organisé par
         <a href="{% url 'organization_page' event.organization.slug %}">
           {{ event.organization.name }}
         </a>
@@ -150,13 +159,42 @@
     </div>
   {% endif %}
   <div class="col-lg p-4">
-    <h5 class="mt-4"> {{ event.organizers.all.count }} Animateur·trice·s</h5>
+
+
+  <div class="lead">
+      {% if is_active %}
+      <h5 class="mt-4">Total perçus: {{ total_fees }}€</h5>
+        <form action="{% url 'event:close' event.pk %}" method="post" class="d-inline">
+          {% csrf_token %}
+          <button class="btn btn-primary btn-block" type="submit" onclick="return confirm('Êtes-vous sûrs de vouloir clôturer l\'évènement?')">
+            <i class="fa fa-calendar-check"></i>
+            Clôturer
+          </button>
+        </form>
+      {% endif %} 
+  </div>
+
+    {% if is_volunteer %}
+      {% if event.has_started %}
+        {% include "event/modal_more_info.html" with form=present_form admin_text="Présent" %}
+      {% endif %}
+    {% endif %}
+
+    <h5 class="mt-4"> {{ event.organizers.all.count }} Animateur·trice·s
+      {% if is_volunteer %}
+        {% include "event/register_organizer.html" with event_to_organize=event %}
+      {% endif %}
+    </h5>
     <hr>
     <div class="card-columns">
       {% include "user/user_card.html" with users=event.organizers.all %}
     </div>
   {% if not event.is_free %}
-    <h5> {{ event.registered.all.count|add:event.presents.all.count }} Participant·e·s</h5>
+    <h5> {{ event.registered.all.count|add:event.presents.all.count }} Participant·e·s
+      {% if is_volunteer %}
+        {% include "event/register.html" with event=event admin_text=" " %}
+      {% endif %}
+    </h5>
     <hr>
     {% if is_volunteer %}
       <div class="card-columns">
@@ -212,46 +250,14 @@
             </div>
         {% endfor %}
       </div>
-
-      <h5 class="mt-4">Quelques statistiques sur l'évènement</h5>
-      <hr>
-      <ul>
-      <li>Total des cotisations perçues: {{ total_fees }}€</li>
-      </ul>
-
-      <div class="fixed-bottom m-4" style="right:0px; left:initial">
-          <div class="lead">
-              {% if is_active %}
-                <a href="{% url 'event:edit' event.pk %}" class="btn btn-warning rounded-circle"><i class="fa fa-pencil-alt"></i></a>
-              {% endif %}
-              {% if is_admin %}
-                <a href="{% url 'event:delete' event.pk %}" class="btn btn-danger rounded-circle"><i class="fa fa-trash"></i></a>
-              {% endif %}
-              {% if is_active %}
-                <form action="{% url 'event:close' event.pk %}" method="post" class="d-inline">
-                  {% csrf_token %}
-                  <button class="btn btn-sm btn-info btn-sm" type="submit" onclick="return confirm('Êtes-vous sûrs de vouloir clôturer l\'évènement?')">
-                    <i class="fa fa-calendar-check"></i>
-                    Clôturer
-                  </button>
-                </form>
-              {% endif %}
-
-        {% if is_volunteer %}
-          {% include "event/register.html" with event=event admin_text="Inscrire" %}
-          {% include "event/register_organizer.html" with event_to_organize=event %}
-          {% if event.has_started %}
-            {% include "event/modal_more_info.html" with form=present_form admin_text="Présent" %}
-          {% endif %}
-        {% endif %}
-        </div>
-      </div>
     {% else %}
       <p>Pour voir les participations vous devez être membre actif de l'organisation </p>
     {% endif %}
   {% endif %}
   </div>
+
 </section>
+
 </div>
 {% endblock %}
 

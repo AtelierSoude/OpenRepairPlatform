@@ -4,6 +4,8 @@ from django.contrib import admin
 from django.conf.urls.static import static
 
 from . import views
+from ateliersoude.inventory.views import OrganizationStockView
+
 
 urlpatterns = [
     path("", views.HomeView.as_view(), name="homepage"),
@@ -37,6 +39,11 @@ urlpatterns = [
     path(
         "<str:orga_slug>/events/",
         views.OrganizationEventsView.as_view(),
+        name="organization_events"
+    ),
+    path(
+        "<str:orga_slug>/stock/",
+        OrganizationStockView.as_view(),
         name="organization_events"
     ),
     path(r"tinymce/", include("tinymce.urls")),

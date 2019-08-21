@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static bootstrap4 %}
+
+{% block content %}
+<div class="container-fluid">
+  {% url "user:organization_list" as organization_list_url %}
+  {% include "breadcrumb.html" with current=organization first_parent_url=organization_list_url first_parent_text="Organisations" %}
+  {% include "organization_menu.html" %}
+</div>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Piece</th>
+      <th>Type</th>
+      <th>Localisation</th>
+      <th>État</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for object in stock %}
+      <tr>
+        <td scope="row"> {{ object.name }} </td>
+        <td>{{ object.type }}</td>
+        <td> {{ object.location }} </td>
+        <td> {{ object.state }} </td>
+      </tr>
+    {% empty %}
+      Pas de stock pour l'instant
+    {% endfor %}
+
+  </tbody>
+</table>
+
+
+{% endblock %}

@@ -143,42 +143,44 @@
 
 <section class="col-md-6 no-gutters p-0">
   {% if event.is_free %}
-    {% if event.activity.picture %}
-      <div class="col-lg h-25 overflow-hidden">
-        <img class="img-fluid position-relative" style="top:-100px" src="{{ event.activity.picture.url }}" alt="activity illustration">
+    {% if is_volunteer %}
+    <h3 class="text-center text-success pt-4">Evenement sans réservations</h3>
+    {% else %}
+      {% if event.activity.picture %}
+        <div class="col-lg h-25 overflow-hidden m-4 mb-0" style="padding-right: 60px !important">
+          <img class="img-fluid position-relative" style="top:-100px" src="{{ event.activity.picture.url }}" alt="activity illustration">
+        </div>
+      {% endif %}
+      <div class="col-lg pb-0 pl-4 pr-4 pt-0">
+        <h5> L'événement </h5>
+        <div>
+          {{ event.activity.description | safe | truncatewords_html:50 }}
+          <a href="{% url 'event:activity_detail' event.activity.pk event.activity.slug %}">
+            En savoir plus ...
+          </a>
+        </div>
       </div>
     {% endif %}
-    <div class="col-lg pb-0 pl-4 pr-4 pt-4">
-      <h5> L'événement </h5>
-      <div>
-        {{ event.activity.description | safe | truncatewords_html:50 }}
-        <a href="{% url 'event:activity_detail' event.activity.pk event.activity.slug %}">
-          En savoir plus ...
-        </a>
-      </div>
-    </div>
   {% endif %}
-  <div class="col-lg p-4">
 
-
-  <div class="lead">
+  <div class="col-lg p-2">
+    {% if not event.is_free %}
       {% if is_active %}
-      <h5 class="mt-4">Total perçus: {{ total_fees }}€</h5>
-        <form action="{% url 'event:close' event.pk %}" method="post" class="d-inline">
-          {% csrf_token %}
-          <button class="btn btn-primary type="submit" onclick="return confirm('Êtes-vous sûrs de vouloir clôturer l\'évènement?')">
-            <i class="fa fa-calendar-check"></i>
-            Clôturer
-          </button>
-        </form>
-      {% endif %} 
-    {% if is_volunteer %}
-      {% if event.has_started %}
-        {% include "event/modal_more_info.html" with form=present_form admin_text="Présent" %}
+        <h5 class="mt-4">Total perçus: {{ total_fees }}€</h5>
+          <form action="{% url 'event:close' event.pk %}" method="post" class="d-inline">
+            {% csrf_token %}
+            <button class="btn btn-primary btn-sm type="submit" onclick="return confirm('Êtes-vous sûrs de vouloir clôturer l\'évènement?')">
+              <i class="fa fa-calendar-check"></i>
+              Clôturer
+            </button>
+          </form>
+        {% endif %} 
+      {% if is_volunteer %}
+        {% if event.has_started %}
+          {% include "event/modal_more_info.html" with form=present_form admin_text="Présent" %}
+        {% endif %}
       {% endif %}
     {% endif %}
-  </div>
-
 
     <h5 class="mt-4"> {{ event.organizers.all.count }} Animateur·trice·s
       {% if is_volunteer %}
@@ -273,8 +275,7 @@
 
 <script>
     $(document).ready(function(){
-      $("#breadcrumb").sticky({topSpacing:0});
-      $("#event_about").sticky({topSpacing:40});
+      $("#event_about").sticky({topSpacing:0});
     });
   </script>
 

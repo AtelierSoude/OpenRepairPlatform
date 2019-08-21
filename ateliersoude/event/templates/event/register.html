@@ -39,7 +39,7 @@
 {% else %}
   {% if event.is_free %}
     <a class="btn btn-outline-warning">Événement sans réservation</a>
-  {% elif event.remaining_seats != 0 %}
+  {% elif event.remaining_seats >= 0 %}
     {% if request.user in event.registered.all %}
       {% tokenize user=request.user event=event action='cancel' as tok %}
       <a href="{% url 'event:cancel_reservation' tok %}" class="btn btn-block btn-warning">Je ne participe plus</a>

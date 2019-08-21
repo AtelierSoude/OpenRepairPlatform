@@ -28,7 +28,7 @@ h4 {
 }
 /* Menu */
 
-.header_detail_page, #h_nav, #breadcrumb, #jumbotron, #search_tab, #event_title, #event_about {
+.header_detail_page, #h_nav, #breadcrumb, #jumbotron, #search_tab, #event_title, #event_about, .jumbotron {
   z-index: 2 !important;
   position: relative;
 }
@@ -74,6 +74,10 @@ h4 {
   small {
     color:initial;
   }
+}
+
+.gravatar{
+  border-radius: 50%;
 }
 
 .event_img {

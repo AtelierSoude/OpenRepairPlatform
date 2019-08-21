@@ -5,6 +5,9 @@ from django.views.generic import (
 )
 from ateliersoude.user.mixins import PermissionOrgaContextMixin
 from ateliersoude.mixins import HasActivePermissionMixin
+from ateliersoude.event.models import (
+    Event
+)
 from ateliersoude.user.models import (
     CustomUser,
     Organization
@@ -38,6 +41,8 @@ class OrganizationPageView(
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
+        context["event_list"] = Event.future_published_events().filter(
+            organization=self.organization).order_by('date')[0:10]
         context["emails"] = [
             (f"{user.email} ({user.first_name} {user.last_name})", user.email)
             for user in CustomUser.objects.all()

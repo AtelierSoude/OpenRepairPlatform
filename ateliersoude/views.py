@@ -25,12 +25,15 @@ class HomeView(TemplateView):
 
 
 class OrganizationPageView(
-    HasActivePermissionMixin, PermissionOrgaContextMixin, DetailView
+    PermissionOrgaContextMixin, DetailView
         ):
     model = Organization
     template_name = "organization_page.html"
 
     def get_object(self, *args, **kwargs):
+        self.organization = Organization.objects.get(
+            slug=self.kwargs["orga_slug"]
+        )
         return self.organization
 
     def get_context_data(self, *args, **kwargs):

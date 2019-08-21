@@ -18,6 +18,7 @@ INSTALLED_APPS = [
     "ateliersoude.event",
     "ateliersoude.user",
     "ateliersoude.location",
+    "ateliersoude.inventory",
     "django.contrib.sites",
     "django.contrib.admin",
     "django.contrib.admindocs",

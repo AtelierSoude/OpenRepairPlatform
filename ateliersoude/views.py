@@ -5,6 +5,9 @@ from django.views.generic import (
 )
 from ateliersoude.user.mixins import PermissionOrgaContextMixin
 from ateliersoude.mixins import HasActivePermissionMixin
+from ateliersoude.event.models import (
+    Event
+)
 from ateliersoude.user.models import (
     CustomUser,
     Organization
@@ -25,16 +28,21 @@ class HomeView(TemplateView):
 
 
 class OrganizationPageView(
-    HasActivePermissionMixin, PermissionOrgaContextMixin, DetailView
+    PermissionOrgaContextMixin, DetailView
         ):
     model = Organization
     template_name = "organization_page.html"
 
     def get_object(self, *args, **kwargs):
+        self.organization = Organization.objects.get(
+            slug=self.kwargs["orga_slug"]
+        )
         return self.organization
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
+        context["event_list"] = Event.future_published_events().filter(
+            organization=self.organization).order_by('date')[0:10]
         context["emails"] = [
             (f"{user.email} ({user.first_name} {user.last_name})", user.email)
             for user in CustomUser.objects.all()
@@ -47,7 +55,7 @@ class OrganizationPageView(
             auto_id="id_volunteer_%s"
         )
         context["add_member_form"] = MoreInfoCustomUserForm
-        context["controls_tab"] = 'active'
+        context["page_tab"] = 'active'
         return context
 
 
@@ -104,6 +112,21 @@ class OrganizationEventsView(
         context["organization"] = self.organization
         context["search_form"] = self.form_class
         context["today"] = datetime.date(datetime.now())
+        return context
+
+
+class OrganizationControlsView(
+    HasActivePermissionMixin, PermissionOrgaContextMixin, DetailView
+        ):
+    model = Organization
+    template_name = "organization_controls.html"
+
+    def get_object(self, *args, **kwargs):
+        return self.model.objects.get(slug=self.organization.slug)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["controls_tab"] = 'active'
         return context
 
 

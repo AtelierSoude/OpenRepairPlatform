@@ -1,4 +1,4 @@
-let placeMap = L.map('place_map').setView([45.76, 4.84], 14);
+let placeMap = L.map('place_map').setView([30.76, 4.84], 14);
 placeMap.scrollWheelZoom.disable();
 
 L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {

@@ -166,19 +166,19 @@
       <h5 class="mt-4">Total perçus: {{ total_fees }}€</h5>
         <form action="{% url 'event:close' event.pk %}" method="post" class="d-inline">
           {% csrf_token %}
-          <button class="btn btn-primary btn-block" type="submit" onclick="return confirm('Êtes-vous sûrs de vouloir clôturer l\'évènement?')">
+          <button class="btn btn-primary type="submit" onclick="return confirm('Êtes-vous sûrs de vouloir clôturer l\'évènement?')">
             <i class="fa fa-calendar-check"></i>
             Clôturer
           </button>
         </form>
       {% endif %} 
-  </div>
-
     {% if is_volunteer %}
       {% if event.has_started %}
         {% include "event/modal_more_info.html" with form=present_form admin_text="Présent" %}
       {% endif %}
     {% endif %}
+  </div>
+
 
     <h5 class="mt-4"> {{ event.organizers.all.count }} Animateur·trice·s
       {% if is_volunteer %}
@@ -202,12 +202,12 @@
       </div>
 
       <div class="card-columns">
-
         {% for participation in event.participations.all %}
-            <div class="card border border-success">
-              <div class="card-body text-center p-4">
+            <div class="card border border-success mx-2" style="border-width:2px !important">
+              <div class="card-body text-center p-2">
                 <a href="{% url "user:user_detail" participation.user.pk %}" class="card-link"> 
-                    <span class="badge badge-pill badge-primary">
+                  <div class="row">
+                    <span class="badge badge-pill badge-primary float-left">
                         {% filter_orga queryset=participation.user.memberships organization=event.organization as membership %}
                         {% if membership %}
                           {{ membership.current_contribution }}
@@ -217,19 +217,20 @@
                         €
                       </span>
                       {% if participation.amount > 0 %}
-                        <span class="badge badge-pill badge-secondary">
+                        <span class="badge badge-pill badge-success float-left">
                         + {{ participation.amount }}€
                         </span>
                       {% endif %}
+                    </div>
                   <div class="row text-center" id="square-{{ participation.user.pk }}">
                       <div class="col-12 mb-1">
                         {% if user.avatar_img %}
-                          {% thumbnail user.avatar_img "100x100" crop="center" format="PNG" as im %}
+                          {% thumbnail user.avatar_img "50x50" crop="center" format="PNG" as im %}
                             <img src="{{ im.url }}" class="m-2 rounded-circle"/>
                           {% endthumbnail %}
                         {% else %}
                           {% if participation.user.first_name %}
-                            {% get_initial_avatar participation.user 75 'circle' %}
+                            {% get_initial_avatar participation.user 50 'circle' %}
                           {% endif %}
                         {% endif %}
                       </div>

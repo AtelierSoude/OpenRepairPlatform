@@ -8,6 +8,7 @@ from . import views
 urlpatterns = [
     path("", views.HomeView.as_view(), name="homepage"),
     path("user/", include("ateliersoude.user.urls", namespace="user")),
+    path("avatar/", include('initial_avatars.urls')),
     path("admin/", admin.site.urls),
     path("accounts/", include("django.contrib.auth.urls")),
     path("event/", include("ateliersoude.event.urls", namespace="event")),

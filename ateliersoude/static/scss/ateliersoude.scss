@@ -142,8 +142,11 @@ h4 {
 }
 
 @media screen and (max-width: 768px) {
-  h3{
-      font-size:1.4rem;
+  h3, h4, h5{
+    font-size:1.2rem;
+  }
+  p, .lead, b {
+    font-size: 0.9rem;
   }
   .fixed_sidedar{
     position: initial !important;
@@ -187,6 +190,7 @@ h4 {
    }
   #event_about {
     padding:25px !important;
+    padding-bottom: 0px !important;
   }
   #event_map {
     z-index: 1;

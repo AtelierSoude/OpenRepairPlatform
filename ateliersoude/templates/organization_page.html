@@ -180,7 +180,9 @@
     $("#breadcrumb").sticky({topSpacing:0});
   });
 </script>
-  {{ emails|json_script:"emails-data" }}
+  {% if is_volunteer %}
+    {{ emails|json_script:"emails-data" }}
+  {% endif %}
   {% assets "js_detail_organization" %}
     <script src="{{ ASSET_URL }}"></script>
   {% endassets %}

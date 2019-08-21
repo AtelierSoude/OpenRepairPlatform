@@ -111,7 +111,9 @@
       $("#breadcrumb").sticky({topSpacing:0});
     });
   </script>
-  {{  users|json_script:"members-data"}}
+  {% if is_volunteer %}
+    {{ users|json_script:"members-data"}}
+  {% endif %}
   <script src="{% static 'js/lib/jquery.waypoints.js' %}"></script>
   <script src="{% static 'js/lib/infinite.min.js' %}"></script>
   <script>

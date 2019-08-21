@@ -262,7 +262,7 @@
 {% endblock %}
 
 {% block extra_js %}
-  {{ users|json_script:"users-data" }}
+  {{ users|json_script:"emails-data" }}
   <script>
       const longitude = {{ event.location.longitude|unlocalize }};
       const latitude = {{ event.location.latitude|unlocalize }};

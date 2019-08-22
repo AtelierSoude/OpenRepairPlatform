@@ -10,7 +10,7 @@ from simple_history.models import HistoricalRecords
 from ateliersoude.fields import CleanHTMLField
 
 from ateliersoude.location.models import Place
-from ateliersoude.user.models import CustomUser, Organization
+from ateliersoude.user.models import CustomUser, Organization, Fee
 from ateliersoude.utils import get_future_published_events, validate_image
 
 
@@ -195,6 +195,7 @@ class Participation(models.Model):
     amount = models.PositiveIntegerField(
         verbose_name=_("Amount paid"), default=0, blank=True
     )
+    fee = models.OneToOneField(Fee, on_delete=models.CASCADE, null=True)
     history = HistoricalRecords()
 
     class Meta:

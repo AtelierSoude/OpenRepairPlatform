@@ -5,9 +5,6 @@ from django.views.generic import (
 )
 from ateliersoude.user.mixins import PermissionOrgaContextMixin
 from ateliersoude.mixins import HasActivePermissionMixin
-from ateliersoude.event.models import (
-    Event
-)
 from ateliersoude.user.models import (
     CustomUser,
     Organization

@@ -83,7 +83,7 @@
     <small>{{object.bio | safe}}</small>
   </div>      
 </div>
-</section>  
+</section>
 
 <section class="row h-100">
 
@@ -91,6 +91,7 @@
       <a class="nav-link active" id="v-pills-rdv-tab" data-toggle="pill" href="#v-pills-rdv" role="tab" aria-controls="v-pills-rdv" aria-selected="true">Rendez-vous</a>
       <a class="nav-link" id="v-pills-membership-tab" data-toggle="pill" href="#v-pills-membership" role="tab" aria-controls="v-pills-membership" aria-selected="false">Adhésions</a>
       <a class="nav-link" id="v-pills-info-tab" data-toggle="pill" href="#v-pills-info" role="tab" aria-controls="v-pills-info" aria-selected="false">Informations</a>
+      <a class="nav-link" id="v-pills-stock-tab" data-toggle="pill" href="#v-pills-stock" role="tab" aria-controls="v-pills-stock" aria-selected="false">Inventaire</a>
   </div>
 
 <div class="col-md-9 p-4 tab-content" id="v-pills-tabContent">
@@ -232,6 +233,29 @@
               <div class="col-md-6">
                   <p>le {{ object.date_joined|date:"d F Y" }}</p>
             </div>
+        </div>
+    </div>
+
+    <div class="tab-pane fade" id="v-pills-stock" role="tabpanel" aria-labelledby="v-pills-stock-tab">
+        <div class="row">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Pièce</th>
+                <th>État</th>
+                <th>Organisation</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for stuff in stock %}
+                <tr>
+                  <td scope="row">{{ stuff }}</td>
+                  <td>{{ stuff.get_state_display }}</td>
+                  <td>{{ stuff.organization_member }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
         </div>
     </div>
   </div>

@@ -2,6 +2,7 @@ from django.db import models
 from django.urls import reverse
 from simple_history.models import HistoricalRecords
 from ateliersoude.fields import CleanHTMLField
+from ateliersoude.user.models import Organization
 
 
 class Stuff(models.Model):
@@ -61,14 +62,12 @@ class Stuff(models.Model):
             return self.member_owner or self.organization_owner
 
     def set_owner(self, new_owner):
-        if isinstance(new_owner, "user.Organization"):
+        if isinstance(new_owner, Organization):
             self.organization_owner = new_owner
             self.member_owner = None
         else:
             self.member_owner = new_owner
-
-    def __str__(self):
-        return self.state + str(self.owner)
+        self.save()
 
 
 class RepairFolder(models.Model):
@@ -106,6 +105,9 @@ class Device(Stuff):
     )
     defect = models.ForeignKey("inventory.Defect", on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.category
+
 
 class Part(Stuff):
     pass
@@ -116,18 +118,8 @@ class Tool(Stuff):
 
 
 class Defect(models.Model):
-
-    def __str__(self):
-        return self.name
-
-    def get_absolute_url(self):
-        return reverse("defect_detail", kwargs={"pk": self.pk})
+    pass
 
 
 class Action(models.Model):
-
-    def __str__(self):
-        return self.name
-
-    def get_absolute_url(self):
-        return reverse("action_detail", kwargs={"pk": self.pk})
+    pass

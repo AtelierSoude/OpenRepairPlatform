@@ -27,6 +27,7 @@ from ateliersoude.mixins import (
     HasVolunteerPermissionMixin,
 )
 from ateliersoude.user.models import CustomUser, Organization, Membership, Fee
+from ateliersoude.inventory.models import Stuff
 
 from .forms import (
     UserUpdateForm,
@@ -312,6 +313,7 @@ class UserDetailView(DetailView):
             key=lambda evt: evt[0].date, reverse=True
         )
         context["future_rendezvous"].sort(key=lambda evt: evt[0].date)
+        context["stock"] = Stuff.objects.filter(member_owner=self.get_object())
         return context
 
 

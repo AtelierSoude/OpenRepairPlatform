@@ -195,7 +195,7 @@ class Participation(models.Model):
     amount = models.PositiveIntegerField(
         verbose_name=_("Amount paid"), default=0, blank=True
     )
-    fee = models.OneToOneField(Fee, on_delete=models.CASCADE, null=True)
+    fee = models.OneToOneField(Fee, on_delete=models.CASCADE, null=True, blank=True)
     history = HistoricalRecords()
 
     class Meta:

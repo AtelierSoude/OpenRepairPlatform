@@ -25,12 +25,12 @@
           <div class="bg-grey" id="side_nav">
             <div class="p-4 mt-4 header_detail_page_picture badge-secondary rounded">
                   {% if object.avatar_img %}
-                    {% thumbnail user.avatar_img "125x125" crop="center" format="PNG" as im %}
+                    {% thumbnail object.avatar_img "125x125" crop="center" format="PNG" as im %}
                       <img src="{{ im.url }}" class="m-2 rounded-circle"/>
                     {% endthumbnail %}
                   {% else %}
                     {% if object.first_name %}
-                      {% get_initial_avatar user 125 'circle' %}
+                      {% get_initial_avatar object 125 'circle' %}
                     {% endif %}
                   {% endif %}
             </div>

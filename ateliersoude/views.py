@@ -35,17 +35,6 @@ class HomeView(TemplateView, FormView):
         context["user_count"] = CustomUser.objects.all().count()
         context["organization_count"] = Organization.objects.all().count()
         context["results_number"] = self.get_queryset().count()
-        if self.request.user.is_authenticated:
-            user = self.request.user
-            registered = list(user.registered_events.all())
-            context["future_rendezvous"] = [
-                (event, "") for event in registered if not event.has_ended
-            ] + [
-                (event, "organizer")
-                for event in user.organizers_events.all()
-                if not event.has_ended
-            ]
-            context["future_rendezvous"].sort(key=lambda evt: evt[0].date)
         return context
 
     def get_queryset(self):

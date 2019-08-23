@@ -25,17 +25,9 @@
     </div>
 
     {% if request.user.is_authenticated %}
-    <div class="container text-left">
-        <h4 class="mt-4 text-muted">Mes prochains rendez-vous</h4>
-            <div class="card-columns">
-                {% if future_rendezvous %}
-                    {% for event, status in future_rendezvous|slice:":3" %}
-                        {% include "event/event_cards.html" with minimal=True %}
-                    {% empty %}
-                    Pas de rendez-vous à venir 
-                    {% endfor %}
-                {% endif %}
-            </div>
+    <div class="container text-center">
+        <h4 class="mt-4">Bonjour {{user.first_name}} :) !</h4>
+        <h4 class="mt-4 text-muted"><a href="{{ user.get_absolute_url }}"> Gérer mes rendez-vous ></a></h4>
     </div>  
     {% else %}
 

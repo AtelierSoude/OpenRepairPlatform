@@ -18,73 +18,77 @@
   <section class="col-md-6 bg-white">
       {% url "event:list" as event_list_url %}
   {% include "breadcrumb.html" with current=event first_parent_url=event_list_url first_parent_text="Évènements" %}
-  <div class="container p-4">
-      <h3>{{ event.activity }} du {{ event.date }}</h3>
+
+    <div class="container pl-4 pr-4 pt-2 bg-white" id="event_about">
+      <h3 class="">{{ event.activity }} du {{ event.date }}      
+        <div class="lead float-right ml-2">
+        {% if is_active %}
+          <a href="{% url 'event:edit' event.pk %}" class="btn btn-warning rounded-circle"><i class="fa fa-pencil-alt"></i></a>
+        {% endif %}
+        {% if is_admin %}
+          <a href="{% url 'event:delete' event.pk %}" class="btn btn-danger rounded-circle"><i class="fa fa-trash"></i></a>
+        {% endif %}
+        </div>
+      </h3>
       <p class="lead">
-        - Organisé par
+         Organisé par
         <a href="{% url 'organization_page' event.organization.slug %}">
           {{ event.organization.name }}
         </a>
       </p>
+      <p>
+          <i class="fa fa-calendar-alt"></i> 
+          Le {{ event.date|date:"l j F Y " }} de {{ event.starts_at }} à {{ event.ends_at }}
+      </p>
+    <h6 class="text-muted">
+      {% if event.is_free %}
+        <span class="badge badge-info badge-pill">Sans réservation</span>
+      {% else %}
+        {% if event.remaining_seats <= 0 %}
+          <span class="badge badge-warning badge-pill">Complet</span>
+        {% else %}
+          Encore  
+          <span class="badge badge-info badge-pill">{{ event.remaining_seats }}
+            </span> places disponibles
+        {% endif %}
+      {% endif %}
+      {% if request.user in event.registered.all or request.user in event.presents.all %}
+        <span class="badge badge-success badge-pill">Inscrit</span>
+      {% endif %}
+      {% if request.user in event.organizers.all %}
+      <span class="badge badge-success badge-pill">Organisateur</span>
+      {% endif %}
+    </h6>
+    {% if not event.is_free %}
+      {% include "event/register.html" with event=event %}
+    {% endif %}
+    {% if is_active and user not in event.registered.all %}
+      <form
+          {% if user in event.organizers.all %}
+          action="{% url 'event:remove_active' event.pk %}"
+          {% else %}
+          action="{% url 'event:add_active' event.pk %}"
+          {% endif %}
+          method="post"
+          class="d-inline">
+        {% csrf_token %}
+        {% if user in event.organizers.all %}
+        <button class="btn btn-warning btn-block" type="submit">
+          je n'anime plus
+        </button>
+        {% else %}
+        <button class="btn btn-primary btn-block" type="submit">
+          J'anime
+        </button>
+        {% endif %}
+      </form>
+
+    {% endif %}
+      <hr>
     </div>
 
-  <div class="p-2">
-      <div class="row pl-3 pr-3">
-        <div class="col-lg-12">
-
-            <p>
-                <i class="fa fa-calendar-alt"></i> 
-                Le {{ event.date|date:"l j F Y " }} de {{ event.starts_at }} à {{ event.ends_at }}
-            </p>
-
-          <h6 class="text-muted">
-            {% if event.is_free %}
-              <span class="badge badge-info badge-pill">Sans réservation</span>
-            {% else %}
-              {% if event.remaining_seats <= 0 %}
-                <span class="badge badge-warning badge-pill">Complet</span>
-              {% else %}
-                Encore  
-                <span class="badge badge-info badge-pill">{{ event.remaining_seats }}
-                  </span> places disponibles
-              {% endif %}
-            {% endif %}
-            {% if request.user in event.registered.all or request.user in event.presents.all %}
-              <span class="badge badge-success badge-pill">Inscrit</span>
-            {% endif %}
-            {% if request.user in event.organizers.all %}
-            <span class="badge badge-success badge-pill">Organisateur</span>
-            {% endif %}
-          </h6>
-          {% if not event.is_free %}
-            {% include "event/register.html" with event=event %}
-          {% endif %}
-          {% if is_active and user not in event.registered.all %}
-            <form
-                {% if user in event.organizers.all %}
-                action="{% url 'event:remove_active' event.pk %}"
-                {% else %}
-                action="{% url 'event:add_active' event.pk %}"
-                {% endif %}
-                method="post"
-                class="d-inline">
-              {% csrf_token %}
-              {% if user in event.organizers.all %}
-              <button class="btn btn-warning" type="submit">
-                Je n'organise plus
-              </button>
-              {% else %}
-              <button class="btn btn-primary" type="submit">
-                J'organise
-              </button>
-              {% endif %}
-            </form>
-
-          {% endif %}
-          <hr>
-        
-        <div class="row">
-              
+    <div class="col-lg-12">
+        <div class="row p-4">
               <ul class="col-md-6">
                   <b>Condition(s) de venue:</b>
                 {% for condition in event.conditions.all %}
@@ -94,10 +98,10 @@
                         {{ condition.price }}€</span> 
                       {% else %}
                       {% endif %}
-                    {{ condition.description | safe }}
+                    <small>{{ condition.description | safe }}</small>
                   </li>
                   {% empty %}
-                  <li>La participation est libre / pas de condition d'accès</li>
+                  <li><small>La participation est libre / pas de condition d'accès</small></li>
                 {% endfor %}
               </ul>
 
@@ -105,14 +109,13 @@
               <div class="col-md-6 border">
                 <div class="row">
                 {% if event.activity.picture %}
-                  <img class="img-responsive col-md-6 h-100" src="{{ event.activity.picture.url }}" alt="activity illustration">
+                  <img class="img-responsive col-md-6 h-100 p-0" src="{{ event.activity.picture.url }}" alt="activity illustration">
                 {% endif %}
     
                 <div class="col-md-6">
-    
+                  <b>{{event.activity.name}}</b>
                   <small class="">
-                    {{event.activity.name}}
-                  {{ event.activity.description | safe }}
+                  {{ event.activity.description | safe | truncatewords_html:7 }}
                   </small>
                 </div>
 
@@ -124,7 +127,7 @@
             {% endif %}
         </div>
     </div>
-  </div>
+
   <hr>
     <div class="col-lg">
       <p class="text-center">
@@ -136,34 +139,64 @@
         <div style="height:100%; min-height: 200px" id="event_map"></div>
     </div>
 
-  </div>
 </section>
 
 <section class="col-md-6 no-gutters p-0">
   {% if event.is_free %}
-    {% if event.activity.picture %}
-      <div class="col-lg h-25 overflow-hidden">
-        <img class="img-fluid position-relative" style="top:-100px" src="{{ event.activity.picture.url }}" alt="activity illustration">
+    {% if is_volunteer %}
+    <h3 class="text-center text-success pt-4">Evenement sans réservations</h3>
+    {% else %}
+      {% if event.activity.picture %}
+        <div class="col-lg h-25 overflow-hidden m-4 mb-0" style="padding-right: 60px !important">
+          <img class="img-fluid position-relative" style="top:-100px" src="{{ event.activity.picture.url }}" alt="activity illustration">
+        </div>
+      {% endif %}
+      <div class="col-lg pb-0 pl-4 pr-4 pt-0">
+        <h5> L'événement </h5>
+        <div>
+          {{ event.activity.description | safe | truncatewords_html:50 }}
+          <a href="{% url 'event:activity_detail' event.activity.pk event.activity.slug %}">
+            En savoir plus ...
+          </a>
+        </div>
       </div>
     {% endif %}
-    <div class="col-lg pb-0 pl-4 pr-4 pt-4">
-      <h5> L'événement </h5>
-      <div>
-        {{ event.activity.description | safe | truncatewords_html:50 }}
-        <a href="{% url 'event:activity_detail' event.activity.pk event.activity.slug %}">
-          En savoir plus ...
-        </a>
-      </div>
-    </div>
   {% endif %}
-  <div class="col-lg p-4">
-    <h5 class="mt-4"> {{ event.organizers.all.count }} Animateur·trice·s</h5>
+
+  <div class="col-lg p-2">
+    {% if not event.is_free %}
+      {% if is_active %}
+        <h5 class="mt-4">Total perçus: {{ total_fees }}€</h5>
+          <form action="{% url 'event:close' event.pk %}" method="post" class="d-inline">
+            {% csrf_token %}
+            <button class="btn btn-primary btn-sm type="submit" onclick="return confirm('Êtes-vous sûrs de vouloir clôturer l\'évènement?')">
+              <i class="fa fa-calendar-check"></i>
+              Clôturer
+            </button>
+          </form>
+        {% endif %} 
+      {% if is_volunteer %}
+        {% if event.has_started %}
+          {% include "event/modal_more_info.html" with form=present_form admin_text="Présent" %}
+        {% endif %}
+      {% endif %}
+    {% endif %}
+
+    <h5 class="mt-4"> {{ event.organizers.all.count }} Animateur·trice·s
+      {% if is_volunteer %}
+        {% include "event/register_organizer.html" with event_to_organize=event %}
+      {% endif %}
+    </h5>
     <hr>
     <div class="card-columns">
       {% include "user/user_card.html" with users=event.organizers.all %}
     </div>
   {% if not event.is_free %}
-    <h5> {{ event.registered.all.count|add:event.presents.all.count }} Participant·e·s</h5>
+    <h5> {{ event.registered.all.count|add:event.presents.all.count }} Participant·e·s
+      {% if is_volunteer %}
+        {% include "event/register.html" with event=event admin_text=" " %}
+      {% endif %}
+    </h5>
     <hr>
     {% if is_volunteer %}
       <div class="card-columns">
@@ -171,12 +204,12 @@
       </div>
 
       <div class="card-columns">
-
         {% for participation in event.participations.all %}
-            <div class="card border border-success">
-              <div class="card-body text-center p-4">
+            <div class="card border border-success mx-2" style="border-width:2px !important">
+              <div class="card-body text-center p-2">
                 <a href="{% url "user:user_detail" participation.user.pk %}" class="card-link"> 
-                    <span class="badge badge-pill badge-primary">
+                  <div class="row">
+                    <span class="badge badge-pill badge-primary float-left">
                         {% filter_orga queryset=participation.user.memberships organization=event.organization as membership %}
                         {% if membership %}
                           {{ membership.current_contribution }}
@@ -186,19 +219,20 @@
                         €
                       </span>
                       {% if participation.amount > 0 %}
-                        <span class="badge badge-pill badge-secondary">
+                        <span class="badge badge-pill badge-success float-left">
                         + {{ participation.amount }}€
                         </span>
                       {% endif %}
+                    </div>
                   <div class="row text-center" id="square-{{ participation.user.pk }}">
                       <div class="col-12 mb-1">
                         {% if user.avatar_img %}
-                          {% thumbnail user.avatar_img "100x100" crop="center" format="PNG" as im %}
+                          {% thumbnail user.avatar_img "50x50" crop="center" format="PNG" as im %}
                             <img src="{{ im.url }}" class="m-2 rounded-circle"/>
                           {% endthumbnail %}
                         {% else %}
                           {% if participation.user.first_name %}
-                            {% get_initial_avatar participation.user 75 'circle' %}
+                            {% get_initial_avatar participation.user 50 'circle' %}
                           {% endif %}
                         {% endif %}
                       </div>
@@ -219,55 +253,32 @@
             </div>
         {% endfor %}
       </div>
-
-      <h5 class="mt-4">Quelques statistiques sur l'évènement</h5>
-      <hr>
-      <ul>
-      <li>Total des cotisations perçues: {{ total_fees }}€</li>
-      </ul>
-
-      <div class="fixed-bottom m-4" style="right:0px; left:initial">
-          <div class="lead">
-              {% if is_active %}
-                <a href="{% url 'event:edit' event.pk %}" class="btn btn-warning rounded-circle"><i class="fa fa-pencil-alt"></i></a>
-              {% endif %}
-              {% if is_admin %}
-                <a href="{% url 'event:delete' event.pk %}" class="btn btn-danger rounded-circle"><i class="fa fa-trash"></i></a>
-              {% endif %}
-              {% if is_active %}
-                <form action="{% url 'event:close' event.pk %}" method="post" class="d-inline">
-                  {% csrf_token %}
-                  <button class="btn btn-sm btn-info btn-sm" type="submit" onclick="return confirm('Êtes-vous sûrs de vouloir clôturer l\'évènement?')">
-                    <i class="fa fa-calendar-check"></i>
-                    Clôturer
-                  </button>
-                </form>
-              {% endif %}
-
-        {% if is_volunteer %}
-          {% include "event/register.html" with event=event admin_text="Inscrire" %}
-          {% include "event/register_organizer.html" with event_to_organize=event %}
-          {% if event.has_started %}
-            {% include "event/modal_more_info.html" with form=present_form admin_text="Présent" %}
-          {% endif %}
-        {% endif %}
-        </div>
-      </div>
     {% else %}
       <p>Pour voir les participations vous devez être membre actif de l'organisation </p>
     {% endif %}
   {% endif %}
   </div>
+
 </section>
+
 </div>
 {% endblock %}
 
 {% block extra_js %}
-  {{ users|json_script:"users-data" }}
+  {% if is_volunteer %}
+    {{ users|json_script:"emails-data" }}
+  {% endif %}
   <script>
       const longitude = {{ event.location.longitude|unlocalize }};
       const latitude = {{ event.location.latitude|unlocalize }};
   </script>
+
+<script>
+    $(document).ready(function(){
+      $("#event_about").sticky({topSpacing:0});
+    });
+  </script>
+
   {% assets "js_detail_event" %}
     <script src="{{ ASSET_URL }}"></script>
   {% endassets %}

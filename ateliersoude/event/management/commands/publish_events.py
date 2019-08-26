@@ -27,21 +27,21 @@ class Command(BaseCommand):
             event.published = True
             event.save()
             orga = event.organization
-            for user in orga.actives.all() | orga.admins.all():
-                event_url = base_url + reverse(
-                    "event:detail", kwargs={"pk": event.id, "slug": event.slug}
-                )
-                msg_plain = render_to_string(
-                    "event/mail/event_published.txt", context=locals()
-                )
-                msg_html = render_to_string(
-                    "event/mail/event_published.html", context=locals()
-                )
-                send_mail(
-                    f" {event.organization} organise {event.slug} "
-                    f"- seras-tu présent ?",
-                    msg_plain,
-                    "no-reply@atelier-soude.fr",
-                    [user.email],
-                    html_message=msg_html,
-                )
+        #    for user in orga.actives.all() | orga.admins.all():
+        #        event_url = base_url + reverse(
+        #            "event:detail", kwargs={"pk": event.id, "slug": event.slug}
+        #        )
+        #        msg_plain = render_to_string(
+        #            "event/mail/event_published.txt", context=locals()
+        #        )
+        #        msg_html = render_to_string(
+        #            "event/mail/event_published.html", context=locals()
+        #        )
+        #        send_mail(
+        #            f" {event.organization} organise {event.slug} "
+        #            f"- seras-tu présent ?",
+        #            msg_plain,
+        #            "no-reply@atelier-soude.fr",
+        #            [user.email],
+        #            html_message=msg_html,
+        #        )

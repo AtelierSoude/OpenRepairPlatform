@@ -1,5 +1,5 @@
 {% extends 'organization_page.html' %}
-{% load static bootstrap4 assets app_filters %}
+{% load static bootstrap4 assets thumbnail initialavatar app_filters %}
 
 {% block menu_content %}
   <section class="container">
@@ -12,53 +12,91 @@
             {% bootstrap_form search_form %}
           <div class="form-group p-2 mt-auto">
             <button type="submit" class="btn btn-primary btn-block">
-              <span>Lancer la recherche</span>
+              <span class=""><i class="fa fa-search"></i></span>
             </button>
         </form>
     </div>
-  </section>
-  <table class="table infinite-container">
-      <thead>
-        <tr>
-          <th scope="col">Nom</th>
-          <th scope="col">Prénom</th>
-          <th scope="col">Statut</th>
-          <th scope="col">Cotisation</th>
-        </tr>
-      </thead>
-      <tbody class="infinite-item">
-        {% for user in members %}
-        <tr>
-          <td>{{ user.last_name }}</td>
-          <td> {{ user.first_name }}</td>
-          <td>
-            {% if user in organization.members.all %} Adhérent
-            {% elif user in organization.volunteers.all%} Volontaire
-            {% elif user in organization.actives.all%} Actif
-            {% elif user in organization.admins.all %} Administrateur
-            {% endif %}
-          </td>
-          {% for membership in user.memberships.all %}
-            {% if membership.organization == organization %}
-            <td>{{ membership.current_contribution }}</td>
-            <td><a class="btn btn-success" href="{% url 'user:user_detail' user.pk %}">Détails</a></td>
-            <td>
-              <button class="btn btn-success btn-sm" 
-                      data-toggle="modal" 
-                      data-target="#more-info-{{ membership.user.pk }}">
-                <i class="fa fa-plus"></i>
-                Mettre à jour le membre
-              </button>
-              {% include "user/organization/modal_more_info.html" with object=organization anonymous_user=user form=add_member_form|initial:user %}
-            </td>
-            {% endif%}
+    <div class="table-responsive">
+      <table class="table infinite-container">
+          <thead class="bg-primary">
+            <tr>
+              <th scope="col"><small class="text-white">Nom</small></th>
+              <th scope="col"><small class="text-white">statut</small></th>
+              <th scope="col"><small class="text-white">Cotisation</small></th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody class="infinite-item">
+          {% for user in members %}
+            {% ifchanged %}
+              <tr>
+                <td colspan="4" class="bg-light">
+                  <b>{{ user.last_name|make_list|first }}</b>
+                </td>
+              </tr>
+            {% endifchanged %}
+            <tr>
+              <td>
+                <a class="" href="{% url 'user:user_detail' user.pk %}">
+                  {% if user.avatar_img %}
+                    {% thumbnail user.avatar_img "30x30" crop="center" format="PNG" as im %}
+                      <img src="{{ im.url }}" class="m-2 rounded-circle"/>
+                    {% endthumbnail %}
+                  {% else %}
+                    {% if user.first_name %}
+                      {% get_initial_avatar user 30 'circle' %}
+                    {% endif %}
+                  {% endif %}
+                  <small>{{ user }}</small>
+                </a>
+              </td>
+              <td>
+                <small>
+                  {% for membership in user.memberships.all %}
+                    {% if membership.organization == organization %}
+                      {% if membership.current_contribution == 0 %} 
+                        <span class="text-danger" >Pas à jour</span>
+                      {% elif membership.current_contribution >= organization.advised_fee %}
+                        <span class="text-success" >A jour </span>
+                      {% else %}
+                        <span class="text-warning" >Incomplet </span>
+                      {% endif %}
+                    {% endif %}
+                  {% endfor %}
+                </small>
+              </td>
+              {% for membership in user.memberships.all %}
+                {% if membership.organization == organization %}
+              <td>
+                    {% if membership.current_contribution == 0 %} 
+                      <span class="badge badge-pill badge-danger" >{{membership.current_contribution}}€</span>
+                    {% elif membership.current_contribution >= organization.advised_fee %}
+                      <span class="badge badge-pill badge-success" >{{membership.current_contribution}}€</span>
+                    {% else %}
+                      <span class="badge badge-pill badge-warning" >{{membership.current_contribution}}€</span>
+                    {% endif %}
+              </td>
+              <td>
+                <button class="btn btn-success btn-sm" 
+                        data-toggle="modal" 
+                        data-target="#more-info-{{ membership.user.pk }}">
+                  <i class="fa fa-plus"></i>
+                  Mettre à jour
+                </button>
+                {% include "user/organization/modal_more_info.html" with object=organization anonymous_user=user form=add_member_form|initial:user %}
+              </td>
+                {% endif %}
+              {% endfor %}
+            </tr>   
+          {% empty %}
+            <tr>
+              <td>Pas de membres</td>
+            </tr>
           {% endfor %}
-        </tr>
-        {% empty %}
-          Pas de gens...
-        {% endfor %}
-      </tbody>
-  </table>
+          </tbody>
+      </table>
+    </div>
+  </section>
   
   {% if page_obj.has_next %}
     <a class="infinite-more-link" href="?page={{ page_obj.next_page_number }}"></a>
@@ -66,7 +104,16 @@
 {% endblock menu_content %}
 
 {% block extra_js %}
-  {{ users|json_script:"members-data" }}
+  <script>
+    $(document).ready(function(){
+      $("#h_nav").sticky({topSpacing:40});
+      $("#side_nav").sticky({topSpacing:80});
+      $("#breadcrumb").sticky({topSpacing:0});
+    });
+  </script>
+  {% if is_volunteer %}
+    {{ users|json_script:"members-data"}}
+  {% endif %}
   <script src="{% static 'js/lib/jquery.waypoints.js' %}"></script>
   <script src="{% static 'js/lib/infinite.min.js' %}"></script>
   <script>

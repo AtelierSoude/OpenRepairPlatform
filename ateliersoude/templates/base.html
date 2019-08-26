@@ -109,6 +109,13 @@
 <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 <script src="{% static 'js/lib/sticky_polyfill.js' %}"></script>
 
+
+<script>
+    $(document).ready(function(){
+      $(".jumbotron").sticky({topSpacing:0});
+    });
+</script>
+
 {% block extra_js %}
 {% assets "js_base" %}
     <script src="{{ ASSET_URL }}"></script>

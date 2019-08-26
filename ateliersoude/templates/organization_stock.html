@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load static bootstrap4 %}
+{% load static bootstrap4 app_filters %}
 
 {% block content %}
 <div class="container-fluid">
@@ -8,29 +8,33 @@
   {% include "organization_menu.html" %}
 </div>
 
-<table class="table">
+<table class="table table-hover">
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalStuff" aria-pressed="false" autocomplete="off">
+  Ajouter un objet à l'inventaire
+</button>
+{% include "inventory/modal_stuff.html" %}
   <thead>
     <tr>
       <th>Piece</th>
       <th>Type</th>
       <th>Localisation</th>
       <th>État</th>
+      <th>Propriétaire</th>
     </tr>
   </thead>
   <tbody>
-    {% for object in stock %}
-      <tr>
-        <td scope="row"> {{ object.name }} </td>
-        <td>{{ object.type }}</td>
-        <td> {{ object.location }} </td>
-        <td> {{ object.state }} </td>
+    {% for stuff in stock %}
+      <tr data-toggle="modal" data-target="#modalStuff{{ stuff.pk }}">
+        <td scope="row"> {{ stuff.name }} </td>
+        <td>{{ stuff.type }}</td>
+        <td> {{ stuff.place }} </td>
+        <td> {{ stuff.get_state_display }} </td>
+        <td> {{ stuff.owner }} </td>
+        {% include "inventory/modal_stuff.html" with form=form|initial_stuff:stuff %}
       </tr>
     {% empty %}
       Pas de stock pour l'instant
     {% endfor %}
-
   </tbody>
 </table>
-
-
 {% endblock %}

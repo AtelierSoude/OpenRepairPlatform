@@ -14,6 +14,10 @@ urlpatterns = [
     path("accounts/", include("django.contrib.auth.urls")),
     path("event/", include("ateliersoude.event.urls", namespace="event")),
     path(
+        "inventory/",
+        include("ateliersoude.inventory.urls", namespace="inventory")
+    ),
+    path(
         "location/",
         include("ateliersoude.location.urls", namespace="location"),
     ),
@@ -44,7 +48,7 @@ urlpatterns = [
     path(
         "<str:orga_slug>/stock/",
         OrganizationStockView.as_view(),
-        name="organization_events"
+        name="organization_stock"
     ),
     path(r"tinymce/", include("tinymce.urls")),
 ]

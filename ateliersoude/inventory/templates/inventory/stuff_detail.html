@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1> Stuff </h1>
+    <p> {{ stuff.pk }} </p>
+    <p> {{ stuff.owner }} </p>
+    <p> {{ stuff.get_state_display }} </p>
+{% endblock content %}

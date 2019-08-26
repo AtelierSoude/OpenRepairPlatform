@@ -18,6 +18,20 @@ def initial(form, user):
     return form
 
 
+@register.filter
+def initial_stuff(form, stuff):
+    form.initial.update(
+        {
+            "state": stuff.state,
+            "organization_owner": stuff.organization_owner,
+            "member_owner": stuff.member_owner,
+            "place": stuff.place,
+
+        }
+    )
+    return form
+
+
 @register.simple_tag
 def filter_orga(queryset, organization):
     return queryset.filter(organization=organization).first()

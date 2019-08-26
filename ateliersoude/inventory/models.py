@@ -69,6 +69,11 @@ class Stuff(models.Model):
             self.member_owner = new_owner
         self.save()
 
+    def get_absolute_url(self):
+        return reverse(
+            "inventory:stuff_view", kwargs={'stuff_pk': self.pk}
+        )
+
 
 class RepairFolder(models.Model):
     Stuff = models.ForeignKey("inventory.Stuff", on_delete=models.CASCADE)

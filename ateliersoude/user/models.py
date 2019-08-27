@@ -221,3 +221,6 @@ class Fee(models.Model):
     )
     def __str__(self):
         return f"{self.user} - {self.date} - {self.amount}"
+    
+    class Meta:
+        ordering = ['-date']

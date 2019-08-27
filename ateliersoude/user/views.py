@@ -205,12 +205,13 @@ class AddMemberToOrganization(HasActivePermissionMixin, RedirectView):
             form = MoreInfoCustomUserForm(self.request.POST)
         user = form.save()
         paid = form.cleaned_data["amount_paid"]
+        date = form.cleaned_data["date"]
 
         Membership.objects.create(
-            organization=self.organization, user=user, amount=paid
+            organization=self.organization, user=user, amount=paid, first_payment=date
         )
         Fee.objects.create(
-            amount=paid, user=user, organization=self.organization
+            amount=paid, user=user, organization=self.organization, date=date
         )
         messages.success(self.request, f"Vous avez ajouté {user} avec succes.")
         return url
@@ -223,12 +224,16 @@ class UpdateMemberView(HasActivePermissionMixin, UpdateView):
 
     def form_valid(self, form):
         user = form.save()
+        date = form.cleaned_data["date"]
         membership = Membership.objects.get(
             organization=self.organization, user=user
         )
         if membership.first_payment < timezone.now() - timedelta(days=365):
-            membership.first_payment = timezone.now()
+            membership.first_payment = date
             membership.amount = form.cleaned_data["amount_paid"]
+        elif date <  membership.first_payment.date():
+            membership.first_payment = date
+            membership.amount += form.cleaned_data["amount_paid"]
         else:
             membership.amount += form.cleaned_data["amount_paid"]
         membership.save()
@@ -236,6 +241,7 @@ class UpdateMemberView(HasActivePermissionMixin, UpdateView):
             amount=form.cleaned_data["amount_paid"],
             user=user,
             organization=self.organization,
+            date = date,
         )
         return super().form_valid(form)
 

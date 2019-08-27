@@ -226,8 +226,8 @@
                     </div>
                   <div class="row text-center" id="square-{{ participation.user.pk }}">
                       <div class="col-12 mb-1">
-                        {% if user.avatar_img %}
-                          {% thumbnail user.avatar_img "50x50" crop="center" format="PNG" as im %}
+                        {% if participation.user.avatar_img %}
+                          {% thumbnail participation.user.avatar_img "50x50" crop="center" format="PNG" as im %}
                             <img src="{{ im.url }}" class="m-2 rounded-circle"/>
                           {% endthumbnail %}
                         {% else %}

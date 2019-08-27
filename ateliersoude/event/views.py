@@ -1,5 +1,5 @@
 import logging
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 from django.contrib import messages
 from django.core import signing
@@ -430,6 +430,7 @@ class CloseEventView(HasActivePermissionMixin, RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         event_pk = kwargs["pk"]
         event = get_object_or_404(Event, pk=event_pk)
+        event_date = event.date
         nb_deleted, nb_new_members = 0, 0
         for temp_user in event.registered.filter(first_name=""):
             temp_user.delete()
@@ -442,17 +443,18 @@ class CloseEventView(HasActivePermissionMixin, RedirectView):
                 amount=participation.amount,
                 user=participation.user,
                 organization=event.organization,
+                date=event_date
             )
             if participation.saved:
                 amount = 0
             else:
                 amount = participation.amount
-
-            if contribution.first_payment < timezone.now() - timedelta(
-                days=365
-            ):
-                contribution.first_payment = timezone.now()
+            if contribution.first_payment.date() < event_date - timedelta(days=365):
+                contribution.first_payment = event_date
                 contribution.amount = amount
+            elif event_date < contribution.first_payment.date():
+                contribution.first_payment = event_date
+                contribution.amount += amount
             else:
                 contribution.amount += amount
             participation.saved = True

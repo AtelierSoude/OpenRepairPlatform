@@ -8,6 +8,13 @@
 
   <section class="container card">
     <div class="col-lg bg-white">
+
+    <button class="btn btn-success btn-sm float-left mt-4" data-toggle="modal" data-target="#more-info-{{ anonymous_user.pk }}">
+        <i class="fa fa-plus"></i>
+        Ajouter un membre
+      </button>
+      {% include "user/organization/modal_more_info.html" with object=organization form=add_member_form %}
+
         <form method="GET" class="form-row float-right">
             {% bootstrap_form search_form %}
           <div class="form-group p-2 mt-auto">
@@ -16,6 +23,7 @@
             </button>
         </form>
     </div>
+
     <div class="table-responsive">
       <table class="table infinite-container">
           <thead class="bg-primary">

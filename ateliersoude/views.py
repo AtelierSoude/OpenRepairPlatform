@@ -19,7 +19,6 @@ from ateliersoude.user.forms import (
 from ateliersoude.event.forms import (
     EventSearchForm
 )
-from ateliersoude.event.forms import EventSearchForm
 from datetime import datetime
 EVENTS_PER_PAGE = 6
 
@@ -60,9 +59,7 @@ class HomeView(TemplateView, FormView):
             )
         return queryset
 
-class OrganizationPageView(
-    PermissionOrgaContextMixin, DetailView
-        ):
+class OrganizationPageView(PermissionOrgaContextMixin, DetailView):
     model = Organization
     template_name = "organization_page.html"
 

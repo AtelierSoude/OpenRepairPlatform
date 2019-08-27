@@ -211,6 +211,7 @@ def test_present_with_more_info(client, event, custom_user_factory):
             "first_name": "gfdsq",
             "street_address": "2, rue part-dieu",
             "amount_paid": 0,
+            "date": event.date,
         },
     )
 
@@ -224,6 +225,7 @@ def test_present_with_more_info(client, event, custom_user_factory):
             "first_name": "gfdsq",
             "street_address": "2, rue part-dieu",
             "amount_paid": 0,
+            "date": event.date,
         },
     )
     assert response.status_code == 403
@@ -236,6 +238,7 @@ def test_present_with_more_info(client, event, custom_user_factory):
             "first_name": "gfdsq",
             "street_address": "2, rue part-dieu",
             "amount_paid": 0,
+            "date": event.date,
         },
     )
     assert reverse("event:detail", args=[event.id, event.slug]) in response.url
@@ -253,6 +256,7 @@ def test_present_with_more_info_unknown_user(client, event, custom_user):
             "first_name": "gfdsq",
             "street_address": "2, rue part-dieu",
             "amount_paid": 0,
+            "date": event.date,
         },
     )
     assert response.status_code == 302
@@ -267,6 +271,7 @@ def test_present_with_more_info_unknown_user(client, event, custom_user):
             "first_name": "gfdsq",
             "street_address": "2, rue part-dieu",
             "amount_paid": 0,
+            "date": event.date,
         },
     )
     assert response.status_code == 302
@@ -294,6 +299,7 @@ def test_present_with_more_info_existing_user(client, event, custom_user):
             "first_name": "gfdsq",
             "street_address": "2, rue part-dieu",
             "amount_paid": 0,
+            "date": event.date,
         },
     )
     assert response.status_code == 302

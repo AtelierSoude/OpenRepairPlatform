@@ -206,9 +206,9 @@ class AddMemberToOrganization(HasActivePermissionMixin, RedirectView):
         user = form.save()
         paid = form.cleaned_data["amount_paid"]
         date = form.cleaned_data["date"]
-
         Membership.objects.create(
-            organization=self.organization, user=user, amount=paid, first_payment=date
+            organization=self.organization, user=user,
+            amount=paid, first_payment=date
         )
         Fee.objects.create(
             amount=paid, user=user, organization=self.organization, date=date
@@ -231,7 +231,7 @@ class UpdateMemberView(HasActivePermissionMixin, UpdateView):
         if membership.first_payment < timezone.now() - timedelta(days=365):
             membership.first_payment = date
             membership.amount = form.cleaned_data["amount_paid"]
-        elif date <  membership.first_payment.date():
+        elif date < membership.first_payment.date():
             membership.first_payment = date
             membership.amount += form.cleaned_data["amount_paid"]
         else:
@@ -241,7 +241,7 @@ class UpdateMemberView(HasActivePermissionMixin, UpdateView):
             amount=form.cleaned_data["amount_paid"],
             user=user,
             organization=self.organization,
-            date = date,
+            date=date,
         )
         return super().form_valid(form)
 

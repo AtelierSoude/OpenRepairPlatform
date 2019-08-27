@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
-from datetime import timedelta, date as dt
+from datetime import date as dt
 
 from .models import CustomUser, Organization
 
@@ -63,6 +63,7 @@ class MoreInfoCustomUserForm(forms.ModelForm):
         initial=dt.today(),
         widget=forms.DateInput(attrs={"type": "date"}, format="%Y-%m-%d"),
     )
+  
     class Meta:
         model = CustomUser
         fields = ["email", "first_name", "last_name", "street_address"]

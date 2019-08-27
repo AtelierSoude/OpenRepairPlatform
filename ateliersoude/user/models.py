@@ -219,8 +219,9 @@ class Fee(models.Model):
     organization = models.ForeignKey(
         Organization, on_delete=models.CASCADE, related_name="fees"
     )
+
     def __str__(self):
-        return f"{self.user} - {self.date} - {self.amount}"
+        return f"{self.user}-{self.date}-{self.amount}"
     
     class Meta:
         ordering = ['-date']

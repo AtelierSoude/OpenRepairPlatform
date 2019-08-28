@@ -4,6 +4,7 @@
   L.AwesomeMarkers.version = '2.0.1';
   L.AwesomeMarkers.Icon = L.Icon.extend({
     options: {
+      myCustomId: '',
       iconSize: [35, 45],
       iconAnchor:   [17, 42],
       popupAnchor: [1, -32],
@@ -28,6 +29,7 @@
 
       if (options.icon) {
         div.innerHTML = this._createInner();
+        div.dataset.location = options.myCustomId;
       }
 
       if (options.bgPos) {

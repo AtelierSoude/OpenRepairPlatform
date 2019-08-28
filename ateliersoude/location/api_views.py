@@ -6,5 +6,5 @@ from ateliersoude.location.serializers import PlaceSerializer
 
 class PlaceListAPIView(ListAPIView):
     serializer_class = PlaceSerializer
-    queryset = Place.objects.all()
+    queryset = Place.objects.filter()
     authentication_classes = []

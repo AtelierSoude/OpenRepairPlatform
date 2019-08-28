@@ -7,16 +7,16 @@
 
   <div class="jumbotron jumbotron-fluid">
     <div class="container">
-      <h1 class="mt-5">Suppression de '{{ organization }}'</h1>
+      <h2 class="mt-5">Suppression de '{{ organization }}'</h2>
     </div>
   </div>
 
   <section class="container">
-    <p>
+    <p class="p-2">
       <i class="fa fa-exclamation-triangle"></i>
       Vous êtes sur le point de supprimer l'organisation <code>'{{ organization }}'</code>. Êtes-vous certain de votre choix ?
     </p>
-    <form method="post">
+    <form class="p-2" method="post">
       {% csrf_token %}
       {{ form.as_p }}
       <input class="btn btn-danger" type="submit" value="Oui je suis sûr">

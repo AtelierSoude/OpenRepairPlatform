@@ -6,6 +6,11 @@ from .models import Place
 class PlaceSerializer(serializers.ModelSerializer):
     orga_url = serializers.SerializerMethodField()
     orga_name = serializers.SerializerMethodField()
+    future_events = serializers.SerializerMethodField()
+
+    def get_future_events(self, place):
+        if place.future_published_events():
+            return True
 
     def get_orga_url(self, place):
         return place.organization.get_absolute_url()
@@ -16,6 +21,7 @@ class PlaceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Place
         fields = [
+            "pk",
             "picture",
             "get_absolute_url",
             "orga_url",
@@ -26,4 +32,5 @@ class PlaceSerializer(serializers.ModelSerializer):
             "latitude",
             "longitude",
             "category",
+            "future_events",
         ]

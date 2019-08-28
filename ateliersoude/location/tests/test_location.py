@@ -36,7 +36,7 @@ def test_location_api_list(client_log, place_factory):
     places = response.json()
     assert len(places) == 1
     assert places[0]["name"] == place.name
-    assert places[0].keys() == {
+    assert set(places[0].keys()) == {
         "picture",
         "get_absolute_url",
         "orga_url",
@@ -47,6 +47,8 @@ def test_location_api_list(client_log, place_factory):
         "latitude",
         "longitude",
         "category",
+        "future_events",
+        "pk",
     }
 
 

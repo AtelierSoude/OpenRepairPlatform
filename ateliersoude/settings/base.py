@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "tinymce",
     "import_export",
     "initial_avatars",
+    "django_gravatar",
 ]
 
 

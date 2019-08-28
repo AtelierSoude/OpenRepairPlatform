@@ -438,7 +438,7 @@ class CloseEventView(HasActivePermissionMixin, RedirectView):
             contribution, created = Membership.objects.get_or_create(
                 user=participation.user, organization=event.organization
             )
-            Fee.objects.create(
+            related_fee = Fee.objects.create(
                 amount=participation.amount,
                 user=participation.user,
                 organization=event.organization,
@@ -456,6 +456,7 @@ class CloseEventView(HasActivePermissionMixin, RedirectView):
             else:
                 contribution.amount += amount
             participation.saved = True
+            participation.fee = related_fee
             participation.save()
             contribution.save()
             if created:

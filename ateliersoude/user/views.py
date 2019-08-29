@@ -286,6 +286,7 @@ class UserDetailView(DetailView):
         user = context["object"]
         registered = list(user.registered_events.all())
         participations = list(Participation.objects.filter(user=user))
+        context["fees"] = list(Fee.objects.filter(user=user))
         context["passed_participations"] = (
             [
                 (participation.event, participation.amount)

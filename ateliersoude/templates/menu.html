@@ -61,6 +61,8 @@
         </a>
         <div class="dropdown-menu " aria-labelledby="navbarDropdownMenuLink">
           <a class="dropdown-item" href="{{ user.get_absolute_url }}"> voir profil </a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="{{ user.get_absolute_url }}"> mes rendez-vous</a>
           {% if user.admin_organizations.all %}
           <div class="dropdown-divider"></div>
           {% for organization in user.admin_organizations.all %}

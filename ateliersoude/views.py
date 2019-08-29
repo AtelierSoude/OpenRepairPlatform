@@ -1,13 +1,11 @@
 from django.views.generic import (
     TemplateView,
     DetailView,
-    ListView
+    ListView,
+    FormView
 )
 from ateliersoude.user.mixins import PermissionOrgaContextMixin
 from ateliersoude.mixins import HasActivePermissionMixin
-from ateliersoude.event.models import (
-    Event
-)
 from ateliersoude.user.models import (
     CustomUser,
     Organization
@@ -18,14 +16,49 @@ from ateliersoude.user.forms import (
     MoreInfoCustomUserForm,
     CustomUserForm
 )
+from ateliersoude.event.forms import (
+    EventSearchForm
+)
 from ateliersoude.event.forms import EventSearchForm
 from datetime import datetime
 EVENTS_PER_PAGE = 6
 
 
-class HomeView(TemplateView):
+class HomeView(TemplateView, FormView):
+    form_class = EventSearchForm
     template_name = "home.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["search_form"] = EventSearchForm(self.request.GET)
+        context["event_count"] = Event.objects.all().count()
+        context["user_count"] = CustomUser.objects.all().count()
+        context["organization_count"] = Organization.objects.all().count()
+        context["results_number"] = self.get_queryset().count()
+        return context
+
+    def get_queryset(self):
+        queryset = Event.future_published_events()
+        form = EventSearchForm(self.request.GET)
+        if not form.is_valid():
+            return queryset
+        if form.cleaned_data["place"]:
+            queryset = queryset.filter(location=form.cleaned_data["place"])
+        if form.cleaned_data["organization"]:
+            queryset = queryset.filter(
+                organization=form.cleaned_data["organization"]
+            )
+        if form.cleaned_data["activity"]:
+            queryset = queryset.filter(activity=form.cleaned_data["activity"])
+        if form.cleaned_data["starts_before"]:
+            queryset = queryset.filter(
+                date__lte=form.cleaned_data["starts_before"]
+            )
+        if form.cleaned_data["starts_after"]:
+            queryset = queryset.filter(
+                date__gte=form.cleaned_data["starts_after"]
+            )
+        return queryset
 
 class OrganizationPageView(
     PermissionOrgaContextMixin, DetailView

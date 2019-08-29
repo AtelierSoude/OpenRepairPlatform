@@ -7,13 +7,18 @@ from import_export.admin import ImportExportModelAdmin
 from import_export.widgets import ForeignKeyWidget, ManyToManyWidget
 from import_export.fields import Field
 
-from .models import CustomUser, Organization, Membership
+from .models import CustomUser, Organization, Membership, Fee
 from .forms import CustomUserChangeForm, CustomUserCreationForm
 
 
 class CustomUserResource(resources.ModelResource):
     class Meta:
         model = CustomUser
+
+
+class FeeResource(resources.ModelResource):
+    class Meta:
+        model = Fee
 
 
 class MembershipResource(resources.ModelResource):
@@ -104,6 +109,9 @@ class CustomUserAdmin(UserAdmin, SimpleHistoryAdmin, ImportExportModelAdmin):
     search_fields = ('first_name', 'last_name', 'email')
 
 
+class FeeAdmin(ImportExportModelAdmin, SimpleHistoryAdmin):
+    resource_class = FeeResource 
+
 class MembershipAdmin(ImportExportModelAdmin, SimpleHistoryAdmin):
     resource_class = MembershipResource
 
@@ -115,3 +123,5 @@ class OrganizationAdmin(SimpleHistoryAdmin, ImportExportModelAdmin):
 admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(Organization, OrganizationAdmin)
 admin.site.register(Membership, MembershipAdmin)
+admin.site.register(Fee, FeeAdmin)
+

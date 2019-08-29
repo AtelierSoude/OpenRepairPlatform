@@ -85,3 +85,4 @@ class OrganizationForm(forms.ModelForm):
             "admins",
             "slug",
         ]
+        

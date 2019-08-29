@@ -16,7 +16,6 @@ from django.views.generic import (
     RedirectView,
 )
 from datetime import timedelta
-
 from ateliersoude import utils
 from ateliersoude.event.models import Event, Participation
 from ateliersoude.event.templatetags.app_filters import tokenize
@@ -25,6 +24,7 @@ from ateliersoude.mixins import (
     HasAdminPermissionMixin,
     HasActivePermissionMixin,
     HasVolunteerPermissionMixin,
+    RedirectQueryParamView
 )
 from ateliersoude.user.models import CustomUser, Organization, Membership, Fee
 
@@ -468,6 +468,26 @@ class RemoveUserFromOrganization(HasAdminPermissionMixin, RedirectView):
             "organization_page", kwargs={"orga_slug": self.organization.slug},
         )
 
+
+class FeeDeleteView(
+    HasActivePermissionMixin, RedirectQueryParamView, DeleteView
+):
+    model = Fee
+    success_url = 'user:user_detail'
+    
+    def get(self, request, *args, **kwargs):
+        return self.post(request, *args, **kwargs)
+
+    def get_success_url(self, *args, **kwargs):
+        self.object = self.get_object
+        return reverse('user:user_detail', kwargs={"pk": self.object.user.pk})
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object
+        user_membership = Membership.objects.get(user=self.object.user)
+        self.object.amount -= user_membership.amount
+        messages.success(request, "La cotisation a bien été supprimée")
+        return super().delete(request, *args, **kwargs)
 
 class RemoveAdminFromOrganization(RemoveUserFromOrganization):
     @staticmethod

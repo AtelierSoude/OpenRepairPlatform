@@ -288,7 +288,11 @@
                       {% endif %}
                     </td>
                     <td>
-                    <b> {{ fee.amount }}€ </b>
+                    <b> {{ fee.amount }}€ </b>   
+                    <a class="btn btn-danger btn-sm" href="{% url 'user:fee_delete' fee.id %}">
+                        <i class="fa fa-trash-alt"></i>
+                        X
+                      </a>
                     </td>
                   </tr>
                   {% endif %}

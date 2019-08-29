@@ -95,4 +95,9 @@ urlpatterns = [
         views.UpdateMemberView.as_view(),
         name="organization_update_member",
     ),
+    path(
+        "fee/<int:pk>/delete/",
+        views.FeeDeleteView.as_view(),
+        name="fee_delete",
+    ),
 ]

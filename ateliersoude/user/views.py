@@ -483,8 +483,8 @@ class FeeDeleteView(
         return reverse('user:user_detail', kwargs={"pk": self.object.user.pk})
 
     def delete(self, request, *args, **kwargs):
-        self.object = self.get_object
-        user_membership = Membership.objects.get(user=self.object.user)
+        self.object = self.get_object()
+        user_membership = Membership.objects.get(user=self.object.user, organization=self.object.organization)
         self.object.amount -= user_membership.amount
         messages.success(request, "La cotisation a bien été supprimée")
         return super().delete(request, *args, **kwargs)

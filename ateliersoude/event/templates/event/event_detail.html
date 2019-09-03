@@ -42,13 +42,13 @@
       </p>
     <h6 class="text-muted">
       {% if event.is_free %}
-        <span class="badge badge-info badge-pill">Sans réservation</span>
+        <span class="badge badge-secondary badge-pill">Sans réservation</span>
       {% else %}
         {% if event.remaining_seats <= 0 %}
           <span class="badge badge-warning badge-pill">Complet</span>
         {% else %}
           Encore  
-          <span class="badge badge-info badge-pill">{{ event.remaining_seats }}
+          <span class="badge badge-secondary badge-pill">{{ event.remaining_seats }}
             </span> places disponibles
         {% endif %}
       {% endif %}
@@ -82,7 +82,6 @@
         </button>
         {% endif %}
       </form>
-
     {% endif %}
       <hr>
     </div>

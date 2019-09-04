@@ -492,7 +492,9 @@ class FeeDeleteView(
         if fees.count() == 0 :
             membership.delete()
         else:
-            membership.first_payment = fees.first().date
+            a_year_ago = timezone.now() - timedelta(days=365)
+            filtered_fees = fees.filter(date__gt=a_year_ago)
+            membership.first_payment = filtered_fees.first().date
             membership.save()
         messages.success(request, "La cotisation a bien été supprimée")
         return HttpResponseRedirect(reverse('user:user_detail', kwargs={"pk": membership.user.pk}))

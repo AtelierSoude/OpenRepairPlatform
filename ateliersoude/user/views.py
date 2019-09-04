@@ -2,10 +2,11 @@ from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.db.models import Q
-from django.http import Http404
+from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
 from django.utils import timezone
+from django.core.exceptions import ObjectDoesNotExist
 from django.utils.decorators import method_decorator
 from django.views.generic import (
     CreateView,
@@ -473,21 +474,29 @@ class FeeDeleteView(
     HasActivePermissionMixin, RedirectQueryParamView, DeleteView
 ):
     model = Fee
-    success_url = 'user:user_detail'
-    
+
     def get(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)
 
-    def get_success_url(self, *args, **kwargs):
-        self.object = self.get_object
-        return reverse('user:user_detail', kwargs={"pk": self.object.user.pk})
-
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
-        user_membership = Membership.objects.get(user=self.object.user, organization=self.object.organization)
-        self.object.amount -= user_membership.amount
+        fee = self.object
+        membership = Membership.objects.get(user=fee.user, organization=fee.organization)
+        membership.amount -= fee.amount
+        try:    
+            fee.participation.amount -= fee.participation.amount
+        except ObjectDoesNotExist:
+            pass
+        fee.delete()
+        fees = Fee.objects.filter(user=membership.user, organization=membership.organization).order_by('date')
+        if fees.count() == 0 :
+            membership.delete()
+        else:
+            membership.first_payment = fees.first().date
+            membership.save()
         messages.success(request, "La cotisation a bien été supprimée")
-        return super().delete(request, *args, **kwargs)
+        return HttpResponseRedirect(reverse('user:user_detail', kwargs={"pk": membership.user.pk}))
+
 
 class RemoveAdminFromOrganization(RemoveUserFromOrganization):
     @staticmethod

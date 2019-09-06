@@ -484,7 +484,8 @@ class FeeDeleteView(
         membership = Membership.objects.get(user=fee.user, organization=fee.organization)
         membership.amount -= fee.amount
         try:    
-            fee.participation.amount -= fee.participation.amount
+            fee.participation.amount = 0
+            fee.participation.save()
         except ObjectDoesNotExist:
             pass
         fee.delete()
@@ -495,7 +496,7 @@ class FeeDeleteView(
             a_year_ago = timezone.now() - timedelta(days=365)
             filtered_fees = fees.filter(date__gt=a_year_ago)
             membership.first_payment = filtered_fees.first().date
-            membership.save()
+        membership.save()
         messages.success(request, "La cotisation a bien été supprimée")
         return HttpResponseRedirect(reverse('user:user_detail', kwargs={"pk": membership.user.pk}))
 

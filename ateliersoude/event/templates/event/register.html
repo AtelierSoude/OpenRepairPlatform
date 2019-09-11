@@ -1,6 +1,6 @@
 {% load app_filters bootstrap4 %}
 
-{% if admin_text %}
+{% if admin_text or not request.user.is_authenticated %}
   {% if event.is_free %}
     <a class="btn btn-outline-warning">Événement sans réservation</a>
   {% else %}

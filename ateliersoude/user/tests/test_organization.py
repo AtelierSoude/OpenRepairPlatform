@@ -495,6 +495,7 @@ def test_add_member_to_organization(custom_user_factory, client, organization):
             "last_name": "Miche",
             "street_address": "11 rue du test",
             "amount_paid": 5,
+            "date": timezone.now().date().strftime("%Y-%m-%d"),
         },
     )
     assert response.status_code == 302
@@ -524,6 +525,7 @@ def test_re_add_member_to_organization(
             "last_name": "Miche",
             "street_address": "11 rue du test",
             "amount_paid": 5,
+            "date": timezone.now().date().strftime("%Y-%m-%d"),
         },
     )
     assert response.status_code == 302
@@ -559,6 +561,7 @@ def test_update_member_to_organization(
             "last_name": "Miche",
             "street_address": "11 rue du test",
             "amount_paid": 5,
+            "date": timezone.now().date().strftime("%Y-%m-%d"),
         },
     )
     membership.refresh_from_db()
@@ -586,6 +589,7 @@ def test_update_member_to_organization(
             "last_name": "Miche",
             "street_address": "11 rue du test",
             "amount_paid": 5,
+            "date": timezone.now().date().strftime("%Y-%m-%d"),
         },
     )
     membership.refresh_from_db()

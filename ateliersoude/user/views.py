@@ -2,10 +2,11 @@ from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.db.models import Q
-from django.http import Http404
+from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
 from django.utils import timezone
+from django.core.exceptions import ObjectDoesNotExist
 from django.utils.decorators import method_decorator
 from django.views.generic import (
     CreateView,
@@ -16,7 +17,6 @@ from django.views.generic import (
     RedirectView,
 )
 from datetime import timedelta
-
 from ateliersoude import utils
 from ateliersoude.event.models import Event, Participation
 from ateliersoude.event.templatetags.app_filters import tokenize
@@ -25,6 +25,7 @@ from ateliersoude.mixins import (
     HasAdminPermissionMixin,
     HasActivePermissionMixin,
     HasVolunteerPermissionMixin,
+    RedirectQueryParamView
 )
 from ateliersoude.user.models import CustomUser, Organization, Membership, Fee
 
@@ -205,12 +206,13 @@ class AddMemberToOrganization(HasActivePermissionMixin, RedirectView):
             form = MoreInfoCustomUserForm(self.request.POST)
         user = form.save()
         paid = form.cleaned_data["amount_paid"]
-
+        date = form.cleaned_data["date"]
         Membership.objects.create(
-            organization=self.organization, user=user, amount=paid
+            organization=self.organization, user=user,
+            amount=paid, first_payment=date
         )
         Fee.objects.create(
-            amount=paid, user=user, organization=self.organization
+            amount=paid, user=user, organization=self.organization, date=date
         )
         messages.success(self.request, f"Vous avez ajouté {user} avec succes.")
         return url
@@ -223,12 +225,16 @@ class UpdateMemberView(HasActivePermissionMixin, UpdateView):
 
     def form_valid(self, form):
         user = form.save()
+        date = form.cleaned_data["date"]
         membership = Membership.objects.get(
             organization=self.organization, user=user
         )
         if membership.first_payment < timezone.now() - timedelta(days=365):
-            membership.first_payment = timezone.now()
+            membership.first_payment = date
             membership.amount = form.cleaned_data["amount_paid"]
+        elif date < membership.first_payment.date():
+            membership.first_payment = date
+            membership.amount += form.cleaned_data["amount_paid"]
         else:
             membership.amount += form.cleaned_data["amount_paid"]
         membership.save()
@@ -236,6 +242,7 @@ class UpdateMemberView(HasActivePermissionMixin, UpdateView):
             amount=form.cleaned_data["amount_paid"],
             user=user,
             organization=self.organization,
+            date=date,
         )
         return super().form_valid(form)
 
@@ -461,6 +468,37 @@ class RemoveUserFromOrganization(HasAdminPermissionMixin, RedirectView):
         return reverse(
             "organization_page", kwargs={"orga_slug": self.organization.slug},
         )
+
+
+class FeeDeleteView(
+    HasActivePermissionMixin, RedirectQueryParamView, DeleteView
+):
+    model = Fee
+
+    def get(self, request, *args, **kwargs):
+        return self.post(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        fee = self.object
+        membership = Membership.objects.get(user=fee.user, organization=fee.organization)
+        membership.amount -= fee.amount
+        try:    
+            fee.participation.amount = 0
+            fee.participation.save()
+        except ObjectDoesNotExist:
+            pass
+        fee.delete()
+        fees = Fee.objects.filter(user=membership.user, organization=membership.organization).order_by('date')
+        if fees.count() == 0 :
+            membership.delete()
+        else:
+            a_year_ago = timezone.now() - timedelta(days=365)
+            filtered_fees = fees.filter(date__gt=a_year_ago)
+            membership.first_payment = filtered_fees.first().date
+        membership.save()
+        messages.success(request, "La cotisation a bien été supprimée")
+        return HttpResponseRedirect(reverse('user:user_detail', kwargs={"pk": membership.user.pk}))
 
 
 class RemoveAdminFromOrganization(RemoveUserFromOrganization):

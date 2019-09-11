@@ -110,7 +110,8 @@ class CustomUserAdmin(UserAdmin, SimpleHistoryAdmin, ImportExportModelAdmin):
 
 
 class FeeAdmin(ImportExportModelAdmin, SimpleHistoryAdmin):
-    resource_class = FeeResource 
+    resource_class = FeeResource
+
 
 class MembershipAdmin(ImportExportModelAdmin, SimpleHistoryAdmin):
     resource_class = MembershipResource

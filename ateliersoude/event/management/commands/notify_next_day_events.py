@@ -30,8 +30,7 @@ class Command(BaseCommand):
         tomorrow_00h00 = tomorrow.replace(hour=0, minute=0, second=0)
         events_next_day = (
             Event.objects.filter(published=True)
-            .filter(publish_at__lte=now)
-            .filter(date__gte=now.date(), ends_at__gte=now.time())
+            .filter(date=tomorrow.date())
             .filter(starts_at__lte=tomorrow_23h59.time())
             .filter(starts_at__gte=tomorrow_00h00.time())
         )

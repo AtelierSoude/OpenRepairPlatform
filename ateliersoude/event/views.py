@@ -331,7 +331,7 @@ class CancelReservationView(RedirectView):
         send_mail(
             subject,
             msg_plain,
-            "no-reply@atelier-soude.fr",
+            f"{event.organization}",
             [user.email],
             html_message=msg_html,
         )
@@ -410,7 +410,7 @@ class BookView(RedirectView):
         send_mail(
             subject,
             msg_plain,
-            "no-reply@atelier-soude.fr",
+            f"{event.organization}",
             [user.email],
             html_message=msg_html,
         )

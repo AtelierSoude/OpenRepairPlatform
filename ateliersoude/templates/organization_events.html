@@ -22,6 +22,7 @@
               <th scope="col"><small class="text-white">Date</small></th>
               <th scope="col"><small class="text-white">Type</small></th>
               <th scope="col"><small class="text-white">Lieu</small></th>
+              <th scope="col"><small class="text-white">Animateurs</small></th>
               <th scope="col"><small class="text-white">Places</small></th>
             </tr>
           </thead>
@@ -52,6 +53,23 @@
               </td>
               <td>
                 <small>{{ event.location }}</small>
+              </td>
+              <td>
+                {% if event.needed_organizers != 0 %}
+                <span
+                class="
+                  {% if event.needed_organizers > event.organizers.all.count %}
+                    text-danger
+                  {% elif event.needed_organizers <= event.needed_organizers %}
+                    text-success
+                  {% else %}
+                    text-warning
+                  {% endif %}
+                  ">
+                <i class="fas fa-user-cog"></i>    
+                {{ event.organizers.all.count }}/{{ event.needed_organizers }}
+                </span>
+                {% endif %}
               </td>
               <td>
                 {% if event.is_free %}

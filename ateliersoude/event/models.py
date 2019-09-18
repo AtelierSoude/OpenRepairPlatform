@@ -125,7 +125,7 @@ class Event(models.Model):
         blank=True,
         through="Participation",
     )
-    nedded_organizers = models.PositiveIntegerField(
+    needed_organizers = models.PositiveIntegerField(
         verbose_name=_("Needed organizers"), default=0
     )
     organizers = models.ManyToManyField(

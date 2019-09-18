@@ -3,39 +3,36 @@
 {% for event in event_list %}
 <div class="card infinite-item mb-4" data-location="{{event.location.pk|escape}}">
   <div class="card-header bg-primary"> 
-
-  <span class="text-secondary">
-    <i class="far fa-calendar-alt"></i>    
-    {{ event.date|date:"l j F Y " }} <br>
-    <span class="text-white">
-      <i class="far fa-clock"></i>  
-      {{ event.starts_at }} à {{ event.ends_at }}
+    <span class="text-secondary">
+      <i class="far fa-calendar-alt"></i>    
+      {{ event.date|date:"l j F Y " }} <br>
+      <span class="text-white">
+        <i class="far fa-clock"></i>  
+        {{ event.starts_at }} à {{ event.ends_at }}
+      </span>
     </span>
-  </span>
     <div class="position-absolute" style="top: 10px; right:10px">
-    {% if event.is_free %}
-    <span class="text-success">Entrée libre</span>
-    {% elif event.remaining_seats <= 0 %}
-    <span class="text-danger">Complet</span>
-    {% else %}
-    <span
-    class="
-      {% if event.remaining_seats == event.available_seats %}
-        text-success
+      {% if event.is_free %}
+      <span class="text-success">Entrée libre</span>
+      {% elif event.remaining_seats <= 0 %}
+      <span class="text-danger">Complet</span>
       {% else %}
-        text-warning
+      <span
+      class="
+        {% if event.remaining_seats == event.available_seats %}
+          text-success
+        {% else %}
+          text-warning
+        {% endif %}
+        ">
+      <i class="fas fa-users"></i>    
+        {{ event.remaining_seats}}
+      </span>
       {% endif %}
-      ">
-    <i class="fas fa-users"></i>    
-      {{ event.remaining_seats}}
-    </span>
-    {% endif %}
     </div>
-
   </div>
 
   <a class="" href="{% url 'event:detail' event.pk event.slug %}">
-
       <span class="text-muted position-absolute" style="top:50px; right:0px">
         {% if request.user in event.registered.all or request.user in event.presents.all %}
           <span class="badge badge-success badge-pill">Inscrit</span>
@@ -44,19 +41,32 @@
           <span class="badge badge-success badge-pill">Organisateur</span>
           {% endif %}
       </span>
-
     {% if minimal != True and event.activity.picture %}
         {% thumbnail event.activity.picture "400" format="PNG" as im %}
           <img class="card-img-top rounded-0 event_img" src="{{ im.url }}"/>
         {% endthumbnail %}
     {% endif %}
-
     <div class="card-body p-0">
     <div class="p-2">
       <h5 class="">{{ event.activity.name }}</h5>
       <small class="text-muted">
         <i class="fa fa-map-marker-alt"></i>
         {{ event.location.name }}
+      </small>
+      <br>
+      <small class="
+        {% if event.needed_organizers != 0 %}
+          {% if event.needed_organizers > event.organizers.all.count %}
+            text-danger
+          {% elif event.needed_organizers <= event.organizers.all.count %}
+            text-success
+          {% else %}
+            text-warning
+          {% endif %}
+        {% endif %}"> 
+        {% if event.needed_organizers != 0 %}
+          {{ event.organizers.all.count }}/{{ event.needed_organizers }} animateurs
+        {% endif %}
       </small>
       {% if minimal != True %}
       <hr>
@@ -73,8 +83,7 @@
         {% endif %}
         <small>Organisé par {{ event.organization }}</small>
       </div>
-  </a>
-
+    </a>
     <footer class="text-muted text-center">
       {% if not event.is_free %}
         {% if event.remaining_seats > 0 %}

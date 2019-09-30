@@ -51,6 +51,7 @@ class EventForm(ModelForm):
             "starts_at",
             "ends_at",
             "publish_at",
+            "needed_organizers",
             "organizers",
             "conditions",
         ]

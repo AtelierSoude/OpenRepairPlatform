@@ -180,8 +180,21 @@
         {% endif %}
       {% endif %}
     {% endif %}
-
-    <h5 class="mt-4"> {{ event.organizers.all.count }} Animateur·trice·s
+    <h5 class="mt-4
+      {% if event.needed_organizers != 0 %}
+        {% if event.needed_organizers > event.organizers.all.count %}
+          text-danger
+        {% elif event.needed_organizers <= event.event.organizers.all.count %}
+          text-success
+        {% else %}
+          text-warning
+        {% endif %}
+      {% endif %}">
+      {{ event.organizers.all.count }}
+      {% if event.needed_organizers != 0 %}
+        /{{ event.needed_organizers }}
+      {% endif %}
+      Animateur·trice·s
       {% if is_volunteer %}
         {% include "event/register_organizer.html" with event_to_organize=event %}
       {% endif %}

@@ -8,7 +8,8 @@ from ateliersoude.user.mixins import PermissionOrgaContextMixin
 from ateliersoude.mixins import HasActivePermissionMixin
 from ateliersoude.user.models import (
     CustomUser,
-    Organization
+    Organization,
+    Fee
 )
 from ateliersoude.event.models import Event
 from ateliersoude.user.forms import (
@@ -121,6 +122,26 @@ class OrganizationMembersView(
         return context
 
 
+class OrganizationFeesView(
+    HasActivePermissionMixin, PermissionOrgaContextMixin, ListView
+        ):
+    model = Fee
+    template_name = "organization_fees.html"
+    context_object_name = "fees"
+    paginate_by = 50
+
+    def get_queryset(self):
+        self.object = self.organization
+        return self.model.objects.filter(
+            organization=self.organization
+        ).order_by("-date")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["accounting_tab"] = 'active'
+        context["organization"] = self.organization
+        return context
+
 class OrganizationEventsView(
     HasActivePermissionMixin, PermissionOrgaContextMixin, ListView
         ):
@@ -171,3 +192,4 @@ class OrganizationDetailsView(PermissionOrgaContextMixin, DetailView):
         context = super().get_context_data(**kwargs)
         context["organization"] = self.object
         return context
+

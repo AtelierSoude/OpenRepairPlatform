@@ -62,8 +62,12 @@ h4 {
 
 /* cards */
 .event_list_cards{
- column-count: 2;
-}
+  -moz-column-count: 3;
+  -moz-column-gap: 50px;
+  -webkit-column-count: 3;
+  -webkit-column-gap: 50px;
+  column-count: 3;
+  column-gap: 50px;}
 .card {
   border-radius: 0;
   border : 0px;
@@ -80,11 +84,15 @@ h4 {
   border-radius: 50%;
 }
 
+.card-img-crop{
+  max-height: 200px;
+  overflow: hidden;
+}
+
 .event_img {
-  object-fit: none; 
-  object-position: center; 
+ /* object-fit: none; 
+  object-position: center; */
   width: 100%;
-  max-height: 150px;
 }
 
 /* breadcrumb (chemin navigation) */

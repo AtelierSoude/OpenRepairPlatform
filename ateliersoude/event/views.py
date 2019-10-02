@@ -145,7 +145,7 @@ class EventListView(ListView):
     model = Event
     context_object_name = "event_list"
     template_name = "event/event_list.html"
-    paginate_by = 3
+    paginate_by = 6
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

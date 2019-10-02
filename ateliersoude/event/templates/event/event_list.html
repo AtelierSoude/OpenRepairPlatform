@@ -37,7 +37,7 @@
 
   <section class="container">
     <div class="col-lg">
-        <div class="infinite-container p-4 event_list_cards">
+        <div class="infinite-container bricklayer">
           {% include "event/event_cards.html" with event_list=event_list %}
         </div>
     </div>
@@ -134,4 +134,8 @@ var waypoint = new Waypoint({
       }
     });
   </script>
+
+<script>
+var bricklayer = new Bricklayer(document.querySelector('.bricklayer'))
+</script>
 {% endblock %}

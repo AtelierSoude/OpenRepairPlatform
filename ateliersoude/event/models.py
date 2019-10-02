@@ -66,7 +66,7 @@ class Activity(models.Model):
         return reverse("event:activity_detail", args=(self.pk, self.slug))
 
     def next_events(self):
-        return get_future_published_events(self.events)
+        return get_future_published_events(self.events)[0:3]
 
 
 class Event(models.Model):

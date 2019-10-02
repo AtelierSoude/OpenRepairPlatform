@@ -32,6 +32,7 @@ from ateliersoude.mixins import (
     RedirectQueryParamView,
     HasAdminPermissionMixin,
     HasActivePermissionMixin,
+    HasVolunteerPermissionMixin,
 )
 from ateliersoude.user.mixins import PermissionOrgaContextMixin
 from ateliersoude.user.forms import CustomUserEmailForm, MoreInfoCustomUserForm
@@ -145,7 +146,7 @@ class EventListView(ListView):
     model = Event
     context_object_name = "event_list"
     template_name = "event/event_list.html"
-    paginate_by = 3
+    paginate_by = 6
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -472,7 +473,7 @@ class CloseEventView(HasActivePermissionMixin, RedirectView):
         return reverse("event:detail", args=[event.id, event.slug])
 
 
-class AddActiveEventView(HasActivePermissionMixin, RedirectView):
+class AddActiveEventView(HasVolunteerPermissionMixin, RedirectView):
     http_method_names = ["post"]
     model = Event
 
@@ -485,7 +486,7 @@ class AddActiveEventView(HasActivePermissionMixin, RedirectView):
         return reverse("event:detail", args=[event.id, event.slug])
 
 
-class RemoveActiveEventView(HasActivePermissionMixin, RedirectView):
+class RemoveActiveEventView(HasVolunteerPermissionMixin, RedirectView):
     http_method_names = ["post"]
     model = Event
 

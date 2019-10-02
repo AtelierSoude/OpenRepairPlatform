@@ -1,5 +1,7 @@
 {% extends 'organization_page.html' %}
 {% load static %}
+{% load thumbnail %}
+{% load initialavatar %}
 
 {% block menu_content %}
 <section class="container">
@@ -30,7 +32,7 @@
           {% for event in events %}
             {% ifchanged %}
               <tr>
-                <td colspan="4" class="bg-light">
+                <td colspan="5" class="bg-light">
                   <b>{{ event.date|date:"F" }} {{event.date|date:"Y" }}</b>
                 </td>
               </tr>
@@ -56,19 +58,33 @@
               </td>
               <td>
                 {% if event.needed_organizers != 0 %}
-                <span
-                class="
-                  {% if event.needed_organizers > event.organizers.all.count %}
-                    text-danger
-                  {% elif event.needed_organizers <= event.needed_organizers %}
-                    text-success
-                  {% else %}
-                    text-warning
-                  {% endif %}
-                  ">
-                <i class="fas fa-user-cog"></i>    
-                {{ event.organizers.all.count }}/{{ event.needed_organizers }}
-                </span>
+                <div class="mini-organizers">
+                    <span class="align-middle
+                      {% if event.needed_organizers != 0 %}
+                        {% if event.needed_organizers > event.organizers.all.count %}
+                          text-danger
+                        {% elif event.needed_organizers <= event.organizers.all.count %}
+                          text-success
+                        {% else %}
+                          text-warning
+                        {% endif %}
+                      {% endif %}"> 
+                        {{ event.organizers.all.count }}/{{ event.needed_organizers }}
+                    </span>
+                    {% for orga in event.organizers.all %}
+                      <div class="position-relative float-left mini d-none d-md-block d-lg-block">
+                      {% if orga.avatar_img %}
+                        {% thumbnail orga.avatar_img "25x25" crop="center" format="PNG" as im %}
+                          <img src="{{ im.url }}" class="rounded-circle"/>
+                        {% endthumbnail %}
+                      {% else %}
+                        {% if orga.first_name %}
+                          {% get_initial_avatar orga 25 'circle' %}
+                        {% endif %}
+                      {% endif %}
+                      </div>
+                    {% endfor %}
+                  </div>
                 {% endif %}
               </td>
               <td>
@@ -76,7 +92,7 @@
                   Illimité
                 {% else %}
                 <span
-                class="
+                class=" float-left
                   {% if event.remaining_seats <= 0 %}
                     text-danger
                   {% elif event.remaining_seats == event.available_seats %}

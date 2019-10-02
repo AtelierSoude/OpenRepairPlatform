@@ -85,10 +85,10 @@ h4 {
 }
 
 .mini{
-  left: -20px;
+  left: -05px;
 }
 
-.mini:first-child {
+.mini:last-child {
   left:0px;
 }
 
@@ -228,5 +228,16 @@ h4 {
   .container{
     margin: 0px !important;
     padding: 0px !important;
+  }
+}
+
+.bricklayer .card {
+  margin:10px;
+} 
+
+@media screen and (min-width: 1200px) {
+  .bricklayer-column-sizer {
+    /* divide by 3. */
+    width: 33.3%;
   }
 }

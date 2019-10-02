@@ -62,12 +62,8 @@ h4 {
 
 /* cards */
 .event_list_cards{
-  -moz-column-count: 3;
-  -moz-column-gap: 50px;
-  -webkit-column-count: 3;
-  -webkit-column-gap: 50px;
   column-count: 3;
-  column-gap: 50px;}
+}
 .card {
   border-radius: 0;
   border : 0px;
@@ -228,16 +224,5 @@ h4 {
   .container{
     margin: 0px !important;
     padding: 0px !important;
-  }
-}
-
-.bricklayer .card {
-  margin:10px;
-} 
-
-@media screen and (min-width: 1200px) {
-  .bricklayer-column-sizer {
-    /* divide by 3. */
-    width: 33.3%;
   }
 }

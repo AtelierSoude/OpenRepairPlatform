@@ -1,4 +1,5 @@
 {% load thumbnail %}
+{% load initialavatar %}
 
 {% for event in event_list %}
 <div class="card infinite-item mb-4" data-location="{{event.location.pk|escape}}">
@@ -54,20 +55,37 @@
         {{ event.location.name }}
       </small>
       <br>
-      <small class="
-        {% if event.needed_organizers != 0 %}
-          {% if event.needed_organizers > event.organizers.all.count %}
-            text-danger
-          {% elif event.needed_organizers <= event.organizers.all.count %}
-            text-success
+
+      <div class="mini-organizers">
+        {% for orga in event.organizers.all %}
+        <div class="position-relative float-left mini">
+          {% if orga.avatar_img %}
+            {% thumbnail orga.avatar_img "25x25" crop="center" format="PNG" as im %}
+              <img src="{{ im.url }}" class="rounded-circle"/>
+            {% endthumbnail %}
           {% else %}
-            text-warning
+            {% if orga.first_name %}
+              {% get_initial_avatar orga 25 'circle' %}
+            {% endif %}
           {% endif %}
-        {% endif %}"> 
-        {% if event.needed_organizers != 0 %}
-          {{ event.organizers.all.count }}/{{ event.needed_organizers }} animateurs
-        {% endif %}
-      </small>
+        </div>
+          {% endfor %}
+        <small class="align-middle
+          {% if event.needed_organizers != 0 %}
+            {% if event.needed_organizers > event.organizers.all.count %}
+              text-danger
+            {% elif event.needed_organizers <= event.organizers.all.count %}
+              text-success
+            {% else %}
+              text-warning
+            {% endif %}
+          {% endif %}"> 
+          {% if event.needed_organizers != 0 %}
+            {{ event.organizers.all.count }}/{{ event.needed_organizers }} animateurs
+          {% endif %}
+        </small>
+      </div>
+
       {% if minimal != True %}
       <hr>
       <small>

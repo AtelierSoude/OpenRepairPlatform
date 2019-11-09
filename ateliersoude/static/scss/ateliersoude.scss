@@ -220,6 +220,10 @@ h4 {
     z-index: 1;
   }
 
+  .header_detail_page, #h_nav, #breadcrumb, #jumbotron, #search_tab, #event_title, #event_about, .jumbotron {
+     z-index: 2 !important;
+   }
+
 }
 
 @media screen and (max-width: 576px) {

@@ -15,7 +15,9 @@ a {
 header{
   z-index:1250 !important;
 }
-
+#event_map {
+  z-index: 0;
+}
 h1, h2, h3, h4, h5 {
   color : #083342;
 }
@@ -29,7 +31,7 @@ h4 {
 /* Menu */
 
 .header_detail_page, #h_nav, #breadcrumb, #jumbotron, #search_tab, #event_title, #event_about, .jumbotron {
-  z-index: 2 !important;
+ /* z-index: 2 !important; */
   position: relative;
 }
 

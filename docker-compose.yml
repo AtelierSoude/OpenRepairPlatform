@@ -10,6 +10,9 @@ services:
     ports:
       - 5433:5432
   django:
+    build:
+      context: .
+      dockerfile: ./deployment/django/Dockerfile
     image: ateliersoude_python
     volumes:
       - $PWD/ateliersoude:/srv/app/ateliersoude
@@ -21,9 +24,11 @@ services:
       - 5678:5678
     depends_on:
       - db
-    env_file:
-      - development/django.env
     working_dir: /srv/app
+    environment:
+      - DJANGO_SETTINGS_MODULE=ateliersoude.settings.dev_docker
+      - EMAIL_PASSWORD=iop@iop.com
+      - SECRET_KEY=iop
     command:
       - /bin/bash
       - -c

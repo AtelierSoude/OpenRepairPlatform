@@ -9,12 +9,9 @@ The plateform is created by Atelier Soudé, an organization which repair everyda
 
 You can build the postgres and django app images, and then run them in development.
 
-First, change `EMAIL_PASSWORD` and `SECRET_KEY` values in `./deployment/django/django.env`
-
-Then run the following commands:
+Run the following command:
 
 ```
-./deployment/build.sh
 docker-compose up
 ```
 

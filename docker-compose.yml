@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:11
+    volumes:
+      - $PWD/postgres_data:/var/lib/postgresql/data
+    env_file:
+      - deployment/postgres/postgres.env
+    ports:
+      - 5433:5432
+  django:
+    image: ateliersoude_python
+    volumes:
+      - $PWD/ateliersoude:/srv/app/ateliersoude
+      - $PWD/ateliersoude_media:/srv/app/ateliersoude_media
+      - $PWD/ateliersoude_static:/srv/app/ateliersoude_static
+      - $PWD/deployment/django:/srv/deployment
+    ports:
+      - 8000:8000
+      - 5678:5678
+    depends_on:
+      - db
+    env_file:
+      - development/django.env
+    working_dir: /srv/app
+    command:
+      - /bin/bash
+      - -c
+      - |
+        sed -i "s/{{SECRET_KEY}}/${SECRET_KEY}/" /etc/cron.d/ateliersoude
+        sed -i "s/{{EMAIL_PASSWORD}}/${EMAIL_PASSWORD}/" /etc/cron.d/ateliersoude
+        service cron start
+        chown -R ateliersoude:ateliersoude /srv/*
+        python3 -m pip install ptvsd django-debug-toolbar
+        python3 manage.py migrate
+        python3 manage.py shell -c "from ateliersoude.user.models import CustomUser; CustomUser.objects.create_superuser('admin@example.com', 'adminpass')" || true
+        python3 manage.py collectstatic --noinput
+        python3 -m ptvsd --host 0.0.0.0 --port 5678 manage.py runserver --noreload --nothreading 0.0.0.0:8000

@@ -142,7 +142,6 @@ ateliersoude.iml
 .idea/
 bootstrap_done
 node_modules/*
-.vscode
 media
 tmp
 *.min.js
@@ -152,3 +151,5 @@ ateliersoude_static/
 ateliersoude_media/
 postgres_data/
 cpdb.sh
+
+migrations/

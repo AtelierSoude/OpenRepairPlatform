@@ -16,8 +16,8 @@ services:
     image: ateliersoude_python
     volumes:
       - $PWD/ateliersoude:/srv/app/ateliersoude
-      - $PWD/ateliersoude_media:/srv/app/ateliersoude_media
-      - $PWD/ateliersoude_static:/srv/app/ateliersoude_static
+      - $PWD/ateliersoude_media:/srv/app/media
+      - $PWD/ateliersoude_static:/srv/app/static
       - $PWD/deployment/django:/srv/deployment
     ports:
       - 8000:8000

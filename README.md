@@ -7,8 +7,6 @@ The plateform is created by Atelier Soudé, an organization which repair everyda
 
 ## Develop with Docker
 
-You can build the postgres and django app images, and then run them in development.
-
 Run the following command:
 
 ```

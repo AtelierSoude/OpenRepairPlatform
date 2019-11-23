@@ -43,7 +43,13 @@ The local code is mounted in a Docker volume, so if you change the code locally 
 Integration tests are run using a Docker image containing a chrome Selenium installation and a VNC server.
 It is possible to debug the tests using a local VNC client that connects to the VNC server in the Docker container, that allows to graphically see what the selenium test is doing on the site.
 
+To install:
+
 `sudo apt-get install krdc`
+
+To launch it:
+
+`krdc`
 
 Start KRDC, and connect to `localhost:5900`
 
@@ -51,4 +57,5 @@ To see the running chrome sessions:
 `http://localhost:4444/wd/hub/static/resource/hub.html`
 
 To launch the tests :
-`python3 -m pytest /tests/integration_tests.py`
+`docker exec openrepairplatform_selenium_1 python3 -m pytest /tests/integration_tests.py -v`
+

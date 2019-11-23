@@ -41,7 +41,8 @@ services:
         python3 manage.py migrate
         python3 manage.py shell -c "from ateliersoude.user.models import CustomUser; CustomUser.objects.create_superuser('admin@example.com', 'adminpass')" || true
         python3 manage.py collectstatic --noinput
-        python3 -m ptvsd --host 0.0.0.0 --port 5678 manage.py runserver --noreload --nothreading 0.0.0.0:8000
+        #python3 -m ptvsd --host 0.0.0.0 --port 5678 manage.py runserver --noreload --nothreading 0.0.0.0:8000
+        python3 -m ptvsd --host 0.0.0.0 --port 5678 manage.py runserver --noreload 0.0.0.0:8000
   selenium:
     build:
       context: .
@@ -53,6 +54,7 @@ services:
     ports:
       - 4444:4444
       - 5900:5900
+      - 5679:5678
     depends_on:
       - django
     environment:

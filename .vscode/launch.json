@@ -19,13 +19,14 @@
         {
             "name": "Debug integration tests",
             "type": "python",
-            "request": "launch",
-            "port": ,
+            "request": "attach",
+            "port": 5679,
             "host": "localhost",
             "pathMappings": [{
                 "localRoot": "${workspaceFolder}/ateliersoude/integration_tests",
                 "remoteRoot": "/tests"
             }],
+            "preLaunchTask": "runtests"
         }
     ]
 }

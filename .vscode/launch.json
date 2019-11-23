@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: Run in Docker",
+            "name": "Debug Django app",
             "type": "python",
             "request": "attach",
             "port": 5678,
@@ -15,6 +15,17 @@
                 "remoteRoot": "/srv/app"
             }],
             //"preLaunchTask": "Docker Restart",
+        },
+        {
+            "name": "Debug integration tests",
+            "type": "python",
+            "request": "launch",
+            "port": ,
+            "host": "localhost",
+            "pathMappings": [{
+                "localRoot": "${workspaceFolder}/ateliersoude/integration_tests",
+                "remoteRoot": "/tests"
+            }],
         }
     ]
 }

@@ -20,9 +20,11 @@ You can then access `http://127.0.0.1:8000/` with the admin user `admin@example.
 If you open the main folder with vs code, you will be able to use the configuration present in `.vscode`.
 
 This will allow you to connect to the container in debug mode and to stop at breakpoints in the code, which is quite confortable to inspect the variables and test new code in the required state of the program (typically before a failure).
+Before starting, you may have to install the Python extension.
 
-For this, just click on `Debug`, and `Start Debugging`: you will run the `Python: Run in Docker` configuration. 
+For this, just click on `Debug`, and `Start Debugging`: you will run the `Debug Django app` configuration. 
 A small additional bar will appear with useful commands for the debug: go to next breakpoint, stop debugging, etc
+More information on debugging with vs code: `https://code.visualstudio.com/Docs/editor/debugging`
 
 Create a breakpoint in the code, for example in a view, and go to the corresponding page from your browser.
 The browser will freeze and vs code will stop at the breakpoint.

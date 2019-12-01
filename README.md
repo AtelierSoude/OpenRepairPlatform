@@ -57,5 +57,8 @@ To see the running chrome sessions:
 `http://localhost:4444/wd/hub/static/resource/hub.html`
 
 To launch the tests :
+
+First, start the Docker container with `docker-compose up`, and then:
+
 `docker exec openrepairplatform_selenium_1 python3 -m pytest /tests/integration_tests.py -v`
 

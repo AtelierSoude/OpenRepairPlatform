@@ -6,7 +6,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 
-import ptvsd
+#import ptvsd
 
 #ptvsd.enable_attach()
 #ptvsd.wait_for_attach()
@@ -18,7 +18,7 @@ class TestGeneral:
 
     def test_home(self):
         xpath = "/html/body/main/div/div[1]/section/div/div/form/div[6]/button"
-        self.driver.get("django:8000")
+        self.driver.get("djangotests:8000")
         element = WebDriverWait(self.driver, 20).until(EC.element_to_be_clickable((By.XPATH, xpath)))
         assert 1 == 1
 
@@ -26,7 +26,7 @@ class TestGeneral:
 
         # go to main page
         xpath = "/html/body/main/div/div[1]/section/div/div/form/div[6]/button"
-        self.driver.get("django:8000")
+        self.driver.get("djangotests:8000")
         element = WebDriverWait(self.driver, 20).until(EC.element_to_be_clickable((By.XPATH, xpath)))
 
         # click on connexion

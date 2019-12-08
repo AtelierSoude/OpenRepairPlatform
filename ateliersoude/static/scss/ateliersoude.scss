@@ -9,6 +9,7 @@
   min-height: 500px;
   overflow-x:hidden;
 }
+
 a {
   color : #49d3be;
 }
@@ -111,6 +112,11 @@ h5{
 }
 
 /* breadcrumb (chemin navigation) */
+
+#breadcrumb-sticky-wrapper, #search_tab-sticky-wrapper{
+z-index: 2;
+}
+
 .breadcrumb{
   font-size: .8em;
   margin-bottom: 0 !important;
@@ -223,7 +229,7 @@ h5{
     z-index: 1;
   }
 
-  .header_detail_page, #h_nav, #breadcrumb, #jumbotron, #search_tab, #event_title, #event_about, .jumbotron {
+  .header_detail_page, #h_nav, #breadcrumb, #jumbotron, #search_tab, #event_title, .booking_form, .jumbotron {
      z-index: 2 !important;
    }
    .modal.show .modal-dialog {

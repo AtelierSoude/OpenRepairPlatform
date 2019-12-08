@@ -1,10 +1,8 @@
 {% load thumbnail %}
 {% load initialavatar %}
-{% if '/activity/' not in request.path %}
-<div class="card-deck">
-{% endif %}
+
   {% for event in event_list %}
-  <div class="card infinite-item mb-4" data-location="{{event.location.pk|escape}}">
+  <div class="card infinite-item mb-4 {{card_size}} float-left" style="background-color: #86868600 !important;" data-location="{{event.location.pk|escape}}">
     <div class="card-header bg-primary"> 
       <span class="text-secondary">
         <i class="far fa-calendar-alt"></i>    
@@ -14,7 +12,7 @@
           {{ event.starts_at }} à {{ event.ends_at }}
         </span>
       </span>
-      <div class="position-absolute" style="top: 10px; right:10px">
+      <div class="position-absolute" style="top: 10px; right:20px">
         {% if event.is_free %}
         <span class="text-success">Entrée libre</span>
         {% elif event.remaining_seats <= 0 %}
@@ -36,7 +34,7 @@
     </div>
 
     <a class="card-img-crop" href="{% url 'event:detail' event.pk event.slug %}">
-        <span class="text-muted position-absolute" style="top:50px; right:0px">
+        <span class="text-muted position-absolute" style="top:50px; right:15px">
           {% if request.user in event.registered.all or request.user in event.presents.all %}
             <span class="badge badge-success badge-pill">Inscrit</span>
             {% endif %}
@@ -49,9 +47,11 @@
             <img class="card-img-top rounded-0 event_img" src="{{ im.url }}"/>
           {% endthumbnail %}
       {% endif %}
-      <div class="card-body p-0 d-flex flex-column">
+      <div class="card-body p-0 d-flex flex-column bg-white">
       <div class="p-2">
-        <h5 class="">{{ event.activity.name }}</h5>
+        <div style="min-height: 48px;">
+          <h5 class="">{{ event.activity.name|truncatechars:40 }}</h5>
+        </div>
         <small class="text-muted">
           <i class="fa fa-map-marker-alt"></i>
           {{ event.location.name }}
@@ -96,7 +96,7 @@
         {% endif %}
       </div>
       </a>
-      <footer class="text-muted text-center align-self-end mt-auto row ml-0 mr-0">
+      <footer class="text-muted text-center align-self-end mt-auto col-lg ml-0 mr-0 pl-0 pr-0">
         <div class="text-center col-lg">
             {% if event.organization.picture %}
             {% thumbnail event.organization.picture "30x30" crop="left" format="PNG" as im %}
@@ -117,13 +117,7 @@
       </footer>
       </div>
   </div>
-  {% if '/activity/' not in request.path %}
-    {% if forloop.counter|divisibleby:"3" %}
-      </div><div class="card-deck">
-    {% endif %}
-  {% endif %}
+
 {% endfor %}
-{% if '/activity/' not in request.path %}
-  </div>
-{% endif %}
+
 

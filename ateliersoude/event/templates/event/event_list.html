@@ -38,7 +38,7 @@
   <section class="container">
     <div class="col-lg">
         <div class="infinite-container p-4 event_list_cards">
-          {% include "event/event_cards.html" with event_list=event_list %}
+          {% include "event/event_cards.html" with event_list=event_list card_size='col-md-4' %}
         </div>
     </div>
     <div class="col-lg no-gutters position-fixed d-none" id="place_map">
@@ -48,6 +48,7 @@
 
   <div class="loading d-none"></div>
 
+  
   {% if page_obj.has_next %}
     <a class="infinite-more-link" href="?page={{ page_obj.next_page_number }}">Affichage en cours...</a>
   {% endif %}
@@ -89,14 +90,14 @@ $(document).ready(function() {
     $(".card").hover(
           function() {
             var location_id = $(this).data("location");
-            $(this).addClass("shadow");
+            $(this).find('.card-body').addClass("shadow");
             $(".awesome-marker[data-location='" + location_id +"' ]").addClass("awesome-marker_hover");
           }
         );
         $(".card").mouseleave(
           function() {
             var location_id = $(this).data("location");
-            $(this).removeClass("shadow");
+            $(this).find('.card-body').removeClass("shadow");
             $(".awesome-marker[data-location='" + location_id +"' ]").removeClass("awesome-marker_hover");
           }
         );
@@ -108,14 +109,14 @@ var waypoint = new Waypoint({
     $(".card").hover(
           function() {
             var location_id = $(this).data("location");
-            $(this).addClass("shadow");
+            $(this).find('.card-body').addClass("shadow");
             $(".awesome-marker[data-location='" + location_id +"' ]").addClass("awesome-marker_hover");
           }
         );
         $(".card").mouseleave(
           function() {
             var location_id = $(this).data("location");
-            $(this).removeClass("shadow");
+            $(this).find('.card-body').removeClass("shadow");
             $(".awesome-marker[data-location='" + location_id +"' ]").removeClass("awesome-marker_hover");
           }
         );

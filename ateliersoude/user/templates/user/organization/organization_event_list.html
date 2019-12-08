@@ -9,7 +9,7 @@
     <h1 class="mt-4 mb-4">Tous les évènements liés à {{ organization }}</h1>
 
     <div class="card-columns">
-      {% include "event/event_cards.html" with event_list=event_list %}
+      {% include "event/event_cards.html" with event_list=event_list card_size='col-md-4' %}
     </div>
 
     {% if is_paginated %}

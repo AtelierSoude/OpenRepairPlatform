@@ -115,6 +115,8 @@ h5{
 
 #breadcrumb-sticky-wrapper, #search_tab-sticky-wrapper{
 z-index: 2;
+position: relative;
+
 }
 
 .breadcrumb{
@@ -123,7 +125,6 @@ z-index: 2;
   border-width: 0;
   background-color: white !important;
   z-index: 2;
-  position: relative;
 }
 
 /* leaflet reset style */

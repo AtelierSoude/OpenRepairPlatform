@@ -107,7 +107,9 @@
           </div>
         {% if not event.is_free %}
           {% if event.remaining_seats > 0 %}
-            {% include "event/register.html" with event=event %}
+            {% if minimal != True %}
+              {% include "event/register.html" with event=event %}
+            {% endif %}
           {% else %}
           <a class="btn btn-block btn-outline-danger"> Complet</a>
           {% endif %}

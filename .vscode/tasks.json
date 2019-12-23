@@ -11,8 +11,8 @@
                 "exec",
                 "openrepairplatform_selenium_1",
                 "python3",
-                "-m",
-                "pytest",
+                // "-m",
+                // "pytest",
                 "/tests/integration_tests.py",
                 "-v"
             ],

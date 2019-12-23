@@ -49,7 +49,7 @@ Then, run the tests with `docker exec openrepairplatform_django_1 pytest --disab
 Integration tests are run using a Docker image containing a chrome Selenium installation and a VNC server.
 It is possible to debug the tests using a local VNC client that connects to the VNC server in the Docker container, that allows to graphically see what the selenium test is doing on the site.
 
-To install the VNC client:
+To install the VNC client on your local computer:
 
 `sudo apt-get install krdc`
 
@@ -64,7 +64,7 @@ To see the running chrome sessions:
 
 To launch the tests :
 
-First, start the Docker container with `docker-compose up`, and then:
+First, start the Docker containers with `docker-compose up`, and then:
 
 `docker exec openrepairplatform_selenium_1 python3 -m pytest /tests/integration_tests.py -v`
 
@@ -74,3 +74,4 @@ If you uncomment the following lines, it will wait for a debugger to connect bef
 ptvsd.enable_attach()
 ptvsd.wait_for_attach()
 ```
+

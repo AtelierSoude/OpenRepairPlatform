@@ -153,3 +153,13 @@ postgres_data/
 cpdb.sh
 
 migrations/
+
+ateliersoude/integration_tests/images/
+ateliersoude/static/admin/
+ateliersoude/static/bootstrap/
+ateliersoude/static/django_tinymce/
+ateliersoude/static/fontawesome/
+ateliersoude/static/import_export/
+ateliersoude/static/rest_framework/
+ateliersoude/static/tiny_mce/
+ateliersoude/staticfiles/

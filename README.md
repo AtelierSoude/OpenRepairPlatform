@@ -38,12 +38,18 @@ You can click on any step of the call stack, and browser the variables, test som
 
 The local code is mounted in a Docker volume, so if you change the code locally and refresh your browser, you will immediatly see the changes.
 
+### Run unit tests
+
+First, start the containers with `docker-compose up`
+Then, run the tests with `docker exec openrepairplatform_django_1 pytest --disable-pytest-warnings --cov=ateliersoude --cov-report term-missing`
+
+
 ### Run integration tests
 
 Integration tests are run using a Docker image containing a chrome Selenium installation and a VNC server.
 It is possible to debug the tests using a local VNC client that connects to the VNC server in the Docker container, that allows to graphically see what the selenium test is doing on the site.
 
-To install:
+To install the VNC client:
 
 `sudo apt-get install krdc`
 
@@ -62,3 +68,9 @@ First, start the Docker container with `docker-compose up`, and then:
 
 `docker exec openrepairplatform_selenium_1 python3 -m pytest /tests/integration_tests.py -v`
 
+If you uncomment the following lines, it will wait for a debugger to connect before running the tests
+
+```
+ptvsd.enable_attach()
+ptvsd.wait_for_attach()
+```

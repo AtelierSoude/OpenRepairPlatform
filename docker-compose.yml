@@ -38,7 +38,7 @@ services:
         sed -i "s/{{EMAIL_PASSWORD}}/${EMAIL_PASSWORD}/" /etc/cron.d/ateliersoude
         service cron start
         chown -R ateliersoude:ateliersoude /srv/*
-        python3 -m pip install ptvsd django-debug-toolbar
+        python3 -m pip install ptvsd django-debug-toolbar django_extensions
         python3 manage.py migrate
         python3 manage.py shell -c "from ateliersoude.user.models import CustomUser; CustomUser.objects.create_superuser('admin@example.com', 'adminpass')" || true
         python3 manage.py collectstatic --noinput
@@ -67,7 +67,7 @@ services:
         sed -i "s/{{EMAIL_PASSWORD}}/${EMAIL_PASSWORD}/" /etc/cron.d/ateliersoude
         service cron start
         chown -R ateliersoude:ateliersoude /srv/*
-        python3 -m pip install ptvsd django-debug-toolbar
+        python3 -m pip install ptvsd django-debug-toolbar django_extensions
         python3 manage.py migrate
         python3 manage.py shell -c "from ateliersoude.user.models import CustomUser; CustomUser.objects.create_superuser('admin@example.com', 'adminpass')" || true
         python3 manage.py collectstatic --noinput
@@ -80,6 +80,7 @@ services:
     volumes:
       - /dev/shm:/dev/shm
       - ./ateliersoude/integration_tests:/tests
+      - $PWD/ateliersoude:/ateliersoude
     ports:
       - 4444:4444
       - 5900:5900

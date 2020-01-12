@@ -6,6 +6,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
+import time
 
 from datetime import datetime
 
@@ -40,8 +41,8 @@ class TestGeneral:
         logbutton.click()
 
         # fill the id and connect
-        xpath_connect = "/html/body/main/section"
-        "/div[2]/div[2]/div/form/div[4]/button"
+        xpath_connect = "/html/body/main/section/div[2]" \
+            + "/div[2]/div/form/div[4]/button"
         connectbutton = WebDriverWait(self.driver, 20).until(
             EC.element_to_be_clickable((By.XPATH, xpath_connect)))
 

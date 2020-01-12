@@ -66,7 +66,6 @@ class TestGeneral:
         self.driver.find_elements(By.XPATH, xpath)[0].send_keys("orga " + str(datetime.now()))
 
         xpath = "//*[@id='id_description_ifr']"
-        # self.driver.find_elements(By.XPATH, xpath)[0].click()
         self.driver.execute_script("tinyMCE.activeEditor.setContent('%s')" % "dscription")
 
         xpath = "//*[@id='id_email']"

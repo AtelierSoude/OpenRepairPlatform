@@ -246,3 +246,37 @@ position: relative;
     padding: 0px !important;
   }
 }
+
+// Menu hack for mobile slide left up // 
+
+@media (max-width: 992px) {
+
+  .navbar-collapse {
+      position: fixed;
+      top: 50px;
+      left:-600px;
+      padding-left: 15px;
+      padding-right: 15px;
+      padding-bottom: 15px;
+      width: 80%;
+      height: 800px;
+      transition: all 0.3s ease;
+      display: block;
+  }
+  .navbar-collapse.collapsing {
+      height: auto !important;
+      margin-right: 50%;
+      transition: all 0.3s ease;
+      display: block;
+  }
+  .navbar-collapse.show {
+      right:20%;
+      left:0px;
+  }
+  .navbar-collapse .nav-item {
+    text-transform: uppercase;
+    font-size: 18px;
+    padding: 10px;
+  }
+}
+

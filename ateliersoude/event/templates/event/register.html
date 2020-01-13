@@ -69,7 +69,7 @@
       {% tokenize user=request.user event=event action='book' as tok %}
       <a href="{% url 'event:book' tok %}" class="btn btn-block btn-success">Je participe !</a>
     {% else %}
-      <a class="btn btn-outine-danger">Participation impossible</a>
+      <a class="btn btn-outine-danger">J'anime cet évènement</a>
     {% endif %}
   {% else %}
     <a class="btn btn-block btn-outline-danger"> Complet</a>

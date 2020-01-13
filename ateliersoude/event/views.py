@@ -481,7 +481,7 @@ class AddActiveEventView(HasVolunteerPermissionMixin, RedirectView):
         event_pk = kwargs["pk"]
         event = get_object_or_404(Event, pk=event_pk)
         event.organizers.add(self.request.user)
-        messages.success(self.request, "Ajouté aux organisateurs !")
+        messages.success(self.request, "Ajouté aux animateurs !")
 
         return reverse("event:detail", args=[event.id, event.slug])
 
@@ -494,6 +494,6 @@ class RemoveActiveEventView(HasVolunteerPermissionMixin, RedirectView):
         event_pk = kwargs["pk"]
         event = get_object_or_404(Event, pk=event_pk)
         event.organizers.remove(self.request.user)
-        messages.success(self.request, "Retiré des organisateurs !")
+        messages.success(self.request, "Retiré des animateurs !")
 
         return reverse("event:detail", args=[event.id, event.slug])

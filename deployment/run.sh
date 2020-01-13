@@ -26,6 +26,7 @@ sudo docker run \
 sudo docker run \
     --name=ateliersoude_nginx \
     -p 80:80 \
+    -p 443:443 \
     -d --restart=unless-stopped \
     -v $PWD/ateliersoude_static:/srv/static:ro \
     -v $PWD/ateliersoude_media:/srv/media:ro \

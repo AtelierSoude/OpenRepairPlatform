@@ -23,11 +23,33 @@
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-          <form action="{% url 'user:create_and_book' %}?event={{ event.pk }}" method="post">
             <div class="modal-body">
-              {% csrf_token %}
-              {% bootstrap_form form=register_form %}
+            <h5 class="text-left">
+              Avant de réserver, prenez connaissance des informations suivante:
+            </h5>
+            <ul class="pl-1">
+              <li class="text-left">
+                <small>un mail de confirmation contenant un lien d'annulation vous sera envoyé.</small>
+              </li>
+              {% for condition in event.conditions.all %}
+              <li class="text-left">
+                {% if condition.price > 0 %}
+                  <span class="badge badge-pill badge-secondary">
+                    {{ condition.price }}€</span> 
+                  {% else %}
+                  {% endif %}
+                <small>{{ condition.description | safe }}</small>
+              </li>
+              {% empty %}
+              <li class="text-left pb-3"><small>La participation est libre / pas de condition d'accès</small>
+              </li>
+            </ul>
+              {% endfor %}
             </div>
+            <small>Pensez à vous <a href="{% url "login" %}" title="se connecter">connecter ou créer/activer votre compte</a></small>
+            <form action="{% url 'user:create_and_book' %}?event={{ event.pk }}" method="post">
+                {% csrf_token %}
+                {% bootstrap_form form=register_form %}
             <div class="modal-footer">
               <input type="submit" value="Réserver" class="btn btn-primary"/>
             </div>

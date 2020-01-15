@@ -116,10 +116,11 @@
             <div class="card-columns">
               {% include "event/activity/cards.html" with activities=organization.activities.all %}
             </div>
-            <h3 class="mt-4">Locaux</h3>
+            <h4 class="mt-4">Locaux</h4>
             {% if organization.places.all %}
             <div class="card-columns">
               {% for place in organization.places.all %}
+               {% if place.is_visible %}
                 <div class="card">  
                   <a class="card-link" href="{% url 'location:detail' place.pk place.slug %}">
                     <div class="card-body">
@@ -128,20 +129,9 @@
                       <span class="badge badge-secondary">{{ place.category }}</span>
                       {{ place.description | safe | truncatewords_html:10 }}
                     </div>
-                    {% if is_admin %}
-                      <div class="card-footer">
-                        <a class="btn btn-info btn-sm" href="{% url 'location:edit' place.id %}">
-                          <i class="fa fa-pencil-alt"></i>
-                          Editer ce lieu
-                        </a>
-                        <a class="btn btn-danger btn-sm" href="{% url 'location:delete' place.id %}">
-                          <i class="fa fa-trash-alt"></i>
-                          Supprimer ce lieu
-                        </a>
-                      </div>
-                    {% endif %}
                   </a>
                 </div>
+                {% endif %}
               {% endfor %}
             </div>
           {% else %}

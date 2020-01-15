@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "import_export",
     "initial_avatars",
     "django_gravatar",
+    'django_extensions'
 ]
 
 

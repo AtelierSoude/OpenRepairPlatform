@@ -7,10 +7,10 @@
   <nav class="navbar navbar-expand-lg p-0" id="header">
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon">
-        <i class="fa fa-bars"></i>
+        <i class="fa fa-bars" style="font-size: 30px;" id="toggler"></i>
       </span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+    <div class="collapse navbar-collapse bg-primary" id="navbarTogglerDemo03">
       <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
         <li class="nav-item active">
         <a href="{% url "homepage" %}">Accueil</a>
@@ -56,7 +56,7 @@
 
       <!-- Menu dropdown -->
       <div class="navbar-brand arrow-login">
-        <a class="nav-link mr-3 dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <a class="nav-link mr-2 dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <i class=""></i>
         </a>
         <div class="dropdown-menu " aria-labelledby="navbarDropdownMenuLink">
@@ -82,5 +82,4 @@
     </div>
   </nav>
 </header>
-
 {% endblock %}

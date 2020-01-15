@@ -30,11 +30,18 @@ class Place(models.Model):
     longitude = models.FloatField()
     latitude = models.FloatField()
     picture = models.ImageField(
-        upload_to="places/",
-        blank=True,
+        upload_to="places/", 
+        blank=True, 
         null=True,
         validators=[validate_image],
         verbose_name=_("Image"),
+    )
+    is_visible = models.NullBooleanField(
+        _("Lieu principal"),
+        default=False, 
+        help_text=_(
+            "Est-ce que ce lieu est un lieu de votre organisation ? Si vous cochez oui, il sera visible sur votre page"
+        ),
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

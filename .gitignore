@@ -81,6 +81,7 @@ celerybeat-schedule
 *.sage.py
 
 # dotenv
+deployment/django/django.env
 .env
 deployment/django/django.env
 # virtualenv

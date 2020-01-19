@@ -195,7 +195,7 @@ class AddMemberToOrganization(HasActivePermissionMixin, RedirectView):
             email=self.request.POST["email"]
         ).first()
         url = reverse(
-            "organization_page", kwargs={"orga_slug": self.organization.slug},
+            "organization_members", kwargs={"orga_slug": self.organization.slug},
         )
         if user in self.organization.members.all():
             messages.warning(self.request, "L'utilisateur est déjà membre.")
@@ -282,6 +282,10 @@ class UserDetailView(DetailView):
                 Q(registered_events__organization__in=list(organizations))
                 | Q(presents_events__organization__in=list(organizations))
             )
+
+            for organization in organizations.all():
+                if organization in custom_user.member_organizations.all():
+                    return custom_user
 
             if custom_user in can_see_users:
                 return custom_user

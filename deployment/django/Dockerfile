@@ -1,6 +1,6 @@
 FROM debian:buster
 
-RUN apt update && apt upgrade -y && apt install -y python3-pip libpq-dev locales locales-all cron make ruby ruby-dev
+RUN apt update && apt upgrade -y && apt install -y --force-yes python3-pip libpq-dev locales locales-all cron make ruby ruby-dev
 RUN gem install sass
 RUN pip3 install uwsgi
 
@@ -24,6 +24,8 @@ COPY deployment/django/start.sh /
 COPY ateliersoude ./ateliersoude
 COPY deployment/django/ateliersoude.cron /etc/cron.d/ateliersoude
 
+RUN CHMOD 0644 /etc/cron.d/ateliersoude
+RUN cron
 RUN useradd ateliersoude
 
 EXPOSE 8000

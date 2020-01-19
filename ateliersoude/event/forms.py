@@ -36,6 +36,11 @@ class EventForm(ModelForm):
             widget=forms.CheckboxSelectMultiple,
             required=False,
         )
+        self.fields["location"] = forms.ModelChoiceField(
+            queryset=self.orga.conditions,
+            widget=forms.CheckboxSelectMultiple,
+            required=False,
+        )
 #       self.fields["activity"] = forms.ModelChoiceField(
 #           queryset=self.orga.activities
 #       )

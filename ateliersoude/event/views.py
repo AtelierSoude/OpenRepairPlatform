@@ -406,7 +406,7 @@ class BookView(RedirectView):
         msg_html = render_to_string("event/mail/book.html", context=locals())
 
         date = event.date.strftime("%d %B")
-        subject = f"Votre réservation du {date} pour {event.name} à {event.location.name}"
+        subject = f"Votre réservation du {date} pour {event.activity.name} à {event.location.name}"
 
         send_mail(
             subject,

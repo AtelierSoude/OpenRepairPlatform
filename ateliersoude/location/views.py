@@ -12,7 +12,7 @@ from django.views.generic import (
 from ateliersoude.location.forms import PlaceForm
 from ateliersoude.location.models import Place
 from ateliersoude.user.mixins import PermissionOrgaContextMixin
-from ateliersoude.mixins import RedirectQueryParamView, HasAdminPermissionMixin
+from ateliersoude.mixins import RedirectQueryParamView, HasAdminPermissionMixin, HasActivePermissionMixin
 
 
 class PlaceView(PermissionOrgaContextMixin, DetailView):

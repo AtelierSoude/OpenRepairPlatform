@@ -24,7 +24,7 @@ COPY deployment/django/start.sh /
 COPY ateliersoude ./ateliersoude
 COPY deployment/django/ateliersoude.cron /etc/cron.d/ateliersoude
 
-RUN CHMOD 0644 /etc/cron.d/ateliersoude
+RUN chmod 0644 /etc/cron.d/ateliersoude
 RUN cron
 RUN useradd ateliersoude
 

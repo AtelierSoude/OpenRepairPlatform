@@ -19,6 +19,8 @@ INSTALLED_APPS = [
     "ateliersoude.user",
     "ateliersoude.location",
     "django.contrib.sites",
+    'dal',
+    'dal_select2',
     "django.contrib.admin",
     "django.contrib.admindocs",
     "django.contrib.auth",

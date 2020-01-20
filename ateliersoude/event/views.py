@@ -1,5 +1,6 @@
 import logging
 from datetime import timedelta
+from dal import autocomplete
 
 from django.contrib import messages
 from django.core import signing
@@ -27,6 +28,7 @@ from ateliersoude.event.forms import (
     RecurrentEventForm,
 )
 from ateliersoude.event.models import Activity, Condition, Event, Participation
+from ateliersoude.location.models import Place
 from ateliersoude.event.templatetags.app_filters import tokenize
 from ateliersoude.mixins import (
     RedirectQueryParamView,
@@ -177,7 +179,6 @@ class EventListView(ListView):
                 date__gte=form.cleaned_data["starts_after"]
             )
         return queryset
-
 
 class EventFormView(HasActivePermissionMixin):
     model = Event
@@ -497,3 +498,17 @@ class RemoveActiveEventView(HasVolunteerPermissionMixin, RedirectView):
         messages.success(self.request, "Retiré des animateurs !")
 
         return reverse("event:detail", args=[event.id, event.slug])
+
+#### autocomplete views for event form ####
+
+class PlaceAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            return Place.objects.none()
+
+        qs = Place.objects.all().order_by("name")
+
+        if self.q:
+            qs = qs.filter(name__istartswith=self.q)
+
+        return qs

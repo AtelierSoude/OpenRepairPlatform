@@ -1,5 +1,6 @@
 from datetime import timedelta, date as dt
 from dateutil import rrule, relativedelta
+from dal import autocomplete
 
 from django import forms
 from django.forms import ModelForm
@@ -36,10 +37,6 @@ class EventForm(ModelForm):
             widget=forms.CheckboxSelectMultiple,
             required=False,
         )
-#       self.fields["activity"] = forms.ModelChoiceField(
-#           queryset=self.orga.activities
-#       )
-
     class Meta:
         model = Event
         fields = [
@@ -55,6 +52,9 @@ class EventForm(ModelForm):
             "organizers",
             "conditions",
         ]
+        widgets = {
+            'location': autocomplete.ModelSelect2(url='event/place_autocomplete')
+        }
 
 
 class RecurrentEventForm(forms.ModelForm):

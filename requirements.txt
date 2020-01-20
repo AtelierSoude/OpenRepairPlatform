@@ -64,3 +64,4 @@ weasyprint==47
 webassets==0.12.1         # via django-assets
 webencodings==0.5.1       # via bleach, html5lib, tinycss2
 django-gravatar2
+django-autocomplete-light

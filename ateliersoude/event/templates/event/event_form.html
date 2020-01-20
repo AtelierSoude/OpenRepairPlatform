@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
-{% load bootstrap4 %}
-{% load assets %}
+{% load bootstrap4 assets static %}
 
 {% block extra_css %}
   {% assets "css_create_edit_event" %}
@@ -45,4 +44,7 @@
   {% assets "js_create_edit_event" %}
     <script src="{{ ASSET_URL }}"></script>
   {% endassets %}
+
+{{ form.media }}
+
 {% endblock %}

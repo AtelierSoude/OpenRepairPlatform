@@ -187,12 +187,13 @@ position: relative;
     position: initial !important;
   }
   .header_detail_page{
-    height: 200px;
+   /* height: 200px; */
     z-index: 2;
   }
   #side_nav{
     background-color: #fee56e !important; 
     width:100%;
+    min-height: 100px;
   }
   .header_detail_page_picture{
     float: left;
@@ -208,6 +209,9 @@ position: relative;
     font-size: 18px;
     padding-top: 10px !important;
     line-height: 75px;
+  }
+  #side_nav .badge{
+    margin-top: 37px !important;
   }
   #v-pills-tab{
     width:100%;

@@ -16,7 +16,7 @@
     <div class="row no-gutters">
       <section class="header_detail_page p-0 text-center col-md-3">
         <div class="bg-grey" id="side_nav">
-            <div class="pt-5 header_detail_page_picture">
+            <div class="pt-5 header_detail_page_picture d-sm-none">
               {% if place.picture %}
                 <img class="img-responsive w-100" src="{{ place.picture.url }}" alt="image_lieu">
             {% endif %}
@@ -29,7 +29,11 @@
       </section>
       <section class="h-100 col-md-9 p-4">
             <div class="">
-            <h4 class="mt-4">Description
+            <h4 class="mt-4">Description  
+              <i class="fa fa-users"></i> créé par
+              <a href="{% url 'organization_page' place.organization.slug %}">
+                {{ place.organization.name }}
+              </a>
               {% if is_admin %}
               <p class="lead float-right">
                 <a class="btn btn-success btn-sm" href="{% url 'location:edit' place.id %}">

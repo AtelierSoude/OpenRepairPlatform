@@ -113,7 +113,7 @@ h5{
 
 /* breadcrumb (chemin navigation) */
 
-#breadcrumb-sticky-wrapper, #search_tab-sticky-wrapper{
+#breadcrumb-sticky-wrapper, #search_tab-sticky-wrapper, #h_nav-sticky-wrapper{
 z-index: 2;
 position: relative;
 
@@ -203,6 +203,9 @@ position: relative;
        height: auto;
        margin: 0px !important;
      }
+   }
+   .user-title{
+     text-align: left !important;
    }
    .header_detail_page_title{
      padding-left:20px;

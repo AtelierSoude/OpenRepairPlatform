@@ -7,6 +7,7 @@ from django.forms import ModelForm
 
 from ateliersoude.event.models import Event, Activity, Condition
 from ateliersoude.location.models import Place
+from ateliersoude.user.models import CustomUser
 from ateliersoude.user.models import Organization
 
 
@@ -28,8 +29,8 @@ class EventForm(ModelForm):
         self.fields["organizers"] = forms.ModelMultipleChoiceField(
             queryset=(
                 self.orga.actives.all() | self.orga.admins.all()
-            ).distinct(),
-            widget=forms.CheckboxSelectMultiple,
+            ).distinct().order_by("first_name"),
+            widget=autocomplete.ModelSelect2Multiple(url='event/' + self.orga.slug + '/user_orga_autocomplete'),
             required=False,
         )
         self.fields["conditions"] = forms.ModelMultipleChoiceField(
@@ -53,7 +54,7 @@ class EventForm(ModelForm):
             "conditions",
         ]
         widgets = {
-            'location': autocomplete.ModelSelect2(url='event/place_autocomplete')
+            'location': autocomplete.ModelSelect2(url='event:place_autocomplete'),
         }
 
 

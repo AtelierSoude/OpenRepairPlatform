@@ -29,6 +29,7 @@ from ateliersoude.event.forms import (
 )
 from ateliersoude.event.models import Activity, Condition, Event, Participation
 from ateliersoude.location.models import Place
+from ateliersoude.user.models import CustomUser
 from ateliersoude.event.templatetags.app_filters import tokenize
 from ateliersoude.mixins import (
     RedirectQueryParamView,
@@ -38,7 +39,7 @@ from ateliersoude.mixins import (
 )
 from ateliersoude.user.mixins import PermissionOrgaContextMixin
 from ateliersoude.user.forms import CustomUserEmailForm, MoreInfoCustomUserForm
-from ateliersoude.user.models import CustomUser, Membership, Fee
+from ateliersoude.user.models import CustomUser, Membership, Fee, Organization
 
 logger = logging.getLogger(__name__)
 
@@ -510,5 +511,26 @@ class PlaceAutocomplete(autocomplete.Select2QuerySetView):
 
         if self.q:
             qs = qs.filter(name__istartswith=self.q)
+
+        return qs
+
+class UserOrgaAutocomplete(autocomplete.Select2QuerySetView):
+
+    def get_queryset(self, *args, **kwargs):
+        orga_slug = self.kwargs.get("orga_slug")
+        organization = get_object_or_404(Organization, slug=orga_slug)
+
+        if not self.request.user.is_authenticated:
+            return CustomUser.objects.none()
+
+        request_user_organizations = self.request.user.active_organizations.all().union(
+                self.request.user.volunteer_organizations.all(),
+                self.request.user.admin_organizations.all(),
+        )
+       
+        qs = organization.actives.all().union(organization.admins.all()).distinct().order_by("first_name")
+
+        if self.q:
+            qs = qs.filter(first_name__istartswith=self.q)
 
         return qs

@@ -1,5 +1,7 @@
 {% extends 'organization_page.html' %}
 {% load static %}
+{% block title %}Page de {{organization.name}}: contrôles des préférences{% endblock %}
+
 
 {% block menu_content %}
   {% if is_active %}

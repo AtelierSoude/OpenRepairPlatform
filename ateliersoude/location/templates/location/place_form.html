@@ -1,6 +1,13 @@
 {% extends 'base.html' %}
 {% load assets %}
 {% load bootstrap4 %}
+{% block title %}        
+  {% if place %}
+    Mise à jour de '{{ place }}'
+  {% else %}
+    Création d'un nouveau lieu sur Reparons
+  {% endif %}
+{% endblock %}
 
 {% block extra_css %}
   {% assets "css_autocomplete" %}

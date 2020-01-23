@@ -56,7 +56,6 @@ class CustomUserForm(forms.Form):
         max_length=100
     )
 
-
 class MoreInfoCustomUserForm(forms.ModelForm):
     amount_paid = forms.IntegerField(min_value=0, initial=0)
     date = forms.DateField(

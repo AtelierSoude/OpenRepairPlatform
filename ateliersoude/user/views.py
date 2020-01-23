@@ -6,6 +6,9 @@ from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
 from django.utils import timezone
+import datetime
+from django import forms
+import datetime
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.decorators import method_decorator
 from django.views.generic import (
@@ -207,6 +210,9 @@ class AddMemberToOrganization(HasActivePermissionMixin, RedirectView):
         user = form.save()
         paid = form.cleaned_data["amount_paid"]
         date = form.cleaned_data["date"]
+        if date > datetime.date.today():
+            raise forms.ValidationError("The date cannot be in the future!")
+        return date
         Membership.objects.create(
             organization=self.organization, user=user,
             amount=paid, first_payment=date
@@ -226,6 +232,9 @@ class UpdateMemberView(HasActivePermissionMixin, UpdateView):
     def form_valid(self, form):
         user = form.save()
         date = form.cleaned_data["date"]
+        if date > datetime.date.today():
+            raise forms.ValidationError("The date cannot be in the future!")
+        return date
         membership = Membership.objects.get(
             organization=self.organization, user=user
         )

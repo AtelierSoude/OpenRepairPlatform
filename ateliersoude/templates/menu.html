@@ -1,20 +1,23 @@
 {% block menu %}
 {% load thumbnail %}
 {% load initialavatar %}
-
+{% load static %}
 
 <header class="header">
   <nav class="navbar navbar-expand-lg p-0" id="header">
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+    <a href="{% url "homepage" %}" class="float-left d-block d-sm-none" style="width:60px;"> 
+      <img src="{% static 'img/logo-reparons-beta.png' %}" class="brand-logo p-1 w-100">
+    </a>
+    <button class="navbar-toggler float-left" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon">
         <i class="fa fa-bars" style="font-size: 30px;" id="toggler"></i>
       </span>
     </button>
+    <a href="{% url "homepage" %}">
+      <img src="{% static 'img/reparons-logo.png' %}" class="brand-logo d-none d-sm-block">
+    </a>
     <div class="collapse navbar-collapse bg-primary" id="navbarTogglerDemo03">
       <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-        <li class="nav-item active">
-        <a href="{% url "homepage" %}">Accueil</a>
-        </li>
         <li class="nav-item">
         <a href="{% url "event:list" %}">Évenements</a>
         </li>
@@ -26,7 +29,7 @@
         </li>
       </ul>
     </div>
-    <div class="navbar navbar-expand-lg d-flex justify-content-end">
+    <div class="navbar navbar-expand-lg d-flex justify-content-end float-right">
       {% if not user.is_authenticated %}
 
         <div class="navbar-brand p-0">
@@ -39,7 +42,7 @@
 
       {% else %}
 
-      <div class="navbar-brand avatar">
+      <div class="navbar-brand avatar float-right">
         <a class="nav-link" href="{{ user.get_absolute_url }}"> 
           {% if user.avatar_img %}
             {% thumbnail user.avatar_img "35x35" crop="center" format="PNG" as im %}

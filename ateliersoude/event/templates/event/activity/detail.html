@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% block title %}A propos de l'activité {{activity}} {% endblock %}
 
 {% block content %}
   {% url "event:activity_list" as activity_list_url %}

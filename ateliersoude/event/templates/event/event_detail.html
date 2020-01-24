@@ -2,7 +2,7 @@
 {% load assets l10n app_filters %}
 {% load thumbnail %}
 {% load initialavatar %}
-
+{% block title %} {{event}} {% endblock %}
 
 {% block extra_css %}
   {% assets "css_detail_event" %}

@@ -1,3 +1,8 @@
+# Be aware 
+
+This application is still in developpment. There is no available  realease at this point. 
+Any contributes are welcome. Please contact us if you want to contribute and we tell you how to.
+
 # Atelier Soudé
 
 OpenRepairPlatform is a Django based application designed to organize collaborative repair structures, features provides organization managment, event publishing, community members managment, repair tracking and sharing.
@@ -5,17 +10,20 @@ OpenRepairPlatform is a Django based application designed to organize collaborat
 The plateform is created by Atelier Soudé, an organization which repair everyday's people electric and electronic objects in Lyon, France.
 
 
-## Develop with Docker
+## Run the application (in Develop mode)
 
-1.Set variables in the deployment/django/django.env file 
+1.Set django variables in `deployment/django/django.env` 
 
-2.Run the following command:
+2.Set postgres variables in `deployment/postgres/postgres.env` 
+
+3.Run the following command:
 
 ```
 docker-compose up
 ```
-
 You can then access `http://127.0.0.1:8000/` with the admin user `admin@example.com` // `adminpass`
+
+4.Create an organization within the `http://127.0.0.1:8000/organizations` path and you can start everythings else 
 
 ### Debug with Visual Studio Code
 

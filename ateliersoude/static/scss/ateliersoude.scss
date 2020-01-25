@@ -62,8 +62,12 @@ h4 {
 
 /* cards */
 .event_list_cards{
- column-count: 2;
-}
+  -moz-column-count: 3;
+  -moz-column-gap: 50px;
+  -webkit-column-count: 3;
+  -webkit-column-gap: 50px;
+  column-count: 3;
+  column-gap: 50px;}
 .card {
   border-radius: 0;
   border : 0px;
@@ -76,15 +80,33 @@ h4 {
   }
 }
 
+.mini-organizers {
+  height:25px;
+}
+
+.mini{
+  left: -05px;
+}
+
+.mini:last-child {
+  left:0px;
+}
+
+
+
 .gravatar{
   border-radius: 50%;
 }
 
+.card-img-crop{
+  max-height: 200px;
+  overflow: hidden;
+}
+
 .event_img {
-  object-fit: none; 
-  object-position: center; 
+ /* object-fit: none; 
+  object-position: center; */
   width: 100%;
-  max-height: 150px;
 }
 
 /* breadcrumb (chemin navigation) */
@@ -206,5 +228,16 @@ h4 {
   .container{
     margin: 0px !important;
     padding: 0px !important;
+  }
+}
+
+.bricklayer .card {
+  margin:10px;
+} 
+
+@media screen and (min-width: 1200px) {
+  .bricklayer-column-sizer {
+    /* divide by 3. */
+    width: 33.3%;
   }
 }

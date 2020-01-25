@@ -7,7 +7,9 @@ The plateform is created by Atelier Soudé, an organization which repair everyda
 
 ## Develop with Docker
 
-Run the following command:
+1.Set variables in the deployment/django/django.env file 
+
+2.Run the following command:
 
 ```
 docker-compose up

@@ -19,7 +19,7 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument(
             "website_url",
-            help="ex: http://dev.atelier-soude.fr:8000"
+            help="ex: https://dev.atelier-soude.fr"
         )
 
     def handle(self, *args, **options):

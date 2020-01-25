@@ -10,7 +10,7 @@
       </button>
         {{ admin_text }}
       {% else %}
-      <button class="btn btn-success btn-block" data-toggle="modal" data-target="#reservation{{ event.pk }}">  
+      <button class="btn btn-success btn-block booking_form" data-toggle="modal" data-target="#reservation{{ event.pk }}">  
         Je participe !
       </button>
       {% endif %}
@@ -23,11 +23,33 @@
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-          <form action="{% url 'user:create_and_book' %}?event={{ event.pk }}" method="post">
             <div class="modal-body">
-              {% csrf_token %}
-              {% bootstrap_form form=register_form %}
+            <h5 class="text-left">
+              Avant de réserver, prenez connaissance des informations suivante:
+            </h5>
+            <ul class="pl-1">
+              <li class="text-left">
+                <small>un mail de confirmation contenant un lien d'annulation vous sera envoyé.</small>
+              </li>
+              {% for condition in event.conditions.all %}
+              <li class="text-left">
+                {% if condition.price > 0 %}
+                  <span class="badge badge-pill badge-secondary">
+                    {{ condition.price }}€</span> 
+                  {% else %}
+                  {% endif %}
+                <small>{{ condition.description | safe }}</small>
+              </li>
+              {% empty %}
+              <li class="text-left pb-3"><small>La participation est libre / pas de condition d'accès</small>
+              </li>
+            </ul>
+              {% endfor %}
             </div>
+            <small>Pensez à vous <a href="{% url "login" %}" title="se connecter">connecter ou créer/activer votre compte</a></small>
+            <form action="{% url 'user:create_and_book' %}?event={{ event.pk }}" method="post">
+                {% csrf_token %}
+                {% bootstrap_form form=register_form %}
             <div class="modal-footer">
               <input type="submit" value="Réserver" class="btn btn-primary"/>
             </div>
@@ -46,10 +68,22 @@
     {% elif request.user not in event.presents.all and request.user not in event.organizers.all %}
       {% tokenize user=request.user event=event action='book' as tok %}
       <a href="{% url 'event:book' tok %}" class="btn btn-block btn-success">Je participe !</a>
+    {% elif request.user in event.organizers.all %}
+      <a class="btn btn-outine-danger">J'anime cet évènement</a>
     {% else %}
-      <a class="btn btn-outine-danger">Participation impossible</a>
+      <a class="btn btn-outine-danger">Je participe déjà</a>
     {% endif %}
   {% else %}
     <a class="btn btn-block btn-outline-danger"> Complet</a>
   {% endif %}
 {% endif %}
+
+{% block extra_js %}
+<script>
+  $(document).ready(function(){
+    $(".booking_form").click(function() {
+      $("#reservation{{ event.pk }}").insertBefore(".header");
+});
+  });
+</script>
+{% endblock %}

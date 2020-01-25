@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
-{% load assets %}
+{% load assets app_filters %}
 {% load l10n %}
+{% block title %}A propos du lieu {{place}}{% endblock %}
 
 {% block extra_css %}
   {% assets "css_detail_place" %}
@@ -11,65 +12,131 @@
 {% block content %}
   {% url "location:list" as location_list_url %}
   {% include "breadcrumb.html" with current=place first_parent_url=location_list_url first_parent_text="Lieux" %}
-  <div class="jumbotron jumbotron-fluid">
-    <div class="container">
-      <h1 class="display-4">{{ place.name|title }}</h1>
-      {% if is_admin %}
-      <p class="lead">
-        <a class="btn btn-primary btn-sm" href="{% url 'location:edit' place.id %}">
-          <i class="fa fa-pencil-alt"></i>
-          Editer ce lieu
-        </a>
-        <a class="btn btn-danger btn-sm" href="{% url 'location:delete' place.id %}">
-          <i class="fa fa-trash-alt"></i>
-          Supprimer ce lieu
-        </a>
-      </p>
-      {% endif %}
-    </div>
-  </div>
-  <section class="container">
-    <div class="card">
-      {% if place.picture %}
-        <img class="img-responsive w-100" src="{{ place.picture.url }}" alt="image_lieu">
-      {% endif %}
-      <div class="card-body">
-        <h5 class="card-subtitle pb-3 mb-2 mt-2 text-muted border-bottom">
-          {{ place.category }} -
-          <small>
-            <i class="fa fa-map-marker"></i>
-            {{ place.address }}
-          </small>
-        </h5>
-        {{ place.description | safe }}
-      </div>
-    </div>
 
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-subtitle pb-3 mb-2 mt-2 text-muted border-bottom">Prochains évènements en ce lieu</h5>
-        <ul>
-          {% for event in place.future_published_events %}
-            <li><a href="{% url 'event:detail' event.pk event.slug %}">{{ event }}</a></li>
-            {% empty %}
-            <i class="fa fa-calendar-times"></i>
-            Aucun évènement planifié ici pour le moment
-          {% endfor %}
-        </ul>
-      </div>
-    </div>
-  </section>
-  <section class="container-fluid" id="place_map" style="height: 90vh"></section>
-
+  <div class="container">
+    <div class="row no-gutters">
+      <section class="header_detail_page p-0 text-center col-md-3">
+        <div class="bg-grey" id="side_nav">
+            <div class="pt-5 header_detail_page_picture d-md-block d-sm-none d-xs-none">
+              {% if place.picture %}
+                <img class="img-responsive w-100" src="{{ place.picture.url }}" alt="image_lieu">
+            {% endif %}
+            </div> 
+            <h2 class="pt-5 header_detail_page_title">{{ place.name|title }}</h2>
+            <div class="card badge badge-pill badge-success p-2 m-1">
+              {{ place.category }}
+            </div>
+        </div>
+      </section>
+      <section class="h-100 col-md-9 p-4">
+            <div class="">
+            <h4 class="mt-4">Description 
+              <small>
+                <i class="fa fa-users"></i> créé par
+                <a href="{% url 'organization_page' place.organization.slug %}">
+                  {{ place.organization.name }}
+                </a>
+              </small> 
+              {% if is_admin %}
+              <p class="lead float-right">
+                <a class="btn btn-success btn-sm" href="{% url 'location:edit' place.id %}">
+                  <i class="fa fa-pencil-alt"></i>
+                  Editer
+                </a>
+                <a class="btn btn-danger btn-sm" href="{% url 'location:delete' place.id %}">
+                  <i class="fa fa-trash-alt"></i>
+                  Supprimer
+                </a>
+              </p>
+              {% endif %}
+            </h4>
+            <div class="card p-4 col-lg">
+              {{ place.description | safe }}
+            </div>
+            <h4 class="mt-4">Adresse</h4>
+              <div class="container-fluid card p-4" id="place_map" style="height: 60vh; top:0px"></div>
+            <h4 class="mt-4">Prochains événements</h4>
+            <div class="card p-4">
+              <div class="table-responsive">
+                <table class="table infinite-container">
+                    <thead class="bg-primary">
+                        <tr>
+                          <th scope="col"><small class="text-white">Date</small></th>
+                          <th scope="col"><small class="text-white">Type</small></th>
+                          <th scope="col"><small class="text-white">Places</small></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                      {% for event in place.future_published_events %}
+                        {% ifchanged %}
+                          <tr>
+                            <td colspan="5" class="bg-light">
+                              <b>{{ event.date|date:"F" }} {{event.date|date:"Y" }}</b>
+                            </td>
+                          </tr>
+                        {% endifchanged %}
+                        <tr class="bg-white">
+                          <td>
+                            <div class="row border-secondary border text-center">
+                              <span class="col-12 bg-secondary">
+                                {{ event.date|date:"N"|upper }}
+                              </span>
+                              <span class="col-12">
+                                {{ event.date|date:"d" }}
+                              </span>
+                            </div>
+                          </td>
+                          <td>
+                            <a href="{% url 'event:detail' event.pk event.activity.slug %}">
+                              <b>{{ event.activity }}</b>
+                            </a>
+                          </td>
+                          <td>
+                            {% if event.is_free %}
+                              Accès libre
+                            {% else %}
+                            <span
+                            class=" float-left
+                              {% if event.remaining_seats <= 0 %}
+                                text-danger
+                              {% elif event.remaining_seats == event.available_seats %}
+                                text-success
+                              {% else %}
+                                text-warning
+                              {% endif %}
+                              ">
+                            <i class="fas fa-users"></i>    
+                              {{ event.remaining_seats}}/{{ event.available_seats }}
+                            </span>
+                            {% endif %}
+                          </td>
+                        </tr>
+                      {% empty %}
+                      Pas d'évènements planifé ici pour le moment
+                      {% endfor %}
+                    </tbody>
+                </table>
+              </div>
+            </div> 
+        </div>
+      </section>
+</div>
 {% endblock %}
 
 {% block extra_js %}
-  <script>
-    let latitude = {{ place.latitude|unlocalize }};
-    let longitude = {{ place.longitude|unlocalize }};
-    let placeName = "{{ place.name }}";
-  </script>
+<script>
+  $(document).ready(function(){
+    $("#side_nav").sticky({topSpacing:40});
+    $("#breadcrumb").sticky({topSpacing:0});
+  });
+</script>
+<script>
+  let latitude = {{ place.latitude|unlocalize }};
+  let longitude = {{ place.longitude|unlocalize }};
+  let placeName = "{{ place.name }}";
+</script>
   {% assets "js_detail_place" %}
     <script src="{{ ASSET_URL }}"></script>
   {% endassets %}
 {% endblock %}
+

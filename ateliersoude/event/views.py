@@ -1,5 +1,6 @@
 import logging
 from datetime import timedelta
+from dal import autocomplete
 
 from django.contrib import messages
 from django.core import signing
@@ -27,6 +28,7 @@ from ateliersoude.event.forms import (
     RecurrentEventForm,
 )
 from ateliersoude.event.models import Activity, Condition, Event, Participation
+from ateliersoude.location.models import Place
 from ateliersoude.event.templatetags.app_filters import tokenize
 from ateliersoude.mixins import (
     RedirectQueryParamView,
@@ -177,7 +179,6 @@ class EventListView(ListView):
                 date__gte=form.cleaned_data["starts_after"]
             )
         return queryset
-
 
 class EventFormView(HasActivePermissionMixin):
     model = Event
@@ -406,7 +407,7 @@ class BookView(RedirectView):
         msg_html = render_to_string("event/mail/book.html", context=locals())
 
         date = event.date.strftime("%d %B")
-        subject = f"Votre réservation du {date} à {event.location.name}"
+        subject = f"Votre réservation du {date} pour {event.activity.name} à {event.location.name}"
 
         send_mail(
             subject,
@@ -481,7 +482,7 @@ class AddActiveEventView(HasVolunteerPermissionMixin, RedirectView):
         event_pk = kwargs["pk"]
         event = get_object_or_404(Event, pk=event_pk)
         event.organizers.add(self.request.user)
-        messages.success(self.request, "Ajouté aux organisateurs !")
+        messages.success(self.request, "Ajouté aux animateurs !")
 
         return reverse("event:detail", args=[event.id, event.slug])
 
@@ -494,6 +495,20 @@ class RemoveActiveEventView(HasVolunteerPermissionMixin, RedirectView):
         event_pk = kwargs["pk"]
         event = get_object_or_404(Event, pk=event_pk)
         event.organizers.remove(self.request.user)
-        messages.success(self.request, "Retiré des organisateurs !")
+        messages.success(self.request, "Retiré des animateurs !")
 
         return reverse("event:detail", args=[event.id, event.slug])
+
+#### autocomplete views for event form ####
+
+class PlaceAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            return Place.objects.none()
+
+        qs = Place.objects.all().order_by("name")
+
+        if self.q:
+            qs = qs.filter(name__istartswith=self.q)
+
+        return qs

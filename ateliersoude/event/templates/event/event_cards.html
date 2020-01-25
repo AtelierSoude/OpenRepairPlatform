@@ -1,119 +1,146 @@
 {% load thumbnail %}
 {% load initialavatar %}
 
-{% for event in event_list %}
-<div class="card infinite-item mb-4" data-location="{{event.location.pk|escape}}">
-  <div class="card-header bg-primary"> 
-    <span class="text-secondary">
-      <i class="far fa-calendar-alt"></i>    
-      {{ event.date|date:"l j F Y " }} <br>
-      <span class="text-white">
-        <i class="far fa-clock"></i>  
-        {{ event.starts_at }} à {{ event.ends_at }}
+  {% for event in event_list %}
+  <div class="card infinite-item mb-4 {{card_size}} float-left" style="background-color: #86868600 !important;" data-location="{{event.location.pk|escape}}">
+    <div class="card-header bg-primary"> 
+      <span class="text-secondary">
+        <i class="far fa-calendar-alt"></i>    
+        {{ event.date|date:"l j F Y " }} <br>
+        <span class="text-white">
+          <i class="far fa-clock"></i>  
+          {{ event.starts_at }} à {{ event.ends_at }}
+        </span>
       </span>
-    </span>
-    <div class="position-absolute" style="top: 10px; right:10px">
-      {% if event.is_free %}
-      <span class="text-success">Entrée libre</span>
-      {% elif event.remaining_seats <= 0 %}
-      <span class="text-danger">Complet</span>
-      {% else %}
-      <span
-      class="
-        {% if event.remaining_seats == event.available_seats %}
-          text-success
+      <div class="position-absolute" style="top: 10px; right:20px">
+        {% if event.is_free %}
+        <span class="text-success">Entrée libre</span>
+        {% elif event.remaining_seats <= 0 %}
+        <span class="text-danger">Complet</span>
         {% else %}
-          text-warning
+        <span
+        class="
+          {% if event.remaining_seats == event.available_seats %}
+            text-success
+          {% else %}
+            text-warning
+          {% endif %}
+          ">
+        <i class="fas fa-users"></i>    
+          {{ event.remaining_seats}}
+        </span>
         {% endif %}
-        ">
-      <i class="fas fa-users"></i>    
-        {{ event.remaining_seats}}
-      </span>
-      {% endif %}
+      </div>
     </div>
+
+    <a class="card-img-crop" href="{% url 'event:detail' event.pk event.slug %}">
+        <span class="text-muted position-absolute" style="top:50px; right:15px">
+          {% if request.user in event.registered.all or request.user in event.presents.all %}
+            <span class="badge badge-success badge-pill">Participant</span>
+            {% endif %}
+            {% if request.user in event.organizers.all %}
+            <span class="badge badge-success badge-pill">Animateur</span>
+            {% endif %}
+        </span>
+      {% if minimal != True and event.activity.picture %}
+          {% thumbnail event.activity.picture "400" format="PNG" as im %}
+            <img class="card-img-top rounded-0 event_img" src="{{ im.url }}"/>
+          {% endthumbnail %}
+      {% endif %}
+      <div class="card-body p-0 d-flex flex-column bg-white">
+      <div class="p-2">
+        <div style="min-height: 48px;">
+          <h5 class="">{{ event.activity.name|truncatechars:40 }}</h5>
+        </div>
+        <small class="text-muted">
+          <i class="fa fa-map-marker-alt"></i>
+          {{ event.location.name }}
+        </small>
+        <br>
+
+        <div class="mini-organizers">
+          {% for orga in event.organizers.all %}
+          <div class="position-relative float-left mini">
+            {% if orga.avatar_img %}
+              {% thumbnail orga.avatar_img "25x25" crop="center" format="PNG" as im %}
+                <img src="{{ im.url }}" class="rounded-circle"/>
+              {% endthumbnail %}
+            {% else %}
+              {% if orga.first_name %}
+                {% get_initial_avatar orga 25 'circle' %}
+              {% endif %}
+            {% endif %}
+          </div>
+            {% endfor %}
+          <small class="align-middle
+            {% if event.needed_organizers != 0 %}
+              {% if event.needed_organizers > event.organizers.all.count %}
+                text-danger
+              {% elif event.needed_organizers <= event.organizers.all.count %}
+                text-success
+              {% else %}
+                text-warning
+              {% endif %}
+            {% endif %}"> 
+            {% if event.needed_organizers != 0 %}
+              {{ event.organizers.all.count }}/{{ event.needed_organizers }} animateurs
+            {% endif %}
+          </small>
+        </div>
+
+        {% if minimal != True %}
+        <hr>
+        <small>
+        {{ event.activity.description | safe | truncatewords_html:5 }}
+        </small>
+        {% endif %}
+      </div>
+      </a>
+      <footer class="text-muted text-center align-self-end mt-auto col-lg ml-0 mr-0 pl-0 pr-0">
+        <div class="text-center col-lg">
+            {% if event.organization.picture %}
+            {% thumbnail event.organization.picture "30x30" crop="left" format="PNG" as im %}
+              <img class="img-fluid rounded-circle square-2" src="{{ im.url }}" alt="organization img">
+            {% endthumbnail %}
+            {% endif %}
+            <small>Organisé par {{ event.organization }}</small>
+          </div>
+        {% if is_volunteer and user not in event.registered.all %}
+<form
+    {% if user in event.organizers.all %}
+    action="{% url 'event:remove_active' event.pk %}"
+    {% else %}
+    action="{% url 'event:add_active' event.pk %}"
+    {% endif %}
+    method="post"
+    class="d-inline">
+  {% csrf_token %}
+  {% if user in event.organizers.all %}
+  <button class="btn btn-warning btn-block" type="submit">
+    je n'anime plus
+  </button>
+  {% else %}
+  <button class="btn btn-primary btn-block" type="submit">
+    J'anime
+  </button>
+  {% endif %}
+</form>
+{% endif %}
+        {% if not event.is_free %}
+          {% if event.remaining_seats > 0 %}
+            {% if minimal != True %}
+              {% include "event/register.html" with event=event %}
+            {% endif %}
+          {% else %}
+          <a class="btn btn-block btn-outline-danger"> Complet</a>
+          {% endif %}
+        {% else %}
+          <a class="btn btn-block btn-outline-danger"> Sans réservation</a>
+        {% endif %}
+      </footer>
+      </div>
   </div>
 
-  <a class="card-img-crop" href="{% url 'event:detail' event.pk event.slug %}">
-      <span class="text-muted position-absolute" style="top:50px; right:0px">
-        {% if request.user in event.registered.all or request.user in event.presents.all %}
-          <span class="badge badge-success badge-pill">Inscrit</span>
-          {% endif %}
-          {% if request.user in event.organizers.all %}
-          <span class="badge badge-success badge-pill">Organisateur</span>
-          {% endif %}
-      </span>
-    {% if minimal != True and event.activity.picture %}
-        {% thumbnail event.activity.picture "400" format="PNG" as im %}
-          <img class="card-img-top rounded-0 event_img" src="{{ im.url }}"/>
-        {% endthumbnail %}
-    {% endif %}
-    <div class="card-body p-0">
-    <div class="p-2">
-      <h5 class="">{{ event.activity.name }}</h5>
-      <small class="text-muted">
-        <i class="fa fa-map-marker-alt"></i>
-        {{ event.location.name }}
-      </small>
-      <br>
-
-      <div class="mini-organizers">
-        {% for orga in event.organizers.all %}
-        <div class="position-relative float-left mini">
-          {% if orga.avatar_img %}
-            {% thumbnail orga.avatar_img "25x25" crop="center" format="PNG" as im %}
-              <img src="{{ im.url }}" class="rounded-circle"/>
-            {% endthumbnail %}
-          {% else %}
-            {% if orga.first_name %}
-              {% get_initial_avatar orga 25 'circle' %}
-            {% endif %}
-          {% endif %}
-        </div>
-          {% endfor %}
-        <small class="align-middle
-          {% if event.needed_organizers != 0 %}
-            {% if event.needed_organizers > event.organizers.all.count %}
-              text-danger
-            {% elif event.needed_organizers <= event.organizers.all.count %}
-              text-success
-            {% else %}
-              text-warning
-            {% endif %}
-          {% endif %}"> 
-          {% if event.needed_organizers != 0 %}
-            {{ event.organizers.all.count }}/{{ event.needed_organizers }} animateurs
-          {% endif %}
-        </small>
-      </div>
-
-      {% if minimal != True %}
-      <hr>
-      <small>
-      {{ event.activity.description | safe | truncatewords_html:5 }}
-      </small>
-      {% endif %}
-    </div>
-      <div class="text-center">
-        {% if event.organization.picture %}
-        {% thumbnail event.organization.picture "30x30" crop="left" format="PNG" as im %}
-          <img class="img-fluid rounded-circle square-2" src="{{ im.url }}" alt="organization img">
-        {% endthumbnail %}
-        {% endif %}
-        <small>Organisé par {{ event.organization }}</small>
-      </div>
-    </a>
-    <footer class="text-muted text-center">
-      {% if not event.is_free %}
-        {% if event.remaining_seats > 0 %}
-          {% include "event/register.html" with event=event %}
-        {% else %}
-        <a class="btn btn-block btn-outline-danger"> Complet</a>
-        {% endif %}
-      {% else %}
-        <a class="btn btn-block btn-outline-danger"> Sans réservation</a>
-      {% endif %}
-    </footer>
-    </div>
-</div>
 {% endfor %}
+
 

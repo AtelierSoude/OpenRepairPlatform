@@ -6,5 +6,5 @@ ateliersoude.egg-info/
 postgres_data/
 venv/
 ateliersoude_static/
-!ateliersoude_static/img/*
+!/ateliersoude_static/img/**
 ateliersoude_media/

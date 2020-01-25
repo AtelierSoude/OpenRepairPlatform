@@ -23,13 +23,13 @@ services:
     ports:
       - 8000:8000
       - 5678:5678
+    env_file:
+      - deployment/django/django.env
     depends_on:
       - db
     working_dir: /srv/app
     environment:
       - DJANGO_SETTINGS_MODULE=ateliersoude.settings.dev_docker
-      - EMAIL_PASSWORD=admin@example.com
-      - SECRET_KEY=adminpass
     command:
       - /bin/bash
       - -c
@@ -60,3 +60,11 @@ services:
       - django
     environment:
       - VNC_NO_PASSWORD=1
+  nginx:
+    build: 
+      context: .
+      dockerfile: ./deployment/nginx/Dockerfile
+    ports:
+      - 443:8000
+    depends_on:
+      - django

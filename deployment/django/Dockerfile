@@ -19,6 +19,7 @@ RUN mkdir /srv/app /srv/static /srv/media
 WORKDIR /srv/app
 
 COPY manage.py .
+COPY static/img/ ateliersoude/static/img/
 COPY deployment/django/uwsgi.ini .
 COPY deployment/django/start.sh /
 COPY ateliersoude ./ateliersoude

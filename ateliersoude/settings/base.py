@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "import_export",
     "initial_avatars",
     "django_gravatar",
+    "captcha",
 ]
 
 
@@ -139,3 +140,10 @@ MESSAGE_TAGS = {messages.ERROR: "danger"}
 
 # Avatar Innitials Settings
 AVATAR_COLORS = ((254, 229, 110), (8, 51, 66), (43, 230, 171),)
+
+# Captcha 
+RECAPTCHA_PUBLIC_KEY = '6LcV2NIUAAAAAI22LSqCLyKKh8aHLLbI9Ipu6aIc'
+RECAPTCHA_PRIVATE_KEY = '6LcV2NIUAAAAAJl841YkZd_ksrJHNhA06FTdHaQw'
+RECAPTCHA_PROXY = {'http': 'http://dev.atelier-soude.fr', 'https': 'https://dev.atelier-soude.fr'}
+RECAPTCHA_DOMAIN = 'www.recaptcha.net'
+

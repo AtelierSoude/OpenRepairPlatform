@@ -2,7 +2,8 @@
 
 {% for activity in activities %}
   {% ifchanged %}
-    <h4 class="pl-4 d-block">{{activity.category}}</h4>
+    <div class="clearfix"></div>
+    <h4 class="pl-3 pt-3 d-block">{{activity.category}}</h4>
   {% endifchanged %}
     <div class="card float-left col-md-4" style="background-color: #86868600 !important;">
       <a class="card-link card-img-crop" href="{% url 'event:activity_detail' activity.pk activity.slug %}">

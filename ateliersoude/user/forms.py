@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 from datetime import date as dt
 from captcha.fields import ReCaptchaField
-from captcha.widgets import ReCaptchaV2Invisible
+from captcha.widgets import ReCaptchaV2Checkbox
 
 from .models import CustomUser, Organization
 
@@ -47,7 +47,7 @@ class UserUpdateForm(forms.ModelForm):
 
 
 class CustomUserEmailForm(forms.ModelForm):
-    captcha = ReCaptchaField(widget=ReCaptchaV2Invisible)
+    captcha = ReCaptchaField(widget=ReCaptchaV2CheckBox)
 
     class Meta:
         model = CustomUser

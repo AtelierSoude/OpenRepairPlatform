@@ -47,7 +47,7 @@ class UserUpdateForm(forms.ModelForm):
 
 
 class CustomUserEmailForm(forms.ModelForm):
-    captcha = ReCaptchaField(widget=ReCaptchaV2CheckBox)
+    captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox)
 
     class Meta:
         model = CustomUser

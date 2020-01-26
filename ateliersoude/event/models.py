@@ -36,9 +36,27 @@ class Condition(models.Model):
             return f"{self.name} - {self.price}€"
         return self.name
 
+class ActivityCategory(models.Model):
+    name = models.CharField(verbose_name=_("Activity type"), max_length=100)
+    slug = models.SlugField(blank=True)
+    history = HistoricalRecords()
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        return super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.name
 
 class Activity(models.Model):
     name = models.CharField(verbose_name=_("Activity type"), max_length=100)
+    category = models.ForeignKey(
+        ActivityCategory, 
+        related_name="category",
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+    )
     slug = models.SlugField(blank=True)
     organization = models.ForeignKey(
         Organization, on_delete=models.CASCADE, related_name="activities"

@@ -1,6 +1,9 @@
 {% load thumbnail %}
 
 {% for activity in activities %}
+  {% ifchanged %}
+    <h2 class="d-block">{{activity.category}}</h2>
+  {%endifchanged %}
   <div class="card">
     <a class="card-link" href="{% url 'event:activity_detail' activity.pk activity.slug %}">
       {% if activity.picture %}

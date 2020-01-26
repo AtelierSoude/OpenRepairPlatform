@@ -6,10 +6,15 @@ from import_export.admin import ImportExportModelAdmin
 from import_export.widgets import ForeignKeyWidget, ManyToManyWidget
 from import_export.fields import Field
 
-from .models import Activity, Condition, Event, Participation
+from .models import Activity, Condition, Event, Participation, ActivityCategory
 from ateliersoude.user.models import CustomUser, Organization
 from ateliersoude.location.models import Place
 
+
+class ActivityCategoryResource(resources.ModelResource):
+
+    class Meta:
+        model = ActivityCategory
 
 class ActivityResource(resources.ModelResource):
     organization = Field(
@@ -20,7 +25,6 @@ class ActivityResource(resources.ModelResource):
 
     class Meta:
         model = Activity
-
 
 class EventResource(resources.ModelResource):
     activity = Field(
@@ -79,6 +83,10 @@ class ParticipationResource(resources.ModelResource):
         model = Participation
 
 
+class ActivityCategoryAdmin(ImportExportModelAdmin, SimpleHistoryAdmin):
+    resource_class = ActivityCategoryResource
+
+
 class ActivityAdmin(ImportExportModelAdmin, SimpleHistoryAdmin):
     resource_class = ActivityResource
 
@@ -94,4 +102,5 @@ class ParticipationAdmin(ImportExportModelAdmin, SimpleHistoryAdmin):
 admin.site.register(Event, EventAdmin)
 admin.site.register(Condition, SimpleHistoryAdmin)
 admin.site.register(Activity, ActivityAdmin)
+admin.site.register(ActivityCategory, ActivityCategoryAdmin)
 admin.site.register(Participation, ParticipationAdmin)

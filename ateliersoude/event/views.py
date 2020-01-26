@@ -94,6 +94,10 @@ class ActivityListView(ListView):
     model = Activity
     template_name = "event/activity/list.html"
 
+    def get_queryset(self):
+        queryset = Activity.objects.all().order_by('category__name')
+        return queryset
+
 
 class ActivityFormView(HasAdminPermissionMixin):
     model = Activity

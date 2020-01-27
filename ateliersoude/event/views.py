@@ -3,6 +3,7 @@ from datetime import timedelta
 from dal import autocomplete
 
 from django.contrib import messages
+from django.db.models import Count
 from django.core import signing
 from django.core.mail import send_mail
 from django.http import HttpResponseRedirect
@@ -95,7 +96,7 @@ class ActivityListView(ListView):
     template_name = "event/activity/list.html"
 
     def get_queryset(self):
-        queryset = Activity.objects.all().order_by('category__name')
+        queryset = Activity.objects.all().annotate(category_count=Count('category')).order_by('-category_count')
         return queryset
 
 

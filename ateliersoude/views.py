@@ -11,7 +11,7 @@ from ateliersoude.user.models import (
     Organization,
     Fee
 )
-from ateliersoude.event.models import Event
+from ateliersoude.event.models import Event, Activity
 from ateliersoude.user.forms import (
     CustomUserEmailForm,
     MoreInfoCustomUserForm,
@@ -20,6 +20,7 @@ from ateliersoude.user.forms import (
 from ateliersoude.event.forms import (
     EventSearchForm
 )
+from django.db.models import Count
 from datetime import datetime
 EVENTS_PER_PAGE = 6
 
@@ -72,6 +73,9 @@ class OrganizationPageView(PermissionOrgaContextMixin, DetailView):
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
+        context ["activities_list"] =  Activity.objects.filter(
+            organization=self.organization).annotate(category_count=Count(
+                'category')).order_by('-category_count')
         context["event_list"] = Event.future_published_events().filter(
             organization=self.organization).order_by('date')[0:10]
         context["emails"] = [

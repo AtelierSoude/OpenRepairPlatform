@@ -33,7 +33,11 @@
       </div>
     </div>
 
-    <a class="card-img-crop" href="{% url 'event:detail' event.pk event.slug %}">
+    <a class="        
+    {% if minimal != True %}
+    card-img-crop
+    {% endif %}" 
+    href="{% url 'event:detail' event.pk event.slug %}">
         <span class="text-muted position-absolute" style="top:50px; right:15px">
           {% if request.user in event.registered.all or request.user in event.presents.all %}
             <span class="badge badge-success badge-pill">Participant</span>

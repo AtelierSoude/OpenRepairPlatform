@@ -206,14 +206,14 @@ class Event(models.Model):
         return get_future_published_events(cls.objects)
 
     def __str__(self):
-        if self.activity.name:
+        if self.activity:
             activity_name = self.activity.name
             return activity_name
         else: 
-            activity_name = 'no activity type'
+            activity_name = "no activity type"
             return activity_name
         full_title = "%s du %s" % (
-            self.activity_name,
+            activity_name,
             self.date.strftime("%d %B"),
         )
         return full_title

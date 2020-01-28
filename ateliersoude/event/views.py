@@ -96,8 +96,8 @@ class ActivityListView(ListView):
     template_name = "event/activity/list.html"
 
     def get_queryset(self):
-        queryset = Activity.objects.all().order_by('cateogry__name')
-        queryset = queryset.annotate(category_count=Count('category')).order_by('-category_count')
+        queryset = Activity.objects.all().annotate(category_count=Count('category')).order_by('-category_count')
+        queryset = queryset.order_by('category__name')
         return queryset
 
 

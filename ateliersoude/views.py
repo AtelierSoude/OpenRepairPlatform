@@ -73,9 +73,9 @@ class OrganizationPageView(PermissionOrgaContextMixin, DetailView):
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
-        activities = Activity.objects.filter(organization=self.organization).order_by('cateogry__name')
-        context ["activities_list"] = activities.annotate(category_count=Count('category')
+        activities = Activity.objects.filter(organization=self.organization).annotate(category_count=Count('category')
             ).order_by('-category_count')
+        context ["activities_list"] = activities.order_by('category__name')
         context["event_list"] = Event.future_published_events().filter(
             organization=self.organization).order_by('date')[0:10]
         context["emails"] = [

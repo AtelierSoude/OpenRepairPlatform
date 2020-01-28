@@ -161,13 +161,7 @@ class Event(models.Model):
     history = HistoricalRecords()
 
     def save(self, *args, **kwargs):
-        if self.activity.name:
-            slug = self.activity.name
-            return slug
-        else: 
-            slug = 'no activity type'
-            return slug
-        self.slug = slugify(self.slug)
+        self.slug = slugify(self.activity.name)
         return super().save(*args, kwargs)
 
     @property
@@ -206,14 +200,8 @@ class Event(models.Model):
         return get_future_published_events(cls.objects)
 
     def __str__(self):
-        if self.activity:
-            activity_name = self.activity.name
-            return activity_name
-        else: 
-            activity_name = "no activity type"
-            return activity_name
         full_title = "%s du %s" % (
-            activity_name,
+            self.activity.name,
             self.date.strftime("%d %B"),
         )
         return full_title

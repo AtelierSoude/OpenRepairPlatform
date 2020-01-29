@@ -232,9 +232,6 @@ class UpdateMemberView(HasActivePermissionMixin, UpdateView):
     def form_valid(self, form):
         user = form.save()
         date = form.cleaned_data["date"]
-        if date > datetime.date.today():
-            raise forms.ValidationError("The date cannot be in the future!")
-        return date
         membership = Membership.objects.get(
             organization=self.organization, user=user
         )
@@ -242,8 +239,7 @@ class UpdateMemberView(HasActivePermissionMixin, UpdateView):
             membership.first_payment = date
             membership.amount = form.cleaned_data["amount_paid"]
         elif date < membership.first_payment.date():
-            membership.first_payment = date
-            membership.amount += form.cleaned_data["amount_paid"]
+            pass
         else:
             membership.amount += form.cleaned_data["amount_paid"]
         membership.save()

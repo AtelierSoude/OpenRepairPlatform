@@ -88,7 +88,7 @@ class UserCreateAndBookView(CreateView):
                         'event:detail',
                         kwargs={
                             "pk": request.GET["event"],
-                            "slug": event.activity.slug
+                            "slug": event.slug
                         })
                 )
             return redirect(self.get_success_url())

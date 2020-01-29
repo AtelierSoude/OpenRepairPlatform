@@ -161,7 +161,13 @@ class Event(models.Model):
     history = HistoricalRecords()
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.activity.name)
+        if self.activity.name:
+            slug = self.activity.name
+            return slug
+        else: 
+            slug = 'no activity type'
+            return slug
+        self.slug = slugify(slug)
         return super().save(*args, kwargs)
 
     @property

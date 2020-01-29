@@ -87,7 +87,7 @@
                             </div>
                           </td>
                           <td>
-                            <a href="{% url event.get_absolute_url %}">
+                            <a href="{% url 'event:detail' event.pk event.activity.slug %}">
                               <b>{{ event.activity }}</b>
                             </a>
                           </td>

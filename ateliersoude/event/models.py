@@ -163,10 +163,8 @@ class Event(models.Model):
     def save(self, *args, **kwargs):
         if self.activity.name:
             slug = self.activity.name
-            return slug
         else: 
             slug = 'no activity type'
-            return slug
         self.slug = slugify(slug)
         return super().save(*args, kwargs)
 
@@ -206,8 +204,12 @@ class Event(models.Model):
         return get_future_published_events(cls.objects)
 
     def __str__(self):
+        if self.activity.name:
+            activity_name = self.activity.name
+        else: 
+            activity_name = 'no activity type'
         full_title = "%s du %s" % (
-            self.activity.name,
+            activity_name,
             self.date.strftime("%d %B"),
         )
         return full_title

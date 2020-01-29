@@ -50,8 +50,14 @@
                 </div>
               </td>
               <td>
-                <a href="{% url 'event:detail' event.pk event.activity.slug %}">
-                  <b>{{ event.activity }}</b>
+                <a href="{% url 'event:detail' event.pk event.slug %}">
+                  <b>
+                    {% if event.activity %}
+                      {{ event.activity }}
+                    {% else %}
+                      Type d'activité supprimé
+                    {% endif %}
+                  </b>
                 </a>
               </td>
               <td>

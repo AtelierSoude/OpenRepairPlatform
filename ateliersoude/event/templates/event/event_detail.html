@@ -110,17 +110,20 @@
                 {% if event.activity.picture %}
                   <img class="img-responsive col-md-6 h-100 p-0" src="{{ event.activity.picture.url }}" alt="activity illustration">
                 {% endif %}
-    
+
+                {% if event.activity %}                
                 <div class="col-md-6">
                   <b>{{event.activity.name}}</b>
                   <small class="">
                   {{ event.activity.description | safe | truncatewords_html:7 }}
                   </small>
                 </div>
-
                 <a href="{% url 'event:activity_detail' event.activity.pk event.activity.slug %}" class="btn btn-primary btn-sm col-md-12 float-right">
                     <i class="fa fa-eye"></i>
                 </a>
+                {% else %}
+                  Type d'activité supprimé
+                {% endif %}
               </div>
             </div>
             {% endif %}
@@ -145,20 +148,24 @@
     {% if is_volunteer %}
     <h3 class="text-center text-success pt-4">Evenement sans réservations</h3>
     {% else %}
-      {% if event.activity.picture %}
-        <div class="col-lg h-25 overflow-hidden m-4 mb-0" style="padding-right: 60px !important">
-          <img class="img-fluid position-relative" style="top:-100px" src="{{ event.activity.picture.url }}" alt="activity illustration">
+      {% if event.activity %}                
+        {% if event.activity.picture %}
+          <div class="col-lg h-25 overflow-hidden m-4 mb-0" style="padding-right: 60px !important">
+            <img class="img-fluid position-relative" style="top:-100px" src="{{ event.activity.picture.url }}" alt="activity illustration">
+          </div>
+        {% endif %}
+        <div class="col-lg pb-0 pl-4 pr-4 pt-0">
+          <h5> L'événement </h5>
+          <div>
+            {{ event.activity.description | safe | truncatewords_html:50 }}
+            <a href="{% url 'event:activity_detail' event.activity.pk event.activity.slug %}">
+              En savoir plus ...
+            </a>
+          </div>
         </div>
       {% endif %}
-      <div class="col-lg pb-0 pl-4 pr-4 pt-0">
-        <h5> L'événement </h5>
-        <div>
-          {{ event.activity.description | safe | truncatewords_html:50 }}
-          <a href="{% url 'event:activity_detail' event.activity.pk event.activity.slug %}">
-            En savoir plus ...
-          </a>
-        </div>
-      </div>
+    {% else %}
+        Type d'activité supprimé
     {% endif %}
   {% endif %}
 

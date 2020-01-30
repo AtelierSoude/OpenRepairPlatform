@@ -282,6 +282,9 @@
                   <tr>
                     <td>
                     le {{ fee.date|date:"d F Y" }}
+                    {% if fee.membership %}
+                      <span class="badge badge-pill badge-warning">référence</span></h5>
+                    {% endif %}
                     </td>
                     <td>
                       {% if fee.participation %}

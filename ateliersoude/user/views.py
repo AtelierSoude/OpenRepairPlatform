@@ -210,15 +210,12 @@ class AddMemberToOrganization(HasActivePermissionMixin, RedirectView):
         user = form.save()
         paid = form.cleaned_data["amount_paid"]
         date = form.cleaned_data["date"]
-        if date > datetime.date.today():
-            raise forms.ValidationError("The date cannot be in the future!")
-        return date
+        fee = Fee.objects.create(
+            amount=paid, user=user, organization=self.organization, date=date
+        )
         Membership.objects.create(
             organization=self.organization, user=user,
-            amount=paid, first_payment=date
-        )
-        Fee.objects.create(
-            amount=paid, user=user, organization=self.organization, date=date
+            amount=paid, first_payment=date, fee=fee
         )
         messages.success(self.request, f"Vous avez ajouté {user} avec succes.")
         return url
@@ -232,23 +229,30 @@ class UpdateMemberView(HasActivePermissionMixin, UpdateView):
     def form_valid(self, form):
         user = form.save()
         date = form.cleaned_data["date"]
+        amount = form.cleaned_data["amount_paid"]
+        up_date_fees = Fee.objects.filter(
+            organization=self.organization, user=user, date__gte=date
+        )
         membership = Membership.objects.get(
             organization=self.organization, user=user
         )
-        if membership.first_payment < timezone.now() - timedelta(days=365):
-            membership.first_payment = date
-            membership.amount = form.cleaned_data["amount_paid"]
-        elif date < membership.first_payment.date():
-            pass
-        else:
-            membership.amount += form.cleaned_data["amount_paid"]
-        membership.save()
-        Fee.objects.create(
-            amount=form.cleaned_data["amount_paid"],
+        fee = Fee.objects.create(
+            amount=amount,
             user=user,
             organization=self.organization,
             date=date,
         )
+        if form.cleaned_data["first_fee"] or membership.first_payment < timezone.now() - timedelta(days=365):
+            membership.first_payment = date
+            membership.amount = amount
+            membership.fee = fee
+            for fee in up_date_fees:
+                membership.amount += fee.amount
+        elif date < membership.first_payment.date():
+            pass
+        elif date > membership.first_payment.date():
+            membership.amount += amount
+        membership.save()
         return super().form_valid(form)
 
     def get_success_url(self, *args, **kwargs):

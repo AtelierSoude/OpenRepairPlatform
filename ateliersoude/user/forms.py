@@ -62,7 +62,8 @@ class MoreInfoCustomUserForm(forms.ModelForm):
         initial=dt.today(),
         widget=forms.DateInput(attrs={"type": "date"}, format="%Y-%m-%d"),
     )
-    
+    first_fee = forms.BooleanField(required=False)
+
     class Meta:
         model = CustomUser
         fields = ["email", "first_name", "last_name", "street_address"]

@@ -230,9 +230,8 @@ class UpdateMemberView(HasActivePermissionMixin, UpdateView):
         user = form.save()
         date = form.cleaned_data["date"]
         amount = form.cleaned_data["amount_paid"]
-        up_date_fees = Fee.objects.filter(
-            organization=self.organization, user=user, date__gte=date
-        )
+        fees = Fee.objects.filter(organization=self.organization, user=user)
+        up_date_fees = fees.filter(date__gte=date)
         membership = Membership.objects.get(
             organization=self.organization, user=user
         )
@@ -242,9 +241,9 @@ class UpdateMemberView(HasActivePermissionMixin, UpdateView):
             organization=self.organization,
             date=date,
         )
-        if form.cleaned_data["first_fee"] or membership.first_payment < timezone.now() - timedelta(days=365):
+        if form.cleaned_data["first_fee"] or membership.first_payment < timezone.now() - timedelta(days=365) or not fees :
             membership.first_payment = date
-            membership.amount = amount
+            membership.amount = 0
             membership.fee = fee
             for fee in up_date_fees:
                 membership.amount += fee.amount
@@ -495,21 +494,34 @@ class FeeDeleteView(
         self.object = self.get_object()
         fee = self.object
         membership = Membership.objects.get(user=fee.user, organization=fee.organization)
-        membership.amount -= fee.amount
+        fees = Fee.objects.filter(user=membership.user, organization=membership.organization)
         try:    
             fee.participation.amount = 0
             fee.participation.save()
         except ObjectDoesNotExist:
             pass
-        fee.delete()
-        fees = Fee.objects.filter(user=membership.user, organization=membership.organization).order_by('date')
-        if fees.count() == 0 :
+        if fee.date >= membership.first_payment.date():
+            membership.amount -= fee.amount
+        try:
+            has_membership = (fee.membership is not None)
+            if has_membership:
+                next_fee = fees.filter(date__gt=fee.date).last()
+                if not next_fee:
+                    prev_fee = fees.filter(date__lt=fee.date).first()
+                    if prev_fee:
+                        membership.amount = prev_fee.amount
+                        membership.fee = prev_fee
+                        membership.first_payment = prev_fee.date
+                if next_fee:
+                    membership.fee = next_fee
+                    membership.first_payment = next_fee.date
+        except ObjectDoesNotExist:
+            pass
+        fee.delete()        
+        if not fees:
             membership.delete()
         else:
-            a_year_ago = timezone.now() - timedelta(days=365)
-            filtered_fees = fees.filter(date__gt=a_year_ago)
-            membership.first_payment = filtered_fees.first().date
-        membership.save()
+            membership.save()
         messages.success(request, "La cotisation a bien été supprimée")
         return HttpResponseRedirect(reverse('user:user_detail', kwargs={"pk": membership.user.pk}))
 

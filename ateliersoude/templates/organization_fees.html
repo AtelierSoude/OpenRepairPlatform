@@ -21,7 +21,7 @@
             {% ifchanged %}
               <tr>
                 <td colspan="5" class="bg-light">
-                  <b>{{fee.date|date:"F" }} {{event.date|date:"Y" }}</b>
+                  <b>{{fee.date|date:"F Y" }}</b>
                 </td>
               </tr>
             {% endifchanged %}
@@ -30,22 +30,23 @@
                 <span class="col-12">
                 {{fee.date|date:"d" }}
                 </span>
-            </td>
-            <td>
+              </td>
+              <td>
                 <a href="{% url 'user:user_detail' fee.user.pk %}">
                   <b>{{fee.user}}</b>
                 </a>
-            </td>
-            <td>
+              </td>
+              <td>
                 {% if fee.participation %}
                     <a href="{% url 'event:detail' fee.participation.event.pk fee.participation.event.slug %}">{{fee.participation.event}}</a>
                 {% else %}
                     Cotisation manuelle
                 {% endif %}
-            </td>
-            <td>
-                <small>{{fee.amount }}</small>
-            </td>
+              </td>
+              <td class="text-right">
+                <b>{{ fee.amount }}€</b><br>
+                <small>{{ fee.get_payment_display }}</small>   
+              </td>
             </tr>
           {% empty %}
           Pas de cotisations

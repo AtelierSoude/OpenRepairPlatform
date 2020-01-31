@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 from datetime import date as dt
 
-from .models import CustomUser, Organization
+from .models import CustomUser, Organization, Fee
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -58,12 +58,20 @@ class CustomUserForm(forms.Form):
 
 class MoreInfoCustomUserForm(forms.ModelForm):
     amount_paid = forms.IntegerField(min_value=0, initial=0)
+    payment = forms.ChoiceField(
+        choices=[
+            (1, "Monnaie"),
+            (2, "Banque"),
+            (3, "Chèque"),
+            (4, "CB"),
+        ],
+        label="Type de paiement",
+    )
     date = forms.DateField(
         initial=dt.today(),
         widget=forms.DateInput(attrs={"type": "date"}, format="%Y-%m-%d"),
     )
     first_fee = forms.BooleanField(required=False)
-
     class Meta:
         model = CustomUser
         fields = ["email", "first_name", "last_name", "street_address"]

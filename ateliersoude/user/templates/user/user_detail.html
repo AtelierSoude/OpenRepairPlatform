@@ -293,8 +293,9 @@
                         Cotisation manuelle
                       {% endif %}
                     </td>
-                    <td>
-                      <b> {{ fee.amount }}€ </b>   
+                    <td class="text-right">
+                      <b>{{ fee.amount }}€</b><br>
+                      <small>{{ fee.get_payment_display }}</small>   
                    </td>
                     <td>
                     <a class="btn btn-danger btn-sm" href="{% url 'user:fee_delete' fee.id %}">

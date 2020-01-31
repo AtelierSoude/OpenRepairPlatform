@@ -240,6 +240,7 @@ class UpdateMemberView(HasActivePermissionMixin, UpdateView):
             user=user,
             organization=self.organization,
             date=date,
+            payment=form.cleaned_data["payment"]
         )
         if form.cleaned_data["first_fee"] or membership.first_payment < timezone.now() - timedelta(days=365) or not fees :
             membership.first_payment = date

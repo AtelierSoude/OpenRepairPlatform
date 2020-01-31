@@ -187,6 +187,19 @@ class Organization(models.Model):
 
 
 class Fee(models.Model):
+    PAYMENT_CASH = "1"
+    PAYMENT_BANK = "2"
+    PAYMENT_BANK_CHECK = "3"
+    PAYMENT_CB = "4"
+    PAYMENTS = (
+        (PAYMENT_CASH, _("Espèces")),
+        (PAYMENT_BANK, _("Banque")),
+        (PAYMENT_BANK_CHECK, _("Chèque")),
+        (PAYMENT_CB, _("CB")),
+    )
+    payment = models.CharField(
+        max_length=1, choices=PAYMENTS, blank=True, default=PAYMENT_CASH
+    )
     date = models.DateField(default=timezone.now)
     amount = models.PositiveIntegerField(default=0)
     user = models.ForeignKey(

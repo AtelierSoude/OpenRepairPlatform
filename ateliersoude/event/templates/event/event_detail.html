@@ -166,6 +166,8 @@
     {% if not event.is_free %}
       {% if is_active %}
         <h5 class="mt-4">Total perçus: {{ total_fees }}€</h5>
+        <h5 class="mt-4">Total CB: {{ total_fees_CB }}€</h5>
+
           <form action="{% url 'event:close' event.pk %}" method="post" class="d-inline">
             {% csrf_token %}
             <button class="btn btn-primary btn-sm type="submit" onclick="return confirm('Êtes-vous sûrs de vouloir clôturer l\'évènement?')">

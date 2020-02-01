@@ -296,11 +296,11 @@
             {% if membership.organization in user.admin_organizations.all or user.volunteer_organizations.all or user.active_organizations.all or object == user %}
               <small>depuis le {{ membership.first_payment|date:"d F Y" }}</small>
               {% if membership.current_contribution == 0 %} 
-                <small>class="text-danger" >Pas à jour</small>
+                <small class="text-danger">Pas à jour</small>
               {% elif membership.current_contribution >= membership.organization.advised_fee %}
-                <small class="text-success" >A jour </small>
+                <small class="text-success">A jour </small>
               {% else %}
-                <small class="text-warning" >Incomplet </small>
+                <small class="text-warning">Incomplet </small>
               {% endif %}
               <span class="badge badge-pill badge-success float-right">{{ membership.current_contribution }}€</span></h5>
               <table class="table table-striped table-hover">

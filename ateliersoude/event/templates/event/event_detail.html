@@ -231,9 +231,9 @@
                       {% filter_orga queryset=participation.user.memberships organization=event.organization as membership %}
                       {% if membership %}
                         {% if membership.current_contribution == 0 %} 
-                        <span class="badge badge-pill badge-primary text-danger float-left" >{{ membership.current_contribution }}€</span>
+                          <span class="badge badge-pill badge-primary text-danger float-left" >{{ membership.current_contribution }}€</span>
                         {% elif membership.current_contribution >= event.organization.advised_fee %}
-                          <spann class="badge badge-pill badge-primary text-success float-left">{{ membership.current_contribution }}€</span>
+                          <span class="badge badge-pill badge-primary text-success float-left">{{ membership.current_contribution }}€</span>
                         {% else %}
                           <span class="badge badge-pill badge-primary text-warning float-left" >{{ membership.current_contribution }}€</span>
                         {% endif %}

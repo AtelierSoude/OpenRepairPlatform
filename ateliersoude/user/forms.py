@@ -60,10 +60,11 @@ class MoreInfoCustomUserForm(forms.ModelForm):
     amount_paid = forms.IntegerField(min_value=0, initial=0)
     payment = forms.ChoiceField(
         choices=[
-            (1, "Monnaie"),
-            (2, "Banque"),
+            (1, "Espèces"),
+            (2, "Online"),
             (3, "Chèque"),
             (4, "CB"),
+            (4, "Gonettes"),
         ],
         label="Type de paiement",
     )

@@ -56,6 +56,14 @@
                     {% endfor %}
                     {% for organization in object.volunteer_organizations.all %}
                     <small class="">
+                        Membre volontaire de
+                        <a href="{% url 'organization_page' organization.slug %}">
+                            {{ organization.name }}
+                        </a>
+                    </small> 
+                    {% endfor %}
+                    {% for organization in object.active_organizations.all %}
+                    <small class="">
                         Membre actif de
                         <a href="{% url 'organization_page' organization.slug %}">
                             {{ organization.name }}
@@ -273,9 +281,16 @@
           {% for membership in object.memberships.all %}
             <div class="card p-4 mb-4">
               <h5 class="pb-2">{{ membership.organization }}
-            {% if membership.organization in user.admin_organizations.all or user.volunteer_organizations.all  %}
+            {% if membership.organization in user.admin_organizations.all or user.volunteer_organizations.all or user.active_organizations.all or object == user %}
               <small>depuis le {{ membership.first_payment|date:"d F Y" }}</small>
-              <span class="badge badge-pill badge-success float-right">{{ membership.amount }}€</span></h5>
+              {% if membership.current_contribution == 0 %} 
+                <small>class="text-danger" >Pas à jour</small>
+              {% elif membership.current_contribution >= membership.organization.advised_fee %}
+                <small class="text-success" >A jour </small>
+              {% else %}
+                <small class="text-warning" >Incomplet </small>
+              {% endif %}
+              <span class="badge badge-pill badge-success float-right">{{ membership.current_contribution }}€</span></h5>
               <table class="table table-striped table-hover">
               {% for fee in fees %}
                 {% if fee.organization == membership.organization %}
@@ -298,9 +313,11 @@
                       <small>{{ fee.get_payment_display }}</small>   
                    </td>
                     <td>
+                    {% if membership.organization in user.admin_organizations.all or user.volunteer_organizations.all or user.active_organizations.all %}
                     <a class="btn btn-danger btn-sm" href="{% url 'user:fee_delete' fee.id %}">
                         <i class="fa fa-trash-alt"></i>
                       </a>
+                    {% endif %}
                     </td>
                   </tr>
                   {% endif %}

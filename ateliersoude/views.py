@@ -128,18 +128,21 @@ class OrganizationFeesView(
     model = Fee
     template_name = "organization_fees.html"
     context_object_name = "fees"
-    paginate_by = 50
+    paginate_by = 100
 
     def get_queryset(self):
         self.object = self.organization
         return self.model.objects.filter(
             organization=self.organization
-        ).order_by("-date")
+        ).order_by("-date").exclude(amount=0)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["accounting_tab"] = 'active'
         context["organization"] = self.organization
+        context["total_fees"] = sum(
+            [fee.amount for fee in self.get_queryset().all()]
+        )
         return context
 
 class OrganizationEventsView(

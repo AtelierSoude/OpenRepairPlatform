@@ -23,8 +23,30 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
-        Nous devons garder une trace des personnes présentes aux ateliers, veuillez compléter ces info svp
+      <div class="modal-body text-center">
+        <br>
+        <ul class="text-left">
+          <b>Note(s) :</b>
+          <li>
+            La contribution minimale pour cette organisation est de
+            <span class="badge badge-pill badge-secondary">{{ event.organization.min_fee }}€</span>
+            et la contribution totale conseillée est de
+            <span class="badge badge-pill badge-success">{{ event.organization.advised_fee }}€</span>
+          </li>
+          {% if event.organization.fee_description %}
+            <li>{{ event.organization.fee_description }}</li>
+          {% endif %}
+        </ul>
+        {% if anonymous_user and anonymous_user.first_name %}
+          <span class="h4">
+            {% filter_orga queryset=user.memberships organization=event.organization as membership %}
+            {% if membership %}
+              {{ anonymous_user }} a payé <span class="badge badge-pill badge-primary">{{ membership.current_contribution }}€</span> depuis le {{ membership.first_payment|date:"d F Y" }}
+            {% else %}
+              {{ anonymous_user }} n'a pas encore contribué pour <span class="badge badge-pill badge-primary">{{ event.organization }}</span>
+            {% endif %}
+          </span>
+        {% endif %}
         <form
             {% if anonymous_user %}
               action="{% url 'user:present_with_more_info' event.pk anonymous_user.pk %}"
@@ -38,28 +60,6 @@
             {% csrf_token %}
             {% bootstrap_form form=form %}
           </div>
-          <b>Note(s) :</b>
-          <ul>
-            <li>
-              La contribution minimale pour cette organisation est de
-              <span class="badge badge-pill badge-secondary">{{ event.organization.min_fee }}€</span>
-              et la contribution totale conseillée est de
-              <span class="badge badge-pill badge-success">{{ event.organization.advised_fee }}€</span>
-            </li>
-            {% if event.organization.fee_description %}
-              <li>{{ event.organization.fee_description }}</li>
-            {% endif %}
-            {% if anonymous_user and anonymous_user.first_name %}
-              <li>
-                {% filter_orga queryset=user.memberships organization=event.organization as membership %}
-                {% if membership %}
-                  {{ anonymous_user }} a payé <b>{{ membership.current_contribution }}€</b> depuis le {{ membership.first_payment|date:"d F Y" }}
-                {% else %}
-                  {{ anonymous_user }} n'a pas encore contribué pour <span class="badge badge-pill badge-primary">{{ event.organization }}</span>
-                {% endif %}
-              </li>
-            {% endif %}
-          </ul>
           <div class="modal-footer">
             <input type="submit" value="Enregistrer" class="btn btn-primary">
           </div>

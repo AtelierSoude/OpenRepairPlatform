@@ -278,20 +278,36 @@ class AbsentView(RedirectView):
 
         event.registered.add(user)
         participation = event.participations.filter(user=user).first()
+        fees = Fee.objects.filter(user=user, organization=event.organization)
+        related_fee = participation.fee
         if participation and participation.saved:
             contribution = Membership.objects.filter(
                 user=participation.user, organization=event.organization
             ).first()
             if contribution:
-                contribution.amount -= participation.amount
-                fee = Fee.objects.filter(
-                    organization=event.organization,
-                    user=participation.user,
-                    date=event.date,
-                    amount=participation.amount,
-                )
-                fee.delete()
-                contribution.save()
+                if related_fee == contribution.fee:
+                    contribution.amount -= related_fee.amount
+                    next_fee = fees.filter(date__gt=related_fee.date).last()
+                    if not next_fee:
+                        prev_fee = fees.filter(date__lt=related_fee.date).first()
+                        if prev_fee:
+                            contribution.amount = prev_fee.amount
+                            contribution.fee = prev_fee
+                            contribution.first_payment = prev_fee.date
+                    if next_fee:
+                        contribution.fee = next_fee
+                        contribution.first_payment = next_fee.date
+                elif event.date > contribution.first_payment.date():
+                    contribution.amount -= related_fee.amount
+                else: 
+                    pass
+                if related_fee:
+                    related_fee.delete()
+                if not fees:
+                    contribution.delete()
+                else:
+                    contribution.save()           
+                
         event.presents.remove(user)
         messages.success(self.request, f"{user} a été marqué comme absent !")
 
@@ -446,28 +462,26 @@ class CloseEventView(HasActivePermissionMixin, RedirectView):
             contribution, created = Membership.objects.get_or_create(
                 user=participation.user, organization=event.organization
             )
-            related_fee = Fee.objects.create(
-                amount=participation.amount,
-                user=participation.user,
-                organization=event.organization,
-                date=event_date
-            )
-            if participation.saved:
-                amount = 0
-            else:
-                amount = participation.amount
-            if contribution.first_payment.date() < event_date - timedelta(days=365):
-                contribution.first_payment = event_date
-                contribution.amount = amount
-            elif event_date < contribution.first_payment.date():
-                contribution.first_payment = event_date
-                contribution.amount += amount
-            else:
-                contribution.amount += amount
-            participation.saved = True
-            participation.fee = related_fee
-            participation.save()
-            contribution.save()
+            if not participation.saved:
+                related_fee = Fee.objects.create(
+                    amount=participation.amount,
+                    user=participation.user,
+                    organization=event.organization,
+                    date=event_date
+                )
+                participation.fee = related_fee
+                if contribution.fee is None or contribution.first_payment.date() < event_date - timedelta(days=365):
+                    contribution.fee = related_fee
+                    contribution.first_payment = related_fee.date
+                    contribution.amount = related_fee.amount
+                elif event_date < contribution.first_payment.date():
+                    pass
+                elif event_date > contribution.first_payment.date():
+                    contribution.amount += related_fee.amount
+                participation.saved = True
+                participation.save()
+                contribution.save()
+
             if created:
                 nb_new_members += 1
 

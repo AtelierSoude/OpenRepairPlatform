@@ -6,6 +6,9 @@ from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
 from django.utils import timezone
+import datetime
+from django import forms
+import datetime
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.decorators import method_decorator
 from django.views.generic import (
@@ -207,12 +210,12 @@ class AddMemberToOrganization(HasActivePermissionMixin, RedirectView):
         user = form.save()
         paid = form.cleaned_data["amount_paid"]
         date = form.cleaned_data["date"]
+        fee = Fee.objects.create(
+            amount=paid, user=user, organization=self.organization, date=date
+        )
         Membership.objects.create(
             organization=self.organization, user=user,
-            amount=paid, first_payment=date
-        )
-        Fee.objects.create(
-            amount=paid, user=user, organization=self.organization, date=date
+            amount=paid, first_payment=date, fee=fee
         )
         messages.success(self.request, f"Vous avez ajouté {user} avec succes.")
         return url
@@ -226,24 +229,30 @@ class UpdateMemberView(HasActivePermissionMixin, UpdateView):
     def form_valid(self, form):
         user = form.save()
         date = form.cleaned_data["date"]
+        amount = form.cleaned_data["amount_paid"]
+        fees = Fee.objects.filter(organization=self.organization, user=user)
+        up_date_fees = fees.filter(date__gte=date)
         membership = Membership.objects.get(
             organization=self.organization, user=user
         )
-        if membership.first_payment < timezone.now() - timedelta(days=365):
-            membership.first_payment = date
-            membership.amount = form.cleaned_data["amount_paid"]
-        elif date < membership.first_payment.date():
-            membership.first_payment = date
-            membership.amount += form.cleaned_data["amount_paid"]
-        else:
-            membership.amount += form.cleaned_data["amount_paid"]
-        membership.save()
-        Fee.objects.create(
-            amount=form.cleaned_data["amount_paid"],
+        fee = Fee.objects.create(
+            amount=amount,
             user=user,
             organization=self.organization,
             date=date,
+            payment=form.cleaned_data["payment"]
         )
+        if form.cleaned_data["first_fee"] or membership.first_payment < timezone.now() - timedelta(days=365) or not fees :
+            membership.first_payment = date
+            membership.amount = 0
+            membership.fee = fee
+            for fee in up_date_fees:
+                membership.amount += fee.amount
+        elif date < membership.first_payment.date():
+            pass
+        elif date > membership.first_payment.date():
+            membership.amount += amount
+        membership.save()
         return super().form_valid(form)
 
     def get_success_url(self, *args, **kwargs):
@@ -486,21 +495,34 @@ class FeeDeleteView(
         self.object = self.get_object()
         fee = self.object
         membership = Membership.objects.get(user=fee.user, organization=fee.organization)
-        membership.amount -= fee.amount
+        fees = Fee.objects.filter(user=membership.user, organization=membership.organization)
         try:    
             fee.participation.amount = 0
             fee.participation.save()
         except ObjectDoesNotExist:
             pass
-        fee.delete()
-        fees = Fee.objects.filter(user=membership.user, organization=membership.organization).order_by('date')
-        if fees.count() == 0 :
+        if fee.date >= membership.first_payment.date():
+            membership.amount -= fee.amount
+        try:
+            has_membership = (fee.membership is not None)
+            if has_membership:
+                next_fee = fees.filter(date__gt=fee.date).last()
+                if not next_fee:
+                    prev_fee = fees.filter(date__lt=fee.date).first()
+                    if prev_fee:
+                        membership.amount = prev_fee.amount
+                        membership.fee = prev_fee
+                        membership.first_payment = prev_fee.date
+                if next_fee:
+                    membership.fee = next_fee
+                    membership.first_payment = next_fee.date
+        except ObjectDoesNotExist:
+            pass
+        fee.delete()        
+        if not fees:
             membership.delete()
         else:
-            a_year_ago = timezone.now() - timedelta(days=365)
-            filtered_fees = fees.filter(date__gt=a_year_ago)
-            membership.first_payment = filtered_fees.first().date
-        membership.save()
+            membership.save()
         messages.success(request, "La cotisation a bien été supprimée")
         return HttpResponseRedirect(reverse('user:user_detail', kwargs={"pk": membership.user.pk}))
 

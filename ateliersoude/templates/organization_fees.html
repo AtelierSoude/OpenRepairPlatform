@@ -3,8 +3,10 @@
 
 {% block menu_content %}
 <section class="container">
-  <h2 class="text-center p-4">Cotisations
-</h2>
+  <h2 class="text-center p-4">Cotisations</h2>
+  <div class="float-right">
+    <h4>Total = {{total_fees}} €</h4>
+  </div>
 
   <div class="table-responsive">
     <table class="table infinite-container">
@@ -21,31 +23,32 @@
             {% ifchanged %}
               <tr>
                 <td colspan="5" class="bg-light">
-                  <b>{{fee.date|date:"F" }} {{event.date|date:"Y" }}</b>
+                  <b>{{fee.date|date:"F Y" }}</b>
                 </td>
               </tr>
             {% endifchanged %}
             <tr class="{% if fee.date <= today %}bg-light text-muted{% else %}bg-white{% endif %}">
               <td>
                 <span class="col-12">
-                {{fee.date|date:"d" }}
+                {{fee.date|date:"d/m/Y" }}
                 </span>
-            </td>
-            <td>
+              </td>
+              <td>
                 <a href="{% url 'user:user_detail' fee.user.pk %}">
                   <b>{{fee.user}}</b>
                 </a>
-            </td>
-            <td>
+              </td>
+              <td>
                 {% if fee.participation %}
                     <a href="{% url 'event:detail' fee.participation.event.pk fee.participation.event.slug %}">{{fee.participation.event}}</a>
                 {% else %}
                     Cotisation manuelle
                 {% endif %}
-            </td>
-            <td>
-                <small>{{fee.amount }}</small>
-            </td>
+              </td>
+              <td class="text-right">
+                <b>{{ fee.amount }}€</b><br>
+                <small>{{ fee.get_payment_display }}</small>   
+              </td>
             </tr>
           {% empty %}
           Pas de cotisations

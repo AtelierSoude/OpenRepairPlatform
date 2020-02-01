@@ -280,7 +280,7 @@ class AbsentView(RedirectView):
         participation = event.participations.filter(user=user).first()
         fees = Fee.objects.filter(user=user, organization=event.organization)
         related_fee = participation.fee
-        if participation and participation.saved:
+        if participation and participation.saved and participation.amount !=0:
             contribution = Membership.objects.filter(
                 user=participation.user, organization=event.organization
             ).first()
@@ -462,7 +462,7 @@ class CloseEventView(HasActivePermissionMixin, RedirectView):
             contribution, created = Membership.objects.get_or_create(
                 user=participation.user, organization=event.organization
             )
-            if not participation.saved:
+            if not participation.saved and participation.amount != 0 or contribution.first_payment.date() < event_date - timedelta(days=365) :
                 related_fee = Fee.objects.create(
                     amount=participation.amount,
                     user=participation.user,
@@ -478,9 +478,9 @@ class CloseEventView(HasActivePermissionMixin, RedirectView):
                     pass
                 elif event_date > contribution.first_payment.date():
                     contribution.amount += related_fee.amount
-                participation.saved = True
-                participation.save()
-                contribution.save()
+            participation.saved = True
+            participation.save()
+            contribution.save()
 
             if created:
                 nb_new_members += 1

@@ -235,23 +235,24 @@ class UpdateMemberView(HasActivePermissionMixin, UpdateView):
         membership = Membership.objects.get(
             organization=self.organization, user=user
         )
-        fee = Fee.objects.create(
-            amount=amount,
-            user=user,
-            organization=self.organization,
-            date=date,
-            payment=form.cleaned_data["payment"]
-        )
-        if form.cleaned_data["first_fee"] or membership.first_payment < timezone.now() - timedelta(days=365) or not fees :
-            membership.first_payment = date
-            membership.amount = 0
-            membership.fee = fee
-            for fee in up_date_fees:
-                membership.amount += fee.amount
-        elif date < membership.first_payment.date():
-            pass
-        elif date > membership.first_payment.date():
-            membership.amount += amount
+        if amount != 0 or form.cleaned_data["first_fee"]:
+            fee = Fee.objects.create(
+                amount=amount,
+                user=user,
+                organization=self.organization,
+                date=date,
+                payment=form.cleaned_data["payment"]
+            )
+            if form.cleaned_data["first_fee"] or membership.first_payment < timezone.now() - timedelta(days=365) or not fees :
+                membership.first_payment = date
+                membership.amount = 0
+                membership.fee = fee
+                for fee in up_date_fees:
+                    membership.amount += fee.amount
+            elif date < membership.first_payment.date():
+                pass
+            elif date > membership.first_payment.date():
+                membership.amount += amount
         membership.save()
         return super().form_valid(form)
 

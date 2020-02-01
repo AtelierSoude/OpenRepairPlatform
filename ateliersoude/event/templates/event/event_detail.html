@@ -228,19 +228,23 @@
               <div class="card-body text-center p-2">
                 <a href="{% url "user:user_detail" participation.user.pk %}" class="card-link"> 
                   <div class="row">
-                    <span class="badge badge-pill badge-primary float-left">
-                        {% filter_orga queryset=participation.user.memberships organization=event.organization as membership %}
-                        {% if membership %}
-                          {{ membership.current_contribution }}
+                      {% filter_orga queryset=participation.user.memberships organization=event.organization as membership %}
+                      {% if membership %}
+                        {% if membership.current_contribution == 0 %} 
+                        <span class="badge badge-pill badge-primary text-danger float-left" >{{ membership.current_contribution }}€</span>
+                        {% elif membership.current_contribution >= event.organization.advised_fee %}
+                          <spann class="badge badge-pill badge-primary text-success float-left">{{ membership.current_contribution }}€</span>
                         {% else %}
-                          0
+                          <span class="badge badge-pill badge-primary text-warning float-left" >{{ membership.current_contribution }}€</span>
                         {% endif %}
-                        €
-                      </span>
+                      {% else %}
+                      <span class="badge badge-pill badge-primary text-danger float-left" >0€</span>
+                      {% endif %}
                       {% if participation.amount > 0 %}
                         <span class="badge badge-pill badge-success float-left">
                         + {{ participation.amount }}€
                         </span>
+                        <small class="pl-1 text-success">{{ participation.fee.get_payment_display }}</small>   
                       {% endif %}
                     </div>
                   <div class="row text-center" id="square-{{ participation.user.pk }}">

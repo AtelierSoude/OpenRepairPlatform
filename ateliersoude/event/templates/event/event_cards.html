@@ -100,9 +100,9 @@
         <hr>
         <small>
           {% if event.description %}
-            {{ event.description | safe | truncatewords_html:7 }}
+            {{ event.description | safe | truncatewords_html:10 }}
           {% else %}
-            {{ event.activity.description | safe | truncatewords_html:7 }}
+            {{ event.activity.description | safe | truncatewords_html:10 }}
           {% endif %}
         </small>
         {% endif %}

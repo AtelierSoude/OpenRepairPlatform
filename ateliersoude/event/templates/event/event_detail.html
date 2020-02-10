@@ -20,7 +20,7 @@
   {% include "breadcrumb.html" with current=event first_parent_url=event_list_url first_parent_text="Évènements" %}
 
     <div class="container pl-4 pr-4 pt-2 bg-white" id="event_about">
-      <h3 class="bg-white" id="event_title">{{ event.activity }} du {{ event.date }}      
+      <h3 class="bg-white" id="event_title">{% if event.activity.category %} {{event.activity.category}} - {% endif %} {{ event.activity }} du {{ event.date }}      
         <div class="lead float-right ml-2">
         {% if is_active %}
           <a href="{% url 'event:edit' event.pk %}" class="btn btn-warning rounded-circle"><i class="fa fa-pencil-alt"></i></a>

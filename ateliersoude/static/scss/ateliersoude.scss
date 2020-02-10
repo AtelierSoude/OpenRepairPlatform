@@ -111,6 +111,12 @@ h5{
   overflow: hidden;
 }
 
+.card-body-crop {
+  max-height: 250px;
+  min-height: 250px;
+  overflow: hidden;
+}
+
 .event_img {
  /* object-fit: none; 
   object-position: center; */

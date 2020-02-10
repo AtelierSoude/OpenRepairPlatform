@@ -35,7 +35,7 @@
 
     <a class="        
     {% if minimal != True %}
-    card-img-crop
+    card-body-crop 
     {% endif %}" 
     href="{% url 'event:detail' event.pk event.slug %}">
         <span class="text-muted position-absolute" style="top:50px; right:15px">
@@ -100,9 +100,9 @@
         <hr>
         <small>
           {% if event.description %}
-            {{ event.description | safe | truncatewords_html:15 }}
+            {{ event.description | safe | truncatewords_html:7 }}
           {% else %}
-            {{ event.activity.description | safe | truncatewords_html:15 }}
+            {{ event.activity.description | safe | truncatewords_html:7 }}
           {% endif %}
         </small>
         {% endif %}

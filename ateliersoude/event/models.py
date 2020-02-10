@@ -121,6 +121,19 @@ class Event(models.Model):
     activity = models.ForeignKey(
         Activity, on_delete=models.SET_NULL, null=True, related_name="events"
     )
+    description = CleanHTMLField(
+        verbose_name=_("Event extra description"), blank=True
+    )
+    collaborator = models.CharField(verbose_name=_("In association with"), 
+        max_length=100,
+        blank=True
+    )
+    external = models.BooleanField(verbose_name=_("External booking ?"), default=False)
+    external_url = models.URLField(
+        max_length=200, 
+        verbose_name=_("Link to an external website for booking or just for infos"), 
+        blank=True
+    )
     slug = models.SlugField(blank=True)
     date = models.DateField(verbose_name=_("Event day"), default=date.today)
     starts_at = models.TimeField(
@@ -155,7 +168,8 @@ class Event(models.Model):
     location = models.ForeignKey(
         Place, on_delete=models.SET_NULL, null=True, related_name="events"
     )
-    is_free = models.BooleanField(default=False)
+    is_free = models.BooleanField(default=False, verbose_name=_("No booking limit ?"))
+    booking = models.BooleanField(default=True, verbose_name=_("This event demands internal booking ?"))
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     history = HistoricalRecords()

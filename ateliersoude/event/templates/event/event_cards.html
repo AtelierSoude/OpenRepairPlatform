@@ -14,7 +14,7 @@
       </span>
       <div class="position-absolute" style="top: 10px; right:20px">
         {% if event.is_free %}
-        <span class="text-success">Entrée libre</span>
+        <span class="text-success">Sans limite</span>
         {% elif event.remaining_seats <= 0 %}
         <span class="text-danger">Complet</span>
         {% else %}
@@ -54,7 +54,11 @@
       <div class="card-body p-0 d-flex flex-column bg-white">
       <div class="p-2">
         <div style="min-height: 48px;">
-          <h5 class="">{{ event.activity.name|truncatechars:40 }}</h5>
+          <h6 class="text-muted mb-0">{{ event.activity.category.name }}</h6>
+          <h5 class="mb-0">{{ event.activity.name|truncatechars:40 }}</h5>
+          {% if event.collaborator and minimal != True %}
+            <small class="text-muted mb-1">en partenariat avec {{ event.collaborator }}</small>
+          {% endif %}
         </div>
         <small class="text-muted">
           <i class="fa fa-map-marker-alt"></i>
@@ -95,7 +99,11 @@
         {% if minimal != True %}
         <hr>
         <small>
-        {{ event.activity.description | safe | truncatewords_html:5 }}
+          {% if event.description %}
+            {{ event.description | safe | truncatewords_html:15 }}
+          {% else %}
+            {{ event.activity.description | safe | truncatewords_html:15 }}
+          {% endif %}
         </small>
         {% endif %}
       </div>
@@ -130,15 +138,17 @@
   {% endif %}
 </form>
 {% endif %}
-        {% if not event.is_free %}
+        {% if event.external == True %}
+          <a class="btn btn-block btn-success" target="_blank" href="{{event.external_url}}"> Réservation externe</a>
+        {% elif event.booking == True %}
           {% if event.remaining_seats > 0 %}
             {% if minimal != True %}
               {% include "event/register.html" with event=event %}
             {% endif %}
           {% else %}
-          <a class="btn btn-block btn-outline-danger"> Complet</a>
+            <a class="btn btn-block btn-outline-danger"> Complet</a>
           {% endif %}
-        {% else %}
+        {% elif event.booking == False %}
           <a class="btn btn-block btn-outline-danger"> Sans réservation</a>
         {% endif %}
       </footer>

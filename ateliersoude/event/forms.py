@@ -41,13 +41,13 @@ class EventForm(ModelForm):
         model = Event
         fields = [
             "activity",
+            "location",
             "is_free",
             "booking",
             "collaborator",
             "external",
             "external_url",
             "description",
-            "location",
             "date",
             "starts_at",
             "ends_at",
@@ -57,11 +57,7 @@ class EventForm(ModelForm):
             "organizers",
             "conditions",
         ]
-        widgets = {
-            'location': autocomplete.ModelSelect2(url='event/place_autocomplete')
-        }
-
-
+       
 class RecurrentEventForm(forms.ModelForm):
     recurrent_type = forms.ChoiceField(
         choices=[("WEEKLY", "semaine"), ("MONTHLY", "mois")], label="Par"

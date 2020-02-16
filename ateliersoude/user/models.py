@@ -197,7 +197,7 @@ class Fee(models.Model):
         (PAYMENT_BANK, _("Online")),
         (PAYMENT_BANK_CHECK, _("Chèque")),
         (PAYMENT_CB, _("CB")),
-        (PAYMENT_CB, _("Gonettes")),
+        (PAYMENT_LOCAL_CASH, _("Gonettes")),
     )
     payment = models.CharField(
         max_length=1, choices=PAYMENTS, blank=True, default=PAYMENT_CASH

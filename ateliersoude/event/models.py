@@ -230,6 +230,21 @@ class Event(models.Model):
 
 
 class Participation(models.Model):
+    PAYMENT_CASH = "1"
+    PAYMENT_BANK = "2"
+    PAYMENT_BANK_CHECK = "3"
+    PAYMENT_CB = "4"
+    PAYMENT_LOCAL_CASH = "5"
+    PAYMENTS = (
+        (PAYMENT_CASH, _("Espèces")),
+        (PAYMENT_BANK, _("Online")),
+        (PAYMENT_BANK_CHECK, _("Chèque")),
+        (PAYMENT_CB, _("CB")),
+        (PAYMENT_LOCAL_CASH, _("Gonettes")),
+    )
+    payment = models.CharField(
+        max_length=1, choices=PAYMENTS, blank=True, default=PAYMENT_CASH
+    )
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     event = models.ForeignKey(
         Event, on_delete=models.CASCADE, related_name="participations"

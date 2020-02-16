@@ -259,9 +259,9 @@ def _load_token(token, salt):
     return Event.objects.get(pk=event_id), CustomUser.objects.get(pk=user_id)
 
 
-def add_present(event: Event, user: CustomUser, paid: int):
+def add_present(event: Event, user: CustomUser, paid: int, payment: int):
     event.registered.remove(user)
-    Participation.objects.create(event=event, user=user, amount=paid)
+    Participation.objects.create(event=event, user=user, amount=paid, payment=payment)
 
 
 class AbsentView(RedirectView):
@@ -467,7 +467,8 @@ class CloseEventView(HasActivePermissionMixin, RedirectView):
                     amount=participation.amount,
                     user=participation.user,
                     organization=event.organization,
-                    date=event_date
+                    date=event_date,
+                    payment=participation.payment
                 )
                 participation.fee = related_fee
                 if contribution.fee is None or contribution.first_payment.date() < event_date - timedelta(days=365):

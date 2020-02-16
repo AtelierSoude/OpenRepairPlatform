@@ -149,7 +149,7 @@ class PresentMoreInfoView(UserPassesTestMixin, UpdateView):
 
     def form_valid(self, form):
         user = form.save()
-        add_present(self.event, user, form.cleaned_data["amount_paid"])
+        add_present(self.event, user, form.cleaned_data["amount_paid"], form.cleaned_data["payment"])
         return super().form_valid(form)
 
     def get_success_url(self, *args, **kwargs):

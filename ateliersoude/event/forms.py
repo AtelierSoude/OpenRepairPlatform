@@ -44,17 +44,22 @@ class EventForm(ModelForm):
         model = Event
         fields = [
             "activity",
-            "location",
-            "available_seats",
             "is_free",
+            "booking",
+            "collaborator",
+            "external",
+            "external_url",
+            "description",
+            "location",
             "date",
             "starts_at",
             "ends_at",
+            "available_seats",
             "publish_at",
+            "needed_organizers",
             "organizers",
             "conditions",
         ]
-
 
 class RecurrentEventForm(forms.ModelForm):
     recurrent_type = forms.ChoiceField(

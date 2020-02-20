@@ -53,7 +53,7 @@ class Command(BaseCommand):
                 send_mail(
                     f"C'est demain - {event.activity.name}",
                     msg_plain,
-                    ' f"{event.organization}" <no-reply@atelier-soude.fr>',
+                    f"{event.organization}" '<no-reply@atelier-soude.fr>',
                     [user.email],
                     html_message=msg_html,
                 )

@@ -45,6 +45,7 @@ class EventForm(ModelForm):
         fields = [
             "activity",
             "is_free",
+            "available_seats",
             "booking",
             "collaborator",
             "external",
@@ -54,7 +55,6 @@ class EventForm(ModelForm):
             "date",
             "starts_at",
             "ends_at",
-            "available_seats",
             "publish_at",
             "needed_organizers",
             "organizers",
@@ -182,7 +182,13 @@ class RecurrentEventForm(forms.ModelForm):
         model = Event
         fields = [
             "activity",
+            "is_free",
             "available_seats",
+            "booking",
+            "collaborator",
+            "external",
+            "external_url",
+            "description",
             "organizers",
             "conditions",
             "location",

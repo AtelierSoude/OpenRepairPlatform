@@ -434,7 +434,7 @@ class BookView(RedirectView):
         send_mail(
             subject,
             msg_plain,
-            f"{event.organization}",
+            f"{event.organization}" ['no-reply@atelier-soude.fr'],
             [user.email],
             html_message=msg_html,
         )

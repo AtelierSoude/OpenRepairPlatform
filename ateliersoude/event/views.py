@@ -224,7 +224,26 @@ class EventDeleteView(
     success_url = reverse_lazy("event:list")
 
     def delete(self, request, *args, **kwargs):
-        messages.success(request, "L'évènement a bien été supprimé")
+        event_pk = kwargs["pk"]
+        event = get_object_or_404(Event, pk=event_pk)
+        users = event.organizers.all().union(
+                event.presents.all(),
+                event.registered.all()
+            )
+        if users:
+            for user in users: 
+                msg_plain = render_to_string("event/mail/event_delete.txt", context=locals())
+                msg_html = render_to_string("event/mail/event_delete.html", context=locals())
+                date = event.date.strftime("%d %B")
+                subject = f"IMPORTANT : Annulation événement du {date} : {event.activity.name} à {event.location.name}"
+                send_mail(
+                    subject,
+                    msg_plain,
+                    f"{event.organization}" '<no-reply@atelier-soude.fr>',
+                    [user.email],
+                    html_message=msg_html,
+                )
+        messages.success(request, "L'évènement a bien été supprimé et les participants avertis")
         return super().delete(request, *args, **kwargs)
 
 

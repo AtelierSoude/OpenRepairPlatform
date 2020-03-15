@@ -1,0 +1,10 @@
+{{ user }},
+
+L'événement {{ event.activity.name }} du {{ event.date_interval_format }} a été annulé par {{event.organization}}.
+
+Vous pouvez néanmoins vous inscrire sur d'autres événements.
+Nous nous excusons pour la gêne occasionnée. 
+
+Si vous souhaitez en savoir plus, contactez l'organisation. 
+
+{% include 'event/mail/footer.txt' %}

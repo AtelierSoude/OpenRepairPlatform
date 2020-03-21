@@ -25,33 +25,18 @@
         <section class="header_detail_page p-0 text-center col-md-3">
             <div class="bg-grey" id="side_nav">
               <div class="p-4 mt-4 header_detail_page_picture badge-secondary rounded">
-                    {% if object.avatar_img %}
-                      {% thumbnail object.avatar_img "125x125" crop="center" format="PNG" as im %}
-                        <img src="{{ im.url }}" class="m-2 rounded-circle"/>
-                      {% endthumbnail %}
-                    {% else %}
-                      {% if object.first_name %}
-                        {% get_initial_avatar object 125 'circle' %}
-                      {% endif %}
-                    {% endif %}
+                {% if object.avatar_img %}
+                  {% thumbnail object.avatar_img "125x125" crop="center" format="PNG" as im %}
+                    <img src="{{ im.url }}" class="m-2 rounded-circle"/>
+                  {% endthumbnail %}
+                {% else %}
+                  {% if object.first_name %}
+                    {% get_initial_avatar object 125 'circle' %}
                   {% endif %}
+                {% endif %}
             </div>
               <h2 class="pt-2 header_detail_page_title">{{ object }}</h2>
-            <div class="nav flex-md-column flex-sm-row nav-pills justify-content-center p-4 text-left" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                <a class="nav-link active" id="v-pills-info-tab" data-toggle="pill" href="#v-pills-info" role="tab" aria-controls="v-pills-info" aria-selected="false">Informations</a>
-                <a class="nav-link" id="v-pills-rdv-tab" data-toggle="pill" href="#v-pills-rdv" role="tab" aria-controls="v-pills-rdv" aria-selected="true">Rendez-vous</a>
-                <a class="nav-link" id="v-pills-membership-tab" data-toggle="pill" href="#v-pills-membership" role="tab" aria-controls="v-pills-membership" aria-selected="false">Adhésions</a>
-                <a class="nav-link" id="v-pills-stock-tab" data-toggle="pill" href="#v-pills-stock" role="tab" aria-controls="v-pills-stock" aria-selected="false">Inventaire</a>
-          </div>
-        </div>
-      </section>
-          
-    <section class="h-100 col-md-9 p-4">
-      <div class="tab-content" id="v-pills-tabContent">
-              <div class="">
-              </div>
               <div class="pt-2">
-                <h2 class="align-left user-title">{{ object }}</h2>
                 <div class="align-left user-title">
                   {% for organization in object.visitor_organizations.all %}
                     <small class="">
@@ -98,12 +83,13 @@
                   {% endif %}
                 </div>
               </div>
-              <div class="nav flex-md-column flex-sm-row nav-pills justify-content-center p-4 text-left" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                  <a class="nav-link active" id="v-pills-info-tab" data-toggle="pill" href="#v-pills-info" role="tab" aria-controls="v-pills-info" aria-selected="false">Informations</a>
-                  <a class="nav-link" id="v-pills-rdv-tab" data-toggle="pill" href="#v-pills-rdv" role="tab" aria-controls="v-pills-rdv" aria-selected="true">Rendez-vous</a>
-                  <a class="nav-link" id="v-pills-membership-tab" data-toggle="pill" href="#v-pills-membership" role="tab" aria-controls="v-pills-membership" aria-selected="false">Adhésions</a>
-              </div>
+            <div class="nav flex-md-column flex-sm-row nav-pills justify-content-center p-4 text-left" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                <a class="nav-link active" id="v-pills-info-tab" data-toggle="pill" href="#v-pills-info" role="tab" aria-controls="v-pills-info" aria-selected="false">Informations</a>
+                <a class="nav-link" id="v-pills-rdv-tab" data-toggle="pill" href="#v-pills-rdv" role="tab" aria-controls="v-pills-rdv" aria-selected="true">Rendez-vous</a>
+                <a class="nav-link" id="v-pills-membership-tab" data-toggle="pill" href="#v-pills-membership" role="tab" aria-controls="v-pills-membership" aria-selected="false">Adhésions</a>
+                <a class="nav-link" id="v-pills-stock-tab" data-toggle="pill" href="#v-pills-stock" role="tab" aria-controls="v-pills-stock" aria-selected="false">Inventaire</a>
           </div>
+        </div>
       </section>
     
     <section class="h-100 col-md-9 p-4">
@@ -345,13 +331,6 @@
             {% endif %}
         </div>
           </div>
-        {% else %}
-          <div class="card p-4 mb-4">
-            <div class="bg-light p-2 m-2 text-warning">
-              Cet utilisateur n'a pas de réservation
-            </div>
-          </div>
-        {% endif %}
       </div>
         <div class="tab-pane fade" id="v-pills-membership" role="tabpanel" aria-labelledby="v-pills-membership-tab">
           <h4 class="mt-4">Etat des cotisations</h4>

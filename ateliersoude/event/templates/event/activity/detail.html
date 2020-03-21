@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% block title %}A propos de l'activité {{activity}} {% endblock %}
 
 {% block content %}
   {% url "event:activity_list" as activity_list_url %}
@@ -38,7 +39,7 @@
         <hr>
           <div class="scrollable">
             {% if activity.next_events %}
-            {% include "event/event_cards.html" with event_list=activity.next_events minimal=True %}
+            {% include "event/event_cards.html" with event_list=activity.next_events minimal=True card_size='col-md-12' %}
             {% else %}
             Aucun évènement planifié pour le moment
             {% endif %}

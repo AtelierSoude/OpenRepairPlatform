@@ -36,9 +36,27 @@ class Condition(models.Model):
             return f"{self.name} - {self.price}€"
         return self.name
 
+class ActivityCategory(models.Model):
+    name = models.CharField(verbose_name=_("Activity type"), max_length=100)
+    slug = models.SlugField(blank=True)
+    history = HistoricalRecords()
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        return super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.name
 
 class Activity(models.Model):
     name = models.CharField(verbose_name=_("Activity type"), max_length=100)
+    category = models.ForeignKey(
+        ActivityCategory, 
+        related_name="category",
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+    )
     slug = models.SlugField(blank=True)
     organization = models.ForeignKey(
         Organization, on_delete=models.CASCADE, related_name="activities"
@@ -66,7 +84,7 @@ class Activity(models.Model):
         return reverse("event:activity_detail", args=(self.pk, self.slug))
 
     def next_events(self):
-        return get_future_published_events(self.events)
+        return get_future_published_events(self.events)[0:3]
 
 
 class Event(models.Model):
@@ -103,6 +121,19 @@ class Event(models.Model):
     activity = models.ForeignKey(
         Activity, on_delete=models.SET_NULL, null=True, related_name="events"
     )
+    description = CleanHTMLField(
+        verbose_name=_("Event extra description"), blank=True
+    )
+    collaborator = models.CharField(verbose_name=_("In association with"), 
+        max_length=100,
+        blank=True
+    )
+    external = models.BooleanField(verbose_name=_("External booking ?"), default=False)
+    external_url = models.URLField(
+        max_length=200, 
+        verbose_name=_("Link to an external website for booking or just for infos"), 
+        blank=True
+    )
     slug = models.SlugField(blank=True)
     date = models.DateField(verbose_name=_("Event day"), default=date.today)
     starts_at = models.TimeField(
@@ -125,6 +156,9 @@ class Event(models.Model):
         blank=True,
         through="Participation",
     )
+    needed_organizers = models.PositiveIntegerField(
+        verbose_name=_("Needed organizers"), default=0
+    )
     organizers = models.ManyToManyField(
         CustomUser,
         related_name="organizers_events",
@@ -134,13 +168,18 @@ class Event(models.Model):
     location = models.ForeignKey(
         Place, on_delete=models.SET_NULL, null=True, related_name="events"
     )
-    is_free = models.BooleanField(default=False)
+    is_free = models.BooleanField(default=False, verbose_name=_("No booking limit ?"))
+    booking = models.BooleanField(default=True, verbose_name=_("This event demands internal booking ?"))
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     history = HistoricalRecords()
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.activity.name)
+        if self.activity.name:
+            slug = self.activity.name
+        else: 
+            slug = 'no activity type'
+        self.slug = slugify(slug)
         return super().save(*args, kwargs)
 
     @property
@@ -179,14 +218,33 @@ class Event(models.Model):
         return get_future_published_events(cls.objects)
 
     def __str__(self):
+        if self.activity.name:
+            activity_name = self.activity.name
+        else: 
+            activity_name = 'no activity type'
         full_title = "%s du %s" % (
-            self.activity.name,
+            activity_name,
             self.date.strftime("%d %B"),
         )
         return full_title
 
 
 class Participation(models.Model):
+    PAYMENT_CASH = "1"
+    PAYMENT_BANK = "2"
+    PAYMENT_BANK_CHECK = "3"
+    PAYMENT_CB = "4"
+    PAYMENT_LOCAL_CASH = "5"
+    PAYMENTS = (
+        (PAYMENT_CASH, _("Espèces")),
+        (PAYMENT_BANK, _("Online")),
+        (PAYMENT_BANK_CHECK, _("Chèque")),
+        (PAYMENT_CB, _("CB")),
+        (PAYMENT_LOCAL_CASH, _("Gonettes")),
+    )
+    payment = models.CharField(
+        max_length=1, choices=PAYMENTS, blank=True, default=PAYMENT_CASH
+    )
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     event = models.ForeignKey(
         Event, on_delete=models.CASCADE, related_name="participations"
@@ -195,7 +253,9 @@ class Participation(models.Model):
     amount = models.PositiveIntegerField(
         verbose_name=_("Amount paid"), default=0, blank=True
     )
-    fee = models.OneToOneField(Fee, on_delete=models.CASCADE, null=True, blank=True)
+    fee = models.OneToOneField(
+        Fee, on_delete=models.SET_NULL, null=True, blank=True
+    )
     history = HistoricalRecords()
 
     class Meta:

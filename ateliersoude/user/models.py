@@ -186,6 +186,38 @@ class Organization(models.Model):
         return self.name
 
 
+class Fee(models.Model):
+    PAYMENT_CASH = "1"
+    PAYMENT_BANK = "2"
+    PAYMENT_BANK_CHECK = "3"
+    PAYMENT_CB = "4"
+    PAYMENT_LOCAL_CASH = "5"
+    PAYMENTS = (
+        (PAYMENT_CASH, _("Espèces")),
+        (PAYMENT_BANK, _("Online")),
+        (PAYMENT_BANK_CHECK, _("Chèque")),
+        (PAYMENT_CB, _("CB")),
+        (PAYMENT_LOCAL_CASH, _("Gonettes")),
+    )
+    payment = models.CharField(
+        max_length=1, choices=PAYMENTS, blank=True, default=PAYMENT_CASH
+    )
+    date = models.DateField(default=timezone.now)
+    amount = models.PositiveIntegerField(default=0)
+    user = models.ForeignKey(
+        CustomUser, on_delete=models.CASCADE, related_name="fees"
+    )
+    organization = models.ForeignKey(
+        Organization, on_delete=models.CASCADE, related_name="fees"
+    )
+
+    def __str__(self):
+        return f"{self.date}-{self.user}-{self.organization}-{self.amount}"
+    
+    class Meta:
+        ordering = ['-date']
+
+
 class Membership(models.Model):
     user = models.ForeignKey(
         CustomUser, on_delete=models.CASCADE, related_name="memberships"
@@ -193,11 +225,17 @@ class Membership(models.Model):
     organization = models.ForeignKey(
         Organization, on_delete=models.CASCADE, related_name="memberships"
     )
+    fee = models.OneToOneField(
+        Fee, on_delete=models.SET_NULL, null=True, blank=True
+    )
     first_payment = models.DateTimeField(default=timezone.now)
     amount = models.PositiveIntegerField(
         verbose_name=_("Amount paid"), default=0, blank=True
     )
     history = HistoricalRecords()
+
+    def __str__(self):
+        return f"{self.user}-{self.organization}"
 
     @property
     def current_contribution(self):
@@ -208,16 +246,3 @@ class Membership(models.Model):
 
     class Meta:
         unique_together = (("user", "organization"),)
-
-
-class Fee(models.Model):
-    date = models.DateField(default=timezone.now)
-    amount = models.PositiveIntegerField(default=0)
-    user = models.ForeignKey(
-        CustomUser, on_delete=models.CASCADE, related_name="fees"
-    )
-    organization = models.ForeignKey(
-        Organization, on_delete=models.CASCADE, related_name="fees"
-    )
-    def __str__(self):
-        return f"{self.user} - {self.date} - {self.amount}"

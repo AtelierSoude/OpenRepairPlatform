@@ -9,18 +9,29 @@
   min-height: 500px;
   overflow-x:hidden;
 }
+
 a {
   color : #49d3be;
 }
 header{
   z-index:1250 !important;
 }
-
+#event_map {
+  z-index: 0;
+}
 h1, h2, h3, h4, h5 {
   color : #083342;
 }
 h4 {
   z-index: 0;
+}
+h5{
+  line-height: 1 !important;
+}
+.brand-logo{
+  max-width: 220px;
+  height: auto;
+  padding-left: 20px;
 }
 
 .bg-grey { 
@@ -29,7 +40,7 @@ h4 {
 /* Menu */
 
 .header_detail_page, #h_nav, #breadcrumb, #jumbotron, #search_tab, #event_title, #event_about, .jumbotron {
-  z-index: 2 !important;
+ /* z-index: 2 !important; */
   position: relative;
 }
 
@@ -61,8 +72,8 @@ h4 {
 
 
 /* cards */
-.event_list_cards{
- column-count: 2;
+.cards-column-1{
+  column-count: 1;
 }
 .card {
   border-radius: 0;
@@ -76,18 +87,50 @@ h4 {
   }
 }
 
+.mini-organizers {
+  height:25px;
+}
+
+.mini{
+  left: -05px;
+}
+
+.mini:last-child {
+  left:0px;
+}
+
+
+
 .gravatar{
   border-radius: 50%;
 }
 
+.card-img-crop{
+  max-height: 200px;
+  min-height: 200px;
+  overflow: hidden;
+}
+
+.card-body-crop {
+  max-height: 240px;
+  min-height: 240px;
+  overflow: hidden;
+}
+
 .event_img {
-  object-fit: none; 
-  object-position: center; 
+ /* object-fit: none; 
+  object-position: center; */
   width: 100%;
-  max-height: 150px;
 }
 
 /* breadcrumb (chemin navigation) */
+
+#breadcrumb-sticky-wrapper, #search_tab-sticky-wrapper, #h_nav-sticky-wrapper{
+z-index: 2;
+position: relative;
+
+}
+
 .breadcrumb{
   font-size: .8em;
   margin-bottom: 0 !important;
@@ -118,8 +161,8 @@ h4 {
 
 .modal-content {
   border-radius: 0;
-  margin-top: 20%;
-  padding: 2em;
+  margin-top: 10%;
+  padding: 1em;
   z-index:10000 !important;
   position:relative !important;
 }
@@ -156,28 +199,36 @@ h4 {
     position: initial !important;
   }
   .header_detail_page{
-    height: 200px;
-    z-index: 2;
-  }
-  #side_nav{
-    background-color: #fee56e !important; 
-    width:100%;
-  }
-  .header_detail_page_picture{
-    float: left;
-    padding-top: 10px !important;
-    img{
-      width: 75px;
-      height: auto;
-      margin: 0px !important;
-    }
-  }
-  .header_detail_page_title{
-    float: left;
-    font-size: 18px;
-    padding-top: 10px !important;
-    line-height: 75px;
-  }
+    /* height: 200px; */
+     z-index: 2;
+   }
+   #side_nav{
+     background-color: #fee56e !important; 
+     width:100%;
+     min-height: 100px;
+   }
+   .header_detail_page_picture{
+     float: left;
+     padding-top: 10px !important;
+     img{
+       width: 75px;
+       height: auto;
+       margin: 0px !important;
+     }
+   }
+   .user-title{
+     text-align: left !important;
+   }
+   .header_detail_page_title{
+     padding-left:20px;
+     float: left;
+     font-size: 18px;
+     padding-top: 10px !important;
+     line-height: 75px;
+   }
+   #side_nav .badge{
+     margin-top: 37px !important;
+   } 
   #v-pills-tab{
     width:100%;
     padding: 0px !important;
@@ -200,6 +251,13 @@ h4 {
     z-index: 1;
   }
 
+  .header_detail_page, #h_nav, #breadcrumb, #jumbotron, #search_tab, #event_title, .booking_form, .jumbotron {
+     z-index: 2 !important;
+   }
+   .modal.show .modal-dialog {
+     z-index: 3 !important;
+     display: relative;
+   }
 }
 
 @media screen and (max-width: 576px) {
@@ -208,3 +266,37 @@ h4 {
     padding: 0px !important;
   }
 }
+
+// Menu hack for mobile slide left up // 
+
+@media (max-width: 992px) {
+
+  .navbar-collapse {
+      position: fixed;
+      top: 50px;
+      left:-600px;
+      padding-left: 15px;
+      padding-right: 15px;
+      padding-bottom: 15px;
+      width: 80%;
+      height: 800px;
+      transition: all 0.3s ease;
+      display: block;
+  }
+  .navbar-collapse.collapsing {
+      height: auto !important;
+      margin-right: 50%;
+      transition: all 0.3s ease;
+      display: block;
+  }
+  .navbar-collapse.show {
+      right:20%;
+      left:0px;
+  }
+  .navbar-collapse .nav-item {
+    text-transform: uppercase;
+    font-size: 18px;
+    padding: 10px;
+  }
+}
+

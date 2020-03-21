@@ -1,5 +1,8 @@
 {% extends 'organization_page.html' %}
 {% load static %}
+{% load thumbnail %}
+{% load initialavatar %}
+{% block title %}Page de {{organization.name}}: gestion des évènements{% endblock %}
 
 {% block menu_content %}
 <section class="container">
@@ -22,6 +25,7 @@
               <th scope="col"><small class="text-white">Date</small></th>
               <th scope="col"><small class="text-white">Type</small></th>
               <th scope="col"><small class="text-white">Lieu</small></th>
+              <th scope="col"><small class="text-white">Animateurs</small></th>
               <th scope="col"><small class="text-white">Places</small></th>
             </tr>
           </thead>
@@ -29,7 +33,7 @@
           {% for event in events %}
             {% ifchanged %}
               <tr>
-                <td colspan="4" class="bg-light">
+                <td colspan="5" class="bg-light">
                   <b>{{ event.date|date:"F" }} {{event.date|date:"Y" }}</b>
                 </td>
               </tr>
@@ -46,19 +50,56 @@
                 </div>
               </td>
               <td>
-                <a href="{% url 'event:detail' event.pk event.activity.slug %}">
-                  <b>{{ event.activity }}</b>
+                <a href="{% url 'event:detail' event.pk event.slug %}">
+                  <b>
+                    {% if event.activity %}
+                      {{ event.activity }}
+                    {% else %}
+                      Type d'activité supprimé
+                    {% endif %}
+                  </b>
                 </a>
               </td>
               <td>
                 <small>{{ event.location }}</small>
               </td>
               <td>
+                {% if event.needed_organizers != 0 %}
+                <div class="mini-organizers">
+                    <span class="align-middle
+                      {% if event.needed_organizers != 0 %}
+                        {% if event.needed_organizers > event.organizers.all.count %}
+                          text-danger
+                        {% elif event.needed_organizers <= event.organizers.all.count %}
+                          text-success
+                        {% else %}
+                          text-warning
+                        {% endif %}
+                      {% endif %}"> 
+                        {{ event.organizers.all.count }}/{{ event.needed_organizers }}
+                    </span>
+                    {% for orga in event.organizers.all %}
+                      <div class="position-relative float-left mini d-none d-md-block d-lg-block">
+                      {% if orga.avatar_img %}
+                        {% thumbnail orga.avatar_img "25x25" crop="center" format="PNG" as im %}
+                          <img src="{{ im.url }}" class="rounded-circle"/>
+                        {% endthumbnail %}
+                      {% else %}
+                        {% if orga.first_name %}
+                          {% get_initial_avatar orga 25 'circle' %}
+                        {% endif %}
+                      {% endif %}
+                      </div>
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              </td>
+              <td>
                 {% if event.is_free %}
                   Illimité
                 {% else %}
                 <span
-                class="
+                class=" float-left
                   {% if event.remaining_seats <= 0 %}
                     text-danger
                   {% elif event.remaining_seats == event.available_seats %}

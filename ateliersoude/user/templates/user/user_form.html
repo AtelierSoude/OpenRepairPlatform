@@ -1,5 +1,12 @@
 {% extends 'base.html' %}
 {% load bootstrap4 assets static %}
+{% block title %}
+{% if object %}
+  Mise à jour du profil de {{user}}
+{% else %}
+  Créer un profil sur Reparon
+{% endif %}
+{% endblock %}
 
 {% block extra_css %}
   {% assets "css_autocomplete" %}

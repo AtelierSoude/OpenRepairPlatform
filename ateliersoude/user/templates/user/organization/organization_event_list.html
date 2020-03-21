@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% block title %}Evénements de {{organisation}} sur Reparons{% endblock %}
 
 {% block content %}
   {% url "user:organization_list" as organization_list_url %}
@@ -6,12 +7,7 @@
   {% include "breadcrumb.html" with current="Évènements" first_parent_url=organization_url first_parent_text=organization second_parent_url=organization_list_url second_parent_text="Organisations" %}
 
   <div class="container">
-    <h1 class="mt-4 mb-4">Tous les évènements liés à {{ organization }}</h1>
-
-    <div class="card-columns">
-      {% include "event/event_cards.html" with event_list=event_list %}
-    </div>
-
+    <h1 class="mt-4 mb-4 text-center">Tous les évènements liés à {{ organization }}</h1>
     {% if is_paginated %}
       <nav aria-label="Event navigation" class="mt-4">
         <ul class="pagination justify-content-center">
@@ -37,5 +33,8 @@
         </ul>
       </nav>
     {% endif %}
+    <div class="col-lg">
+      {% include "event/event_cards.html" with event_list=event_list card_size='col-md-4' %}
+    </div>
   </div>
 {% endblock %}

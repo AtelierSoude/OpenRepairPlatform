@@ -81,6 +81,7 @@ celerybeat-schedule
 *.sage.py
 
 # dotenv
+deployment/django/django.env
 .env
 
 # virtualenv
@@ -149,6 +150,8 @@ tmp
 *.min.css
 ateliersoude/static/css
 ateliersoude_static/
+!ateliersoude_static/img/*
 ateliersoude_media/
+ateliersoude_letsencrypt/
 postgres_data/
 cpdb.sh

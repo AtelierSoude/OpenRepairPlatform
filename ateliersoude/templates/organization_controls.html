@@ -1,5 +1,7 @@
 {% extends 'organization_page.html' %}
 {% load static %}
+{% block title %}Page de {{organization.name}}: contrôles des préférences{% endblock %}
+
 
 {% block menu_content %}
   {% if is_active %}
@@ -11,13 +13,10 @@
             <i class="fa fa-pencil-alt"></i> Editer
         </a>
         </div>
-        <h4 class="mt-4">Activités, lieux</h4>
+        <h4 class="mt-4">Activités</h4>
         <div class="card p-4">
         <a class="btn btn-primary btn mb-2" href="{% url 'event:activity_create' organization.pk %}" title="activity place">
           <i class="fa fa-plus-circle"></i> Ajouter une activité
-        </a>
-        <a href="{% url 'location:create' organization.pk %}" class="btn btn-primary btn">
-          <i class="fa fa-plus-circle"></i> Ajouter un lieu
         </a>
         </div>
         <h4 class="mt-4">Conditions d'accès</h4>
@@ -29,12 +28,48 @@
             {% include 'event/condition/list.html' with conditions=organization.conditions.all %}
           </div>
         </div>
-        <h4 class="mt-4">Supprimer</h4>
+        <h4 class="mt-4">Lieux</h4>
         <div class="card p-4">
-          <a class="btn btn-danger col-lg" href="{% url 'user:organization_delete' organization.pk %}">
-              <i class="fa fa-trash"></i> Supprimer l'organisation
-          </a>
-        </div>
+        <a href="{% url 'location:create' organization.pk %}" class="btn btn-primary btn">
+          <i class="fa fa-plus-circle"></i> Ajouter un lieu
+        </a>
+          {% if organization.places.all %}
+          <div class="card-columns">
+            {% for place in organization.places.all %}
+              <div class="card">  
+                <a class="card-link" href="{% url 'location:detail' place.pk place.slug %}">
+                  <div class="card-body">
+                    <h4 class="card-title">{{ place.name }}</h4>
+                    <h6 class="card-subtitle mb-2 text-muted">{{ place.address }}</h6>
+                    <span class="badge badge-secondary">{{ place.category }}</span>
+                    {{ place.description | safe | truncatewords_html:10 }}
+                  </div>
+                  {% if is_admin %}
+                    <div class="card-footer">
+                      <a class="btn btn-info btn-sm" href="{% url 'location:edit' place.id %}">
+                        <i class="fa fa-pencil-alt"></i>
+                        Editer ce lieu
+                      </a>
+                      <a class="btn btn-danger btn-sm" href="{% url 'location:delete' place.id %}">
+                        <i class="fa fa-trash-alt"></i>
+                        Supprimer ce lieu
+                      </a>
+                    </div>
+                  {% endif %}
+                </a>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div>Il n'y a pas de local associé à cette organisation.</div>
+        {% endif %}
+      </div>
+      <h4 class="mt-4">Supprimer</h4>
+      <div class="card p-4">
+        <a class="btn btn-danger col-lg" href="{% url 'user:organization_delete' organization.pk %}">
+            <i class="fa fa-trash"></i> Supprimer l'organisation
+        </a>
+      </div>
       {% endif %}
     </div>
   {% endif %}

@@ -8,9 +8,10 @@ from ateliersoude.user.mixins import PermissionOrgaContextMixin
 from ateliersoude.mixins import HasActivePermissionMixin
 from ateliersoude.user.models import (
     CustomUser,
-    Organization
+    Organization,
+    Fee
 )
-from ateliersoude.event.models import Event
+from ateliersoude.event.models import Event, Activity
 from ateliersoude.user.forms import (
     CustomUserEmailForm,
     MoreInfoCustomUserForm,
@@ -19,7 +20,7 @@ from ateliersoude.user.forms import (
 from ateliersoude.event.forms import (
     EventSearchForm
 )
-from ateliersoude.event.forms import EventSearchForm
+from django.db.models import Count
 from datetime import datetime
 EVENTS_PER_PAGE = 6
 
@@ -60,9 +61,7 @@ class HomeView(TemplateView, FormView):
             )
         return queryset
 
-class OrganizationPageView(
-    PermissionOrgaContextMixin, DetailView
-        ):
+class OrganizationPageView(PermissionOrgaContextMixin, DetailView):
     model = Organization
     template_name = "organization_page.html"
 
@@ -74,6 +73,9 @@ class OrganizationPageView(
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
+        activities = Activity.objects.filter(organization=self.organization).annotate(category_count=Count('category')
+            ).order_by('-category_count')
+        context ["activities_list"] = activities.order_by('category__name')
         context["event_list"] = Event.future_published_events().filter(
             organization=self.organization).order_by('date')[0:10]
         context["emails"] = [
@@ -123,6 +125,29 @@ class OrganizationMembersView(
         context["add_member_form"] = MoreInfoCustomUserForm
         return context
 
+
+class OrganizationFeesView(
+    HasActivePermissionMixin, PermissionOrgaContextMixin, ListView
+        ):
+    model = Fee
+    template_name = "organization_fees.html"
+    context_object_name = "fees"
+    paginate_by = 100
+
+    def get_queryset(self):
+        self.object = self.organization
+        return self.model.objects.filter(
+            organization=self.organization
+        ).order_by("-date").exclude(amount=0)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["accounting_tab"] = 'active'
+        context["organization"] = self.organization
+        context["total_fees"] = sum(
+            [fee.amount for fee in self.get_queryset().all()]
+        )
+        return context
 
 class OrganizationEventsView(
     HasActivePermissionMixin, PermissionOrgaContextMixin, ListView
@@ -174,3 +199,4 @@ class OrganizationDetailsView(PermissionOrgaContextMixin, DetailView):
         context = super().get_context_data(**kwargs)
         context["organization"] = self.object
         return context
+

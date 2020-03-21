@@ -1,14 +1,15 @@
 import logging
 from datetime import timedelta
+from dal import autocomplete
 
 from django.contrib import messages
+from django.db.models import Count
 from django.core import signing
 from django.core.mail import send_mail
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.template.loader import render_to_string
 from django.urls import reverse, reverse_lazy
-from django.utils import timezone
 from django.views.generic import (
     CreateView,
     DetailView,
@@ -28,11 +29,13 @@ from ateliersoude.event.forms import (
     RecurrentEventForm,
 )
 from ateliersoude.event.models import Activity, Condition, Event, Participation
+from ateliersoude.location.models import Place
 from ateliersoude.event.templatetags.app_filters import tokenize
 from ateliersoude.mixins import (
     RedirectQueryParamView,
     HasAdminPermissionMixin,
     HasActivePermissionMixin,
+    HasVolunteerPermissionMixin,
 )
 from ateliersoude.user.mixins import PermissionOrgaContextMixin
 from ateliersoude.user.forms import CustomUserEmailForm, MoreInfoCustomUserForm
@@ -92,6 +95,11 @@ class ActivityListView(ListView):
     model = Activity
     template_name = "event/activity/list.html"
 
+    def get_queryset(self):
+        queryset = Activity.objects.all().annotate(category_count=Count('category')).order_by('-category_count')
+        queryset = queryset.order_by('category__name')
+        return queryset
+
 
 class ActivityFormView(HasAdminPermissionMixin):
     model = Activity
@@ -146,7 +154,7 @@ class EventListView(ListView):
     model = Event
     context_object_name = "event_list"
     template_name = "event/event_list.html"
-    paginate_by = 3
+    paginate_by = 6
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -177,7 +185,6 @@ class EventListView(ListView):
                 date__gte=form.cleaned_data["starts_after"]
             )
         return queryset
-
 
 class EventFormView(HasActivePermissionMixin):
     model = Event
@@ -217,7 +224,26 @@ class EventDeleteView(
     success_url = reverse_lazy("event:list")
 
     def delete(self, request, *args, **kwargs):
-        messages.success(request, "L'évènement a bien été supprimé")
+        event_pk = kwargs["pk"]
+        event = get_object_or_404(Event, pk=event_pk)
+        users = event.organizers.all().union(
+                event.presents.all(),
+                event.registered.all()
+            )
+        if users:
+            for user in users: 
+                msg_plain = render_to_string("event/mail/event_delete.txt", context=locals())
+                msg_html = render_to_string("event/mail/event_delete.html", context=locals())
+                date = event.date.strftime("%d %B")
+                subject = f"IMPORTANT : Annulation événement du {date} : {event.activity.name} à {event.location.name}"
+                send_mail(
+                    subject,
+                    msg_plain,
+                    f"{event.organization}" '<no-reply@atelier-soude.fr>',
+                    [user.email],
+                    html_message=msg_html,
+                )
+        messages.success(request, "L'évènement a bien été supprimé et les participants avertis")
         return super().delete(request, *args, **kwargs)
 
 
@@ -252,9 +278,9 @@ def _load_token(token, salt):
     return Event.objects.get(pk=event_id), CustomUser.objects.get(pk=user_id)
 
 
-def add_present(event: Event, user: CustomUser, paid: int):
+def add_present(event: Event, user: CustomUser, paid: int, payment: int):
     event.registered.remove(user)
-    Participation.objects.create(event=event, user=user, amount=paid)
+    Participation.objects.create(event=event, user=user, amount=paid, payment=payment)
 
 
 class AbsentView(RedirectView):
@@ -271,20 +297,36 @@ class AbsentView(RedirectView):
 
         event.registered.add(user)
         participation = event.participations.filter(user=user).first()
-        if participation and participation.saved:
+        fees = Fee.objects.filter(user=user, organization=event.organization)
+        related_fee = participation.fee
+        if participation and participation.saved and participation.amount !=0:
             contribution = Membership.objects.filter(
                 user=participation.user, organization=event.organization
             ).first()
             if contribution:
-                contribution.amount -= participation.amount
-                fee = Fee.objects.filter(
-                    organization=event.organization,
-                    user=participation.user,
-                    date=event.date,
-                    amount=participation.amount,
-                )
-                fee.delete()
-                contribution.save()
+                if related_fee == contribution.fee:
+                    contribution.amount -= related_fee.amount
+                    next_fee = fees.filter(date__gt=related_fee.date).last()
+                    if not next_fee:
+                        prev_fee = fees.filter(date__lt=related_fee.date).first()
+                        if prev_fee:
+                            contribution.amount = prev_fee.amount
+                            contribution.fee = prev_fee
+                            contribution.first_payment = prev_fee.date
+                    if next_fee:
+                        contribution.fee = next_fee
+                        contribution.first_payment = next_fee.date
+                elif event.date > contribution.first_payment.date():
+                    contribution.amount -= related_fee.amount
+                else: 
+                    pass
+                if related_fee:
+                    related_fee.delete()
+                if not fees:
+                    contribution.delete()
+                else:
+                    contribution.save()           
+                
         event.presents.remove(user)
         messages.success(self.request, f"{user} a été marqué comme absent !")
 
@@ -332,7 +374,7 @@ class CancelReservationView(RedirectView):
         send_mail(
             subject,
             msg_plain,
-            "no-reply@atelier-soude.fr",
+            f"{event.organization}" '<no-reply@atelier-soude.fr>',
             [user.email],
             html_message=msg_html,
         )
@@ -406,12 +448,12 @@ class BookView(RedirectView):
         msg_html = render_to_string("event/mail/book.html", context=locals())
 
         date = event.date.strftime("%d %B")
-        subject = f"Votre réservation du {date} à {event.location.name}"
+        subject = f"Votre réservation du {date} pour {event.activity.name} à {event.location.name}"
 
         send_mail(
             subject,
             msg_plain,
-            "no-reply@atelier-soude.fr",
+            f"{event.organization}" '<no-reply@atelier-soude.fr>',
             [user.email],
             html_message=msg_html,
         )
@@ -430,6 +472,7 @@ class CloseEventView(HasActivePermissionMixin, RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         event_pk = kwargs["pk"]
         event = get_object_or_404(Event, pk=event_pk)
+        event_date = event.date
         nb_deleted, nb_new_members = 0, 0
         for temp_user in event.registered.filter(first_name=""):
             temp_user.delete()
@@ -438,27 +481,27 @@ class CloseEventView(HasActivePermissionMixin, RedirectView):
             contribution, created = Membership.objects.get_or_create(
                 user=participation.user, organization=event.organization
             )
-            related_fee = Fee.objects.create(
-                amount=participation.amount,
-                user=participation.user,
-                organization=event.organization,
-            )
-            if participation.saved:
-                amount = 0
-            else:
-                amount = participation.amount
-
-            if contribution.first_payment < timezone.now() - timedelta(
-                days=365
-            ):
-                contribution.first_payment = timezone.now()
-                contribution.amount = amount
-            else:
-                contribution.amount += amount
+            if not participation.saved and participation.amount != 0 or contribution.first_payment.date() < event_date - timedelta(days=365) :
+                related_fee = Fee.objects.create(
+                    amount=participation.amount,
+                    user=participation.user,
+                    organization=event.organization,
+                    date=event_date,
+                    payment=participation.payment
+                )
+                participation.fee = related_fee
+                if contribution.fee is None or contribution.first_payment.date() < event_date - timedelta(days=365):
+                    contribution.fee = related_fee
+                    contribution.first_payment = related_fee.date
+                    contribution.amount = related_fee.amount
+                elif event_date < contribution.first_payment.date():
+                    pass
+                elif event_date > contribution.first_payment.date():
+                    contribution.amount += related_fee.amount
             participation.saved = True
-            participation.fee = related_fee
             participation.save()
             contribution.save()
+
             if created:
                 nb_new_members += 1
 
@@ -471,7 +514,7 @@ class CloseEventView(HasActivePermissionMixin, RedirectView):
         return reverse("event:detail", args=[event.id, event.slug])
 
 
-class AddActiveEventView(HasActivePermissionMixin, RedirectView):
+class AddActiveEventView(HasVolunteerPermissionMixin, RedirectView):
     http_method_names = ["post"]
     model = Event
 
@@ -479,12 +522,12 @@ class AddActiveEventView(HasActivePermissionMixin, RedirectView):
         event_pk = kwargs["pk"]
         event = get_object_or_404(Event, pk=event_pk)
         event.organizers.add(self.request.user)
-        messages.success(self.request, "Ajouté aux organisateurs !")
+        messages.success(self.request, "Ajouté aux animateurs !")
 
         return reverse("event:detail", args=[event.id, event.slug])
 
 
-class RemoveActiveEventView(HasActivePermissionMixin, RedirectView):
+class RemoveActiveEventView(HasVolunteerPermissionMixin, RedirectView):
     http_method_names = ["post"]
     model = Event
 
@@ -492,6 +535,20 @@ class RemoveActiveEventView(HasActivePermissionMixin, RedirectView):
         event_pk = kwargs["pk"]
         event = get_object_or_404(Event, pk=event_pk)
         event.organizers.remove(self.request.user)
-        messages.success(self.request, "Retiré des organisateurs !")
+        messages.success(self.request, "Retiré des animateurs !")
 
         return reverse("event:detail", args=[event.id, event.slug])
+
+#### autocomplete views for event form ####
+
+class PlaceAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            return Place.objects.none()
+
+        qs = Place.objects.all().order_by("name")
+
+        if self.q:
+            qs = qs.filter(name__istartswith=self.q)
+
+        return qs

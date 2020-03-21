@@ -6,6 +6,7 @@ SECRET_KEY = os.environ["SECRET_KEY"]
 DEBUG = False
 
 ALLOWED_HOSTS = [
+    ""
     "127.0.0.1", "localhost",
     "atelier-soude.fr",
     "www.atelier-soude.fr",
@@ -39,3 +40,4 @@ EMAIL_PORT = 25
 EMAIL_HOST_USER = "no-reply@atelier-soude.fr"
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_PASSWORD")
+

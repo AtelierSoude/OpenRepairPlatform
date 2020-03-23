@@ -18,9 +18,9 @@
         >
           {% csrf_token %}
           {% if stuff %}
-            {% bootstrap_form form %}
+            {% bootstrap_form stuff_form %}
           {% else %}
-            {% bootstrap_form form %}
+            {% bootstrap_form stuff_form %}
           {% endif %}
           <div class="form-group p-2">
             <button type="submit" class="btn btn-success w-100 p-3">Valider</button>

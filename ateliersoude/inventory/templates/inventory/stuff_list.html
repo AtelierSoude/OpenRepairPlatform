@@ -17,7 +17,7 @@
         <td> {{ stuff.place }} </td>
         <td> {{ stuff.get_state_display }} </td>
         <td> {{ stuff.owner }} </td>
-        {% include "inventory/modal_stuff.html" with form=form|initial_stuff:stuff %}
+        {% include "inventory/modal_stuff.html" with stuff_form=stuff_form|initial_stuff:stuff %}
       </tr>
     {% empty %}
       Pas de stock pour l'instant

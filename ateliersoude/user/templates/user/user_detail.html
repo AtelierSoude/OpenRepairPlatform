@@ -394,6 +394,14 @@
         </div>
 
     <div class="tab-pane fade" id="v-pills-stock" role="tabpanel" aria-labelledby="v-pills-stock-tab">
+
+
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalStuff" aria-pressed="false" autocomplete="off">
+        Ajouter un objet à l'inventaire
+      </button>
+      {% include "inventory/modal_stuff.html" %}
+
+      
       <h4 class="mt-4"> {{ stock.all.count}} Objets inventoriés </h4>
       <div class="card p-2 pt-4">
           <div class="table-responsive">

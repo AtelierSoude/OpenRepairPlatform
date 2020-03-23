@@ -66,3 +66,4 @@ webencodings==0.5.1       # via bleach, html5lib, tinycss2
 django-gravatar2
 django-autocomplete-light
 django-recaptcha
+pyfixit2

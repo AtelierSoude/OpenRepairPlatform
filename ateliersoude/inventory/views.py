@@ -2,7 +2,7 @@ from django.views.generic import (
     ListView,
     CreateView,
     UpdateView,
-    DetailView
+    DetailView,
 )
 from django.contrib import messages
 from ateliersoude.mixins import HasActivePermissionMixin
@@ -11,6 +11,10 @@ from ateliersoude.user.mixins import PermissionOrgaContextMixin
 from .models import Stuff
 from .forms import StuffForm
 
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import authentication, permissions
+from django.contrib.auth.models import User
 
 class OrganizationStockView(
     HasActivePermissionMixin, PermissionOrgaContextMixin, ListView

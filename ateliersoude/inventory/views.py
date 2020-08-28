@@ -91,8 +91,10 @@ class StuffUserFormView(PermissionOrgaContextMixin):
         stuff = self.object
         return reverse("inventory:stuff_view", args=[stuff.pk])
 
+
 class StuffUserCreateView(RedirectQueryParamView, StuffUserFormView, CreateView):
     success_message = "l'appareil a bien été créé"
+
 
 class StuffOrganizationFormView(PermissionOrgaContextMixin):
     model = Stuff
@@ -107,6 +109,7 @@ class StuffOrganizationFormView(PermissionOrgaContextMixin):
     def get_success_url(self):
         stuff = self.object
         return reverse("inventory:stuff_view", args=[stuff.pk])
+
 
 class StuffOrganizationCreateView(RedirectQueryParamView, StuffOrganizationFormView, CreateView):
     success_message = "l'appareil a bien été créé"

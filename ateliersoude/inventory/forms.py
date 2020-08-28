@@ -22,6 +22,19 @@ class StuffForm(ModelForm):
             "state"
         ]
 
+class StuffUserForm(ModelForm):
+    # type = ChoiceField(
+    #     choices=(
+    #         ("D", "Device"),
+    #         ("T", "Tool"),
+    #         ("P", "Part"),
+    #     )
+    # )
+    class Meta:
+        model = Stuff
+        fields = [
+            "state"
+        ]
 
 class StuffOrganizationForm(ModelForm):
     # type = ChoiceField(
@@ -35,19 +48,5 @@ class StuffOrganizationForm(ModelForm):
         model = Stuff
         fields = [
             "place",
-            "state"
-        ]
-
-class StuffUserForm(ModelForm):
-    # type = ChoiceField(
-    #     choices=(
-    #         ("D", "Device"),
-    #         ("T", "Tool"),
-    #         ("P", "Part"),
-    #     )
-    # )
-    class Meta:
-        model = Stuff
-        fields = [
             "state"
         ]

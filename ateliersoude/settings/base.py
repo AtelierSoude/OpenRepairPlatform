@@ -20,8 +20,6 @@ INSTALLED_APPS = [
     "ateliersoude.location",
     "ateliersoude.inventory",
     "django.contrib.sites",
-    'dal',
-    'dal_select2',
     "django.contrib.admin",
     "django.contrib.admindocs",
     "django.contrib.auth",
@@ -36,11 +34,12 @@ INSTALLED_APPS = [
     "django_assets",
     "bootstrap4",
     "sorl.thumbnail",
-    "tinymce",
     "import_export",
     "initial_avatars",
     "django_gravatar",
     "captcha",
+    'dal',
+    'dal_select2',
 ]
 
 

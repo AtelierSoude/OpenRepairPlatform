@@ -11,6 +11,6 @@
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalStuff" aria-pressed="false" autocomplete="off">
   Ajouter un objet à l'inventaire
 </button>
-{% include "inventory/modal_stuff.html" %}
+{% include "inventory/modal_stuff.html" with owner_organization=organization %}
 {% include "inventory/stuff_list.html" with stock=stock %}
 {% endblock %}

@@ -3,7 +3,13 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="modalStuffTitle">Modifier</h5>
+        {% if stuff %}
+          <h5 class="modal-title" id="modalStuffTitle">Modifier</h5>
+        {% elif owner_member %}
+          <h5 class="modal-title" id="modalStuffTitle">Créer un appareil pour {{owner_member}}</h5>
+        {% elif owner_organization %}
+        <h5 class="modal-title" id="modalStuffTitle">Créer un appareil pour {{owner_organization}}</h5>
+        {% endif %}
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -13,15 +19,27 @@
           {% if stuff %}
             action="{% url 'inventory:update_stuff' stuff.pk %}"
           {% else %}
+            {% if owner_member %}
+            action="{% url 'inventory:create_user_stuff' owner_member.pk %}"
+            {% elif owner_organization %}
+            action="{% url 'inventory:create_organization_stuff' owner_organization.slug %}"
+            {% else %}
             action="{% url 'inventory:create_stuff' %}"
+            {% endif %}
           {% endif %}
         >
           {% csrf_token %}
+
           {% if stuff %}
             {% bootstrap_form stuff_form %}
           {% else %}
-            {% bootstrap_form stuff_form %}
+            {% if owner_member %}
+              {% bootstrap_form add_member_stuff %}
+            {% elif owner_organization %}
+              {% bootstrap_form add_organization_stuff %}
+            {% endif %}
           {% endif %}
+
           <div class="form-group p-2">
             <button type="submit" class="btn btn-success w-100 p-3">Valider</button>
           </div>

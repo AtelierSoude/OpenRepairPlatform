@@ -399,7 +399,7 @@
       <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalStuff" aria-pressed="false" autocomplete="off">
         Ajouter un objet à l'inventaire
       </button>
-      {% include "inventory/modal_stuff.html" %}
+      {% include "inventory/modal_stuff.html" with owner_member=object %}
 
       
       <h4 class="mt-4"> {{ stock.all.count}} Objets inventoriés </h4>
@@ -416,7 +416,7 @@
               <tbody>
                 {% for stuff in stock %}
                   <tr>
-                    <td scope="row">{{ stuff }}</td>
+                    <td scope="row"><a href="{{stuff.get_absolute_url}}"> {{ stuff }}</a></td>
                     <td>
                       {% if stuff.place %}
                         <a href="{% url 'location:detail' stuff.place.id stuff.place.slug %}">

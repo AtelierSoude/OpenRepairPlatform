@@ -30,6 +30,7 @@ from ateliersoude.event.forms import (
 )
 from ateliersoude.event.models import Activity, Condition, Event, Participation
 from ateliersoude.location.models import Place
+from ateliersoude.inventory.forms import StuffForm
 from ateliersoude.event.templatetags.app_filters import tokenize
 from ateliersoude.mixins import (
     RedirectQueryParamView,

@@ -11,13 +11,13 @@
   </thead>
   <tbody>
     {% for stuff in stock %}
-      <tr data-toggle="modal" data-target="#modalStuff{{ stuff.pk }}">
-        <td scope="row"> {{ stuff.name }} </td>
-        <td>{{ stuff.type }}</td>
-        <td> {{ stuff.place }} </td>
-        <td> {{ stuff.get_state_display }} </td>
-        <td> {{ stuff.owner }} </td>
-        {% include "inventory/modal_stuff.html" with stuff_form=stuff_form|initial_stuff:stuff %}
+      <tr>
+          <td scope="row"> <a href="{{stuff.get_absolute_url}}"> {{ stuff }}</a> </td>
+          <td>{{ stuff.type }}</td>
+          <td> {{ stuff.place }} </td>
+          <td> {{ stuff.get_state_display }} </td>
+          <td> {{ stuff.owner }} </td>
+        </a>
       </tr>
     {% empty %}
       Pas de stock pour l'instant

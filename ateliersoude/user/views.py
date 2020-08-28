@@ -32,7 +32,7 @@ from ateliersoude.mixins import (
 )
 from ateliersoude.user.models import CustomUser, Organization, Membership, Fee
 from ateliersoude.inventory.models import Stuff
-from ateliersoude.inventory.forms import StuffForm
+from ateliersoude.inventory.forms import StuffForm, StuffUserForm
 
 from .forms import (
     UserUpdateForm,
@@ -337,7 +337,7 @@ class UserDetailView(DetailView):
         )
         context["future_rendezvous"].sort(key=lambda evt: evt[0].date)
         context["stock"] = Stuff.objects.filter(member_owner=self.get_object())
-        context["stuff_form"] = StuffForm
+        context["add_member_stuff"] = StuffUserForm
         return context
 
 

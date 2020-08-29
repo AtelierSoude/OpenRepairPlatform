@@ -67,3 +67,4 @@ django-gravatar2
 django-autocomplete-light
 django-recaptcha
 pyfixit2
+

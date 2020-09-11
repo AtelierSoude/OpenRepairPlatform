@@ -11,10 +11,10 @@
 
   <div class="card p-2">
     <div class="float-right pb-4 col-lg text-center">
-      <a class="btn btn-primary m-2 {% if not organization.activities.all %} disabled{% endif %}" href="{% url 'event:create' organization.id %}">
+      <a class="btn btn-primary m-2" href="{% url 'event:create' organization.id %}">
         <i class="fa fa-plus-circle"></i> évènement
       </a>
-      <a class="btn btn-success m-2 {% if not organization.activities.all %} disabled{% endif %}" href="{% url 'event:recurrent_create' organization.id %}">
+      <a class="btn btn-success m-2" href="{% url 'event:recurrent_create' organization.id %}">
         <i class="fa fa-plus-circle"></i> événement récurrent
       </a>
     </div>

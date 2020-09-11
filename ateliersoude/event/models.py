@@ -175,7 +175,7 @@ class Event(models.Model):
     history = HistoricalRecords()
 
     def save(self, *args, **kwargs):
-        if self.activity.name:
+        if self.activity:
             slug = self.activity.name
         else: 
             slug = 'no activity type'
@@ -218,7 +218,7 @@ class Event(models.Model):
         return get_future_published_events(cls.objects)
 
     def __str__(self):
-        if self.activity.name:
+        if self.activity:
             activity_name = self.activity.name
         else: 
             activity_name = 'no activity type'

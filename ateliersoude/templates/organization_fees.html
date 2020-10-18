@@ -6,9 +6,9 @@
 
 {% block menu_content %}
 <section class="container text-center">
-  <h2 class="text-center p-4">Cotisations</h2>
-  <div class="text-center card p-2 m-auto">
-  {% if filter %}
+  <div class="text-center p-2 m-auto">
+    <h2 class="text-center pt-2">Cotisations</h2>
+    {% if filter %}
       <form action="" method="get" class="form-inline justify-content-center">
           {% bootstrap_form filter.form %}
           <a class="btn-secondary">{% bootstrap_button 'filtrer' %}</a>
@@ -20,9 +20,12 @@
       <a class="btn btn-success btn-sm" href="{% querystring '_export'='ods' %}">ODS</a>
       </span>
   </div>
-    {% render_table table %}
+</section>
+<section class="border border-primary mb-5">
+  {% render_table table %}
 </section>
 {% endblock menu_content %}
+
 
 {% block extra_js %}
   <script>

@@ -23,5 +23,6 @@ class FeeTable(tables.Table):
 
     class Meta:
         model = Fee
+        attrs = {"class": "table table-fixed"}
         sequence = ('date', 'user', 'participation', 'payment', 'amount')
         exclude = ("organization", 'id' )

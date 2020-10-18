@@ -262,4 +262,8 @@ class Participation(models.Model):
         unique_together = (("user", "event"),)
 
     def __str__(self):
-        return self.user.first_name + " " + str(self.event)
+        return " Participation " + self.user.first_name + " " + str(self.event)
+    
+    def get_absolute_url(self):
+        return reverse("event:detail", args=(self.event.pk, self.event.slug))
+

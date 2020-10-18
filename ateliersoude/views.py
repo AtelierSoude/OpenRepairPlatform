@@ -4,6 +4,14 @@ from django.views.generic import (
     ListView,
     FormView
 )
+import django_tables2 as tables
+from django_filters.views import FilterView
+from django_tables2.views import SingleTableMixin
+from django_tables2.export.views import ExportMixin
+
+from ateliersoude.tables import FeeTable
+from ateliersoude.filters import FeeFilter
+
 from ateliersoude.user.mixins import PermissionOrgaContextMixin
 from ateliersoude.mixins import HasActivePermissionMixin
 from ateliersoude.user.models import (
@@ -125,14 +133,20 @@ class OrganizationMembersView(
         context["add_member_form"] = MoreInfoCustomUserForm
         return context
 
-
 class OrganizationFeesView(
-    HasActivePermissionMixin, PermissionOrgaContextMixin, ListView
+    HasActivePermissionMixin, 
+    PermissionOrgaContextMixin, 
+    ExportMixin, 
+    tables.SingleTableMixin, 
+    FilterView
         ):
     model = Fee
     template_name = "organization_fees.html"
     context_object_name = "fees"
-    paginate_by = 100
+    table_class = FeeTable
+    filterset_class = FeeFilter
+    paginate_by = 40
+    dataset_kwargs = {"title": "Fees"}
 
     def get_queryset(self):
         self.object = self.organization
@@ -144,8 +158,9 @@ class OrganizationFeesView(
         context = super().get_context_data(**kwargs)
         context["accounting_tab"] = 'active'
         context["organization"] = self.organization
+        filtered_data = FeeFilter(self.request.GET, queryset=self.get_queryset().all())
         context["total_fees"] = sum(
-            [fee.amount for fee in self.get_queryset().all()]
+            [fee.amount for fee in filtered_data.qs]
         )
         return context
 

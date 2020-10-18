@@ -1,65 +1,26 @@
 {% extends 'organization_page.html' %}
 {% load static %}
+{% load bootstrap4 %}
+{% load querystring from django_tables2 %}
+{% load django_tables2 %}
 
 {% block menu_content %}
-<section class="container">
+<section class="container text-center">
   <h2 class="text-center p-4">Cotisations</h2>
-  <div class="float-right">
+  <div class="text-center card p-2 m-auto">
+  {% if filter %}
+      <form action="" method="get" class="form-inline justify-content-center">
+          {% bootstrap_form filter.form %}
+          <a class="btn-secondary">{% bootstrap_button 'filtrer' %}</a>
+      </form>
+    {% endif %}
     <h4>Total = {{total_fees}} €</h4>
+    <span class="">Télécharger le résultat :
+      <a class="btn btn-success btn-sm" href="{% querystring '_export'='csv' %}">CSV</a>
+      <a class="btn btn-success btn-sm" href="{% querystring '_export'='ods' %}">ODS</a>
+      </span>
   </div>
-
-  <div class="table-responsive">
-    <table class="table infinite-container">
-        <thead class="bg-primary">
-            <tr>
-              <th scope="col"><small class="text-white">Date</small></th>
-              <th scope="col"><small class="text-white">Membre</small></th>
-              <th scope="col"><small class="text-white">Source</small></th>
-              <th scope="col"><small class="text-white">Montant</small></th>
-            </tr>
-          </thead>
-        <tbody class="infinite-item">
-          {% for fee in fees %}
-            {% ifchanged %}
-              <tr>
-                <td colspan="5" class="bg-light">
-                  <b>{{fee.date|date:"F Y" }}</b>
-                </td>
-              </tr>
-            {% endifchanged %}
-            <tr class="{% if fee.date <= today %}bg-light text-muted{% else %}bg-white{% endif %}">
-              <td>
-                <span class="col-12">
-                {{fee.date|date:"d/m/Y" }}
-                </span>
-              </td>
-              <td>
-                <a href="{% url 'user:user_detail' fee.user.pk %}">
-                  <b>{{fee.user}}</b>
-                </a>
-              </td>
-              <td>
-                {% if fee.participation %}
-                    <a href="{% url 'event:detail' fee.participation.event.pk fee.participation.event.slug %}">{{fee.participation.event}}</a>
-                {% else %}
-                    Cotisation manuelle
-                {% endif %}
-              </td>
-              <td class="text-right">
-                <b>{{ fee.amount }}€</b><br>
-                <small>{{ fee.get_payment_display }}</small>   
-              </td>
-            </tr>
-          {% empty %}
-          Pas de cotisations
-          {% endfor %}
-        </tbody>
-    </table>
-  </div>
-  {% if page_obj.has_next %}
-    <a class="infinite-more-link" href="?page={{ page_obj.next_page_number }}"></a>
-  {% endif %}
-  </div>
+    {% render_table table %}
 </section>
 {% endblock menu_content %}
 
@@ -71,6 +32,7 @@
       $("#breadcrumb").sticky({topSpacing:0});
     });
   </script>
+  
   <script src="{% static 'js/lib/jquery.waypoints.js' %}"></script>
   <script src="{% static 'js/lib/infinite.min.js' %}"></script>
   <script>

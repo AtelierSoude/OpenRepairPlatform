@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     "initial_avatars",
     "django_gravatar",
     "captcha",
+    "django_tables2",
+    'django_filters',
 ]
 
 
@@ -147,3 +149,5 @@ RECAPTCHA_PRIVATE_KEY = '6Lfe2dIUAAAAADoVIbd8p2YAk7QdH65FS8aC6KX6'
 RECAPTCHA_PROXY = {'http': 'http://dev.atelier-soude.fr', 'https': 'https://dev.atelier-soude.fr'}
 RECAPTCHA_DOMAIN = 'www.recaptcha.net'
 
+# Django tables2
+DJANGO_TABLES2_TEMPLATE = "django_tables2/bootstrap4.html"

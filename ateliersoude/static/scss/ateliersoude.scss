@@ -37,6 +37,19 @@ h5{
 .bg-grey { 
   background-color: #eef2f6 !important;
 }
+
+/* tables */ 
+
+thead {
+  background-color: #083342;
+}
+
+tbody {
+  tr {
+    background-color: #fff;
+  }
+}
+
 /* Menu */
 
 .header_detail_page, #h_nav, #breadcrumb, #jumbotron, #search_tab, #event_title, #event_about, .jumbotron {

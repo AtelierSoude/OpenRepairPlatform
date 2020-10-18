@@ -61,7 +61,28 @@ tbody {
     table-layout:fixed;
 }
 }
+.small-column{
+  width:50px;
+}  
+.form-xs {
+  input {
+    height: calc(1em + .375rem + 2px) !important;
+    padding: .5rem .5rem !important;
+    font-size: .75rem !important;
+    line-height: 1.5;
+  }
+  label {
+    margin-right: .5rem;
+  }
+}
+.table td, .table th {
+  vertical-align: middle;
+}
 
+td {
+  white-space: normal !important; 
+  word-wrap: break-word;  
+}
 
 /* Menu */
 

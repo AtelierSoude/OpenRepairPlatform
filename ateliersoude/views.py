@@ -9,8 +9,8 @@ from django_filters.views import FilterView
 from django_tables2.views import SingleTableMixin
 from django_tables2.export.views import ExportMixin
 
-from ateliersoude.tables import FeeTable
-from ateliersoude.filters import FeeFilter
+from ateliersoude.tables import FeeTable, MemberTable
+from ateliersoude.filters import FeeFilter, MemberFilter
 
 from ateliersoude.user.mixins import PermissionOrgaContextMixin
 from ateliersoude.mixins import HasActivePermissionMixin
@@ -103,12 +103,20 @@ class OrganizationPageView(PermissionOrgaContextMixin, DetailView):
 
 
 class OrganizationMembersView(
-    HasActivePermissionMixin, PermissionOrgaContextMixin, ListView
+    HasActivePermissionMixin, 
+    PermissionOrgaContextMixin, 
+    ExportMixin, 
+    tables.SingleTableMixin, 
+    FilterView
         ):
     model = CustomUser
     template_name = "organization_members.html"
     context_object_name = "members"
     paginate_by = 20
+    table_class = MemberTable
+    filterset_class = MemberFilter
+    paginate_by = 40
+    dataset_kwargs = {"title": "Members"}
 
     def get_queryset(self):
         self.object = self.organization

@@ -5,27 +5,29 @@
 {% load django_tables2 %}
 
 {% block menu_content %}
-<section class="container text-center">
+<section class="container">
   <div class="text-center p-2 m-auto">
     <h2 class="text-center pt-2">Cotisations</h2>
     {% if filter %}
-      <form action="" method="get" class="form-inline justify-content-center">
+    <div class="card mb-4 text-center">
+      <form action="" method="get" class="form-inline justify-content-center form-xs">
+        <h4 class="d-block w-100">Rechercher</h4>
           {% bootstrap_form filter.form %}
-          <a class="btn-secondary">{% bootstrap_button 'filtrer' %}</a>
+          <a class="btn-secondary w-100">{% bootstrap_button 'filtrer' %}</a>
       </form>
+    </div>
     {% endif %}
-    <h4>Total = {{total_fees}} €</h4>
-    <span class="">Télécharger le résultat :
-      <a class="btn btn-success btn-sm" href="{% querystring '_export'='csv' %}">CSV</a>
-      <a class="btn btn-success btn-sm" href="{% querystring '_export'='ods' %}">ODS</a>
-      </span>
   </div>
 </section>
+<h4 class="text-center w-100">Total = {{total_fees}} €</h4>
 <section class="border border-primary mb-5">
+  <span class="">Télécharger le résultat :
+    <a class="btn btn-success btn-sm" href="{% querystring '_export'='csv' %}">CSV</a>
+    <a class="btn btn-success btn-sm" href="{% querystring '_export'='ods' %}">ODS</a>
+  </span>
   {% render_table table %}
 </section>
 {% endblock menu_content %}
-
 
 {% block extra_js %}
   <script>
@@ -35,7 +37,6 @@
       $("#breadcrumb").sticky({topSpacing:0});
     });
   </script>
-  
   <script src="{% static 'js/lib/jquery.waypoints.js' %}"></script>
   <script src="{% static 'js/lib/infinite.min.js' %}"></script>
   <script>

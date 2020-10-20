@@ -62,7 +62,7 @@ tbody {
 }
 }
 .small-column{
-  width:50px;
+  width:70px;
 }  
 .form-xs {
   input {
@@ -82,6 +82,34 @@ tbody {
 td {
   white-space: normal !important; 
   word-wrap: break-word;  
+}
+
+.column-shifter-container .dropdown-toggle {
+  color: #083342;
+}
+
+.table-hover tbody tr:hover {
+  background-color: rgba(0,0,0,0.02);
+}
+/* pagination fix */ 
+.pagination {
+  justify-content: center !important;
+  li {
+    position: relative;
+    display: block;
+    padding: .5rem .75rem;
+    margin-left: -1px;
+    line-height: 1.25;
+    color: #2be6ab;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+  }
+  li.active {
+    z-index: 1;
+    color: #fff;
+    background-color: #083342;
+    border-color: #083342;
+  }
 }
 
 /* Menu */

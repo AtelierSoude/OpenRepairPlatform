@@ -9,8 +9,8 @@ from django_filters.views import FilterView
 from django_tables2.views import SingleTableMixin
 from django_tables2.export.views import ExportMixin
 
-from ateliersoude.tables import FeeTable, MemberTable
-from ateliersoude.filters import FeeFilter, MemberFilter
+from ateliersoude.tables import FeeTable, MemberTable, EventTable
+from ateliersoude.filters import FeeFilter, MemberFilter, EventFilter
 
 from ateliersoude.user.mixins import PermissionOrgaContextMixin
 from ateliersoude.mixins import HasActivePermissionMixin
@@ -172,13 +172,21 @@ class OrganizationFeesView(
         )
         return context
 
+
 class OrganizationEventsView(
-    HasActivePermissionMixin, PermissionOrgaContextMixin, ListView
+    HasActivePermissionMixin, 
+    PermissionOrgaContextMixin, 
+    ExportMixin, 
+    tables.SingleTableMixin, 
+    FilterView
         ):
     model = Event
     template_name = "organization_events.html"
     context_object_name = "events"
-    paginate_by = 10
+    table_class = EventTable
+    filterset_class = EventFilter
+    paginate_by = 20
+    dataset_kwargs = {"title": "Event"}
     form_class = EventSearchForm
 
     def get_queryset(self):
@@ -192,6 +200,8 @@ class OrganizationEventsView(
         context["events_tab"] = 'active'
         context["organization"] = self.organization
         context["search_form"] = self.form_class
+        filtered_data = EventFilter(self.request.GET, queryset=self.get_queryset().all())
+        context["total_events"] = filtered_data.qs.count()
         context["today"] = datetime.date(datetime.now())
         return context
 

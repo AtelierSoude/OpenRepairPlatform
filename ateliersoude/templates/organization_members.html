@@ -11,29 +11,31 @@
   </section>
   <section class="container">
     <div class="col-lg">
-    <div class="card mb-4 text-center">
-      <button class="btn btn-success" data-toggle="modal" data-target="#more-info-{{ anonymous_user.pk }}">
-        <i class="fa fa-plus"></i>
-        Ajouter un membre
-      </button>
-      {% include "user/organization/modal_more_info.html" with object=organization form=add_member_form %}
+      <div class="card mb-4 text-center">
+        <button class="btn btn-success" data-toggle="modal" data-target="#more-info-{{ anonymous_user.pk }}">
+          <i class="fa fa-plus"></i>
+          Ajouter un membre
+        </button>
+        {% include "user/organization/modal_more_info.html" with object=organization form=add_member_form %}
+      </div>
+      {% if filter %}
+      <div class="card mb-4 text-center">
+        <form action="" method="get" class="form-inline justify-content-center form-xs">
+          <h4 class="d-block w-100">Rechercher</h4>
+            {% bootstrap_form filter.form %}
+            <a class="btn-secondary w-100">{% bootstrap_button 'filtrer' %}</a>
+        </form>
+      </div>
+      {% endif %}
+      <div class="border border-primary mb-5">
+        <span class="float-right">Télécharger le résultat :
+          <a class="btn btn-success btn-sm" href="{% querystring '_export'='csv' %}">CSV</a>
+          <a class="btn btn-success btn-sm" href="{% querystring '_export'='ods' %}">ODS</a>
+        </span>
+        {% render_table table %}
+      </div>
     </div>
-    {% if filter %}
-    <div class="card mb-4 text-center">
-      <form action="" method="get" class="form-inline justify-content-center form-xs">
-        <h4 class="d-block w-100">Rechercher</h4>
-          {% bootstrap_form filter.form %}
-          <a class="btn-secondary w-100">{% bootstrap_button 'filtrer' %}</a>
-      </form>
-    </div>
-    {% endif %}
-    <div class="border border-primary mb-5">
-      <span class="">Télécharger le résultat :
-        <a class="btn btn-success btn-sm" href="{% querystring '_export'='csv' %}">CSV</a>
-        <a class="btn btn-success btn-sm" href="{% querystring '_export'='ods' %}">ODS</a>
-      </span>
-      {% render_table table %}
-    </div>
+  </section>
 {% endblock menu_content %}
 
 {% block extra_js %}

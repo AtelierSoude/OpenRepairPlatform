@@ -2,8 +2,72 @@ import django_tables2 as tables
 from ateliersoude.user.models import (
     Fee, CustomUser
 )
+from ateliersoude.event.models import (
+    Event
+)
+from django_tables2_column_shifter.tables import ColumnShiftTable
+from django_tables2.export.export import TableExport
 
-class MemberTable(tables.Table):
+class EventTable(ColumnShiftTable):
+
+    def get_column_default_show(self):
+        self.column_default_show = ['date', 'activity', 'location', 'needed_organizers', 'seats', 'action']
+        return super(MemberTable, self).get_column_default_show()
+
+    date = tables.TemplateColumn(
+        accessor='date', 
+        template_name="extra_column_data.html",
+        verbose_name="Date",
+        extra_context={"column": "date"},
+        )
+    needed_organizers = tables.TemplateColumn(
+        accessor='needed_organizers', 
+        template_name="extra_column_data.html",
+        verbose_name="Animateurs",
+        extra_context={"column": "needed_organizers"},
+        )
+    seats = tables.TemplateColumn(
+        accessor='available_seats', 
+        template_name="extra_column_data.html",
+        extra_context={"column": "seats"},
+        verbose_name="Places",
+        )
+    action = tables.TemplateColumn(
+        accessor='get_absolute_url', 
+        template_name="extra_column_data.html",
+        extra_context={"column": "details"},
+        verbose_name="Action",
+        linkify=True,
+
+        )
+    class Meta:
+        model = Event
+        attrs = {"class": "table table-fixed table-hover"}
+        sequence = ('date', 'activity', 'location', 'collaborator', 'needed_organizers', 'seats', 'published', 'action')
+        exclude = (
+            "id", 
+            'organization', 
+            'starts_at',
+            'ends_at',
+            'description',
+            'external', 
+            'external_url', 
+            'slug', 
+            'is_free', 
+            'booking', 
+            'created_at',
+            'updated_at',
+            'available_seats',
+            'publish_at',
+            )
+
+
+
+class MemberTable(ColumnShiftTable):
+
+    def get_column_default_show(self):
+        self.column_default_show = ['avatar', 'full_name', 'membership_status', 'member_update']
+        return super(MemberTable, self).get_column_default_show()
 
     full_name = tables.Column(
         accessor='full_name', 
@@ -31,8 +95,8 @@ class MemberTable(tables.Table):
 
     class Meta:
         model = CustomUser
-        attrs = {"class": "table table-fixed"}
-        sequence = ('avatar', 'full_name', 'email', 'membership_status', 'member_update')
+        attrs = {"class": "table table-fixed table-hover"}
+        sequence = ('avatar', 'full_name', 'email', 'street_address', 'phone_number', 'membership_status', 'member_update')
         exclude = (
             "password", 
             'last_name',
@@ -47,10 +111,10 @@ class MemberTable(tables.Table):
             'is_staff',
             'gender',
             'avatar_img',
-            'phone_number',
             'first_name',
-            'street_address',
             )
+
+
 
 
 class FeeTable(tables.Table):
@@ -72,6 +136,6 @@ class FeeTable(tables.Table):
 
     class Meta:
         model = Fee
-        attrs = {"class": "table table-fixed"}
+        attrs = {"class": "table table-fixed table-hover"}
         sequence = ('date', 'user', 'participation', 'payment', 'amount')
         exclude = ("organization", 'id' )

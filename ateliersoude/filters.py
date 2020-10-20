@@ -5,6 +5,17 @@ from django import forms
 from ateliersoude.user.models import (
     Fee, CustomUser
 )
+from ateliersoude.event.models import (
+    Event
+)
+
+class EventFilter(django_filters.FilterSet):
+    date = django_filters.DateFromToRangeFilter()
+
+    class Meta:
+        model = Event 
+        fields = ['date', 'activity', 'location']
+
 class FeeFilter(django_filters.FilterSet):
     date = django_filters.DateFromToRangeFilter()
 

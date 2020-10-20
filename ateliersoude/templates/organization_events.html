@@ -1,130 +1,38 @@
 {% extends 'organization_page.html' %}
-{% load static %}
-{% load thumbnail %}
-{% load initialavatar %}
+{% load static thumbnail bootstrap4 initialavatar django_tables2 %}
+{% load querystring from django_tables2 %}
+
 {% block title %}Page de {{organization.name}}: gestion des évènements{% endblock %}
 
 {% block menu_content %}
-<section class="container">
-  <h2 class="text-center p-4">{{organization.events.all.count}} évènements
-</h2>
-
-  <div class="card p-2">
-    <div class="float-right pb-4 col-lg text-center">
-      <a class="btn btn-primary m-2" href="{% url 'event:create' organization.id %}">
+  <section class="container">
+    <h2 class="text-center p-2">Evénements de {{ organization }}</h2>
+    <div class="row mb-4 text-center">
+      <a class="btn btn-primary col-md-6" href="{% url 'event:create' organization.id %}">
         <i class="fa fa-plus-circle"></i> évènement
       </a>
-      <a class="btn btn-success m-2" href="{% url 'event:recurrent_create' organization.id %}">
+      <a class="btn btn-success col-md-6" href="{% url 'event:recurrent_create' organization.id %}">
         <i class="fa fa-plus-circle"></i> événement récurrent
       </a>
     </div>
-  <div class="table-responsive">
-    <table class="table infinite-container">
-        <thead class="bg-primary">
-            <tr>
-              <th scope="col"><small class="text-white">Date</small></th>
-              <th scope="col"><small class="text-white">Type</small></th>
-              <th scope="col"><small class="text-white">Lieu</small></th>
-              <th scope="col"><small class="text-white">Animateurs</small></th>
-              <th scope="col"><small class="text-white">Places</small></th>
-            </tr>
-          </thead>
-        <tbody class="infinite-item">
-          {% for event in events %}
-            {% ifchanged %}
-              <tr>
-                <td colspan="5" class="bg-light">
-                  <b>{{ event.date|date:"F" }} {{event.date|date:"Y" }}</b>
-                </td>
-              </tr>
-            {% endifchanged %}
-            <tr class="{% if event.date <= today %}bg-light text-muted{% else %}bg-white{% endif %}">
-              <td>
-                <div class="row border-secondary border text-center">
-                  <span class="col-12 bg-secondary">
-                    {{ event.date|date:"N"|upper }}
-                  </span>
-                  <span class="col-12">
-                    {{ event.date|date:"d" }}
-                  </span>
-                </div>
-              </td>
-              <td>
-                <a href="{% url 'event:detail' event.pk event.slug %}">
-                  <b>
-                    {% if event.activity %}
-                      {{ event.activity }}
-                    {% else %}
-                      Type d'activité supprimé
-                    {% endif %}
-                  </b>
-                </a>
-              </td>
-              <td>
-                <small>{{ event.location }}</small>
-              </td>
-              <td>
-                {% if event.needed_organizers != 0 %}
-                <div class="mini-organizers">
-                    <span class="align-middle
-                      {% if event.needed_organizers != 0 %}
-                        {% if event.needed_organizers > event.organizers.all.count %}
-                          text-danger
-                        {% elif event.needed_organizers <= event.organizers.all.count %}
-                          text-success
-                        {% else %}
-                          text-warning
-                        {% endif %}
-                      {% endif %}"> 
-                        {{ event.organizers.all.count }}/{{ event.needed_organizers }}
-                    </span>
-                    {% for orga in event.organizers.all %}
-                      <div class="position-relative float-left mini d-none d-md-block d-lg-block">
-                      {% if orga.avatar_img %}
-                        {% thumbnail orga.avatar_img "25x25" crop="center" format="PNG" as im %}
-                          <img src="{{ im.url }}" class="rounded-circle"/>
-                        {% endthumbnail %}
-                      {% else %}
-                        {% if orga.first_name %}
-                          {% get_initial_avatar orga 25 'circle' %}
-                        {% endif %}
-                      {% endif %}
-                      </div>
-                    {% endfor %}
-                  </div>
-                {% endif %}
-              </td>
-              <td>
-                {% if event.is_free %}
-                  Illimité
-                {% else %}
-                <span
-                class=" float-left
-                  {% if event.remaining_seats <= 0 %}
-                    text-danger
-                  {% elif event.remaining_seats == event.available_seats %}
-                    text-success
-                  {% else %}
-                    text-warning
-                  {% endif %}
-                  ">
-                <i class="fas fa-users"></i>    
-                  {{ event.remaining_seats}}/{{ event.available_seats }}
-                </span>
-                {% endif %}
-              </td>
-            </tr>
-          {% empty %}
-          Pas d'évènements 
-          {% endfor %}
-        </tbody>
-    </table>
+  </section>
+  {% if filter %}
+  <div class="card mb-4 text-center">
+    <form action="" method="get" class="form-inline justify-content-center form-xs">
+      <h4 class="d-block w-100">Rechercher</h4>
+        {% bootstrap_form filter.form %}
+        <a class="btn-secondary w-100">{% bootstrap_button 'filtrer' %}</a>
+    </form>
   </div>
-  {% if page_obj.has_next %}
-    <a class="infinite-more-link" href="?page={{ page_obj.next_page_number }}"></a>
   {% endif %}
-  </div>
-</section>
+  <h4 class="text-center w-100">{{total_events}} dates</h4>
+  <section class="border border-primary mb-5">
+    <span class="float-right">Télécharger le résultat :
+      <a class="btn btn-success btn-sm" href="{% querystring '_export'='csv' %}">CSV</a>
+      <a class="btn btn-success btn-sm" href="{% querystring '_export'='ods' %}">ODS</a>
+    </span>
+  {% render_table table %}
+  </section>
 {% endblock menu_content %}
 
 {% block extra_js %}
@@ -133,19 +41,6 @@
       $("#h_nav").sticky({topSpacing:40});
       $("#side_nav").sticky({topSpacing:80});
       $("#breadcrumb").sticky({topSpacing:0});
-    });
-  </script>
-  <script src="{% static 'js/lib/jquery.waypoints.js' %}"></script>
-  <script src="{% static 'js/lib/infinite.min.js' %}"></script>
-  <script>
-    var infinite = new Waypoint.Infinite({
-      element: $('.infinite-container')[0],
-      onBeforePageLoad: function () {
-        $('.loading').show();
-      },
-      onAfterPageLoad: function ($items) {
-        $('.loading').hide();
-      }
     });
   </script>
 {% endblock %}

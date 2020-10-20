@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "django_gravatar",
     "captcha",
     "django_tables2",
+    'django_tables2_column_shifter',
     'django_filters',
 ]
 

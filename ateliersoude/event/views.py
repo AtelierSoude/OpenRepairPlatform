@@ -514,7 +514,19 @@ class PlaceAutocomplete(autocomplete.Select2QuerySetView):
 
         return qs
 
-class UserOrgaAutocomplete(autocomplete.Select2QuerySetView):
+class ActivityAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            return Place.objects.none()
+
+        qs = Activity.objects.all().order_by("name")
+
+        if self.q:
+            qs = qs.filter(name__istartswith=self.q)
+
+        return qs
+
+class ConditionOrgaAutocomplete(HasVolunteerPermissionMixin, autocomplete.Select2QuerySetView):
 
     def get_queryset(self, *args, **kwargs):
         orga_slug = self.kwargs.get("orga_slug")
@@ -523,14 +535,9 @@ class UserOrgaAutocomplete(autocomplete.Select2QuerySetView):
         if not self.request.user.is_authenticated:
             return CustomUser.objects.none()
 
-        request_user_organizations = self.request.user.active_organizations.all().union(
-                self.request.user.volunteer_organizations.all(),
-                self.request.user.admin_organizations.all(),
-        )
-       
-        qs = organization.actives.all().union(organization.admins.all()).distinct().order_by("first_name")
+        qs = organization.conditions.all().order_by("name")
 
         if self.q:
-            qs = qs.filter(first_name__istartswith=self.q)
+            qs = qs.filter(name__istartswith=self.q)
 
         return qs

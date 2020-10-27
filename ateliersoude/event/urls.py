@@ -13,9 +13,14 @@ urlpatterns = [
         name="place_autocomplete",
     ),
     re_path(
-        r'^(?P<orga_slug>[\w-]+)/user_orga_autocomplete/$', 
-        views.UserOrgaAutocomplete.as_view(), 
-        name="user_orga_autocomplete",
+        "activity_autocomplete/", 
+        views.ActivityAutocomplete.as_view(), 
+        name="activity_autocomplete",
+    ),
+    path(
+        "<str:orga_slug>/condition_orga_autocomplete/",
+        views.ConditionOrgaAutocomplete.as_view(), 
+        name="condition_orga_autocomplete",
     ),
     path(
         "condition/create/<int:orga_pk>/",

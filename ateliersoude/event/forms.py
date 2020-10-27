@@ -27,15 +27,13 @@ class EventForm(ModelForm):
         self.orga = kwargs.pop("orga")
         super().__init__(*args, **kwargs)
         self.fields["organizers"] = forms.ModelMultipleChoiceField(
-            queryset=(
-                self.orga.actives.all() | self.orga.admins.all()
-            ).distinct().order_by("first_name"),
-            widget=autocomplete.ModelSelect2Multiple(url='event/' + self.orga.slug + '/user_orga_autocomplete'),
+            queryset=CustomUser.objects.all(),
+            widget=autocomplete.ModelSelect2Multiple(url='/' + self.orga.slug + '/user_orga_autocomplete/'),
             required=False,
         )
         self.fields["conditions"] = forms.ModelMultipleChoiceField(
             queryset=self.orga.conditions,
-            widget=forms.CheckboxSelectMultiple,
+            widget=autocomplete.ModelSelect2Multiple(url='/event/' + self.orga.slug + '/condition_orga_autocomplete/'),
             required=False,
         )
     class Meta:
@@ -55,6 +53,7 @@ class EventForm(ModelForm):
         ]
         widgets = {
             'location': autocomplete.ModelSelect2(url='event:place_autocomplete'),
+            'activity': autocomplete.ModelSelect2(url='event:activity_autocomplete')
         }
 
 

@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, re_path
 from django.conf.urls import url
 
 from . import views
@@ -7,10 +7,20 @@ app_name = "event"
 
 
 urlpatterns = [
-    url(
-        r'place_autocomplete/$', 
+    re_path(
+        "place_autocomplete/", 
         views.PlaceAutocomplete.as_view(), 
         name="place_autocomplete",
+    ),
+    re_path(
+        "activity_autocomplete/", 
+        views.ActivityAutocomplete.as_view(), 
+        name="activity_autocomplete",
+    ),
+    path(
+        "<str:orga_slug>/condition_orga_autocomplete/",
+        views.ConditionOrgaAutocomplete.as_view(), 
+        name="condition_orga_autocomplete",
     ),
     path(
         "condition/create/<int:orga_pk>/",

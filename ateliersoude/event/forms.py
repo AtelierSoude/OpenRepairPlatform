@@ -6,6 +6,7 @@ from django.forms import ModelForm
 
 from ateliersoude.event.models import Event, Activity, Condition
 from ateliersoude.location.models import Place
+from ateliersoude.user.models import CustomUser
 from ateliersoude.user.models import Organization
 
 
@@ -25,15 +26,13 @@ class EventForm(ModelForm):
         self.orga = kwargs.pop("orga")
         super().__init__(*args, **kwargs)
         self.fields["organizers"] = forms.ModelMultipleChoiceField(
-            queryset=(
-                self.orga.actives.all() | self.orga.admins.all()
-            ).distinct(),
-            widget=forms.CheckboxSelectMultiple,
+            queryset=CustomUser.objects.all(),
+            widget=autocomplete.ModelSelect2Multiple(url='/' + self.orga.slug + '/user_orga_autocomplete/'),
             required=False,
         )
         self.fields["conditions"] = forms.ModelMultipleChoiceField(
             queryset=self.orga.conditions,
-            widget=forms.CheckboxSelectMultiple,
+            widget=autocomplete.ModelSelect2Multiple(url='/event/' + self.orga.slug + '/condition_orga_autocomplete/'),
             required=False,
         )
         self.fields["activity"] = forms.ModelChoiceField(
@@ -60,6 +59,11 @@ class EventForm(ModelForm):
             "organizers",
             "conditions",
         ]
+        widgets = {
+            'location': autocomplete.ModelSelect2(url='event:place_autocomplete'),
+            'activity': autocomplete.ModelSelect2(url='event:activity_autocomplete')
+        }
+
 
 class RecurrentEventForm(forms.ModelForm):
     recurrent_type = forms.ChoiceField(

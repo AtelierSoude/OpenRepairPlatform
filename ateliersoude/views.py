@@ -1,3 +1,6 @@
+from dal import autocomplete 
+from django.shortcuts import get_object_or_404
+
 from django.views.generic import (
     TemplateView,
     DetailView,
@@ -233,3 +236,19 @@ class OrganizationDetailsView(PermissionOrgaContextMixin, DetailView):
         context["organization"] = self.object
         return context
 
+
+class ActiveOrgaAutocomplete(HasActivePermissionMixin, autocomplete.Select2QuerySetView):
+
+    def get_queryset(self, *args, **kwargs):
+        orga_slug = self.kwargs.get("orga_slug")
+        organization = get_object_or_404(Organization, slug=orga_slug)
+
+        if not self.request.user.is_authenticated:
+            return CustomUser.objects.none()
+
+        qs = organization.actives.all().union(organization.admins.all()).distinct().order_by("first_name")
+
+        if self.q:
+            qs = qs.filter(first_name__istartswith=self.q)
+
+        return qs

@@ -561,9 +561,6 @@ class ConditionOrgaAutocomplete(HasVolunteerPermissionMixin, autocomplete.Select
 
 class FutureEventActivityAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
-        if not self.request.user.is_authenticated:
-            return Activity.objects.none()
-
         future_events = Event.future_published_events()
         qs = Activity.objects.filter(
                 events__in=future_events
@@ -576,9 +573,6 @@ class FutureEventActivityAutocomplete(autocomplete.Select2QuerySetView):
 
 class FutureEventPlaceAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
-        if not self.request.user.is_authenticated:
-            return Place.objects.none()
-        
         future_events = Event.future_published_events()
         qs = Place.objects.filter(
                 events__in=future_events

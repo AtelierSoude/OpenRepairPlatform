@@ -91,6 +91,36 @@ td {
 .table-hover tbody tr:hover {
   background-color: rgba(0,0,0,0.02);
 }
+
+/* forms */ 
+
+.select2-container .select2-selection--single{
+  height:40px !important;
+}
+.select2-container{
+  display: block !important ;
+}
+.select2-container{
+  min-width: 80% !important;
+}
+.search-bar{
+  .form-group{
+    padding: 0px !important ;
+    margin-bottom: 0px !important;
+    width:45%;
+  }
+  .input-group-text{
+    border: 0px !important ;
+    background-color: #fff !important;
+  }
+}
+
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+  background-color: #083342 !important;
+
+}
+
+
 /* pagination fix */ 
 .pagination {
   justify-content: center !important;

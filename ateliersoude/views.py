@@ -22,7 +22,7 @@ from ateliersoude.user.models import (
     Organization,
     Fee
 )
-from ateliersoude.event.models import Event, Activity
+from ateliersoude.event.models import Event, Activity, Place
 from ateliersoude.user.forms import (
     CustomUserEmailForm,
     MoreInfoCustomUserForm,
@@ -236,6 +236,7 @@ class OrganizationDetailsView(PermissionOrgaContextMixin, DetailView):
         context["organization"] = self.object
         return context
 
+#### autocomplete ####
 
 class ActiveOrgaAutocomplete(HasActivePermissionMixin, autocomplete.Select2QuerySetView):
 
@@ -249,6 +250,32 @@ class ActiveOrgaAutocomplete(HasActivePermissionMixin, autocomplete.Select2Query
         qs = organization.actives.all().union(organization.admins.all()).distinct().order_by("first_name")
 
         if self.q:
-            qs = qs.filter(first_name__istartswith=self.q)
+            qs = qs.filter(first_name__icontains=self.q)
+
+        return qs
+
+class PlaceAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            return Place.objects.none()
+
+        qs = Place.objects.all().order_by("address")
+
+        if self.q:
+            qs = qs.filter(address__icontains=self.q)
+
+        return qs
+
+
+class ActivityAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            return Activity.objects.none()
+
+        future_events = Event.future_published_events()
+        qs = Activity.objects.all().order_by("name")
+
+        if self.q:
+            qs = qs.filter(name__icontains=self.q)
 
         return qs

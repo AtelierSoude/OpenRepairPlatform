@@ -153,6 +153,7 @@ class EventView(PermissionOrgaContextMixin, DetailView):
 
 class EventListView(ListView):
     model = Event
+    form_class = EventSearchForm
     context_object_name = "event_list"
     template_name = "event/event_list.html"
     paginate_by = 6
@@ -542,30 +543,6 @@ class RemoveActiveEventView(HasVolunteerPermissionMixin, RedirectView):
 
 #### autocomplete views for event form ####
 
-class PlaceAutocomplete(autocomplete.Select2QuerySetView):
-    def get_queryset(self):
-        if not self.request.user.is_authenticated:
-            return Place.objects.none()
-
-        qs = Place.objects.all().order_by("name")
-
-        if self.q:
-            qs = qs.filter(name__istartswith=self.q)
-
-        return qs
-
-class ActivityAutocomplete(autocomplete.Select2QuerySetView):
-    def get_queryset(self):
-        if not self.request.user.is_authenticated:
-            return Place.objects.none()
-
-        qs = Activity.objects.all().order_by("name")
-
-        if self.q:
-            qs = qs.filter(name__istartswith=self.q)
-
-        return qs
-
 class ConditionOrgaAutocomplete(HasVolunteerPermissionMixin, autocomplete.Select2QuerySetView):
 
     def get_queryset(self, *args, **kwargs):
@@ -579,5 +556,44 @@ class ConditionOrgaAutocomplete(HasVolunteerPermissionMixin, autocomplete.Select
 
         if self.q:
             qs = qs.filter(name__istartswith=self.q)
+
+        return qs
+
+class FutureEventActivityAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            return Activity.objects.none()
+
+        future_events = Event.future_published_events()
+        qs = Activity.objects.filter(
+                events__in=future_events
+            ).distinct().order_by("name")
+
+        if self.q:
+            qs = qs.filter(name__icontains=self.q)
+
+        return qs
+
+class FutureEventPlaceAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            return Place.objects.none()
+        
+        future_events = Event.future_published_events()
+        qs = Place.objects.filter(
+                events__in=future_events
+            ).distinct().order_by("address")
+
+        activity_pk = self.forwarded.get('activity', None)
+
+        if activity_pk:
+            activity = Activity.objects.get(pk=activity_pk)
+            future_events = future_events.filter(activity=activity)
+            qs = Place.objects.filter(
+                events__in=future_events
+            ).distinct().order_by("address")
+
+        if self.q:
+            qs = qs.filter(address__icontains=self.q)
 
         return qs

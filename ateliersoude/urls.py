@@ -21,6 +21,16 @@ urlpatterns = [
         include("ateliersoude.location.api_urls", namespace="api_location"),
     ),
     path(
+        "place_autocomplete/", 
+        views.PlaceAutocomplete.as_view(), 
+        name="place_autocomplete",
+    ),
+    path(
+        "activity_autocomplete/", 
+        views.ActivityAutocomplete.as_view(), 
+        name="activity_autocomplete",
+    ),
+    path(
         "<str:orga_slug>/user_orga_autocomplete/",
         views.ActiveOrgaAutocomplete.as_view(), 
         name="user_orga_autocomplete",

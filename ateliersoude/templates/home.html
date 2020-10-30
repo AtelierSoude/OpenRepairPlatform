@@ -13,15 +13,19 @@
             <div class="col-lg bg-secondary">
                 <div id="search">
                     <form method="GET" class="form-row" action="{% url 'event:list' %}">
-                        {% bootstrap_form search_form %}
-                    <br>
-                    <div class="form-group p-2 col mt-auto">
-                        <button type="submit" class="btn btn-primary btn-block">
+                        <div class="input-group search-bar">
+                            {% bootstrap_field search_form.activity show_label=False field_class='form-control' addon_before='Quoi' %}
+                            {% bootstrap_field search_form.place show_label=False field_class='form-control' addon_before='<span class="fa fa-map-marker"></span>&nbsp;Où' %}
+                        <!-- Dos it make sense to filter by dates here ? 
+                            {% bootstrap_field search_form.starts_before show_label=False field_class='form-control' addon_before='<span class="fa fa-calendar"></span> du' %}
+                            {% bootstrap_field search_form.starts_after show_label=False field_class='form-control' addon_before='au' %} 
+                        --> 
+                        <button type="submit" class="btn btn-primary">
                         <span class=""><i class="fa fa-search"></i></span>
                         </button>
-                    </div>
+                        </div>
                     </form>
-            </div>
+                </div>
             </div>
         </section>
     </div>
@@ -74,4 +78,7 @@
     </div>
     {% endif %}
 </div>
+
+{{ form.media }}
+
 {% endblock %}

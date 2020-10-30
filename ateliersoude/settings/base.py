@@ -15,12 +15,12 @@ ALLOWED_HOSTS = []
 SITE_ID = 1
 
 INSTALLED_APPS = [
+    'dal',
+    'dal_select2',
     "ateliersoude.event",
     "ateliersoude.user",
     "ateliersoude.location",
     "django.contrib.sites",
-    'dal',
-    'dal_select2',
     "django.contrib.admin",
     "django.contrib.admindocs",
     "django.contrib.auth",
@@ -35,7 +35,6 @@ INSTALLED_APPS = [
     "django_assets",
     "bootstrap4",
     "sorl.thumbnail",
-    "tinymce",
     "import_export",
     "initial_avatars",
     "django_gravatar",

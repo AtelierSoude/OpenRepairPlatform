@@ -7,15 +7,15 @@ app_name = "event"
 
 
 urlpatterns = [
-    re_path(
-        "place_autocomplete/", 
-        views.PlaceAutocomplete.as_view(), 
-        name="place_autocomplete",
+    path(
+        "future_event_place_autocomplete/", 
+        views.FutureEventPlaceAutocomplete.as_view(), 
+        name="future_event_place_autocomplete",
     ),
-    re_path(
-        "activity_autocomplete/", 
-        views.ActivityAutocomplete.as_view(), 
-        name="activity_autocomplete",
+    path(
+        "future_event_activity_autocomplete/", 
+        views.FutureEventActivityAutocomplete.as_view(), 
+        name="future_event_activity_autocomplete",
     ),
     path(
         "<str:orga_slug>/condition_orga_autocomplete/",

@@ -67,5 +67,6 @@ django-gravatar2
 django-autocomplete-light
 django-recaptcha
 django-tables2
+django-tables2-column-shifter
 django-filter
 tablib

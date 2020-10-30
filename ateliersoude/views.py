@@ -247,7 +247,9 @@ class ActiveOrgaAutocomplete(HasActivePermissionMixin, autocomplete.Select2Query
         if not self.request.user.is_authenticated:
             return CustomUser.objects.none()
 
-        qs = organization.actives.all().union(organization.admins.all()).distinct().order_by("first_name")
+        qs = organization.actives.all().union(
+            organization.admins.all(), organization.volunteers.all()
+            ).distinct().order_by("first_name")
 
         if self.q:
             qs = qs.filter(first_name__icontains=self.q)
@@ -265,7 +267,6 @@ class PlaceAutocomplete(autocomplete.Select2QuerySetView):
             qs = qs.filter(address__icontains=self.q)
 
         return qs
-
 
 class ActivityAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):

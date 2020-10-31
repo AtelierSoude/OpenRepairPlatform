@@ -4,8 +4,8 @@ import pytest
 from django.urls import reverse
 from django.utils import timezone
 
-from ateliersoude.event.models import Event
-from ateliersoude.user.factories import USER_PASSWORD
+from openrepairplatform.event.models import Event
+from openrepairplatform.user.factories import USER_PASSWORD
 
 pytestmark = pytest.mark.django_db
 

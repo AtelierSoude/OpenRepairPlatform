@@ -3,7 +3,7 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.http import HttpRequest
 
-from ateliersoude import utils
+from openrepairplatform import utils
 
 pytestmark = pytest.mark.django_db
 

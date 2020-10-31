@@ -6,7 +6,7 @@ services:
     volumes:
       - $PWD/postgres_data:/var/lib/postgresql/data
     env_file:
-      - ateliersoude/.env
+      - openrepairplatform/.env
     ports:
       - 5433:5432
   django:
@@ -14,44 +14,44 @@ services:
     build:
       context: .
       dockerfile: ./deployment/django/Dockerfile
-    image: ateliersoude_python
+    image: openrepairplatform_python
     volumes:
-      - $PWD/ateliersoude:/srv/app/ateliersoude
-      - $PWD/ateliersoude_media:/srv/app/media
-      - $PWD/ateliersoude_static:/srv/app/static
+      - $PWD/openrepairplatform:/srv/app/openrepairplatform
+      - $PWD/openrepairplatform_media:/srv/app/media
+      - $PWD/openrepairplatform_static:/srv/app/static
       - $PWD/deployment/django:/srv/deployment
     ports:
       - 8000:8000
       - 5678:5678
     env_file:
-      - ateliersoude/.env
+      - openrepairplatform/.env
     depends_on:
       - db
     working_dir: /srv/app
     environment:
-      - DJANGO_SETTINGS_MODULE=ateliersoude.settings.dev_docker
+      - DJANGO_SETTINGS_MODULE=openrepairplatform.settings.dev_docker
     command:
       - /bin/bash
       - -c
       - |
-        sed -i "s/{{SECRET_KEY}}/${SECRET_KEY}/" /etc/cron.d/ateliersoude
-        sed -i "s/{{EMAIL_PASSWORD}}/${EMAIL_PASSWORD}/" /etc/cron.d/ateliersoude
+        sed -i "s/{{SECRET_KEY}}/${SECRET_KEY}/" /etc/cron.d/openrepairplatform
+        sed -i "s/{{EMAIL_PASSWORD}}/${EMAIL_PASSWORD}/" /etc/cron.d/openrepairplatform
         service cron start
-        chown -R ateliersoude:ateliersoude /srv/*
+        chown -R openrepairplatform:openrepairplatform /srv/*
         python3 -m pip install ptvsd django-debug-toolbar django_extensions
         python3 manage.py migrate
-        python3 manage.py shell -c "from ateliersoude.user.models import CustomUser; CustomUser.objects.create_superuser('admin@example.com', 'adminpass')" || true
+        python3 manage.py shell -c "from openrepairplatform.user.models import CustomUser; CustomUser.objects.create_superuser('admin@example.com', 'adminpass')" || true
         python3 manage.py collectstatic --noinput
         python3 -m ptvsd --host 0.0.0.0 --port 5678 manage.py runserver --noreload 0.0.0.0:8000
   selenium:
     build:
       context: .
-      dockerfile: ./ateliersoude/integration_tests/selenium/Dockerfile
+      dockerfile: ./openrepairplatform/integration_tests/selenium/Dockerfile
     image: selenium_image
     volumes:
       - /dev/shm:/dev/shm
-      - ./ateliersoude/integration_tests:/tests
-      - $PWD/ateliersoude:/ateliersoude
+      - ./openrepairplatform/integration_tests:/tests
+      - $PWD/openrepairplatform:/openrepairplatform
     ports:
       - 4444:4444
       - 5900:5900
@@ -62,7 +62,7 @@ services:
       - VNC_NO_PASSWORD=1
   nginx:
     env_file:
-      - ateliersoude/.env
+      - openrepairplatform/.env
     build: 
       context: .
       dockerfile: ./deployment/nginx/Dockerfile

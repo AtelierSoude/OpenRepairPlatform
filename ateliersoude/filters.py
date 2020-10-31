@@ -2,10 +2,10 @@ import django_filters
 from django.db import models
 from django import forms
 
-from ateliersoude.user.models import (
+from openrepairplatform.user.models import (
     Fee, CustomUser
 )
-from ateliersoude.event.models import (
+from openrepairplatform.event.models import (
     Event
 )
 

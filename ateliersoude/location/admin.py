@@ -5,8 +5,8 @@ from import_export.admin import ImportExportModelAdmin
 from import_export.widgets import ForeignKeyWidget
 from import_export.fields import Field
 
-from ateliersoude.location.models import Place
-from ateliersoude.user.models import Organization
+from openrepairplatform.location.models import Place
+from openrepairplatform.user.models import Organization
 
 
 class PlaceResource(resources.ModelResource):

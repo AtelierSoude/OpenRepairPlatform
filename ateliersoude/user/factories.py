@@ -7,7 +7,7 @@ from factory.django import DjangoModelFactory, ImageField
 
 from faker import Factory
 
-from ateliersoude.user.models import Organization, CustomUser, Membership, Fee
+from openrepairplatform.user.models import Organization, CustomUser, Membership, Fee
 
 faker = Factory.create()
 USER_PASSWORD = "hackmeplease2048"

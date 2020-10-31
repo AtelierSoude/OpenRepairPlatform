@@ -15,16 +15,16 @@ The plateform is created by Atelier Soudé, an organization which repair everyda
 
 ## Run the application (in Develop mode only)
 
-1.Set django, postgres and nginx/domain variables in `ateliersoude/.env` 
+1.Set django, postgres and nginx/domain variables in `openrepairplatform/.env` 
 
 2.Run the following command:
 
 ```
 docker-compose up
 ```
-You can then access `http://127.0.0.1:8000/` with the admin user `admin@example.com` // `adminpass`
+You can then access `http://127.0.0.1:8000/` and log with the admin user `admin@example.com` // `adminpass`
 
-3.Create an organization within the `http://127.0.0.1:8000/organizations` path and you can start everythings else 
+3.Create an organization within the `http://127.0.0.1:8000/organizations` path and you can start everythings else (further documentation will come)
 
 ### Debug with Visual Studio Code
 
@@ -52,7 +52,7 @@ The local code is mounted in a Docker volume, so if you change the code locally 
 ### Run unit tests
 
 First, start the containers with `docker-compose up`
-Then, run the tests with `docker exec openrepairplatform_django_1 pytest --disable-pytest-warnings --cov=ateliersoude --cov-report term-missing`
+Then, run the tests with `docker exec openrepairplatform_django_1 pytest --disable-pytest-warnings --cov=openrepairplatform --cov-report term-missing`
 
 
 ### Run integration tests

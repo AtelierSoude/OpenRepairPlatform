@@ -12,23 +12,23 @@ from django_filters.views import FilterView
 from django_tables2.views import SingleTableMixin
 from django_tables2.export.views import ExportMixin
 
-from ateliersoude.tables import FeeTable, MemberTable, EventTable
-from ateliersoude.filters import FeeFilter, MemberFilter, EventFilter
+from openrepairplatform.tables import FeeTable, MemberTable, EventTable
+from openrepairplatform.filters import FeeFilter, MemberFilter, EventFilter
 
-from ateliersoude.user.mixins import PermissionOrgaContextMixin
-from ateliersoude.mixins import HasActivePermissionMixin
-from ateliersoude.user.models import (
+from openrepairplatform.user.mixins import PermissionOrgaContextMixin
+from openrepairplatform.mixins import HasActivePermissionMixin
+from openrepairplatform.user.models import (
     CustomUser,
     Organization,
     Fee
 )
-from ateliersoude.event.models import Event, Activity, Place
-from ateliersoude.user.forms import (
+from openrepairplatform.event.models import Event, Activity, Place
+from openrepairplatform.user.forms import (
     CustomUserEmailForm,
     MoreInfoCustomUserForm,
     CustomUserForm
 )
-from ateliersoude.event.forms import (
+from openrepairplatform.event.forms import (
     EventSearchForm
 )
 from django.db.models import Count

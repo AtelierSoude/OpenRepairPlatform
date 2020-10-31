@@ -6,9 +6,9 @@ from django.utils import timezone
 from factory.django import DjangoModelFactory
 from faker import Factory
 
-from ateliersoude.event.models import Activity, Event, Condition, Participation
-from ateliersoude.location.factories import PlaceFactory
-from ateliersoude.user.factories import OrganizationFactory, CustomUserFactory
+from openrepairplatform.event.models import Activity, Event, Condition, Participation
+from openrepairplatform.location.factories import PlaceFactory
+from openrepairplatform.user.factories import OrganizationFactory, CustomUserFactory
 
 faker = Factory.create()
 

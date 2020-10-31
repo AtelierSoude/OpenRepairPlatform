@@ -3,8 +3,8 @@ import pytest
 from pytest_factoryboy import register
 from rest_framework.test import APIClient
 
-from ateliersoude.location.factories import PlaceFactory
-from ateliersoude.event.factories import (
+from openrepairplatform.location.factories import PlaceFactory
+from openrepairplatform.event.factories import (
     ActivityFactory,
     ConditionFactory,
     EventFactory,
@@ -12,7 +12,7 @@ from ateliersoude.event.factories import (
     ParticipationFactory,
 )
 
-from ateliersoude.user.factories import (
+from openrepairplatform.user.factories import (
     USER_PASSWORD,
     CustomUserFactory,
     OrganizationFactory,

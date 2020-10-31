@@ -7,8 +7,8 @@ scss_custom_bootstrap = Bundle(
     filters="scss",
     output="css/custom_bootstrap.css",
 )
-scss_atelier_soude = Bundle(
-    "scss/ateliersoude.scss", filters="scss", output="css/ateliersoude.css"
+scss_openrepairplatform = Bundle(
+    "scss/openrepairplatform.scss", filters="scss", output="css/openrepairplatform.css"
 )
 scss_places = Bundle(
     "scss/lib/leaflet.scss",
@@ -56,10 +56,10 @@ css_custom_bootstrap = Bundle(
     filters="cssrewrite,cssmin",
     output="css/custom_bootstrap.min.css",
 )
-css_atelier_soude = Bundle(
-    scss_atelier_soude,
+css_openrepairplatform = Bundle(
+    scss_openrepairplatform,
     filters="cssrewrite,cssmin",
-    output="css/ateliersoude.min.css",
+    output="css/openrepairplatform.min.css",
 )
 css_places = Bundle(
     scss_places, filters="cssrewrite,cssmin", output="css/places.min.css"
@@ -171,7 +171,7 @@ js_infinite = Bundle(
 )
 
 register("css_custom_bootstrap", css_custom_bootstrap)
-register("css_ateliersoude", css_atelier_soude)
+register("css_openrepairplatform", css_openrepairplatform)
 register("css_places", css_places)
 register("css_autocomplete", css_auto_complete)
 register("css_detail_place", css_detail_place)

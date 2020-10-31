@@ -1,7 +1,7 @@
 from rest_framework.generics import ListAPIView
 
-from ateliersoude.location.models import Place
-from ateliersoude.location.serializers import PlaceSerializer
+from openrepairplatform.location.models import Place
+from openrepairplatform.location.serializers import PlaceSerializer
 
 
 class PlaceListAPIView(ListAPIView):

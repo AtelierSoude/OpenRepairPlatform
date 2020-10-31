@@ -1,7 +1,7 @@
 import pytest
 from django.views.generic import DeleteView
 
-from ateliersoude.mixins import RedirectQueryParamView
+from openrepairplatform.mixins import RedirectQueryParamView
 
 pytestmark = pytest.mark.django_db
 DEFAULT_PATH = "/default/"

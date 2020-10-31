@@ -7,11 +7,11 @@ from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
 from simple_history.models import HistoricalRecords
 
-from ateliersoude.fields import CleanHTMLField
+from openrepairplatform.fields import CleanHTMLField
 
-from ateliersoude.location.models import Place
-from ateliersoude.user.models import CustomUser, Organization, Fee
-from ateliersoude.utils import get_future_published_events, validate_image
+from openrepairplatform.location.models import Place
+from openrepairplatform.user.models import CustomUser, Organization, Fee
+from openrepairplatform.utils import get_future_published_events, validate_image
 
 
 class Condition(models.Model):

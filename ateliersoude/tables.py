@@ -1,8 +1,8 @@
 import django_tables2 as tables
-from ateliersoude.user.models import (
+from openrepairplatform.user.models import (
     Fee, CustomUser
 )
-from ateliersoude.event.models import (
+from openrepairplatform.event.models import (
     Event
 )
 from django_tables2_column_shifter.tables import ColumnShiftTable

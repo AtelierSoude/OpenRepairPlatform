@@ -9,10 +9,10 @@ from django.views.generic import (
     UpdateView,
 )
 
-from ateliersoude.location.forms import PlaceForm
-from ateliersoude.location.models import Place
-from ateliersoude.user.mixins import PermissionOrgaContextMixin
-from ateliersoude.mixins import RedirectQueryParamView, HasAdminPermissionMixin, HasActivePermissionMixin
+from openrepairplatform.location.forms import PlaceForm
+from openrepairplatform.location.models import Place
+from openrepairplatform.user.mixins import PermissionOrgaContextMixin
+from openrepairplatform.mixins import RedirectQueryParamView, HasAdminPermissionMixin, HasActivePermissionMixin
 
 
 class PlaceView(PermissionOrgaContextMixin, DetailView):

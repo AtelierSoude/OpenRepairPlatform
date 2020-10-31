@@ -7,8 +7,8 @@ from import_export.widgets import ForeignKeyWidget, ManyToManyWidget
 from import_export.fields import Field
 
 from .models import Activity, Condition, Event, Participation, ActivityCategory
-from ateliersoude.user.models import CustomUser, Organization
-from ateliersoude.location.models import Place
+from openrepairplatform.user.models import CustomUser, Organization
+from openrepairplatform.location.models import Place
 
 
 class ActivityCategoryResource(resources.ModelResource):

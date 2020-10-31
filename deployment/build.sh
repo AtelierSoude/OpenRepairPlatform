@@ -7,5 +7,5 @@ if [[ "${EMAIL_PASSWORD}" == "CHANGE_ME" || "${SECRET_KEY}" == "CHANGE_ME" ]]; t
 fi
 
 sudo docker pull postgres:11
-sudo docker build -t ateliersoude_nginx -f deployment/nginx/Dockerfile .
-sudo docker build -t ateliersoude_python -f deployment/django/Dockerfile .
+sudo docker build -t openrepairplatform_nginx -f deployment/nginx/Dockerfile .
+sudo docker build -t openrepairplatform_python -f deployment/django/Dockerfile .

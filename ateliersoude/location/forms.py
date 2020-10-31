@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import ModelForm
 
-from ateliersoude.location.models import Place
+from openrepairplatform.location.models import Place
 
 
 class PlaceForm(ModelForm):

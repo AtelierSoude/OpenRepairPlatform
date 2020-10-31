@@ -4,7 +4,7 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils import timezone
 
-from ateliersoude.event.models import Event
+from openrepairplatform.event.models import Event
 
 
 # Run every hour

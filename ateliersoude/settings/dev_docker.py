@@ -17,10 +17,10 @@ ALLOWED_HOSTS += ['localhost', '127.0.0.1', 'django', 'selenium']
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "ateliersoude",
+        "NAME": os.getenv("POSTGRES_DB_NAME"),
         "USER": os.getenv("POSTGRES_USER"),
-        "HOST":  os.getenv("POSTGRES_DB"),
+        "HOST": 'db',
         "PORT": "5432",
-        "PASSWORD":  os.getenv("POSTGRES_PASSWORD"),
+        "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
     }
 }

@@ -9,8 +9,8 @@ from django.urls import reverse
 from django.utils import timezone
 from datetime import timedelta
 
-from ateliersoude.user.factories import USER_PASSWORD
-from ateliersoude.user.models import Organization, Fee
+from openrepairplatform.user.factories import USER_PASSWORD
+from openrepairplatform.user.models import Organization, Fee
 
 pytestmark = pytest.mark.django_db
 FILES_DIR = join(dirname(abspath(__file__)), "files")

@@ -1,8 +1,8 @@
 import pytest
 from django.core.exceptions import ValidationError
 
-from ateliersoude.fields import CleanHTMLField
-from ateliersoude.location.models import Place
+from openrepairplatform.fields import CleanHTMLField
+from openrepairplatform.location.models import Place
 
 pytestmark = pytest.mark.django_db
 

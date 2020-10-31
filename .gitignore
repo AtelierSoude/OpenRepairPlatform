@@ -141,7 +141,7 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 
-ateliersoude.iml
+openrepairplatform.iml
 .idea/
 bootstrap_done
 node_modules/*
@@ -149,22 +149,22 @@ media
 tmp
 *.min.js
 *.min.css
-ateliersoude/static/css
-ateliersoude_static/
-!ateliersoude_static/img/*
-ateliersoude_media/
-ateliersoude_letsencrypt/
+openrepairplatform/static/css
+openrepairplatform_static/
+!openrepairplatform_static/img/*
+openrepairplatform_media/
+openrepairplatform_letsencrypt/
 postgres_data/
 cpdb.sh
 
 migrations/
 
-ateliersoude/integration_tests/images/
-ateliersoude/static/admin/
-ateliersoude/static/bootstrap/
-ateliersoude/static/django_tinymce/
-ateliersoude/static/fontawesome/
-ateliersoude/static/import_export/
-ateliersoude/static/rest_framework/
-ateliersoude/static/tiny_mce/
-ateliersoude/staticfiles/
+openrepairplatform/integration_tests/images/
+openrepairplatform/static/admin/
+openrepairplatform/static/bootstrap/
+openrepairplatform/static/django_tinymce/
+openrepairplatform/static/fontawesome/
+openrepairplatform/static/import_export/
+openrepairplatform/static/rest_framework/
+openrepairplatform/static/tiny_mce/
+openrepairplatform/staticfiles/

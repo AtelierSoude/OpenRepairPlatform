@@ -1,7 +1,11 @@
 from os.path import dirname, abspath, join
+import os
 
 from bootstrap4 import forms
 from django.contrib import messages
+from dotenv import load_dotenv
+
+load_dotenv()
 
 PROJECT_DIR = dirname(dirname(abspath(__file__)))
 BASE_DIR = dirname(PROJECT_DIR)
@@ -18,9 +22,9 @@ INSTALLED_APPS = [
     'dal',
     'dal_select2',
     'tinymce',
-    "ateliersoude.event",
-    "ateliersoude.user",
-    "ateliersoude.location",
+    "openrepairplatform.event",
+    "openrepairplatform.user",
+    "openrepairplatform.location",
     "django.contrib.sites",
     "django.contrib.admin",
     "django.contrib.admindocs",
@@ -57,15 +61,15 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.middleware.locale.LocaleMiddleware",
     "simple_history.middleware.HistoryRequestMiddleware",
-    "ateliersoude.event.middleware.middleware.ForceLangMiddleware"
+    "openrepairplatform.event.middleware.middleware.ForceLangMiddleware"
 ]
 
-ROOT_URLCONF = "ateliersoude.urls"
+ROOT_URLCONF = "openrepairplatform.urls"
 
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [(join(BASE_DIR, "ateliersoude", "templates"))],
+        "DIRS": [(join(BASE_DIR, "openrepairplatform", "templates"))],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -79,12 +83,12 @@ TEMPLATES = [
     }
 ]
 
-WSGI_APPLICATION = "ateliersoude.wsgi.application"
+WSGI_APPLICATION = "openrepairplatform.wsgi.application"
 
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "ateliersoude",
+        "NAME": os.getenv("POSTGRES_DB_NAME"),
     }
 }
 
@@ -133,7 +137,7 @@ EMAIL_FILE_PATH = join(BASE_DIR, "tmp", "messages")
 AUTHENTICATION_BACKENDS = ("django.contrib.auth.backends.ModelBackend",)
 
 # Config django-assets
-ASSETS_MODULES = ["ateliersoude.assets"]
+ASSETS_MODULES = ["openrepairplatform.assets"]
 ASSETS_ROOT = STATICFILES_DIRS[0]
 
 # Add class to field wrapper in django-bootstrap4

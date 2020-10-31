@@ -3,8 +3,8 @@ from factory.django import DjangoModelFactory
 
 from faker import Factory
 
-from ateliersoude.location.models import Place
-from ateliersoude.user.factories import OrganizationFactory
+from openrepairplatform.location.models import Place
+from openrepairplatform.user.factories import OrganizationFactory
 
 faker = Factory.create()
 

@@ -19,15 +19,15 @@ RUN mkdir /srv/app /srv/static /srv/media
 WORKDIR /srv/app
 
 COPY manage.py .
-COPY static/img/ ateliersoude/static/img/
+COPY static/img/ openrepairplatform/static/img/
 COPY deployment/django/uwsgi.ini .
 COPY deployment/django/start.sh /
-COPY ateliersoude ./ateliersoude
-COPY deployment/django/ateliersoude.cron /etc/cron.d/ateliersoude
+COPY openrepairplatform ./openrepairplatform
+COPY deployment/django/openrepairplatform.cron /etc/cron.d/openrepairplatform
 
-RUN chmod 0644 /etc/cron.d/ateliersoude
+RUN chmod 0644 /etc/cron.d/openrepairplatform
 RUN cron
-RUN useradd ateliersoude
+RUN useradd openrepairplatform
 
 EXPOSE 8000
 

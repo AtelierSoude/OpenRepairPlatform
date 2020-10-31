@@ -4,10 +4,10 @@ from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
 from simple_history.models import HistoricalRecords
 
-from ateliersoude.fields import CleanHTMLField
+from openrepairplatform.fields import CleanHTMLField
 
-from ateliersoude.user.models import Organization
-from ateliersoude.utils import validate_image, get_future_published_events
+from openrepairplatform.user.models import Organization
+from openrepairplatform.utils import validate_image, get_future_published_events
 
 
 class Place(models.Model):

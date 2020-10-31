@@ -5,10 +5,10 @@ from django import forms
 from django.forms import ModelForm
 from dal import autocomplete 
 
-from ateliersoude.event.models import Event, Activity, Condition
-from ateliersoude.location.models import Place
-from ateliersoude.user.models import CustomUser
-from ateliersoude.user.models import Organization
+from openrepairplatform.event.models import Event, Activity, Condition
+from openrepairplatform.location.models import Place
+from openrepairplatform.user.models import CustomUser
+from openrepairplatform.user.models import Organization
 
 
 class EventForm(ModelForm):

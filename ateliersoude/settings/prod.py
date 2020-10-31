@@ -21,10 +21,10 @@ ASSETS_ROOT = STATIC_ROOT
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "ateliersoude",
+        "NAME": os.getenv("POSTGRES_DB_NAME"),
         "USER": os.getenv("POSTGRES_USER"),
-        "HOST":  os.getenv("POSTGRES_DB"),
-        "PASSWORD":  os.getenv("POSTGRES_PASSWORD"),
+        "HOST": 'db',
+        "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
     }
 }
 

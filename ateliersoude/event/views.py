@@ -20,27 +20,27 @@ from django.views.generic import (
     FormView,
 )
 
-from ateliersoude import utils
-from ateliersoude.event.forms import (
+from openrepairplatform import utils
+from openrepairplatform.event.forms import (
     EventForm,
     ActivityForm,
     ConditionForm,
     EventSearchForm,
     RecurrentEventForm,
 )
-from ateliersoude.event.models import Activity, Condition, Event, Participation
-from ateliersoude.location.models import Place
-from ateliersoude.user.models import CustomUser
-from ateliersoude.event.templatetags.app_filters import tokenize
-from ateliersoude.mixins import (
+from openrepairplatform.event.models import Activity, Condition, Event, Participation
+from openrepairplatform.location.models import Place
+from openrepairplatform.user.models import CustomUser
+from openrepairplatform.event.templatetags.app_filters import tokenize
+from openrepairplatform.mixins import (
     RedirectQueryParamView,
     HasAdminPermissionMixin,
     HasActivePermissionMixin,
     HasVolunteerPermissionMixin,
 )
-from ateliersoude.user.mixins import PermissionOrgaContextMixin
-from ateliersoude.user.forms import CustomUserEmailForm, MoreInfoCustomUserForm
-from ateliersoude.user.models import CustomUser, Membership, Fee, Organization
+from openrepairplatform.user.mixins import PermissionOrgaContextMixin
+from openrepairplatform.user.forms import CustomUserEmailForm, MoreInfoCustomUserForm
+from openrepairplatform.user.models import CustomUser, Membership, Fee, Organization
 
 logger = logging.getLogger(__name__)
 

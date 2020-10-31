@@ -23,7 +23,7 @@
             "port": 5679,
             "host": "localhost",
             "pathMappings": [{
-                "localRoot": "${workspaceFolder}/ateliersoude/integration_tests",
+                "localRoot": "${workspaceFolder}/openrepairplatform/integration_tests",
                 "remoteRoot": "/tests"
             }],
             // "preLaunchTask": "runtests"

@@ -5,9 +5,9 @@ from django.core import signing
 from django.urls import reverse
 from django.utils import timezone
 
-from ateliersoude.event.models import Event
-from ateliersoude.user.factories import USER_PASSWORD
-from ateliersoude.user.models import CustomUser, Membership, Fee
+from openrepairplatform.event.models import Event
+from openrepairplatform.user.factories import USER_PASSWORD
+from openrepairplatform.user.models import CustomUser, Membership, Fee
 
 pytestmark = pytest.mark.django_db
 

@@ -1,7 +1,7 @@
 from django import template
 from django.core import signing
 
-from ateliersoude.user.models import Fee
+from openrepairplatform.user.models import Fee
 
 register = template.Library()
 

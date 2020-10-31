@@ -7,18 +7,18 @@ from . import views
 
 urlpatterns = [
     path("", views.HomeView.as_view(), name="homepage"),
-    path("user/", include("ateliersoude.user.urls", namespace="user")),
+    path("user/", include("openrepairplatform.user.urls", namespace="user")),
     path("avatar/", include('initial_avatars.urls')),
     path("admin/", admin.site.urls),
     path("accounts/", include("django.contrib.auth.urls")),
-    path("event/", include("ateliersoude.event.urls", namespace="event")),
+    path("event/", include("openrepairplatform.event.urls", namespace="event")),
     path(
         "location/",
-        include("ateliersoude.location.urls", namespace="location"),
+        include("openrepairplatform.location.urls", namespace="location"),
     ),
     path(
         "api/location/",
-        include("ateliersoude.location.api_urls", namespace="api_location"),
+        include("openrepairplatform.location.api_urls", namespace="api_location"),
     ),
     path(
         "place_autocomplete/", 

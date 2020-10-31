@@ -2,16 +2,16 @@ import pytest
 from django.core import signing
 from django.http import HttpRequest
 
-from ateliersoude import settings
-from ateliersoude.event.models import Event
-from ateliersoude.event.templatetags.app_filters import (
+from openrepairplatform import settings
+from openrepairplatform.event.models import Event
+from openrepairplatform.event.templatetags.app_filters import (
     tokenize,
     initial,
     filter_orga,
     query_transform,
     organization_fees,
 )
-from ateliersoude.user.forms import MoreInfoCustomUserForm
+from openrepairplatform.user.forms import MoreInfoCustomUserForm
 
 pytestmark = pytest.mark.django_db
 

@@ -2,8 +2,8 @@ import pytest
 from django.contrib.auth import get_user
 from django.urls import reverse
 
-from ateliersoude.event.models import Activity
-from ateliersoude.user.factories import USER_PASSWORD
+from openrepairplatform.event.models import Activity
+from openrepairplatform.user.factories import USER_PASSWORD
 
 pytestmark = pytest.mark.django_db
 

@@ -20,17 +20,17 @@ from django.views.generic import (
     RedirectView,
 )
 from datetime import timedelta
-from ateliersoude import utils
-from ateliersoude.event.models import Event, Participation
-from ateliersoude.event.templatetags.app_filters import tokenize
-from ateliersoude.event.views import add_present
-from ateliersoude.mixins import (
+from openrepairplatform import utils
+from openrepairplatform.event.models import Event, Participation
+from openrepairplatform.event.templatetags.app_filters import tokenize
+from openrepairplatform.event.views import add_present
+from openrepairplatform.mixins import (
     HasAdminPermissionMixin,
     HasActivePermissionMixin,
     HasVolunteerPermissionMixin,
     RedirectQueryParamView
 )
-from ateliersoude.user.models import CustomUser, Organization, Membership, Fee
+from openrepairplatform.user.models import CustomUser, Organization, Membership, Fee
 
 from .forms import (
     UserUpdateForm,

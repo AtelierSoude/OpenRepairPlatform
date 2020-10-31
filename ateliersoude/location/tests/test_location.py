@@ -3,7 +3,7 @@ import pytest
 from django.contrib.auth import get_user
 from django.urls import reverse
 
-from ateliersoude.location.models import Place
+from openrepairplatform.location.models import Place
 
 pytestmark = pytest.mark.django_db
 

@@ -6,9 +6,9 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils import timezone
 
-from ateliersoude.event.models import Event
+from openrepairplatform.event.models import Event
 
-from ateliersoude.event.templatetags.app_filters import tokenize
+from openrepairplatform.event.templatetags.app_filters import tokenize
 
 
 # Run every day at a given time

@@ -1,7 +1,7 @@
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.urls import Resolver404, resolve
 from django.shortcuts import get_object_or_404
-from ateliersoude.user.models import Organization
+from openrepairplatform.user.models import Organization
 
 
 def is_valid_path(path: str) -> bool:

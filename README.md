@@ -15,20 +15,16 @@ The plateform is created by Atelier Soudé, an organization which repair everyda
 
 ## Run the application (in Develop mode only)
 
-1.Set django variables in `deployment/django/django.env` 
+1.Set django, postgres and nginx/domain variables in `ateliersoude/.env` 
 
-2.Set postgres variables in `deployment/postgres/postgres.env` 
-
-3.Set nginx domaine name in `deployment/nginx/nginx.env` 
-
-4.Run the following command:
+2.Run the following command:
 
 ```
 docker-compose up
 ```
 You can then access `http://127.0.0.1:8000/` with the admin user `admin@example.com` // `adminpass`
 
-5.Create an organization within the `http://127.0.0.1:8000/organizations` path and you can start everythings else 
+3.Create an organization within the `http://127.0.0.1:8000/organizations` path and you can start everythings else 
 
 ### Debug with Visual Studio Code
 

@@ -3,6 +3,7 @@ from datetime import timedelta
 from dal import autocomplete
 
 from django.contrib import messages
+from django.db.models import Count
 from django.core import signing
 from django.core.mail import send_mail
 from django.http import HttpResponseRedirect
@@ -29,6 +30,7 @@ from ateliersoude.event.forms import (
 )
 from ateliersoude.event.models import Activity, Condition, Event, Participation
 from ateliersoude.location.models import Place
+from ateliersoude.user.models import CustomUser
 from ateliersoude.event.templatetags.app_filters import tokenize
 from ateliersoude.mixins import (
     RedirectQueryParamView,
@@ -38,7 +40,7 @@ from ateliersoude.mixins import (
 )
 from ateliersoude.user.mixins import PermissionOrgaContextMixin
 from ateliersoude.user.forms import CustomUserEmailForm, MoreInfoCustomUserForm
-from ateliersoude.user.models import CustomUser, Membership, Fee
+from ateliersoude.user.models import CustomUser, Membership, Fee, Organization
 
 logger = logging.getLogger(__name__)
 
@@ -94,6 +96,11 @@ class ActivityListView(ListView):
     model = Activity
     template_name = "event/activity/list.html"
 
+    def get_queryset(self):
+        queryset = Activity.objects.all().annotate(category_count=Count('category')).order_by('-category_count')
+        queryset = queryset.order_by('category__name')
+        return queryset
+
 
 class ActivityFormView(HasAdminPermissionMixin):
     model = Activity
@@ -146,6 +153,7 @@ class EventView(PermissionOrgaContextMixin, DetailView):
 
 class EventListView(ListView):
     model = Event
+    form_class = EventSearchForm
     context_object_name = "event_list"
     template_name = "event/event_list.html"
     paginate_by = 6
@@ -218,7 +226,26 @@ class EventDeleteView(
     success_url = reverse_lazy("event:list")
 
     def delete(self, request, *args, **kwargs):
-        messages.success(request, "L'évènement a bien été supprimé")
+        event_pk = kwargs["pk"]
+        event = get_object_or_404(Event, pk=event_pk)
+        users = event.organizers.all().union(
+                event.presents.all(),
+                event.registered.all()
+            )
+        if users:
+            for user in users: 
+                msg_plain = render_to_string("event/mail/event_delete.txt", context=locals())
+                msg_html = render_to_string("event/mail/event_delete.html", context=locals())
+                date = event.date.strftime("%d %B")
+                subject = f"IMPORTANT : Annulation événement du {date} : {event.activity.name} à {event.location.name}"
+                send_mail(
+                    subject,
+                    msg_plain,
+                    f"{event.organization}" '<no-reply@atelier-soude.fr>',
+                    [user.email],
+                    html_message=msg_html,
+                )
+        messages.success(request, "L'évènement a bien été supprimé et les participants avertis")
         return super().delete(request, *args, **kwargs)
 
 
@@ -253,9 +280,9 @@ def _load_token(token, salt):
     return Event.objects.get(pk=event_id), CustomUser.objects.get(pk=user_id)
 
 
-def add_present(event: Event, user: CustomUser, paid: int):
+def add_present(event: Event, user: CustomUser, paid: int, payment: int):
     event.registered.remove(user)
-    Participation.objects.create(event=event, user=user, amount=paid)
+    Participation.objects.create(event=event, user=user, amount=paid, payment=payment)
 
 
 class AbsentView(RedirectView):
@@ -272,20 +299,36 @@ class AbsentView(RedirectView):
 
         event.registered.add(user)
         participation = event.participations.filter(user=user).first()
-        if participation and participation.saved:
+        fees = Fee.objects.filter(user=user, organization=event.organization)
+        related_fee = participation.fee
+        if participation and participation.saved and participation.amount !=0:
             contribution = Membership.objects.filter(
                 user=participation.user, organization=event.organization
             ).first()
             if contribution:
-                contribution.amount -= participation.amount
-                fee = Fee.objects.filter(
-                    organization=event.organization,
-                    user=participation.user,
-                    date=event.date,
-                    amount=participation.amount,
-                )
-                fee.delete()
-                contribution.save()
+                if related_fee == contribution.fee:
+                    contribution.amount -= related_fee.amount
+                    next_fee = fees.filter(date__gt=related_fee.date).last()
+                    if not next_fee:
+                        prev_fee = fees.filter(date__lt=related_fee.date).first()
+                        if prev_fee:
+                            contribution.amount = prev_fee.amount
+                            contribution.fee = prev_fee
+                            contribution.first_payment = prev_fee.date
+                    if next_fee:
+                        contribution.fee = next_fee
+                        contribution.first_payment = next_fee.date
+                elif event.date > contribution.first_payment.date():
+                    contribution.amount -= related_fee.amount
+                else: 
+                    pass
+                if related_fee:
+                    related_fee.delete()
+                if not fees:
+                    contribution.delete()
+                else:
+                    contribution.save()           
+                
         event.presents.remove(user)
         messages.success(self.request, f"{user} a été marqué comme absent !")
 
@@ -333,7 +376,7 @@ class CancelReservationView(RedirectView):
         send_mail(
             subject,
             msg_plain,
-            f"{event.organization}",
+            f"{event.organization}" '<no-reply@atelier-soude.fr>',
             [user.email],
             html_message=msg_html,
         )
@@ -412,7 +455,7 @@ class BookView(RedirectView):
         send_mail(
             subject,
             msg_plain,
-            f"{event.organization}",
+            f"{event.organization}" '<no-reply@atelier-soude.fr>',
             [user.email],
             html_message=msg_html,
         )
@@ -440,28 +483,27 @@ class CloseEventView(HasActivePermissionMixin, RedirectView):
             contribution, created = Membership.objects.get_or_create(
                 user=participation.user, organization=event.organization
             )
-            related_fee = Fee.objects.create(
-                amount=participation.amount,
-                user=participation.user,
-                organization=event.organization,
-                date=event_date
-            )
-            if participation.saved:
-                amount = 0
-            else:
-                amount = participation.amount
-            if contribution.first_payment.date() < event_date - timedelta(days=365):
-                contribution.first_payment = event_date
-                contribution.amount = amount
-            elif event_date < contribution.first_payment.date():
-                contribution.first_payment = event_date
-                contribution.amount += amount
-            else:
-                contribution.amount += amount
+            if not participation.saved and participation.amount != 0 or contribution.first_payment.date() < event_date - timedelta(days=365) :
+                related_fee = Fee.objects.create(
+                    amount=participation.amount,
+                    user=participation.user,
+                    organization=event.organization,
+                    date=event_date,
+                    payment=participation.payment
+                )
+                participation.fee = related_fee
+                if contribution.fee is None or contribution.first_payment.date() < event_date - timedelta(days=365):
+                    contribution.fee = related_fee
+                    contribution.first_payment = related_fee.date
+                    contribution.amount = related_fee.amount
+                elif event_date < contribution.first_payment.date():
+                    pass
+                elif event_date > contribution.first_payment.date():
+                    contribution.amount += related_fee.amount
             participation.saved = True
-            participation.fee = related_fee
             participation.save()
             contribution.save()
+
             if created:
                 nb_new_members += 1
 
@@ -501,14 +543,51 @@ class RemoveActiveEventView(HasVolunteerPermissionMixin, RedirectView):
 
 #### autocomplete views for event form ####
 
-class PlaceAutocomplete(autocomplete.Select2QuerySetView):
-    def get_queryset(self):
-        if not self.request.user.is_authenticated:
-            return Place.objects.none()
+class ConditionOrgaAutocomplete(HasVolunteerPermissionMixin, autocomplete.Select2QuerySetView):
 
-        qs = Place.objects.all().order_by("name")
+    def get_queryset(self, *args, **kwargs):
+        orga_slug = self.kwargs.get("orga_slug")
+        organization = get_object_or_404(Organization, slug=orga_slug)
+
+        if not self.request.user.is_authenticated:
+            return CustomUser.objects.none()
+
+        qs = organization.conditions.all().order_by("name")
 
         if self.q:
             qs = qs.filter(name__istartswith=self.q)
+
+        return qs
+
+class FutureEventActivityAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        future_events = Event.future_published_events()
+        qs = Activity.objects.filter(
+                events__in=future_events
+            ).distinct().order_by("name")
+
+        if self.q:
+            qs = qs.filter(name__icontains=self.q)
+
+        return qs
+
+class FutureEventPlaceAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        future_events = Event.future_published_events()
+        qs = Place.objects.filter(
+                events__in=future_events
+            ).distinct().order_by("address")
+
+        activity_pk = self.forwarded.get('activity', None)
+
+        if activity_pk:
+            activity = Activity.objects.get(pk=activity_pk)
+            future_events = future_events.filter(activity=activity)
+            qs = Place.objects.filter(
+                events__in=future_events
+            ).distinct().order_by("address")
+
+        if self.q:
+            qs = qs.filter(address__icontains=self.q)
 
         return qs

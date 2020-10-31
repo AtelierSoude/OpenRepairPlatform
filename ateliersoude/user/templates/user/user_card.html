@@ -12,19 +12,22 @@
 
   <div class="card mx-2 p-2">
     <a class="card-link" href="{{ user.get_absolute_url }}">
-
+      <div class="row">
       {% if event_control == True %}
-        <span class="badge badge-pill badge-primary">
-            {% filter_orga queryset=user.memberships organization=event.organization as membership %}
-            {% if membership %}
-              {{ membership.current_contribution }}
-            {% else %}
-              0
-            {% endif %}
-            €
-          </span>
+        {% filter_orga queryset=user.memberships organization=event.organization as membership %}
+        {% if membership %}
+          {% if membership.current_contribution == 0 %} 
+            <span class="badge badge-pill badge-primary text-danger float-left" >0€</span>
+          {% elif membership.current_contribution >= event.organization.advised_fee %}
+            <spann class="badge badge-pill badge-primary text-success float-left">{{ membership.current_contribution }}€</span>
+          {% else %}
+            <span class="badge badge-pill badge-primary text-warning float-left" >{{ membership.current_contribution }}€</span>
+          {% endif %}
+        {% else %}
+          <span class="badge badge-pill badge-primary text-danger float-left" >0€</span>
+        {% endif %}
       {% endif %}
-
+      </div>
       <div class="row text-center" id="square-{{ user.pk }}">
         <div class="col-12 mb-1">
           {% if user.avatar_img %}

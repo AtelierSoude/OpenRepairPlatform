@@ -1,25 +1,31 @@
 {% load thumbnail %}
 
 {% for activity in activities %}
-  <div class="card">
-    <a class="card-link" href="{% url 'event:activity_detail' activity.pk activity.slug %}">
-      {% if activity.picture %}
-      {% thumbnail activity.picture "400" format="PNG" as im %}
-      <img class="card-img-top" src="{{ im.url }}" alt="activité illustration">
-      {% endthumbnail %}
-      {% endif %}
-      <div class="card-body">
-        <h5 class="card-title">{{ activity.name }}</h5>
-        {{ activity.description | safe | truncatewords_html:10 }}
-        <footer class="blockquote-footer">
-          Créé par
-          <a href="{% url 'organization_page' activity.organization.slug %}">
-            {{ activity.organization }}
-          </a>
-        </footer>
-      </div>
-    </a>
-  </div>
+  {% ifchanged %}
+    <div class="clearfix"></div>
+    <h4 class="pl-3 pt-3 d-block">{{activity.category}}</h4>
+  {% endifchanged %}
+    <div class="card float-left col-md-4" style="background-color: #86868600 !important;">
+      <a class="card-link card-img-crop" href="{% url 'event:activity_detail' activity.pk activity.slug %}">
+        {% if activity.picture %}
+        {% thumbnail activity.picture "400" format="PNG" as im %}
+        <img class="card-img-top mt-3" src="{{ im.url }}" alt="activité illustration">
+        {% endthumbnail %}
+        {% endif %}
+        <div class="card-body p-2 d-flex flex-column bg-white">
+          <div style="min-height: 48px;">
+            <h5 class="card-title">{{ activity.name }}</h5>
+          </div>
+          {{ activity.description | safe | truncatewords_html:15 }}
+          <footer class="blockquote-footer">
+            Créé par
+            <a href="{% url 'organization_page' activity.organization.slug %}">
+              {{ activity.organization }}
+            </a>
+          </footer>
+        </div>
+      </a>
+    </div>
 {% empty %}
   Aucune activité trouvée
 {% endfor %}

@@ -1,9 +1,20 @@
+from dal import autocomplete 
+from django.shortcuts import get_object_or_404
+
 from django.views.generic import (
     TemplateView,
     DetailView,
     ListView,
     FormView
 )
+import django_tables2 as tables
+from django_filters.views import FilterView
+from django_tables2.views import SingleTableMixin
+from django_tables2.export.views import ExportMixin
+
+from ateliersoude.tables import FeeTable, MemberTable, EventTable
+from ateliersoude.filters import FeeFilter, MemberFilter, EventFilter
+
 from ateliersoude.user.mixins import PermissionOrgaContextMixin
 from ateliersoude.mixins import HasActivePermissionMixin
 from ateliersoude.user.models import (
@@ -11,7 +22,7 @@ from ateliersoude.user.models import (
     Organization,
     Fee
 )
-from ateliersoude.event.models import Event
+from ateliersoude.event.models import Event, Activity, Place
 from ateliersoude.user.forms import (
     CustomUserEmailForm,
     MoreInfoCustomUserForm,
@@ -20,6 +31,7 @@ from ateliersoude.user.forms import (
 from ateliersoude.event.forms import (
     EventSearchForm
 )
+from django.db.models import Count
 from datetime import datetime
 EVENTS_PER_PAGE = 6
 
@@ -72,6 +84,9 @@ class OrganizationPageView(PermissionOrgaContextMixin, DetailView):
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
+        activities = Activity.objects.filter(organization=self.organization).annotate(category_count=Count('category')
+            ).order_by('-category_count')
+        context ["activities_list"] = activities.order_by('category__name')
         context["event_list"] = Event.future_published_events().filter(
             organization=self.organization).order_by('date')[0:10]
         context["emails"] = [
@@ -91,12 +106,20 @@ class OrganizationPageView(PermissionOrgaContextMixin, DetailView):
 
 
 class OrganizationMembersView(
-    HasActivePermissionMixin, PermissionOrgaContextMixin, ListView
+    HasActivePermissionMixin, 
+    PermissionOrgaContextMixin, 
+    ExportMixin, 
+    tables.SingleTableMixin, 
+    FilterView
         ):
     model = CustomUser
     template_name = "organization_members.html"
     context_object_name = "members"
     paginate_by = 20
+    table_class = MemberTable
+    filterset_class = MemberFilter
+    paginate_by = 40
+    dataset_kwargs = {"title": "Members"}
 
     def get_queryset(self):
         self.object = self.organization
@@ -121,34 +144,52 @@ class OrganizationMembersView(
         context["add_member_form"] = MoreInfoCustomUserForm
         return context
 
-
 class OrganizationFeesView(
-    HasActivePermissionMixin, PermissionOrgaContextMixin, ListView
+    HasActivePermissionMixin, 
+    PermissionOrgaContextMixin, 
+    ExportMixin, 
+    tables.SingleTableMixin, 
+    FilterView
         ):
     model = Fee
     template_name = "organization_fees.html"
     context_object_name = "fees"
-    paginate_by = 50
+    table_class = FeeTable
+    filterset_class = FeeFilter
+    paginate_by = 40
+    dataset_kwargs = {"title": "Fees"}
 
     def get_queryset(self):
         self.object = self.organization
         return self.model.objects.filter(
             organization=self.organization
-        ).order_by("-date")
+        ).order_by("-date").exclude(amount=0)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["accounting_tab"] = 'active'
         context["organization"] = self.organization
+        filtered_data = FeeFilter(self.request.GET, queryset=self.get_queryset().all())
+        context["total_fees"] = sum(
+            [fee.amount for fee in filtered_data.qs]
+        )
         return context
 
+
 class OrganizationEventsView(
-    HasActivePermissionMixin, PermissionOrgaContextMixin, ListView
+    HasActivePermissionMixin, 
+    PermissionOrgaContextMixin, 
+    ExportMixin, 
+    tables.SingleTableMixin, 
+    FilterView
         ):
     model = Event
     template_name = "organization_events.html"
     context_object_name = "events"
-    paginate_by = 10
+    table_class = EventTable
+    filterset_class = EventFilter
+    paginate_by = 20
+    dataset_kwargs = {"title": "Event"}
     form_class = EventSearchForm
 
     def get_queryset(self):
@@ -162,6 +203,8 @@ class OrganizationEventsView(
         context["events_tab"] = 'active'
         context["organization"] = self.organization
         context["search_form"] = self.form_class
+        filtered_data = EventFilter(self.request.GET, queryset=self.get_queryset().all())
+        context["total_events"] = filtered_data.qs.count()
         context["today"] = datetime.date(datetime.now())
         return context
 
@@ -193,3 +236,47 @@ class OrganizationDetailsView(PermissionOrgaContextMixin, DetailView):
         context["organization"] = self.object
         return context
 
+#### autocomplete ####
+
+class ActiveOrgaAutocomplete(HasActivePermissionMixin, autocomplete.Select2QuerySetView):
+
+    def get_queryset(self, *args, **kwargs):
+        orga_slug = self.kwargs.get("orga_slug")
+        organization = get_object_or_404(Organization, slug=orga_slug)
+
+        if not self.request.user.is_authenticated:
+            return CustomUser.objects.none()
+
+        qs = organization.actives.all().union(
+            organization.admins.all(), organization.volunteers.all()
+            ).distinct().order_by("first_name")
+
+        if self.q:
+            qs = qs.filter(first_name__icontains=self.q)
+
+        return qs
+
+class PlaceAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            return Place.objects.none()
+
+        qs = Place.objects.all().order_by("address")
+
+        if self.q:
+            qs = qs.filter(address__icontains=self.q)
+
+        return qs
+
+class ActivityAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            return Activity.objects.none()
+
+        future_events = Event.future_published_events()
+        qs = Activity.objects.all().order_by("name")
+
+        if self.q:
+            qs = qs.filter(name__icontains=self.q)
+
+        return qs

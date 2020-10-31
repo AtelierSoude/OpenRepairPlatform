@@ -6,7 +6,7 @@ services:
     volumes:
       - $PWD/postgres_data:/var/lib/postgresql/data
     env_file:
-      - deployment/postgres/postgres.env
+      - ateliersoude/.env
     ports:
       - 5433:5432
   django:
@@ -24,7 +24,7 @@ services:
       - 8000:8000
       - 5678:5678
     env_file:
-      - deployment/django/django.env
+      - ateliersoude/.env
     depends_on:
       - db
     working_dir: /srv/app
@@ -61,6 +61,8 @@ services:
     environment:
       - VNC_NO_PASSWORD=1
   nginx:
+    env_file:
+      - ateliersoude/.env
     build: 
       context: .
       dockerfile: ./deployment/nginx/Dockerfile

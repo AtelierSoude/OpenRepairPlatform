@@ -37,6 +37,111 @@ h5{
 .bg-grey { 
   background-color: #eef2f6 !important;
 }
+
+/* tables */ 
+
+thead {
+  background-color: #083342;
+}
+
+tbody {
+  tr {
+    background-color: #fff;
+  }
+}
+.table-fixed{
+  tbody {
+    display:block;
+    height:400px;
+    overflow:auto;
+}
+  thead, tbody tr {
+    display:table;
+    width:100%;
+    table-layout:fixed;
+}
+}
+.small-column{
+  width:70px;
+}  
+.form-xs {
+  input {
+    height: calc(1em + .375rem + 2px) !important;
+    padding: .5rem .5rem !important;
+    font-size: .75rem !important;
+    line-height: 1.5;
+  }
+  label {
+    margin-right: .5rem;
+  }
+}
+.table td, .table th {
+  vertical-align: middle;
+}
+
+td {
+  white-space: normal !important; 
+  word-wrap: break-word;  
+}
+
+.column-shifter-container .dropdown-toggle {
+  color: #083342;
+}
+
+.table-hover tbody tr:hover {
+  background-color: rgba(0,0,0,0.02);
+}
+
+/* forms */ 
+
+.select2-container .select2-selection--single{
+  height:40px !important;
+}
+.select2-container{
+  display: block !important ;
+}
+.select2-container{
+  min-width: 80% !important;
+}
+.search-bar{
+  .form-group{
+    padding: 0px !important ;
+    margin-bottom: 0px !important;
+    width:45%;
+  }
+  .input-group-text{
+    border: 0px !important ;
+    background-color: #fff !important;
+  }
+}
+
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+  background-color: #083342 !important;
+
+}
+
+
+/* pagination fix */ 
+.pagination {
+  justify-content: center !important;
+  li {
+    position: relative;
+    display: block;
+    padding: .5rem .75rem;
+    margin-left: -1px;
+    line-height: 1.25;
+    color: #2be6ab;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+  }
+  li.active {
+    z-index: 1;
+    color: #fff;
+    background-color: #083342;
+    border-color: #083342;
+  }
+}
+
 /* Menu */
 
 .header_detail_page, #h_nav, #breadcrumb, #jumbotron, #search_tab, #event_title, #event_about, .jumbotron {
@@ -107,6 +212,13 @@ h5{
 
 .card-img-crop{
   max-height: 200px;
+  min-height: 200px;
+  overflow: hidden;
+}
+
+.card-body-crop {
+  max-height: 240px;
+  min-height: 240px;
   overflow: hidden;
 }
 
@@ -154,8 +266,8 @@ position: relative;
 
 .modal-content {
   border-radius: 0;
-  margin-top: 20%;
-  padding: 2em;
+  margin-top: 10%;
+  padding: 1em;
   z-index:10000 !important;
   position:relative !important;
 }

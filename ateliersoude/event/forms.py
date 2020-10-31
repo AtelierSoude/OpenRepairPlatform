@@ -1,12 +1,13 @@
 from datetime import timedelta, date as dt
 from dateutil import rrule, relativedelta
-from dal import autocomplete
 
 from django import forms
 from django.forms import ModelForm
+from dal import autocomplete 
 
 from ateliersoude.event.models import Event, Activity, Condition
 from ateliersoude.location.models import Place
+from ateliersoude.user.models import CustomUser
 from ateliersoude.user.models import Organization
 
 
@@ -26,24 +27,32 @@ class EventForm(ModelForm):
         self.orga = kwargs.pop("orga")
         super().__init__(*args, **kwargs)
         self.fields["organizers"] = forms.ModelMultipleChoiceField(
-            queryset=(
-                self.orga.actives.all() | self.orga.admins.all()
-            ).distinct(),
-            widget=forms.CheckboxSelectMultiple,
+            queryset=CustomUser.objects.all(),
+            widget=autocomplete.ModelSelect2Multiple(url='/' + self.orga.slug + '/user_orga_autocomplete/'),
             required=False,
         )
         self.fields["conditions"] = forms.ModelMultipleChoiceField(
             queryset=self.orga.conditions,
-            widget=forms.CheckboxSelectMultiple,
+            widget=autocomplete.ModelSelect2Multiple(url='/event/' + self.orga.slug + '/condition_orga_autocomplete/'),
             required=False,
         )
+        self.fields["activity"] = forms.ModelChoiceField(
+            widget=autocomplete.ModelSelect2(url='activity_autocomplete'),
+            queryset=Activity.objects.all()
+        )
+
     class Meta:
         model = Event
         fields = [
             "activity",
-            "location",
-            "available_seats",
             "is_free",
+            "available_seats",
+            "booking",
+            "collaborator",
+            "external",
+            "external_url",
+            "description",
+            "location",
             "date",
             "starts_at",
             "ends_at",
@@ -53,7 +62,7 @@ class EventForm(ModelForm):
             "conditions",
         ]
         widgets = {
-            'location': autocomplete.ModelSelect2(url='event/place_autocomplete')
+            'location': autocomplete.ModelSelect2(url='place_autocomplete'),
         }
 
 
@@ -178,7 +187,13 @@ class RecurrentEventForm(forms.ModelForm):
         model = Event
         fields = [
             "activity",
+            "is_free",
             "available_seats",
+            "booking",
+            "collaborator",
+            "external",
+            "external_url",
+            "description",
             "organizers",
             "conditions",
             "location",
@@ -224,9 +239,21 @@ class EventSearchForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         future_events = Event.future_published_events()
+        self.fields["activity"] = forms.ModelChoiceField(
+            required=False,
+            queryset=Activity.objects.filter(
+                events__in=future_events
+            ).distinct(),
+            widget=autocomplete.ModelSelect2(url='event:future_event_activity_autocomplete'),
+            label="Activité"
+        )
         self.fields["place"] = forms.ModelChoiceField(
             required=False,
-            queryset=Place.objects.filter(events__in=future_events).distinct(),
+            queryset=Place.objects.filter(
+                events__in=future_events
+            ).distinct(),
+            widget=autocomplete.ModelSelect2(url='event:future_event_place_autocomplete', 
+            forward=['activity']),
             label="Lieu",
         )
         self.fields["organization"] = forms.ModelChoiceField(
@@ -235,20 +262,4 @@ class EventSearchForm(forms.Form):
                 events__in=future_events
             ).distinct(),
             label="Organisateur",
-        )
-        self.fields["activity"] = forms.ModelChoiceField(
-            required=False,
-            queryset=Activity.objects.filter(
-                events__in=future_events
-            ).distinct(),
-            label="Activité"
-        )
-        self.order_fields(
-            [
-                'organization',
-                'place',
-                'activity',
-                'starts_after',
-                'starts_before'
-            ]
         )

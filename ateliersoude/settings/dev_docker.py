@@ -1,7 +1,9 @@
 from .base import *  # noqa
 import os
 import socket
+from dotenv import load_dotenv
 
+load_dotenv()
 
 DEBUG = True
 
@@ -16,9 +18,9 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": "ateliersoude",
-        "USER": "ateliersoude",
-        "HOST": "db",
+        "USER": os.getenv("POSTGRES_USER"),
+        "HOST":  os.getenv("POSTGRES_DB"),
         "PORT": "5432",
-        "PASSWORD": os.getenv("POSTGRES_PASSWORD", "ateliersoude"),
+        "PASSWORD":  os.getenv("POSTGRES_PASSWORD"),
     }
 }

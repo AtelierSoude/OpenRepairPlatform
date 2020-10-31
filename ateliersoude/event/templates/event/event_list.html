@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static i18n l10n %}
-{% load bootstrap4 app_filters %}
+{% load bootstrap4 app_filters assets %}
+{% include 'autocomplete_light/static.html' %}
 {% block title %}Les événements disponibles sur Reparons {% endblock %}
 
 {% block content %}
@@ -8,16 +9,20 @@
 
   <section class="container-fluid" id="search_tab">
       <div class="col-lg bg-white">
-        <div class="collapse" id="search">
-          <form method="GET" class="form-row">
-              {% bootstrap_form search_form %}
-            <br>
-            <div class="form-group p-2 col mt-auto">
-              <button type="submit" class="btn btn-primary btn-block">
-                <span class="">Lancer la recherche</span>
-              </button>
-            </div>
-          </form>
+        <div id="search" class="collapse.show">
+            <form method="GET" class="form-row" action="{% url 'event:list' %}">
+                <div class="input-group search-bar">
+                    {% bootstrap_field search_form.activity show_label=False field_class='form-control' addon_before='Quoi' %}
+                    {% bootstrap_field search_form.place show_label=False field_class='form-control' addon_before='<span class="fa fa-map-marker"></span>&nbsp;Où' %}
+                <!-- Dos it make sense to filter by dates here ? 
+                    {% bootstrap_field search_form.starts_before show_label=False field_class='form-control' addon_before='<span class="fa fa-calendar"></span> du' %}
+                    {% bootstrap_field search_form.starts_after show_label=False field_class='form-control' addon_before='au' %} 
+                --> 
+                <button type="submit" class="btn btn-secondary">
+                <span class=""><i class="fa fa-search"></i>Rechercher</span>
+                </button>
+                </div>
+            </form>
         </div>
         <div class="col-lg text-center mb-3">
             {% if results_number == 0 %}
@@ -27,8 +32,8 @@
             {% endif %}
           </div>
       <a class="text-center d-block" 
-        data-toggle="collapse" href="#search" role="button" aria-expanded="false" aria-controls="search">
-       Rechercher parmi les évènements
+        data-toggle="collapse" href="#search" role="button" aria-expanded="true" aria-controls="search">
+       Afficher/cacher
        <span class="btn btn-secondary">
           <i class="fa fa-search"></i>
        </span>
@@ -37,6 +42,17 @@
   </section>
 
   <section class="container">
+
+
+  <div class="container-fluid">
+      <div class="alert alert-danger alert-dismissible fade show mb-0" role="alert">
+        INFOS : suite aux nouvelles mesures sanitaires, les événéments affichés sont fortement succeptibles d'être annulés
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+  </div>
+
     <div class="col-lg">
         <div class="infinite-container p-4 event_list_cards">
           {% include "event/event_cards.html" with event_list=event_list card_size='col-md-4' %}
@@ -57,7 +73,6 @@
   <div class="d-block d-md-block d-lg-block position-fixed bg-white text-center" style="bottom: 0px; width:100%">
     <a class="btn btn-success" id="map_show">Afficher la carte</a>
   </div>
-{% endblock %}
 
 {% block extra_js %}
   <script src="{% static 'js/lib/jquery.waypoints.js' %}"></script>
@@ -68,7 +83,7 @@
         $("#breadcrumb").sticky({topSpacing:0});
         $("#search_tab").sticky({topSpacing:40});
       });
-    </script>
+  </script>
 
 <script>
       $(document).ready(function(){
@@ -136,4 +151,8 @@ var waypoint = new Waypoint({
       }
     });
   </script>
+{% endblock %}
+
+{{ search_form.media }}
+
 {% endblock %}

@@ -14,7 +14,7 @@
       </span>
       <div class="position-absolute" style="top: 10px; right:20px">
         {% if event.is_free %}
-        <span class="text-success">Entrée libre</span>
+        <span class="text-success">Sans limite</span>
         {% elif event.remaining_seats <= 0 %}
         <span class="text-danger">Complet</span>
         {% else %}
@@ -33,7 +33,11 @@
       </div>
     </div>
 
-    <a class="card-img-crop" href="{% url 'event:detail' event.pk event.slug %}">
+    <a class="        
+    {% if minimal != True %}
+    card-img-crop 
+    {% endif %}" 
+    href="{% url 'event:detail' event.pk event.slug %}">
         <span class="text-muted position-absolute" style="top:50px; right:15px">
           {% if request.user in event.registered.all or request.user in event.presents.all %}
             <span class="badge badge-success badge-pill">Participant</span>
@@ -47,53 +51,67 @@
             <img class="card-img-top rounded-0 event_img" src="{{ im.url }}"/>
           {% endthumbnail %}
       {% endif %}
+    </a>
       <div class="card-body p-0 d-flex flex-column bg-white">
-      <div class="p-2">
-        <div style="min-height: 48px;">
-          <h5 class="">{{ event.activity.name|truncatechars:40 }}</h5>
-        </div>
-        <small class="text-muted">
-          <i class="fa fa-map-marker-alt"></i>
-          {{ event.location.name }}
-        </small>
-        <br>
-
-        <div class="mini-organizers">
-          {% for orga in event.organizers.all %}
-          <div class="position-relative float-left mini">
-            {% if orga.avatar_img %}
-              {% thumbnail orga.avatar_img "25x25" crop="center" format="PNG" as im %}
-                <img src="{{ im.url }}" class="rounded-circle"/>
-              {% endthumbnail %}
-            {% else %}
-              {% if orga.first_name %}
-                {% get_initial_avatar orga 25 'circle' %}
-              {% endif %}
+        <a class="        
+        {% if minimal != True %}
+        card-body-crop 
+        {% endif %}" 
+        href="{% url 'event:detail' event.pk event.slug %}">
+        <div class="p-2">
+          <div style="min-height: 48px;">
+            <h6 class="text-muted mb-0">{{ event.activity.category.name }}</h6>
+            <h5 class="mb-0">{{ event.activity.name|truncatechars:40 }}</h5>
+            {% if event.collaborator and minimal != True %}
+              <small class="text-muted mb-1">en partenariat avec {{ event.collaborator }}</small>
             {% endif %}
           </div>
-            {% endfor %}
-          <small class="align-middle
-            {% if event.needed_organizers != 0 %}
-              {% if event.needed_organizers > event.organizers.all.count %}
-                text-danger
-              {% elif event.needed_organizers <= event.organizers.all.count %}
-                text-success
+          <small class="text-muted">
+            <i class="fa fa-map-marker-alt"></i>
+            {{ event.location.name }}
+          </small>
+          <br>
+
+          <div class="mini-organizers">
+            {% for orga in event.organizers.all %}
+            <div class="position-relative float-left mini">
+              {% if orga.avatar_img %}
+                {% thumbnail orga.avatar_img "25x25" crop="center" format="PNG" as im %}
+                  <img src="{{ im.url }}" class="rounded-circle"/>
+                {% endthumbnail %}
               {% else %}
-                text-warning
+                {% if orga.first_name %}
+                  {% get_initial_avatar orga 25 'circle' %}
+                {% endif %}
               {% endif %}
-            {% endif %}"> 
-            {% if event.needed_organizers != 0 %}
-              {{ event.organizers.all.count }}/{{ event.needed_organizers }} animateurs
+            </div>
+              {% endfor %}
+            <small class="align-middle
+              {% if event.needed_organizers != 0 %}
+                {% if event.needed_organizers > event.organizers.all.count %}
+                  text-danger
+                {% elif event.needed_organizers <= event.organizers.all.count %}
+                  text-success
+                {% else %}
+                  text-warning
+                {% endif %}
+              {% endif %}"> 
+              {% if event.needed_organizers != 0 %}
+                {{ event.organizers.all.count }}/{{ event.needed_organizers }} animateurs
+              {% endif %}
+            </small>
+          </div>
+
+          {% if minimal != True %}
+          <hr>
+          <small>
+            {% if event.description %}
+              {{ event.description | safe | truncatewords_html:10 }}
+            {% else %}
+              {{ event.activity.description | safe | truncatewords_html:10 }}
             {% endif %}
           </small>
-        </div>
-
-        {% if minimal != True %}
-        <hr>
-        <small>
-        {{ event.activity.description | safe | truncatewords_html:5 }}
-        </small>
-        {% endif %}
+          {% endif %}
       </div>
       </a>
       <footer class="text-muted text-center align-self-end mt-auto col-lg ml-0 mr-0 pl-0 pr-0">
@@ -126,15 +144,17 @@
   {% endif %}
 </form>
 {% endif %}
-        {% if not event.is_free %}
+        {% if event.external == True %}
+          <a class="btn btn-block btn-success" target="_blank" href="{{event.external_url}}"> Réservation externe</a>
+        {% elif event.booking == True %}
           {% if event.remaining_seats > 0 %}
             {% if minimal != True %}
               {% include "event/register.html" with event=event %}
             {% endif %}
           {% else %}
-          <a class="btn btn-block btn-outline-danger"> Complet</a>
+            <a class="btn btn-block btn-outline-danger"> Complet</a>
           {% endif %}
-        {% else %}
+        {% elif event.booking == False %}
           <a class="btn btn-block btn-outline-danger"> Sans réservation</a>
         {% endif %}
       </footer>

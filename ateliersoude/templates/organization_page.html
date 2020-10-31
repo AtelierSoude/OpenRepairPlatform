@@ -114,8 +114,8 @@
               {{ organization.description | safe }}
             </div>
             <h4 class="mt-4">Activités</h4>
-            <div class="card-columns">
-              {% include "event/activity/cards.html" with activities=organization.activities.all %}
+            <div class="clearfix">
+              {% include "event/activity/cards.html" with activities=activities_list %}
             </div>
             <h4 class="mt-4">Locaux</h4>
             {% if organization.places.all %}

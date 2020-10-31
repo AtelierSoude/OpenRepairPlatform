@@ -38,7 +38,7 @@ lxml==4.3.3
 markupsafe==1.1.1         # via jinja2
 mccabe==0.6.1             # via flake8
 more-itertools==7.0.0     # via pytest
-pillow==6.2.0             # via cairosvg
+pillow==7.1.0             # via cairosvg
 pluggy==0.9.0             # via pytest
 psycopg2==2.8.6
 py==1.8.0                 # via pytest

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-. deployment/django/django.env
+. openrepairplatform/.env
 if [[ "${EMAIL_PASSWORD}" == "CHANGE_ME" || "${SECRET_KEY}" == "CHANGE_ME" ]]; then
     cat deployment/checklist.txt;
     exit 1;
@@ -18,13 +18,14 @@ sudo docker run \
 sudo docker run \
     --name=openrepairplatform_python \
     -d --restart=unless-stopped \
-    --env-file=dopenrepairplatform/.env \
+    --env-file=openrepairplatform/.env \
     -v $PWD/openrepairplatform_static:/srv/static \
     -v $PWD/openrepairplatform_media:/srv/media \
     --network=openrepairplatform \
     openrepairplatform_python
 sudo docker run \
     --name=openrepairplatform_nginx \
+    --env-file=openrepairplatform/.env \
     -p 80:80 \
     -p 443:443 \
     -d --restart=unless-stopped \

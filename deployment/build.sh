@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-. deployment/django/django.env
+. openrepairplatform/.env
 if [[ "${EMAIL_PASSWORD}" == "CHANGE_ME" || "${SECRET_KEY}" == "CHANGE_ME" ]]; then
     cat deployment/checklist.txt;
     exit 1;

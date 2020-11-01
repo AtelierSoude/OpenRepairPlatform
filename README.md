@@ -3,7 +3,7 @@
 This application is still in developpment. There is no available realease at this point. 
 Any contributes are welcome. Please contact us if you want to contribute and we tell you how to.
 
-This is not a stable version and may not work for unknows reasons. 
+This is not a stable version.
 You may have to make some little modifications to make it work properly for your usage. 
 
 # Atelier Soudé

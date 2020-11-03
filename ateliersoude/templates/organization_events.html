@@ -7,7 +7,7 @@
 {% block menu_content %}
   <section class="container">
     <h2 class="text-center mt-4">Evénements de {{ organization }}</h2>
-    <div class="row mb-4 text-center">
+    {% if is_active %}
       <button class="btn-absolute btn btn-success" id="more-button">
         <i class="fa fa-plus"></i>
         <a class="d-none btn-event pl-1" href="{% url 'event:create' organization.id %}">
@@ -18,8 +18,7 @@
           événement récurrent
         </a>
       </button>
-    </div>
-    </div>
+    {% endif %}
   </section>
   {% if filter %}
   <div class="card mb-4 text-center">
@@ -31,10 +30,12 @@
   {% endif %}
   <h4 class="text-center mt-4">{{total_events}} dates</h4>
   <section class="box-shadow">
-    <span class="float-right">Télécharger le résultat :
-      <a class="btn btn-success btn-sm" href="{% querystring '_export'='csv' %}">CSV</a>
-      <a class="btn btn-success btn-sm" href="{% querystring '_export'='ods' %}">ODS</a>
-    </span>
+    {% if is_active %}
+      <span class="float-right">Télécharger le résultat :
+        <a class="btn btn-success btn-sm" href="{% querystring '_export'='csv' %}">CSV</a>
+        <a class="btn btn-success btn-sm" href="{% querystring '_export'='ods' %}">ODS</a>
+      </span>
+    {% endif %}
   {% render_table table %}
   </section>
 {% endblock menu_content %}

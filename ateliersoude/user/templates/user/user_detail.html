@@ -188,14 +188,7 @@
                           {% endifchanged %}
                           <tr class="{% if event.date <= today %}bg-light text-muted{% else %}bg-white{% endif %}">
                             <td>
-                              <div class="row border-secondary border text-center">
-                                <span class="col-12 bg-secondary">
-                                  {{ event.date|date:"N"|upper }}
-                                </span>
-                                <span class="col-12">
-                                  {{ event.date|date:"d" }}
-                                </span>
-                              </div>
+                              {% include "extra_column_data.html" with column="date" record=event %}
                             </td>
                             <td>
                               <a href="{% url 'event:detail' event.pk event.slug %}">
@@ -250,14 +243,7 @@
                           {% endifchanged %}
                           <tr class="bg-light text-muted">
                             <td>
-                              <div class="row border-secondary border text-center">
-                                <span class="col-12 bg-secondary">
-                                  {{ event.date|date:"N"|upper }}
-                                </span>
-                                <span class="col-12">
-                                  {{ event.date|date:"d" }}
-                                </span>
-                              </div>
+                              {% include "extra_column_data.html" with column="date" record=event %}
                             </td>
                             <td>
                               <a href="{% url 'event:detail' event.pk event.slug %}">

@@ -46,12 +46,12 @@
     
 {% elif column == "date" %}   
     <div class="row border-secondary border text-center bg-white ml-2 mr-2 calendar">
-      <span class="col-12 bg-secondary">
+      <small class="col-12 bg-secondary">
         {{ record.date|date:"N"|upper }} {{ record.date|date:"Y"|upper }}
-      </span>
-      <span class="col-12">
+      </small>
+      <small class="col-12">
         {{ record.date|date:"d" }}
-      </span>
+      </small>
     </div>
 
 {% elif column == "needed_organizers" %}   

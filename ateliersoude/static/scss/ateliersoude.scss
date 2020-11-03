@@ -63,7 +63,7 @@ tbody {
 .table-fixed{
   tbody {
     display:block;
-    height:400px;
+    max-height:400px;
     overflow:auto;
 }
   thead, tbody tr {
@@ -291,8 +291,8 @@ td {
 
 /* breadcrumb (chemin navigation) */
 
-#breadcrumb-sticky-wrapper, #search_tab-sticky-wrapper, #h_nav-sticky-wrapper, #jumbotron-sticky-wrapper {
-z-index: 3;
+#breadcrumb-sticky-wrapper, #search_tab-sticky-wrapper, #h_nav-sticky-wrapper, #jumbotron-sticky-wrapper, #v-pills-tab {
+z-index: 3 !important;
 position: relative;
 
 }

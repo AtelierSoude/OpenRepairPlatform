@@ -87,8 +87,57 @@ class OrganizationPageView(PermissionOrgaContextMixin, DetailView):
         activities = Activity.objects.filter(organization=self.organization).annotate(category_count=Count('category')
             ).order_by('-category_count')
         context ["activities_list"] = activities.order_by('category__name')
-        context["event_list"] = Event.future_published_events().filter(
-            organization=self.organization).order_by('date')[0:10]
+        context["future_event"] = Event.future_published_events().filter(
+            organization=self.organization).order_by('date')
+        context["page_tab"] = 'active'
+        return context
+
+class OrganizationEventsView(
+    PermissionOrgaContextMixin,
+    ExportMixin, 
+    tables.SingleTableMixin, 
+    FilterView,
+        ):
+    model = Organization
+    template_name = "organization_events.html"
+    context_object_name = "events"
+    table_class = EventTable
+    filterset_class = EventFilter
+    paginate_by = 20
+    dataset_kwargs = {"title": "Event"}
+    form_class = EventSearchForm
+
+    def get_queryset(self):
+        orga_slug = self.kwargs.get("orga_slug")
+        organization = get_object_or_404(Organization, slug=orga_slug)
+        self.object = organization
+        return organization.events.order_by("date")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        organization = Organization.objects.get(slug=self.kwargs.get("orga_slug"))
+        context["events_tab"] = 'active'
+        context["organization"] = organization
+        context["search_form"] = self.form_class
+        filtered_data = EventFilter(self.request.GET, queryset=self.get_queryset().all())
+        context["total_events"] = filtered_data.qs.count()
+        context["today"] = datetime.date(datetime.now())
+        context["future_event"] = Event.future_published_events().filter(
+            organization=organization).order_by('date')
+        return context
+
+class OrganizationGroupsView(PermissionOrgaContextMixin, DetailView):
+    model = Organization
+    template_name = "organization_groups.html"
+
+    def get_object(self, *args, **kwargs):
+        self.organization = Organization.objects.get(
+            slug=self.kwargs["orga_slug"]
+        )
+        return self.organization
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
         context["emails"] = [
             (f"{user.email} ({user.first_name} {user.last_name})", user.email)
             for user in CustomUser.objects.all()
@@ -101,9 +150,10 @@ class OrganizationPageView(PermissionOrgaContextMixin, DetailView):
             auto_id="id_volunteer_%s"
         )
         context["add_member_form"] = MoreInfoCustomUserForm
-        context["page_tab"] = 'active'
+        context["groups_tab"] = 'active'
+        context["future_event"] = Event.future_published_events().filter(
+            organization=self.organization).order_by('date')
         return context
-
 
 class OrganizationMembersView(
     HasActivePermissionMixin, 
@@ -142,6 +192,8 @@ class OrganizationMembersView(
             for user in self.get_queryset()
         ]
         context["add_member_form"] = MoreInfoCustomUserForm
+        context["future_event"] = Event.future_published_events().filter(
+            organization=self.organization).order_by('date')
         return context
 
 class OrganizationFeesView(
@@ -173,41 +225,9 @@ class OrganizationFeesView(
         context["total_fees"] = sum(
             [fee.amount for fee in filtered_data.qs]
         )
+        context["future_event"] = Event.future_published_events().filter(
+            organization=self.organization).order_by('date')
         return context
-
-
-class OrganizationEventsView(
-    HasActivePermissionMixin, 
-    PermissionOrgaContextMixin, 
-    ExportMixin, 
-    tables.SingleTableMixin, 
-    FilterView
-        ):
-    model = Event
-    template_name = "organization_events.html"
-    context_object_name = "events"
-    table_class = EventTable
-    filterset_class = EventFilter
-    paginate_by = 20
-    dataset_kwargs = {"title": "Event"}
-    form_class = EventSearchForm
-
-    def get_queryset(self):
-        self.object = self.organization
-        return self.model.objects.filter(
-            organization=self.organization
-        ).order_by("-date")
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["events_tab"] = 'active'
-        context["organization"] = self.organization
-        context["search_form"] = self.form_class
-        filtered_data = EventFilter(self.request.GET, queryset=self.get_queryset().all())
-        context["total_events"] = filtered_data.qs.count()
-        context["today"] = datetime.date(datetime.now())
-        return context
-
 
 class OrganizationControlsView(
     HasActivePermissionMixin, PermissionOrgaContextMixin, DetailView
@@ -221,6 +241,8 @@ class OrganizationControlsView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["controls_tab"] = 'active'
+        context["future_event"] = Event.future_published_events().filter(
+            organization=self.organization).order_by('date')
         return context
 
 

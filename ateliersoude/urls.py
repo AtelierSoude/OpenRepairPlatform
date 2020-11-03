@@ -41,6 +41,11 @@ urlpatterns = [
         name="organization_page",
     ),
     path(
+        "<str:orga_slug>/groups/",
+        views.OrganizationGroupsView.as_view(),
+        name="organization_groups",
+    ),
+    path(
         "<str:orga_slug>/members/",
         views.OrganizationMembersView.as_view(),
         name="organization_members",

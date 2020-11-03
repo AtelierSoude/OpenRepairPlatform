@@ -1,5 +1,6 @@
 from dal import autocomplete 
 from django.shortcuts import get_object_or_404
+from django.db.models import Q
 
 from django.views.generic import (
     TemplateView,
@@ -271,10 +272,10 @@ class ActiveOrgaAutocomplete(HasActivePermissionMixin, autocomplete.Select2Query
 
         qs = organization.actives.all().union(
             organization.admins.all(), organization.volunteers.all()
-            ).distinct().order_by("first_name")
+            ).order_by("first_name")
 
         if self.q:
-            qs = qs.filter(first_name__icontains=self.q)
+            qs = qs.filter(first_name__startswith=self.q)
 
         return qs
 
@@ -283,11 +284,10 @@ class PlaceAutocomplete(autocomplete.Select2QuerySetView):
         if not self.request.user.is_authenticated:
             return Place.objects.none()
 
-        qs = Place.objects.all().order_by("address")
+        qs = Place.objects.all().order_by("name")
 
         if self.q:
-            qs = qs.filter(address__icontains=self.q)
-
+            qs = qs.filter(Q(name__icontains=self.q) | Q(address__icontains=self.q))
         return qs
 
 class ActivityAutocomplete(autocomplete.Select2QuerySetView):

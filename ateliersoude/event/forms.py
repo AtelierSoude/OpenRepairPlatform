@@ -27,7 +27,9 @@ class EventForm(ModelForm):
         self.orga = kwargs.pop("orga")
         super().__init__(*args, **kwargs)
         self.fields["organizers"] = forms.ModelMultipleChoiceField(
-            queryset=CustomUser.objects.all(),
+            queryset=(
+                self.orga.actives.all() | self.orga.admins.all() | self.orga.volunteers.all() 
+            ).distinct(),
             widget=autocomplete.ModelSelect2Multiple(url='/' + self.orga.slug + '/user_orga_autocomplete/'),
             required=False,
         )
@@ -111,7 +113,7 @@ class RecurrentEventForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields["organizers"] = forms.ModelMultipleChoiceField(
             queryset=(
-                self.orga.actives.all() | self.orga.admins.all()
+                self.orga.actives.all() | self.orga.admins.all() | self.orga.volunteers.all() 
             ).distinct(),
             widget=forms.CheckboxSelectMultiple,
             required=False,

@@ -9,6 +9,9 @@
   min-height: 500px;
   overflow-x:hidden;
 }
+html{
+  font-size:.938em;
+}
 
 a {
   color : #49d3be;
@@ -35,13 +38,16 @@ h5{
 }
 
 .bg-grey { 
-  background-color: #eef2f6 !important;
+  background-color: #fff !important;
 }
 
 /* tables */ 
 
 thead {
-  background-color: #083342;
+  background-color: rgb(249, 249, 249);
+  a{
+    color: #838282;
+  }
 }
 
 tbody {
@@ -49,6 +55,11 @@ tbody {
     background-color: #fff;
   }
 }
+.box-shadow {
+  box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16),0 0 0 0 rgba(0,0,0,0.12);
+  border: 1px solid #cecece;
+}
+
 .table-fixed{
   tbody {
     display:block;
@@ -90,6 +101,10 @@ td {
 
 .table-hover tbody tr:hover {
   background-color: rgba(0,0,0,0.02);
+}
+
+.calendar{
+  max-width:120px
 }
 
 /* forms */ 
@@ -175,14 +190,60 @@ td {
   margin: 0px !important;
 }
 
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+  border-bottom: 3px solid #00cb8b;
+  background: inherit !important;
+  color: #484848;
+}
 
+.nav-link {
+  color: #828282;
+}
+
+/* buttons */ 
+
+.btn-absolute {
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 4px rgba(0,0,0,0.14),0 4px 8px rgba(0,0,0,0.28);
+  transition: right 0.5s, bottom 0.5s, border-radius 0.5s, text-indent 0.2s, visibility 1s, width 0.2s ease, height 0.5s ease 0.4s, color 0.5s, background-color 2s, transform 0.5s;
+  padding: 0;
+  margin: 0;
+  width: 63px;
+  height: 63px;
+  border-radius: 40px;
+  position: fixed;
+  bottom: 30px;
+  right: 50px;
+  z-index: 399;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  a{
+    color:#FFF;
+    text-decoration: none;
+    line-height: 63px;
+  }
+}
+
+/* jumbotron */ 
+
+.no-padding-jumbotron {
+  padding: 1rem 0rem 0rem 0rem;
+  margin-bottom: 0px;
+}
+
+.bordered {
+  border: 1px solid #cecece;
+}
 /* cards */
 .cards-column-1{
   column-count: 1;
 }
 .card {
-  border-radius: 0;
-  border : 0px;
+  border: 1px solid #cecece;
   a.card-link {
     text-decoration: none;
     color: inherit;
@@ -230,8 +291,8 @@ td {
 
 /* breadcrumb (chemin navigation) */
 
-#breadcrumb-sticky-wrapper, #search_tab-sticky-wrapper, #h_nav-sticky-wrapper{
-z-index: 2;
+#breadcrumb-sticky-wrapper, #search_tab-sticky-wrapper, #h_nav-sticky-wrapper, #jumbotron-sticky-wrapper {
+z-index: 3;
 position: relative;
 
 }
@@ -308,12 +369,10 @@ position: relative;
      z-index: 2;
    }
    #side_nav{
-     background-color: #fee56e !important; 
+    /* background-color: #fee56e !important;  */
      width:100%;
-     min-height: 100px;
    }
    .header_detail_page_picture{
-     float: left;
      padding-top: 10px !important;
      img{
        width: 75px;
@@ -325,9 +384,6 @@ position: relative;
      text-align: left !important;
    }
    .header_detail_page_title{
-     padding-left:20px;
-     float: left;
-     font-size: 18px;
      padding-top: 10px !important;
      line-height: 75px;
    }
@@ -339,10 +395,10 @@ position: relative;
     padding: 0px !important;
     a{
       font-size: 12px;
-      color: #083342;
+      color: #828282;
     }
     a.active{
-      color : #FFF;
+      color : #484848;
     }
   }
   .event_list_cards{

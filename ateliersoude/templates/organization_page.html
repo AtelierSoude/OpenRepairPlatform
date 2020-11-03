@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load static bootstrap4 %}
+{% load static bootstrap4 thumbnail%}
 {% block title %}Page de {{organization.name}} sur Reparons{% endblock %}
 
 {% load assets app_filters thumbnail %}
@@ -14,20 +14,26 @@
 <div class="container-fluid">
     {% url "user:organization_list" as organization_list_url %}
     {% include "breadcrumb.html" with current=organization first_parent_url=organization_list_url first_parent_text="Organisations" %}
-    {% include "organization_menu.html" with organization=organization%}
+
+    <div class="jumbotron jumbotron-fluid no-padding-jumbotron">
+      <div class="container text-center d-flex justify-content-center align-items-center flex-md-column">
+        <div class="header_detail_page_picture">
+          {% if organization.picture %}
+            {% thumbnail organization.picture "100x100" crop="center" format="PNG" as im %}
+              <img src="{{ im.url }}" class="m-2 rounded-circle"/>
+            {% endthumbnail %}
+          {% endif %}
+        </div> 
+        <h2 class="header_detail_page_title">{{ organization.name }}</h2>
+      </div>
+      {% include "organization_menu.html" with organization=organization%}
+    </div>
+
   <div class="container">
     <div class="tab-content row no-gutters" id="v-pills-tabContent">
       {% block menu_content %}
       <section class="header_detail_page p-0 text-center col-md-3">
         <div class="bg-grey" id="side_nav">
-            <div class="pt-5 header_detail_page_picture">
-                {% if organization.picture %}
-                  {% thumbnail object.picture "150x150" crop="center" format="PNG" as im %}
-                    <img src="{{ im.url }}" class="m-2 rounded-circle"/>
-                  {% endthumbnail %}
-                {% endif %}
-            </div> 
-            <h2 class="pt-5 header_detail_page_title">{{ organization.name }}</h2>
           <div class="nav flex-md-column flex-sm-row nav-pills justify-content-center p-4 text-left" id="v-pills-tab" role="tablist" aria-orientation="vertical">
               <a class="nav-link active" id="v-pills-about-tab" data-toggle="pill" href="#v-pills-about" role="tab" aria-controls="v-pills-rdv" aria-selected="true">Informations générales</a>
               <a class="nav-link" id="v-pills-events-tab" data-toggle="pill" href="#v-pills-events" role="tab" aria-controls="v-pills-events" aria-selected="false">Evènements</a>
@@ -49,70 +55,72 @@
               </div>    
 
             <div class="tab-pane fade show active" id="v-pills-about" role="tabpanel" aria-labelledby="v-pills-about-tab">
-            <h4 class="mt-4">Informations  
-              {% if is_admin %}
-                <a class="btn btn-success btn-sm float-right" href="{% url 'user:organization_update' organization.pk %}">
-                  <i class="fa fa-pencil-alt"></i> Editer
-                </a>
-              {% endif %}
-            </h4>
-            <div class="card p-4">
-              <div class="row">
-                <div class="col-md-6 p-1">
-                  <i class="fa fa-phone pr-2"></i>Téléphone
-                </div>
-                <div class="col-md-6 p-1">
-                  {% if organization.phone_number %}
-                    {{ organization.phone_number }}
-                  {% else %}
-                    Non renseigné
-                  {% endif %}
-                </div>
-                <div class="col-md-6 p-1">
-                  <i class="fa fa-envelope pr-2"></i>Adresse mail
-                </div>
-                <div class="col-md-6 p-1">
-                  {% if object.email %}
-                  <a href="{{organization.email}}">{{ object.email }}</a>
-                  {% else %}
-                    Non renseigné
-                  {% endif %}
-                </div>
-                <div class="col-md-6 p-1">
-                  <i class="fa fa-map pr-2"></i>Site internet
-                </div>
-                <div class="col-md-6 p-1">
-                  {% if organization.website %}
-                    <a href="{{organization.website}}">{{ organization.website }}</a>
-                  {% else %}
-                      Non renseigné
-                  {% endif %}
-                </div>
-                {% if organization.advised_fee %}
-                <div class="col-md-6 p-1">
-                  <p class="mt-1">
-                    {% if organization.fee_description %}
-                      {{ organization.fee_description }}
-                    {% else %}
-                      L'adhésion est de 
+              <div class=" d-flex justify-content-center flex-column flex-md-row flex-lg-row">
+                <div class="card p-4 m-2 col-md-6">
+                  <h4 class="mt-4">Informations  
+                    {% if is_admin %}
+                      <a class="btn btn-success btn-sm float-right" href="{% url 'user:organization_update' organization.pk %}">
+                        <i class="fa fa-pencil-alt"></i> Editer
+                      </a>
                     {% endif %}
-                  </p>
+                  </h4>
+                  <div class="row">
+                    <div class="col-md-6 p-1">
+                      <i class="fa fa-phone pr-2"></i>Téléphone
+                    </div>
+                    <div class="col-md-6 p-1">
+                      {% if organization.phone_number %}
+                        {{ organization.phone_number }}
+                      {% else %}
+                        Non renseigné
+                      {% endif %}
+                    </div>
+                    <div class="col-md-6 p-1">
+                      <i class="fa fa-envelope pr-2"></i>Adresse mail
+                    </div>
+                    <div class="col-md-6 p-1">
+                      {% if object.email %}
+                      <a href="{{organization.email}}">{{ object.email }}</a>
+                      {% else %}
+                        Non renseigné
+                      {% endif %}
+                    </div>
+                    <div class="col-md-6 p-1">
+                      <i class="fa fa-map pr-2"></i>Site internet
+                    </div>
+                    <div class="col-md-6 p-1">
+                      {% if organization.website %}
+                        <a href="{{organization.website}}">{{ organization.website }}</a>
+                      {% else %}
+                          Non renseigné
+                      {% endif %}
+                    </div>
+                    {% if organization.advised_fee %}
+                    <div class="col-md-6 p-1">
+                      <p class="mt-1">
+                        {% if organization.fee_description %}
+                          {{ organization.fee_description }}
+                        {% else %}
+                          L'adhésion est de 
+                        {% endif %}
+                      </p>
+                    </div>
+                    <div class="col-md-6 p-1">
+                      <span class="badge badge-pill badge-secondary">
+                        {% if organization.min_fee %}
+                          {{ organization.min_fee }} - 
+                        {% endif %}    
+                        {{ organization.advised_fee }}€
+                      </span>
+                    </div>
+                    {% endif %}
+                  </div>
                 </div>
-                <div class="col-md-6 p-1">
-                  <span class="badge badge-pill badge-secondary">
-                    {% if organization.min_fee %}
-                      {{ organization.min_fee }} - 
-                    {% endif %}    
-                    {{ organization.advised_fee }}€
-                  </span>
+                <div class="card p-4 m-2 col-md-6">
+                  <h4 class="mt-4">Description</h4>
+                  {{ organization.description | safe }}
                 </div>
-                {% endif %}
               </div>
-            </div>
-            <h4 class="mt-4">Description</h4>
-            <div class="card p-4">
-              {{ organization.description | safe }}
-            </div>
             <h4 class="mt-4">Activités</h4>
             <div class="clearfix">
               {% include "event/activity/cards.html" with activities=activities_list %}

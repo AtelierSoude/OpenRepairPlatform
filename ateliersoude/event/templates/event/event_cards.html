@@ -2,7 +2,7 @@
 {% load initialavatar %}
 
   {% for event in event_list %}
-  <div class="card infinite-item mb-4 {{card_size}} float-left" style="background-color: #86868600 !important;" data-location="{{event.location.pk|escape}}">
+  <div class="card infinite-item mb-4 {{card_size}} float-left" style="border:0" data-location="{{event.location.pk|escape}}">
     <div class="card-header bg-primary"> 
       <span class="text-secondary">
         <i class="far fa-calendar-alt"></i>    
@@ -52,7 +52,7 @@
           {% endthumbnail %}
       {% endif %}
     </a>
-      <div class="card-body p-0 d-flex flex-column bg-white">
+      <div class="card-body bordered p-0 d-flex flex-column bg-white">
         <a class="        
         {% if minimal != True %}
         card-body-crop 

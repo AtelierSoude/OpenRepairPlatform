@@ -20,6 +20,9 @@ class EventTable(ColumnShiftTable):
         verbose_name="Date",
         extra_context={"column": "date"},
         )
+    location = tables.Column(
+        attrs={"td": {"class": "small"}}
+        )
     needed_organizers = tables.TemplateColumn(
         accessor='needed_organizers', 
         template_name="extra_column_data.html",

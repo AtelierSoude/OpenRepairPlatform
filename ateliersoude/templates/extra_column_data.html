@@ -40,12 +40,12 @@
             <i class="fa fa-plus"></i>
             Mettre à jour
             </button>
-            {% include "user/organization/modal_more_info.html" with object=organization anonymous_user=user form=add_member_form|initial:user %}
+            {% include "user/organization/modal_more_info.html" with object=organization anonymous_user=record form=add_member_form|initial:record %}
         {% endif %}
     {% endfor %}
     
 {% elif column == "date" %}   
-    <div class="row border-secondary border text-center bg-white">
+    <div class="row border-secondary border text-center bg-white ml-2 mr-2 calendar">
       <span class="col-12 bg-secondary">
         {{ record.date|date:"N"|upper }} {{ record.date|date:"Y"|upper }}
       </span>

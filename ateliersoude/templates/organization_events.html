@@ -6,27 +6,31 @@
 
 {% block menu_content %}
   <section class="container">
-    <h2 class="text-center p-2">Evénements de {{ organization }}</h2>
+    <h2 class="text-center mt-4">Evénements de {{ organization }}</h2>
     <div class="row mb-4 text-center">
-      <a class="btn btn-primary col-md-6" href="{% url 'event:create' organization.id %}">
-        <i class="fa fa-plus-circle"></i> évènement
-      </a>
-      <a class="btn btn-success col-md-6" href="{% url 'event:recurrent_create' organization.id %}">
-        <i class="fa fa-plus-circle"></i> événement récurrent
-      </a>
+      <button class="btn-absolute btn btn-success" id="more-button">
+        <i class="fa fa-plus"></i>
+        <a class="d-none btn-event pl-1" href="{% url 'event:create' organization.id %}">
+          ajouter un événement
+        </a>        
+        <a class="btn btn-primary btn-reccurent-event d-none btn-absolute" style="bottom:100px" href="{% url 'event:recurrent_create' organization.id %}">
+          <i class="fa fa-plus pr-1"></i>
+          événement récurrent
+        </a>
+      </button>
+    </div>
     </div>
   </section>
   {% if filter %}
   <div class="card mb-4 text-center">
     <form action="" method="get" class="form-inline justify-content-center form-xs">
-      <h4 class="d-block w-100">Rechercher</h4>
         {% bootstrap_form filter.form %}
-        <a class="btn-secondary w-100">{% bootstrap_button 'filtrer' %}</a>
+        <a class="btn-secondary">{% bootstrap_button 'filtrer' %}</a>
     </form>
   </div>
   {% endif %}
-  <h4 class="text-center w-100">{{total_events}} dates</h4>
-  <section class="border border-primary mb-5">
+  <h4 class="text-center mt-4">{{total_events}} dates</h4>
+  <section class="box-shadow">
     <span class="float-right">Télécharger le résultat :
       <a class="btn btn-success btn-sm" href="{% querystring '_export'='csv' %}">CSV</a>
       <a class="btn btn-success btn-sm" href="{% querystring '_export'='ods' %}">ODS</a>
@@ -36,6 +40,23 @@
 {% endblock menu_content %}
 
 {% block extra_js %}
+
+<script>
+  $(document).ready(function(){
+    $( "#more-button" ).hover(
+  function() {
+    $( ".btn-event" ).addClass( "d-block" );
+    $( this ).css( "width", "250px" );
+    $( ".btn-reccurent-event" ).addClass( "d-block" ).css( "width", "250px" );
+  }, function() {
+    $( ".btn-event" ).removeClass( "d-block" );
+    $( this ).css( "width", "63px" );
+    $( ".btn-reccurent-event" ).removeClass( "d-block" ).css( "width", "0px" );
+  }
+  );
+  });
+</script>
+
   <script>
     $(document).ready(function(){
       $("#h_nav").sticky({topSpacing:40});

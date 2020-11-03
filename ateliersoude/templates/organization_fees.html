@@ -1,26 +1,25 @@
 {% extends 'organization_page.html' %}
-{% load static %}
+{% load static thumbnail%}
 {% load bootstrap4 %}
 {% load querystring from django_tables2 %}
 {% load django_tables2 %}
 
 {% block menu_content %}
 <section class="container">
-  <div class="text-center p-2 m-auto">
+  <div class="text-center m-auto">
     <h2 class="text-center pt-2">Cotisations</h2>
     {% if filter %}
     <div class="card mb-4 text-center">
       <form action="" method="get" class="form-inline justify-content-center form-xs">
-        <h4 class="d-block w-100">Rechercher</h4>
           {% bootstrap_form filter.form %}
-          <a class="btn-secondary w-100">{% bootstrap_button 'filtrer' %}</a>
+          {% bootstrap_button 'filtrer' button_class="btn-secondary" %}
       </form>
     </div>
     {% endif %}
   </div>
 </section>
 <h4 class="text-center w-100">Total = {{total_fees}} €</h4>
-<section class="border border-primary mb-5">
+<section class="box-shadow mb-5">
   <span class="">Télécharger le résultat :
     <a class="btn btn-success btn-sm" href="{% querystring '_export'='csv' %}">CSV</a>
     <a class="btn btn-success btn-sm" href="{% querystring '_export'='ods' %}">ODS</a>

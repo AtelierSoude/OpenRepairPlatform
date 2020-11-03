@@ -125,14 +125,14 @@ var waypoint = new Waypoint({
     $(".card").hover(
           function() {
             var location_id = $(this).data("location");
-            $(this).find('.card-body').addClass("shadow");
+            $(this).find('.card-body').addClass("box-shadow");
             $(".awesome-marker[data-location='" + location_id +"' ]").addClass("awesome-marker_hover");
           }
         );
         $(".card").mouseleave(
           function() {
             var location_id = $(this).data("location");
-            $(this).find('.card-body').removeClass("shadow");
+            $(this).find('.card-body').removeClass("box-shadow");
             $(".awesome-marker[data-location='" + location_id +"' ]").removeClass("awesome-marker_hover");
           }
         );

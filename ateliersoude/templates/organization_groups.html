@@ -1,5 +1,5 @@
 {% extends 'organization_page.html' %}
-{% load bootstrap4 app_filters static thumbnail%}
+{% load bootstrap4 app_filters static thumbnail assets %}
 {% load querystring from django_tables2 %}
 {% load django_tables2 %}
 
@@ -61,9 +61,15 @@
 </style>
 
 {% block extra_js %}
+
+{% assets "js_groups_organization" %}
+<script src="{{ ASSET_URL }}"></script>
+{% endassets %}
+
 {% if is_volunteer %}
 {{ emails|json_script:"emails-data" }}
 {% endif %}
+
   <script>
     $(document).ready(function(){
       $("#h_nav").sticky({topSpacing:40});

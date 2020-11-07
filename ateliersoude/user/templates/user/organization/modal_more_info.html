@@ -21,29 +21,34 @@
         {% else %}
         {% bootstrap_form search_form %}
           {{search_form.media}}
-          <script>
-            document.querySelector(".select2-hidden-accessible").onchange=function() {  
-              if($(".selected-user").length){ 
-                user_pk = $(".selected-user").attr('id');
-                  fetch("/api/user/"+user_pk)
-                  .then(response => {
-                    return response.json();
-                  })
-                  .then(data => {
-                    $("#id_email").val(data.email).prop( "disabled", true );
-                    $("#id_first_name").val(data.first_name).prop( "disabled", true );
-                    $("#id_last_name").val(data.last_name).prop( "disabled", true );
-                    $("#id_street_address").val(data.street_address).prop( "disabled", true );
-                  })
-                }
-              else{ 
-                  $("#id_email").val('').prop( "disabled", false );
-                  $("#id_first_name").val('').prop( "disabled", false );
-                  $("#id_last_name").val('').prop( "disabled", false );
-                  $("#id_street_address").val('').prop( "disabled", false);
-                };
+        <script>
+          /// trick to make select2 works inna modal 
+          $(document).ready(function(){
+            $.fn.modal.Constructor.prototype._enforceFocus = function() {};
+          });
+          /// festch api regardless to the selected user using autocomplete 
+          document.querySelector(".select2-hidden-accessible").onchange=function() {  
+            if($(".selected-user").length){ 
+              user_pk = $(".selected-user").attr('id');
+                fetch("/api/user/"+user_pk)
+                .then(response => {
+                  return response.json();
+                })
+                .then(data => {
+                  $("#id_email").val(data.email).prop( "disabled", true );
+                  $("#id_first_name").val(data.first_name).prop( "disabled", true );
+                  $("#id_last_name").val(data.last_name).prop( "disabled", true );
+                  $("#id_street_address").val(data.street_address).prop( "disabled", true );
+                })
               }
-          </script>
+            else{ 
+                $("#id_email").val('').prop( "disabled", false );
+                $("#id_first_name").val('').prop( "disabled", false );
+                $("#id_last_name").val('').prop( "disabled", false );
+                $("#id_street_address").val('').prop( "disabled", false);
+              };
+            }
+        </script>
         {% endif %}
         Veuillez compléter ces info s'il vous plait.
         <form

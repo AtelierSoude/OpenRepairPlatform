@@ -1,6 +1,7 @@
 from dal import autocomplete 
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
+from django.utils.safestring import mark_safe
 
 from django.views.generic import (
     TemplateView,
@@ -26,8 +27,8 @@ from ateliersoude.user.models import (
 from ateliersoude.event.models import Event, Activity, Place
 from ateliersoude.user.forms import (
     CustomUserEmailForm,
+    CustomUserSearchForm,
     MoreInfoCustomUserForm,
-    CustomUserForm
 )
 from ateliersoude.event.forms import (
     EventSearchForm
@@ -112,7 +113,7 @@ class OrganizationEventsView(
         orga_slug = self.kwargs.get("orga_slug")
         organization = get_object_or_404(Organization, slug=orga_slug)
         self.object = organization
-        return organization.events.order_by("date")
+        return organization.events.order_by("-date")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -175,22 +176,16 @@ class OrganizationMembersView(
     def get_queryset(self):
         self.object = self.organization
         queryset = self.organization.members.all().order_by("last_name")
-        form = CustomUserForm(self.request.GET)
-        if form.is_valid() and form.cleaned_data["main_field"]:
-            queryset = queryset.filter(
-                first_name=form.cleaned_data["main_field"].split()[0],
-                last_name=form.cleaned_data["main_field"].split()[1]
-            )
         return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["members_tab"] = 'active'
         context["organization"] = self.organization
-        context["search_form"] = CustomUserForm
-        context["users"] = [
-            (f"{user.first_name} {user.last_name}")
-            for user in self.get_queryset()
+        context["search_form"] = CustomUserSearchForm
+        context["emails"] = [
+            (f"{user.email} ({user.first_name} {user.last_name})", user.email)
+            for user in CustomUser.objects.all()
         ]
         context["add_member_form"] = MoreInfoCustomUserForm
         context["future_event"] = Event.future_published_events().filter(
@@ -272,12 +267,24 @@ class ActiveOrgaAutocomplete(HasActivePermissionMixin, autocomplete.Select2Query
 
         qs = organization.actives.all().union(
             organization.admins.all(), organization.volunteers.all()
-            ).order_by("first_name")
+            )
+        if self.q:
+            qs = qs.filter(Q(first_name__icontains=self.q) | Q(last_name__icontains=self.q) | Q(email__icontains=self.q))
+        return qs
+
+class CustomUserAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            return CustomUser.objects.none()
+
+        qs = CustomUser.objects.all()
 
         if self.q:
-            qs = qs.filter(first_name__startswith=self.q)
-
+            qs = qs.filter(Q(first_name__icontains=self.q) | Q(last_name__icontains=self.q) | Q(email__icontains=self.q))
         return qs
+
+    def get_selected_result_label(self, item):
+        return f"<span class='selected-user' id={item.pk}/>{item}</span>"
 
 class PlaceAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):

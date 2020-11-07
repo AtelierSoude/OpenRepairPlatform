@@ -106,13 +106,13 @@
                 <div class="card-rows">
                   {% for place in organization.places.all %}
                     {% if place.is_visible %}
-                      <div class="card">  
+                      <div class="card m-2">  
                         <a class="card-link" href="{% url 'location:detail' place.pk place.slug %}">
                           <div class="card-body">
-                            <h4 class="card-title">{{ place.name }}</h4>
-                            <h6 class="card-subtitle mb-2 text-muted">{{ place.address }}</h6>
-                            <span class="badge badge-secondary">{{ place.category }}</span>
-                            {{ place.description | safe | truncatewords_html:10 }}
+                            <h5 class="card-title">{{ place.name }}</h5>
+                            <small class="card-subtitle mb-2 text-muted">{{ place.address }}</small><br>
+                            <span class="badge badge-secondary">{{ place.category }}</span><br>
+                            <small>{{ place.description | safe | truncatewords_html:10 }}</small>
                           </div>
                         </a>
                       </div>
@@ -173,7 +173,4 @@
     $("#breadcrumb").sticky({topSpacing:0});
   });
 </script>
-  {% assets "js_detail_organization" %}
-    <script src="{{ ASSET_URL }}"></script>
-  {% endassets %}
 {% endblock %}

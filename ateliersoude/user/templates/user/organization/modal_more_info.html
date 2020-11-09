@@ -28,8 +28,9 @@
           });
         </script>
         <script async >
+          $(document).ready(function(){
           /// festch api regardless to the selected user using autocomplete 
-            elem = document.querySelector(".select2-hidden-accessible");
+            elem = document.querySelector("#id_user");
             if (elem) {
               elem.onchange=function() {  
                 if($(".selected-user").length){ 
@@ -53,6 +54,7 @@
                 };
               };
             };
+          });
         </script>
         {% endif %}
         Veuillez compléter ces info s'il vous plait.

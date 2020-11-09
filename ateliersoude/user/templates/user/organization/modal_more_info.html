@@ -27,9 +27,8 @@
             $.fn.modal.Constructor.prototype._enforceFocus = function() {};
           });
         </script>
-        <script async>
+        <script async >
           /// festch api regardless to the selected user using autocomplete 
-          document.addEventListener("DOMContentLoaded", function() { 
             elem = document.querySelector(".select2-hidden-accessible");
             if (elem) {
               elem.onchange=function() {  
@@ -54,7 +53,6 @@
                 };
               };
             };
-          });
         </script>
         {% endif %}
         Veuillez compléter ces info s'il vous plait.

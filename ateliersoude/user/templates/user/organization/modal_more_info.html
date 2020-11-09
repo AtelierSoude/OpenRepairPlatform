@@ -27,30 +27,33 @@
             $.fn.modal.Constructor.prototype._enforceFocus = function() {};
           });
         </script>
-        <script>
+        <script async>
           /// festch api regardless to the selected user using autocomplete 
           document.addEventListener("DOMContentLoaded", function() { 
-            document.querySelector(".select2-hidden-accessible").onchange=function() {  
-              if($(".selected-user").length){ 
-                user_pk = $(".selected-user").attr('id');
-                  fetch("/api/user/"+user_pk)
-                  .then(response => {
-                    return response.json();
-                  })
-                  .then(data => {
-                    $("#id_email").val(data.email).prop( "disabled", true );
-                    $("#id_first_name").val(data.first_name).prop( "disabled", true );
-                    $("#id_last_name").val(data.last_name).prop( "disabled", true );
-                    $("#id_street_address").val(data.street_address).prop( "disabled", true );
-                  })
-              }
-              else { 
-                  $("#id_email").val('').prop( "disabled", false );
-                  $("#id_first_name").val('').prop( "disabled", false );
-                  $("#id_last_name").val('').prop( "disabled", false );
-                  $("#id_street_address").val('').prop( "disabled", false);
+            elem = document.querySelector(".select2-hidden-accessible");
+            if (elem) {
+              elem.onchange=function() {  
+                if($(".selected-user").length){ 
+                  user_pk = $(".selected-user").attr('id');
+                    fetch("/api/user/"+user_pk)
+                    .then(response => {
+                      return response.json();
+                    })
+                    .then(data => {
+                      $("#id_email").val(data.email).prop( "disabled", true );
+                      $("#id_first_name").val(data.first_name).prop( "disabled", true );
+                      $("#id_last_name").val(data.last_name).prop( "disabled", true );
+                      $("#id_street_address").val(data.street_address).prop( "disabled", true );
+                    })
+                }
+                else { 
+                    $("#id_email").val('').prop( "disabled", false );
+                    $("#id_first_name").val('').prop( "disabled", false );
+                    $("#id_last_name").val('').prop( "disabled", false );
+                    $("#id_street_address").val('').prop( "disabled", false);
+                };
               };
-            }
+            };
           });
         </script>
         {% endif %}
@@ -65,6 +68,7 @@
             class="text-left"
         >
           <div class="modal-body">
+            {% csrf_token %}
             {% if anonymous_user %}
             {% bootstrap_form form=form|initial:anonymous_user %}
             {% else %}

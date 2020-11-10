@@ -27,7 +27,7 @@
             $.fn.modal.Constructor.prototype._enforceFocus = function() {};
           });
         </script>
-        <script async >
+        <script >
           $(document).ready(function(){
           /// festch api regardless to the selected user using autocomplete 
             elem = document.querySelector("#id_user");
@@ -40,17 +40,17 @@
                       return response.json();
                     })
                     .then(data => {
-                      $("#id_email").val(data.email).prop( "disabled", true );
-                      $("#id_first_name").val(data.first_name).prop( "disabled", true );
-                      $("#id_last_name").val(data.last_name).prop( "disabled", true );
-                      $("#id_street_address").val(data.street_address).prop( "disabled", true );
+                      $("#id_email").val(data.email).val();
+                      $("#id_first_name").val(data.first_name).val();
+                      $("#id_last_name").val(data.last_name).val();
+                      $("#id_street_address").val(data.street_address).val();
                     })
                 }
                 else { 
-                    $("#id_email").val('').prop( "disabled", false );
-                    $("#id_first_name").val('').prop( "disabled", false );
-                    $("#id_last_name").val('').prop( "disabled", false );
-                    $("#id_street_address").val('').prop( "disabled", false);
+                    $("#id_email").val('');
+                    $("#id_first_name").val('');
+                    $("#id_last_name").val('');
+                    $("#id_street_address").val('');
                 };
               };
             };

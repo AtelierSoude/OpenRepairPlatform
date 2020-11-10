@@ -58,4 +58,4 @@ class Place(models.Model):
         return get_future_published_events(self.events)
 
     def __str__(self):
-        return self.name
+        return self.name + ", " + str(self.address)

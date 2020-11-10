@@ -10,8 +10,7 @@ RUN mkdir /var/www/letsencrypt
 RUN mkdir /var/www/letsencrypt/.well-known
 RUN mkdir /var/www/letsencrypt/.well-known/acme-challenge
 
+#command to run on first exec to generate diffie helman cert use to secure tls handshake
 #CMD openssl dhparam -out /etc/ssl/certsdhparam.pem 4096
 
-#VOLUME /var/www/letsencrypt/.well-known/acme-challenge
-
-CMD /usr/sbin/nginx -g "daemon off;"
+CMD while :; do sleep 12h & wait ${!}; certbot renew; nginx -s reload; done & nginx -g "daemon off;"

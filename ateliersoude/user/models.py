@@ -114,7 +114,10 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
             return f"{self.first_name} {self.last_name}"
         return self.email
 
-
+    @property
+    def full_name(self):
+        return '{0} {1}'.format(self.first_name, self.last_name)
+        
 class Organization(models.Model):
     name = models.CharField(
         max_length=100, default="", verbose_name=_("Organization name")

@@ -1,7 +1,7 @@
 {% load bootstrap4 app_filters %}
 
+<div class="modal" id="more-info-{{ anonymous_user.pk }}" role="dialog">
 
-<div class="modal" id="more-info-{{ anonymous_user.pk }}" tabindex="-1" role="dialog">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -17,6 +17,46 @@
         </button>
       </div>
       <div class="modal-body">
+        {% if anonymous_user %}
+        {% else %}
+        {% bootstrap_form search_form %}
+          {{search_form.media}}
+        <script>
+          /// trick to make select2 works inna modal 
+          $(document).ready(function(){
+            $.fn.modal.Constructor.prototype._enforceFocus = function() {};
+          });
+        </script>
+        <script >
+          $(document).ready(function(){
+          /// festch api regardless to the selected user using autocomplete 
+            elem = document.querySelector("#id_user");
+            if (elem) {
+              elem.onchange=function() {  
+                if($(".selected-user").length){ 
+                  user_pk = $(".selected-user").attr('id');
+                    fetch("/api/user/"+user_pk)
+                    .then(response => {
+                      return response.json();
+                    })
+                    .then(data => {
+                      $("#id_email").val(data.email).val();
+                      $("#id_first_name").val(data.first_name).val();
+                      $("#id_last_name").val(data.last_name).val();
+                      $("#id_street_address").val(data.street_address).val();
+                    })
+                }
+                else { 
+                    $("#id_email").val('');
+                    $("#id_first_name").val('');
+                    $("#id_last_name").val('');
+                    $("#id_street_address").val('');
+                };
+              };
+            };
+          });
+        </script>
+        {% endif %}
         Veuillez compléter ces info s'il vous plait.
         <form
             {% if anonymous_user %}

@@ -1,4 +1,4 @@
-{% if is_active %}
+
 <nav class="nav nav-pills justify-content-center bg-secondary" id="h_nav">
     <a class="nav-link {{ page_tab }}" 
     href="{% url 'organization_page' organization.slug %}">
@@ -6,11 +6,17 @@
     <a class="text-center nav-link {{ events_tab }}" 
     href="{% url 'organization_events' organization.slug %}">
       <i style="font-size: 22px" class="fas fa-calendar-alt d-none d-sm-block d-md-none d-block"></i>    
-      <span class="d-none d-sm-none d-md-block">Evenements</span>
+      <span class="d-none d-sm-none d-md-block">Evenements <span class="badge badge-light">{{future_event.all.count}}</span></span>
     </a>
+    <a class="text-center nav-link {{ groups_tab }}" 
+    href="{% url 'organization_groups' organization.slug %}">
+      <i style="font-size: 22px" class="fas fa-users d-none d-sm-block d-md-none d-block"></i>    
+      <span class="d-none d-sm-none d-md-block">Groupes</span>
+    </a>
+    {% if is_active %}
     <a class="text-center nav-link {{ members_tab }}"
     href="{% url 'organization_members' organization.slug %}">
-    <i style="font-size: 22px" class="fas fa-users d-none d-sm-block d-md-none d-block"></i>    
+    <i style="font-size: 22px" class="fas fa-user d-none d-sm-block d-md-none d-block"></i>    
       <span class="d-none d-sm-none d-md-block">Membres</span>
     </a>
     <a class="text-center nav-link {{ accounting_tab }}"
@@ -21,7 +27,7 @@
     <a class="text-center nav-link {{ controls_tab }}"
     href="{% url 'organization_controls' organization.slug %}">
       <i style="font-size: 22px" class="fas fa-cog d-none d-sm-block d-md-none d-block"></i>    
-      <span class="d-none d-sm-none d-md-block">Modifier</span>
+      <span class="d-none d-sm-none d-md-block">Gérer</span>
     </a>
+    {% endif %}
 </nav>
-{% endif %}

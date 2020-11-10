@@ -4,8 +4,8 @@
 {% block content %}
   {% include "breadcrumb.html" with current="Activités" %}
   <section class="container pt-3">
-    <div class="row col-md-12">
-      <div class="p-4 event_list_cards">
+    <div class="">
+      <div class="event_list_cards">
         {% include "event/activity/cards.html" with activities=activity_list.all %}
       </div>
     </div>

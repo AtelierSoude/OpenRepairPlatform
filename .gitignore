@@ -83,7 +83,7 @@ celerybeat-schedule
 # dotenv
 deployment/django/django.env
 .env
-
+deployment/django/django.env
 # virtualenv
 .venv
 venv/

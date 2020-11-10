@@ -196,9 +196,9 @@ class AddMemberToOrganization(HasActivePermissionMixin, RedirectView):
     http_methods = ["post"]
 
     def get_redirect_url(self, *args, **kwargs):
-        user = CustomUser.objects.filter(
+        user = CustomUser.objects.get(
             email=self.request.POST["email"]
-        ).first()
+        )
         url = reverse(
             "organization_members", kwargs={"orga_slug": self.organization.slug},
         )

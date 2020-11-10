@@ -151,13 +151,13 @@ js_recurrent_event = Bundle(
     filters="jsmin",
     output="js/events/recurrent_event.min.js",
 )
-js_detail_organization = Bundle(
+js_groups_organization = Bundle(
     "js/lib/auto-complete.js",
     "js/user/create_edit.js",
     "js/lib/gov_addresses.js",
     "js/user/autocomplete.js",
     filters="jsmin",
-    output="js/user/detail_organization.min.js",
+    output="js/user/groups_organization.min.js",
 )
 js_waypoints = Bundle(
     "js/lib/jquery.waypoints.js",
@@ -188,6 +188,6 @@ register("js_detail_place", js_detail_place)
 register("js_detail_event", js_detail_event)
 register("js_create_edit_event", js_create_edit_event)
 register("js_recurrent_event", js_recurrent_event)
-register("js_detail_organization", js_detail_organization)
+register("js_groups_organization", js_groups_organization)
 register("js_waypoints", js_waypoints)
 register("js_infinite", js_infinite)

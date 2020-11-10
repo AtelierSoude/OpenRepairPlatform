@@ -17,7 +17,7 @@ from ateliersoude.utils import get_future_published_events, validate_image
 class Condition(models.Model):
     name = models.CharField(verbose_name=_("Condition Type"), max_length=100)
     description = models.CharField(
-        verbose_name=_("Condition description"), default="", max_length=100
+        verbose_name=_("Condition description"), default="", max_length=300
     )
     organization = models.ForeignKey(
         Organization, on_delete=models.CASCADE, related_name="conditions"
@@ -175,7 +175,7 @@ class Event(models.Model):
     history = HistoricalRecords()
 
     def save(self, *args, **kwargs):
-        if self.activity.name:
+        if self.activity:
             slug = self.activity.name
         else: 
             slug = 'no activity type'
@@ -218,7 +218,7 @@ class Event(models.Model):
         return get_future_published_events(cls.objects)
 
     def __str__(self):
-        if self.activity.name:
+        if self.activity:
             activity_name = self.activity.name
         else: 
             activity_name = 'no activity type'
@@ -262,4 +262,8 @@ class Participation(models.Model):
         unique_together = (("user", "event"),)
 
     def __str__(self):
-        return self.user.first_name + " " + str(self.event)
+        return " Participation " + self.user.first_name + " " + str(self.event)
+    
+    def get_absolute_url(self):
+        return reverse("event:detail", args=(self.event.pk, self.event.slug))
+

@@ -1,4 +1,4 @@
-## Django-AtelierSoude
+## Django-openrepairplatform
 
 OpenRepairPlatform is a Django based application designed to organize collaborative repair structures, features provides organization managment, event publishing, community members managment, repair tracking and sharing.
 
@@ -15,7 +15,7 @@ cd [git checkout directory]/deployment
 Only if a change is needed in the initial content. It is possible to dump the
 data that was manually created and make it a fixture. This involves opening a
 shell in the running container (`docker exec -ti deployment_django_1 bash`), cd'ing
-to the `/ateliersoude` directory and running `./manage.py`. Look at the
+to the `/openrepairplatform` directory and running `./manage.py`. Look at the
 `quotation/fixtures/quotation/README.txt` file for more.
 
 ### Running the application
@@ -34,13 +34,13 @@ Then to run the application:
 
 ### Logs
 
-Having the logs displayed to STDOUT is done with `docker logs -f ateliersoude-django`
+Having the logs displayed to STDOUT is done with `docker logs -f openrepairplatform-django`
 except for the dev server where they're displayed by default (container isn't detached)
 
 ### Get into the containers
 
 - Application:  `docker exec -ti deployment_django_1 bash`
-- Database: ` docker exec -ti deployement_ateliersoude-postgres_1 bash`
+- Database: ` docker exec -ti deployement_openrepairplatform-postgres_1 bash`
 
 ### Fixture data
 
@@ -53,7 +53,7 @@ passwd: `foobar`
 
 To run unit tests:
 
-`docker-compose -f deployment/docker-compose.yml run --rm django python ateliersoude/manage.py test plateformeweb.tests --settings=ateliersoude.settings.test`
+`docker-compose -f deployment/docker-compose.yml run --rm django python openrepairplatform/manage.py test plateformeweb.tests --settings=openrepairplatform.settings.test`
 
 ### Debugger
 
@@ -67,7 +67,7 @@ set_trace()
 
 to make it interactive run thet test with external ports, add `--service-ports` to the test command.
 
-`docker-compose -f deployment/docker-compose.yml run --service-ports --rm django python ateliersoude/manage.py test plateformeweb.tests --settings=ateliersoude.settings.test`
+`docker-compose -f deployment/docker-compose.yml run --service-ports --rm django python openrepairplatform/manage.py test plateformeweb.tests --settings=openrepairplatform.settings.test`
 
 
 

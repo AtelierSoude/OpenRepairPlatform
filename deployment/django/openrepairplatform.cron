@@ -1,0 +1,3 @@
+5 * * * * openrepairplatform cd /srv/app && LANG=fr_FR.UTF-8 EMAIL_PASSWORD={{EMAIL_PASSWORD}} SECRET_KEY={{SECRET_KEY}} DJANGO_SETTINGS_MODULE=openrepairplatform.settings.prod python3 manage.py publish_events > /tmp/log_publish_events 2>&1
+0 16 * * * openrepairplatform cd /srv/app && LANG=fr_FR.UTF-8 EMAIL_PASSWORD={{EMAIL_PASSWORD}} SECRET_KEY={{SECRET_KEY}} DJANGO_SETTINGS_MODULE=openrepairplatform.settings.prod python3 manage.py notify_next_day_events https://dev.atelier-soude.fr > /tmp/log_publish_events 2>&1
+# empty line

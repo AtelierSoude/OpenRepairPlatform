@@ -83,7 +83,9 @@ celerybeat-schedule
 # dotenv
 deployment/django/django.env
 .env
-deployment/django/django.env
+deployment/postgres/postgres.env
+deployment/nginx/nginx.env
+
 # virtualenv
 .venv
 venv/
@@ -139,19 +141,30 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 
-ateliersoude.iml
+openrepairplatform.iml
 .idea/
 bootstrap_done
 node_modules/*
-.vscode
 media
 tmp
 *.min.js
 *.min.css
-ateliersoude/static/css
-ateliersoude_static/
-!ateliersoude_static/img/*
-ateliersoude_media/
-ateliersoude_letsencrypt/
+openrepairplatform/static/css
+openrepairplatform_static/
+!openrepairplatform_static/img/*
+openrepairplatform_media/
+openrepairplatform_letsencrypt/
 postgres_data/
 cpdb.sh
+
+migrations/
+
+openrepairplatform/integration_tests/images/
+openrepairplatform/static/admin/
+openrepairplatform/static/bootstrap/
+openrepairplatform/static/django_tinymce/
+openrepairplatform/static/fontawesome/
+openrepairplatform/static/import_export/
+openrepairplatform/static/rest_framework/
+openrepairplatform/static/tiny_mce/
+openrepairplatform/staticfiles/

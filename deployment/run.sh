@@ -1,35 +1,36 @@
 #!/usr/bin/env bash
 
-. deployment/django/django.env
+. openrepairplatform/.env
 if [[ "${EMAIL_PASSWORD}" == "CHANGE_ME" || "${SECRET_KEY}" == "CHANGE_ME" ]]; then
     cat deployment/checklist.txt;
     exit 1;
 fi
 
-sudo docker network create ateliersoude || true
+sudo docker network create openrepairplatform || true
 
 sudo docker run \
     --name=postgres \
-    --env-file=deployment/postgres/postgres.env \
+    --env-file=openrepairplatform/.env \
     -d --restart=unless-stopped \
     -v $PWD/postgres_data:/var/lib/postgresql/data \
-    --network=ateliersoude \
+    --network=openrepairplatform \
     postgres:11
 sudo docker run \
-    --name=ateliersoude_python \
+    --name=openrepairplatform_python \
     -d --restart=unless-stopped \
-    --env-file=deployment/django/django.env \
-    -v $PWD/ateliersoude_static:/srv/static \
-    -v $PWD/ateliersoude_media:/srv/media \
-    --network=ateliersoude \
-    ateliersoude_python
+    --env-file=openrepairplatform/.env \
+    -v $PWD/openrepairplatform_static:/srv/static \
+    -v $PWD/openrepairplatform_media:/srv/media \
+    --network=openrepairplatform \
+    openrepairplatform_python
 sudo docker run \
-    --name=ateliersoude_nginx \
+    --name=openrepairplatform_nginx \
+    --env-file=openrepairplatform/.env \
     -p 80:80 \
     -p 443:443 \
     -d --restart=unless-stopped \
-    -v $PWD/ateliersoude_static:/srv/static:ro \
-    -v $PWD/ateliersoude_media:/srv/media:ro \
-    -v $PWD/ateliersoude_letsencrypt:/etc/letsencrypt/:rw \
-    --network=ateliersoude \
-    ateliersoude_nginx
+    -v $PWD/openrepairplatform_static:/srv/static:ro \
+    -v $PWD/openrepairplatform_media:/srv/media:ro \
+    -v $PWD/openrepairplatform_letsencrypt:/etc/letsencrypt/:rw \
+    --network=openrepairplatform \
+    openrepairplatform_nginx

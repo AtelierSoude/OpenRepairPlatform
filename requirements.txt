@@ -71,3 +71,4 @@ django-tables2-column-shifter
 django-filter
 tablib
 python-dotenv
+django-extensions

@@ -9,7 +9,14 @@ from ateliersoude.mixins import HasActivePermissionMixin, RedirectQueryParamView
 from ateliersoude.user.mixins import PermissionOrgaContextMixin
 from django.urls import reverse, reverse_lazy
 
+import django_tables2 as tables
+from django_filters.views import FilterView
+from django_tables2.views import SingleTableMixin
+from django_tables2.export.views import ExportMixin
+
+from .tables import StockTable
 from .models import Stuff
+from .filters import StockFilter
 from .forms import StuffForm, StuffUserForm, StuffOrganizationForm
 from ateliersoude.user.models import CustomUser, Organization
 
@@ -19,12 +26,19 @@ from rest_framework import authentication, permissions
 from django.contrib.auth.models import User
 
 class OrganizationStockView(
-    HasActivePermissionMixin, PermissionOrgaContextMixin, ListView
+    HasActivePermissionMixin, 
+    PermissionOrgaContextMixin, 
+    ExportMixin, 
+    tables.SingleTableMixin, 
+    FilterView,
         ):
     model = Stuff
     template_name = "organization_stock.html"
     context_object_name = "stock"
     paginate_by = 50
+    table_class = StockTable
+    filterset_class = StockFilter
+    dataset_kwargs = {"title": "Stock"}
 
     def get_queryset(self):
         self.object = self.organization
@@ -33,6 +47,7 @@ class OrganizationStockView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["organization"] = self.organization
+        context["stock_tab"] = 'active'
         context["add_organization_stuff"] = StuffOrganizationForm
         return context
 

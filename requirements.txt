@@ -21,13 +21,8 @@ django-bootstrap4
 django-import-export==1.2.0
 django-initial-avatars==0.9.1
 django-simple-history==2.7.0
-<<<<<<< HEAD
-django-tinymce==2.8.0
-django>=2.2.4
-=======
 django-tinymce==3.1.0
-django==2.2.3
->>>>>>> dev_branch
+django==2.2.4
 djangorestframework==3.9.2
 entrypoints==0.3          # via flake8
 factory-boy==2.11.1
@@ -71,12 +66,7 @@ webencodings      # via bleach, html5lib, tinycss2
 django-gravatar2
 django-autocomplete-light
 django-recaptcha
-<<<<<<< HEAD
-pyfixit2
-
-=======
 django-tables2
 django-tables2-column-shifter
 django-filter
 tablib
->>>>>>> dev_branch

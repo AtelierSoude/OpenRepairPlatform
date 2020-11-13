@@ -1,16 +1,62 @@
-{% extends 'base.html' %}
-{% load static bootstrap4 app_filters %}
+{% extends 'organization_page.html' %}
+{% load static thumbnail bootstrap4 initialavatar django_tables2 %}
+{% load querystring from django_tables2 %}
 
-{% block content %}
-<div class="container-fluid">
-  {% url "user:organization_list" as organization_list_url %}
-  {% include "breadcrumb.html" with current=organization first_parent_url=organization_list_url first_parent_text="Organisations" %}
-  {% include "organization_menu.html" %}
-</div>
+{% block title %}Page de {{organization.name}}: gestion des stocks{% endblock %}
 
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalStuff" aria-pressed="false" autocomplete="off">
-  Ajouter un objet à l'inventaire
-</button>
-{% include "inventory/modal_stuff.html" with owner_organization=organization %}
-{% include "inventory/stuff_list.html" with stock=stock %}
+{% block menu_content %}
+  <section class="container">
+    <h2 class="text-center mt-4">Stock de {{ organization }}</h2>
+    {% if is_active %}   
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalStuff" aria-pressed="false" autocomplete="off">
+      Ajouter un objet à l'inventaire
+    </button>
+    {% include "inventory/modal_stuff.html" with owner_organization=organization %}
+    {% endif %}
+  </section>
+  {% if filter %}
+  <div class="card mb-4 text-center">
+    <form action="" method="get" class="form-inline justify-content-center form-xs">
+        {% bootstrap_form filter.form %}
+        <a class="btn-secondary">{% bootstrap_button 'filtrer' %}</a>
+    </form>
+  </div>
+  {% endif %}
+  <h4 class="text-center mt-4">TANT objets</h4>
+  <section class="box-shadow">
+    {% if is_active %}
+      <span class="float-right">Télécharger le résultat :
+        <a class="btn btn-success btn-sm" href="{% querystring '_export'='csv' %}">CSV</a>
+        <a class="btn btn-success btn-sm" href="{% querystring '_export'='ods' %}">ODS</a>
+      </span>
+    {% endif %}
+  {% render_table table %}
+  </section>
+{% endblock menu_content %}
+
+{% block extra_js %}
+
+<script>
+  $(document).ready(function(){
+    $( "#more-button" ).hover(
+  function() {
+    $( ".btn-event" ).addClass( "d-block" );
+    $( this ).css( "width", "250px" );
+    $( ".btn-reccurent-event" ).addClass( "d-block" ).css( "width", "250px" );
+  }, function() {
+    $( ".btn-event" ).removeClass( "d-block" );
+    $( this ).css( "width", "63px" );
+    $( ".btn-reccurent-event" ).removeClass( "d-block" ).css( "width", "0px" );
+  }
+  );
+  });
+</script>
+
+  <script>
+    $(document).ready(function(){
+      $("#h_nav").sticky({topSpacing:40});
+      $("#side_nav").sticky({topSpacing:80});
+      $("#breadcrumb").sticky({topSpacing:0});
+    });
+  </script>
 {% endblock %}

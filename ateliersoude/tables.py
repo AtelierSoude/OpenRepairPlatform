@@ -117,8 +117,6 @@ class MemberTable(ColumnShiftTable):
             )
 
 
-
-
 class FeeTable(tables.Table):
     user = tables.Column(
         linkify=True, 

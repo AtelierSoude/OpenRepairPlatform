@@ -19,6 +19,11 @@
     <i style="font-size: 22px" class="fas fa-user d-none d-sm-block d-md-none d-block"></i>    
       <span class="d-none d-sm-none d-md-block">Membres</span>
     </a>
+    <a class="text-center nav-link {{ stock_tab }}"
+    href="{% url 'organization_stock' organization.slug %}">
+    <i style="font-size: 22px" class="fas fa-box d-none d-sm-block d-md-none d-block"></i>    
+      <span class="d-none d-sm-none d-md-block">Stock</span>
+    </a>
     <a class="text-center nav-link {{ accounting_tab }}"
     href="{% url 'organization_fees' organization.slug %}">
     <i style="font-size: 22px" class="fas fa-euro-sign d-none d-sm-block d-md-none d-block"></i>    

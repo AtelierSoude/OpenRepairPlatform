@@ -54,6 +54,10 @@
           <span class="badge badge-light">
             {{object.memberships.all.count}}</span>
         </a>
+        <a class="nav-link" id="v-pills-stock-tab" data-toggle="pill" href="#v-pills-stock" role="tab" aria-controls="v-pills-stock" aria-selected="false">Inventaire
+          <span class="badge badge-light">
+            {{stock.all.count}}</span>
+        </a>
       </nav>
     </div>
   </div>
@@ -388,14 +392,10 @@
         </div>
 
     <div class="tab-pane fade" id="v-pills-stock" role="tabpanel" aria-labelledby="v-pills-stock-tab">
-
-
       <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalStuff" aria-pressed="false" autocomplete="off">
         Ajouter un objet à l'inventaire
       </button>
       {% include "inventory/modal_stuff.html" with owner_member=object %}
-
-      
       <h4 class="mt-4"> {{ stock.all.count}} Objets inventoriés </h4>
       <div class="card p-2 pt-4">
           <div class="table-responsive">
@@ -421,17 +421,7 @@
                       {% endif %}
                     </td>
                     <td>
-                      {% if stuff.get_state_display == "Broken" %}
-                        <span class="badge badge-pill badge-danger">En panne</span>
-                      {% elif stuff.get_state_display == "Disassembled" %}
-                        <span class="badge badge-pill badge-danger">Désassemblé</span>
-                      {% elif stuff.get_state_display == "Thrown" %}
-                        <span class="badge badge-pill badge-primary">Evaporé</span>
-                      {% elif stuff.get_state_display == "Fixing" %}
-                        <span class="badge badge-pill badge-secondary">En réparation</span>
-                      {% else %}
-                        <span class="badge badge-pill badge-success">Fonctionnel</span>
-                      {% endif %}
+                      {% include "inventory/stuff_state_display.html" with stuff_state=stuff.get_state_display %}
                     </td>
                   </tr>
                 {% empty %}

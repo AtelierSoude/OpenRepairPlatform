@@ -30,11 +30,7 @@ from ateliersoude.event.forms import (
 )
 from ateliersoude.event.models import Activity, Condition, Event, Participation
 from ateliersoude.location.models import Place
-<<<<<<< HEAD
 from ateliersoude.inventory.forms import StuffForm
-=======
-from ateliersoude.user.models import CustomUser
->>>>>>> dev_branch
 from ateliersoude.event.templatetags.app_filters import tokenize
 from ateliersoude.mixins import (
     RedirectQueryParamView,
@@ -561,8 +557,6 @@ class ConditionOrgaAutocomplete(HasVolunteerPermissionMixin, autocomplete.Select
         if self.q:
             qs = qs.filter(name__istartswith=self.q)
 
-<<<<<<< HEAD
-=======
         return qs
 
 class FutureEventActivityAutocomplete(autocomplete.Select2QuerySetView):
@@ -596,5 +590,4 @@ class FutureEventPlaceAutocomplete(autocomplete.Select2QuerySetView):
         if self.q:
             qs = qs.filter(address__icontains=self.q)
 
->>>>>>> dev_branch
         return qs

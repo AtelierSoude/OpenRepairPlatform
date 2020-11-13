@@ -187,37 +187,65 @@ class PresentCreateUserView(HasActivePermissionMixin, RedirectView):
             return next_url
         return reverse("event:detail", args=[event.id, event.slug]) + "#manage"
 
-
+### in future : change or mix AddMemberToOrganization and UpdateMembre Views 
 class AddMemberToOrganization(HasActivePermissionMixin, RedirectView):
     model = Organization
     form_class = MoreInfoCustomUserForm
     http_methods = ["post"]
 
     def get_redirect_url(self, *args, **kwargs):
-        user = CustomUser.objects.get(
+        user = CustomUser.objects.filter(
             email=self.request.POST["email"]
-        )
+        ).first()
         url = reverse(
             "organization_members", kwargs={"orga_slug": self.organization.slug},
         )
-        if user in self.organization.members.all():
-            messages.warning(self.request, "L'utilisateur est déjà membre.")
-            return url
         if user:
             form = MoreInfoCustomUserForm(self.request.POST, instance=user)
         else:
             form = MoreInfoCustomUserForm(self.request.POST)
         user = form.save()
-        paid = form.cleaned_data["amount_paid"]
+        amount = form.cleaned_data["amount_paid"]
         date = form.cleaned_data["date"]
-        fee = Fee.objects.create(
-            amount=paid, user=user, organization=self.organization, date=date
-        )
-        Membership.objects.create(
+        if user in self.organization.members.all():
+            fees = Fee.objects.filter(organization=self.organization, user=user)
+            up_date_fees = fees.filter(date__gte=date)
+            membership = Membership.objects.get(
+                organization=self.organization, user=user
+            )
+            if amount != 0 or form.cleaned_data["first_fee"]:
+                fee = Fee.objects.create(
+                    amount=amount,
+                    user=user,
+                    organization=self.organization,
+                    date=date,
+                    payment=form.cleaned_data["payment"]
+                )
+                if form.cleaned_data["first_fee"] or membership.first_payment < timezone.now() - timedelta(days=365) or not fees :
+                    membership.first_payment = date
+                    membership.amount = 0
+                    membership.fee = fee
+                    for fee in up_date_fees:
+                        membership.amount += fee.amount
+                elif date < membership.first_payment.date():
+                    pass
+                elif date > membership.first_payment.date():
+                    membership.amount += amount
+                membership.save()
+            messages.success(self.request, f"Vous avez modifié {user} avec succes.")
+        else:
+            fee = Fee.objects.create(
+                    amount=amount,
+                    user=user,
+                    organization=self.organization,
+                    date=date,
+                    payment=form.cleaned_data["payment"]
+                )
+            Membership.objects.create(
             organization=self.organization, user=user,
-            amount=paid, first_payment=date, fee=fee
-        )
-        messages.success(self.request, f"Vous avez ajouté {user} avec succes.")
+            amount=amount, first_payment=date, fee=fee
+            )
+            messages.success(self.request, f"Vous avez ajouté ou {user} avec succes.")
         return url
 
 

@@ -153,6 +153,7 @@ js_recurrent_event = Bundle(
 )
 js_groups_organization = Bundle(
     "js/lib/auto-complete.js",
+    "js/user/user_exist_api_autocomplete.js",
     "js/user/create_edit.js",
     "js/lib/gov_addresses.js",
     "js/user/autocomplete.js",

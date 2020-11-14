@@ -22,10 +22,10 @@ INSTALLED_APPS = [
     'dal',
     'dal_select2',
     'tinymce',
-    "ateliersoude.event",
-    "ateliersoude.user",
-    "ateliersoude.location",
-    "ateliersoude.inventory",
+    "openrepairplatform.user",
+    "openrepairplatform.event",
+    "openrepairplatform.location",
+    "openrepairplatform.inventory",
     "django.contrib.sites",
     "django.contrib.admin",
     "django.contrib.admindocs",
@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     "django_tables2",
     'django_tables2_column_shifter',
     'django_filters',
+    'treebeard',
 ]
 
 

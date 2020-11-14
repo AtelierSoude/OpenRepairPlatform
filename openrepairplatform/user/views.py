@@ -30,13 +30,9 @@ from openrepairplatform.mixins import (
     HasVolunteerPermissionMixin,
     RedirectQueryParamView
 )
-<<<<<<< HEAD:ateliersoude/user/views.py
-from ateliersoude.user.models import CustomUser, Organization, Membership, Fee
-from ateliersoude.inventory.models import Stuff
-from ateliersoude.inventory.forms import StuffForm, StuffUserForm
-=======
 from openrepairplatform.user.models import CustomUser, Organization, Membership, Fee
->>>>>>> dev_branch:openrepairplatform/user/views.py
+from openrepairplatform.inventory.models import Stuff
+from openrepairplatform.inventory.forms import StuffForm, StuffUserForm
 
 from .forms import (
     UserUpdateForm,

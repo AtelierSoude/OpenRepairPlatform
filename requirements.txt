@@ -72,3 +72,4 @@ django-filter
 tablib
 python-dotenv
 django-extensions
+django-treebeard

@@ -30,7 +30,7 @@ from openrepairplatform.event.forms import (
 )
 from openrepairplatform.event.models import Activity, Condition, Event, Participation
 from openrepairplatform.location.models import Place
-from ateliersoude.inventory.forms import StuffForm
+from openrepairplatform.inventory.forms import StuffForm
 from openrepairplatform.user.models import CustomUser
 from openrepairplatform.event.templatetags.app_filters import tokenize
 from openrepairplatform.mixins import (

@@ -1,7 +1,7 @@
 from django.forms import ModelForm
 from django import forms
-from ateliersoude.user.models import CustomUser
-from ateliersoude.location.models import Place
+from openrepairplatform.user.models import CustomUser
+from openrepairplatform.location.models import Place
 from .models import Stuff
 from dal import autocomplete
 
@@ -47,6 +47,7 @@ class StuffOrganizationForm(ModelForm):
     class Meta:
         model = Stuff
         fields = [
+            "device",
             "place",
             "state"
         ]

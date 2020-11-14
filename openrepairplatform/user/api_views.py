@@ -1,8 +1,8 @@
 from django.shortcuts import render
-from ateliersoude.user.models import (
+from openrepairplatform.user.models import (
     CustomUser,
 )
-from ateliersoude.user.serializers import CustomUserSerializer
+from openrepairplatform.user.serializers import CustomUserSerializer
 from rest_framework import viewsets
 
 

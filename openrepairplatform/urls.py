@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.conf.urls.static import static
 
 from . import views
-from ateliersoude.inventory.views import OrganizationStockView
+from openrepairplatform.inventory.views import OrganizationStockView
 
 
 urlpatterns = [
@@ -16,7 +16,7 @@ urlpatterns = [
     path("event/", include("openrepairplatform.event.urls", namespace="event")),
     path(
         "inventory/",
-        include("ateliersoude.inventory.urls", namespace="inventory")
+        include("openrepairplatform.inventory.urls", namespace="inventory")
     ),
     path(
         "location/",
@@ -28,7 +28,7 @@ urlpatterns = [
     ),
     path(
         "api/user/",
-        include("ateliersoude.user.api_urls", namespace="api_user"),
+        include("openrepairplatform.user.api_urls", namespace="api_user"),
     ),
     path(
         "place_autocomplete/", 

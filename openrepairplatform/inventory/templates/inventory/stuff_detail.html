@@ -47,7 +47,16 @@
                 </div>
             </div>
           </div>
-          <h4 class="mt-4">Historique</h4>
+          {% for folder in stuff.folders.all %}
+          {{folder.steps.all}}
+          {% for step in folder.steps.all %}
+          race
+          {{step}}
+          {%endfor%}
+
+          {%endfor%}
+
+                  <h4 class="mt-4">Historique</h4>
           <div class="card p-4">
             <p>
               {% for h in stuff.history.all %}

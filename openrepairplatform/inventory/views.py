@@ -5,8 +5,8 @@ from django.views.generic import (
     DetailView,
 )
 from django.contrib import messages
-from ateliersoude.mixins import HasActivePermissionMixin, RedirectQueryParamView
-from ateliersoude.user.mixins import PermissionOrgaContextMixin
+from openrepairplatform.mixins import HasActivePermissionMixin, RedirectQueryParamView
+from openrepairplatform.user.mixins import PermissionOrgaContextMixin
 from django.urls import reverse, reverse_lazy
 
 import django_tables2 as tables
@@ -18,12 +18,11 @@ from .tables import StockTable
 from .models import Stuff
 from .filters import StockFilter
 from .forms import StuffForm, StuffUserForm, StuffOrganizationForm
-from ateliersoude.user.models import CustomUser, Organization
+from openrepairplatform.user.models import CustomUser, Organization
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import authentication, permissions
-from django.contrib.auth.models import User
 
 class OrganizationStockView(
     HasActivePermissionMixin, 
@@ -122,8 +121,8 @@ class StuffOrganizationFormView(PermissionOrgaContextMixin):
         return super().form_valid(form)
 
     def get_success_url(self):
-        stuff = self.object
-        return reverse("inventory:stuff_view", args=[stuff.pk])
+        orga_slug = self.kwargs["orga_slug"]
+        return reverse("organization_stock", args=[orga_slug])
 
 
 class StuffOrganizationCreateView(RedirectQueryParamView, StuffOrganizationFormView, CreateView):

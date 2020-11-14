@@ -1,8 +1,9 @@
 from django.db import models
+from treebeard.mp_tree import MP_Node
 from django.urls import reverse
 from simple_history.models import HistoricalRecords
-from ateliersoude.fields import CleanHTMLField
-from ateliersoude.user.models import Organization
+from openrepairplatform.fields import CleanHTMLField
+from openrepairplatform.user.models import Organization
 
 class Brand(models.Model):
     name = models.CharField(max_length=50)
@@ -18,20 +19,10 @@ class Brand(models.Model):
     def __str__(self):
         return self.name
 
-class Category(models.Model):
-    name = models.CharField(max_length=100)
-    
-    def __str__(self):
-        return self.name
+class Category(MP_Node):
+    name = models.CharField(max_length=150)
 
-class SubCategory(models.Model):
-    name = models.CharField(max_length=100)
-    parent_category = models.ForeignKey(
-        "inventory.Category", 
-        on_delete=models.SET_NULL,
-        blank=True,
-        null=True,
-        )
+    node_order_by = ['name']
     
     def __str__(self):
         return self.name
@@ -92,6 +83,10 @@ class Stuff(models.Model):
         choices=STATES,
         default=BROKEN
     )
+    information = CleanHTMLField(
+        null=True,
+        blank=True
+    )
     history = HistoricalRecords()
 
     @property
@@ -115,44 +110,11 @@ class Stuff(models.Model):
     def __str__(self):
         return f"{self.device} - #{self.id}"
 
-class Part(Stuff):
-    pass
-
-class Tool(Stuff):
-    pass
-
-class RepairFolder(models.Model):
-    Stuff = models.ForeignKey("inventory.Stuff", on_delete=models.CASCADE)
-    ongoing = models.BooleanField(default=True)
-
-
-class Repair(models.Model):
-    repair_folder = models.ForeignKey(
-        "inventory.RepairFolder",
-        on_delete=models.CASCADE
-    )
-    fixer = models.ManyToManyField("user.CustomUser",)
-    actions = models.ManyToManyField("inventory.Action",)
-    event = models.ForeignKey("event.Event", on_delete=models.CASCADE)
-    repair_date = models.DateField(null=True, blank=True)
-
-    @property
-    def date(self):
-        if self.event:
-            return self.event.date
-        return self.repair_date
-
 
 class Device(models.Model):
     category = models.ForeignKey(
         "inventory.Category", 
         on_delete=models.SET_NULL,  
-        blank=True,
-        null=True,
-    )
-    subcategory = models.ForeignKey(
-        "inventory.SubCategory",
-        on_delete=models.SET_NULL,
         blank=True,
         null=True,
     )
@@ -187,7 +149,7 @@ class Device(models.Model):
     )
 
     def __str__(self):
-        return f"{self.subcategory}-{self.brand}-{self.model}"
+        return f"{self.category}-{self.brand}-{self.model}"
 
 
 class Defect(models.Model):
@@ -202,14 +164,20 @@ class Defect(models.Model):
 # Maybe add a list of strings that would be hashtags for indexing e.g. "#NoPower", "#Switch", "#PowerSupply"
 # Maybe link to a user or fixer to indicate who made the Observation
 class Observation(models.Model):
-    pass
+    name = models.CharField(max_length=150, default="")
+    
+    def __str__(self):
+        return self.name
     
 # A reasoning that takes place during repair or diagnosis
 # Implement a string that would detail fixer reasoning from an Observation and leading to an Action
 # e.g. "There is no power at the output pin of the switch even when the switch is on. The switch must be defective"
 # Maybe link to a user or fixer to indicate who made the Reasoning
 class Reasoning(models.Model):
-    pass
+    name = models.CharField(max_length=150, default="")
+    
+    def __str__(self):
+        return self.name
 
 # An action taken by the fixer during repair or diagnosis
 # Could be implemented as a verb (from a list that must be easily maintained) associated to a Part
@@ -217,12 +185,19 @@ class Reasoning(models.Model):
 # or Resolder Wire Red wire
 # Maybe link to a user or fixer to indicate who took the Action
 class Action(models.Model):
-    pass
+    name = models.CharField(max_length=150, default="")
+    
+    def __str__(self):
+        return self.name
     
 # Implements a status (be it the initial one or the one resulting from an Action being taken)
 # Take it from the Stuff class above
 class Status(models.Model):
-    pass
+    name = models.CharField(max_length=150, default="")
+    
+    def __str__(self):
+        return self.name
+
 
 # Implements a step in diagnosis or repair.
 # This consists of:
@@ -234,10 +209,28 @@ class Status(models.Model):
 # . the initial Observation and
 # . the intial status (probably "broken" unless the user comes for an enhancement or minor issue)
 class DiagnosisOrRepairStep(models.Model):
-    pass
+    folder = models.ForeignKey("inventory.RepairFolder", related_name="steps", on_delete=models.SET_NULL, null=True, blank=True)
+    event = models.ForeignKey("event.Event", on_delete=models.SET_NULL, null=True, blank=True)
+    repair_date = models.DateField(null=True, blank=True)
+    observation = models.ForeignKey("inventory.Observation", on_delete=models.SET_NULL, null=True, blank=True)
+    reasoning = models.ForeignKey("inventory.Reasoning", on_delete=models.SET_NULL, null=True, blank=True)
+    action = models.ForeignKey("inventory.Action", on_delete=models.SET_NULL, null=True, blank=True)
+    status = models.ForeignKey("inventory.Status", on_delete=models.SET_NULL, null=True, blank=True)
+
+    @property
+    def date(self):
+        if self.event:
+            return self.event.date
+        return self.repair_date
     
-# Implements a complete diagnosis or a complete repair
-# This would maybe replace or be merged within the Repair class above
-# Consists mainly of a sequence of DiagnosisOrRepairSteps as define before
-class DiagnosisOrRepair(models.Model):
-    pass
+    def __str__(self):
+        return f"actions réalisées sur {self.folder} le {self.repair_date}"
+
+class RepairFolder(models.Model):
+    stuff = models.ForeignKey("inventory.Stuff", related_name="folders", on_delete=models.SET_NULL, null=True, blank=True)
+    ongoing = models.BooleanField(default=True)
+    open_date = models.DateField(null=True, blank=True)
+
+    def __str__(self):
+        return f"dossier {self.stuff}-{self.open_date}"
+ 

@@ -1,0 +1,69 @@
+{% load bootstrap4 app_filters %}
+
+<div class="modal" id="more-info-{{ anonymous_user.pk }}" role="dialog">
+
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+        {% if anonymous_user %}
+        Compléter les info de {{ anonymous_user }}
+        {% else %}
+        Ajouter un membre à l'organisation
+        {% endif %}
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        {% if anonymous_user %}
+        {% else %}
+        {% bootstrap_form search_form %}
+          {{search_form.media}}
+        {% endif %}
+        Veuillez compléter ces info s'il vous plait.
+        <form
+            {% if anonymous_user %}
+            action="{% url 'user:organization_update_member' object.pk anonymous_user.pk %}"
+            {% else %}
+            action="{% url 'user:organization_add_member' object.pk %}"
+            {% endif %}
+            method="post"
+            class="text-left"
+        >
+          <div class="modal-body">
+            {% csrf_token %}
+            {% if anonymous_user %}
+            {% bootstrap_form form=form|initial:anonymous_user %}
+            {% else %}
+            {% bootstrap_form form=form %}
+            {% endif %}
+          </div>
+          {% if object.fee_description %}
+            <p>{{ object.fee_description }}</p>
+          {% endif %}
+          <p>
+            <b>Note:</b>
+            La contribution minimale pour cette organisation est de
+            <span class="badge badge-pill badge-secondary">{{ object.min_fee }}€</span>
+            et la contribution totale conseillée est de
+            <span class="badge badge-pill badge-success">{{ object.advised_fee }}€</span>
+            {% if anonymous_user and anonymous_user.first_name %}
+              <br>
+              {% filter_orga queryset=anonymous_user.memberships organization=object as membership %}
+              {% if membership %}
+                {{ anonymous_user }} a payé <span class="badge badge-pill badge-primary">{{ membership.current_contribution }}€</span> depuis le {{ membership.first_payment|date:"d F Y" }}
+              {% else %}
+                {{ anonymous_user }} n'a pas encore contribué pour <b>{{ object }}</b>
+              {% endif %}
+            {% endif %}
+          </p>
+          <div class="modal-footer">
+            <input type="submit" value="Enregistrer" class="btn btn-primary">
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

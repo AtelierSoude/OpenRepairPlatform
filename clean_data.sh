@@ -1,7 +1,7 @@
 #!/bin/bash
 
-dropdb ateliersoude
-createdb ateliersoude
+dropdb openrepairplatform
+createdb openrepairplatform
 ./manage.py makemigrations
 ./manage.py migrate
 ./manage.py createsuperuser

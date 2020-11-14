@@ -2,9 +2,9 @@ node_modules/
 tmp/
 media/
 .pytest_cache/
-ateliersoude.egg-info/
+openrepairplatform.egg-info/
 postgres_data/
 venv/
-ateliersoude_static/
-!ateliersoude_static/img/*
-ateliersoude_media/
+openrepairplatform_static/
+!/openrepairplatform_static/img/**
+openrepairplatform_media/

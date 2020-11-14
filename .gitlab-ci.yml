@@ -5,7 +5,7 @@ tests:
     - postgres:11  
   variables:                   
     DOCKER_TEST: "True"        
-    DJANGO_SETTINGS_MODULE: "ateliersoude.settings.tests"
+    DJANGO_SETTINGS_MODULE: "openrepairplatform.settings.tests"
   script:
     - if [ ! -d venv ] ; then virtualenv venv ; fi
     - ./venv/bin/pip install -U -r requirements.txt

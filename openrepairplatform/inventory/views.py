@@ -15,14 +15,19 @@ from django_tables2.views import SingleTableMixin
 from django_tables2.export.views import ExportMixin
 
 from .tables import StockTable
-from .models import Stuff
+from .models import Stuff, Device
 from .filters import StockFilter
-from .forms import StuffForm, StuffUserForm, StuffOrganizationForm
+from .forms import StuffForm, StuffUserForm, StuffOrganizationForm, StuffDeviceForm, StuffOwnerForm, StuffPlaceForm, StuffStateForm
 from openrepairplatform.user.models import CustomUser, Organization
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import authentication, permissions
+
+
+class DeviceDetailView(DetailView):
+    model = Device
+    template_name = "inventory/device_detail.html"
 
 class OrganizationStockView(
     HasActivePermissionMixin, 
@@ -59,6 +64,10 @@ class StuffDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["stuff_form"] = StuffForm
+        context["stuff_owner_form"] = StuffOwnerForm
+        context["stuff_place_form"] = StuffPlaceForm
+        context["stuff_state_form"] = StuffStateForm
+        context["stuff_device_form"] = StuffDeviceForm
         return context
 
 
@@ -105,6 +114,19 @@ class StuffUserFormView(PermissionOrgaContextMixin):
         stuff = self.object
         return reverse("inventory:stuff_view", args=[stuff.pk])
 
+
+class StuffDeviceFormView(PermissionOrgaContextMixin):
+    model = Stuff
+    form_class = StuffDeviceForm
+    http_methods = ["post"]
+
+    def form_valid(self, form):
+        messages.success(self.request, self.success_message)
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        stuff = self.object
+        return reverse("inventory:stuff_view", args=[stuff.pk])
 
 class StuffUserCreateView(RedirectQueryParamView, StuffUserFormView, CreateView):
     success_message = "l'appareil a bien été créé"

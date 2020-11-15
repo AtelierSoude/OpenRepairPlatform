@@ -5,6 +5,11 @@ from . import views
 app_name = "inventory"
 urlpatterns = [
     path(
+        "device/<int:pk>/<slug>/",
+        views.DeviceDetailView.as_view(),
+        name="device_view"
+    ),
+    path(
         "<int:stuff_pk>/",
         views.StuffDetailView.as_view(),
         name="stuff_view"

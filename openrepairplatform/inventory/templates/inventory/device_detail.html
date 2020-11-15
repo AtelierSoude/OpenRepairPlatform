@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% load assets app_filters thumbnail initialavatar %}
+{% block title %}Page de {{device}} {% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>{{device}}</h2>
+    Réparations relatives à cet appareil ... 
+    {% for stuff in device.stuffs.all %}
+    {% include "inventory/repair_folder.html" %}
+    {% endfor %}
+</div>
+{% endblock %}

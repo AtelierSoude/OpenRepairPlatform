@@ -202,6 +202,9 @@ td {
 
 /* buttons */ 
 
+.btn-default {
+  background-color: #eaeaea;
+}
 .btn-absolute {
   font-size: 1.2rem;
   display: flex;
@@ -244,6 +247,7 @@ td {
 }
 .card {
   border: 1px solid #cecece;
+  border-radius: 5px;
   a.card-link {
     text-decoration: none;
     color: inherit;
@@ -251,6 +255,11 @@ td {
   small {
     color:initial;
   }
+}
+
+.card.overflowded{
+  max-height: 300px;
+  overflow-y: auto;
 }
 
 .mini-organizers {
@@ -430,8 +439,8 @@ position: relative;
 
 @media screen and (max-width: 576px) {
   .container{
-    margin: 0px !important;
-    padding: 0px !important;
+  /*  margin: 0px !important;
+    padding: 0px !important; */
   }
 }
 

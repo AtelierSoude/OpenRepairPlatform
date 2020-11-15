@@ -1,9 +1,12 @@
 from django.db import models
 from treebeard.mp_tree import MP_Node
 from django.urls import reverse
+from django.utils.text import slugify
 from simple_history.models import HistoricalRecords
 from openrepairplatform.fields import CleanHTMLField
 from openrepairplatform.user.models import Organization
+from openrepairplatform.utils import validate_image
+from django.utils.translation import ugettext_lazy as _
 
 class Brand(models.Model):
     name = models.CharField(max_length=50)
@@ -42,7 +45,7 @@ class Stuff(models.Model):
     ]
     device = models.ForeignKey(
         "inventory.device",
-        related_name="device",
+        related_name="stuffs",
         null=True,
         blank=True,
         on_delete=models.SET_NULL
@@ -134,26 +137,29 @@ class Device(models.Model):
         blank=True
     )
     picture = models.ImageField(
-        upload_to=None,
-        height_field=None,
-        width_field=None,
-        max_length=None,
+        upload_to="devices/", 
+        blank=True, 
         null=True,
-        blank=True
+        validators=[validate_image],
+        verbose_name=_("Image"),
     )
-    defect = models.ForeignKey(
-        "inventory.Defect", 
-        null=True,
+    slug = models.SlugField(
+        default="",
+        unique=True,
         blank=True,
-        on_delete=models.CASCADE
     )
+    history = HistoricalRecords()
+
+    def save(self, *args, **kwargs):
+        self.slug = '-'.join((slugify(self.category), slugify(self.brand), slugify(self.model)))
+        return super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse("inventory:device_view", args=(self.pk, self.slug))
 
     def __str__(self):
         return f"{self.category}-{self.brand}-{self.model}"
 
-
-class Defect(models.Model):
-    pass
 
 # NOTE: Comments below are present to help modelling the repair process and objects
 # and list fields that should be in the classes

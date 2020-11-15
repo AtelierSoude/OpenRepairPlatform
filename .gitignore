@@ -85,6 +85,7 @@ deployment/django/django.env
 openrepairplatform/.env
 deployment/postgres/postgres.env
 deployment/nginx/nginx.env
+.env
 
 # virtualenv
 .venv

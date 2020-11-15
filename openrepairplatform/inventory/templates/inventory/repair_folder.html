@@ -1,0 +1,64 @@
+{% for folder in stuff.folders.all %}
+    <div class="card mb-2">
+        <div class="card-header" data-toggle="collapse" href="#collapse{{folder.pk}}" role="button" aria-expanded="false" aria-controls="{{folder.pk}}">
+            ouvert le {{ folder.open_date }} 
+            <span class="float-right">
+            {% if folder.ongoing == True %}
+            <span class="badge badge-pill badge-secondary">En cours</span>
+            {% else %}
+            <span class="badge badge-pill badge-success">Terminé</span>
+            {% endif %}
+            </span><br>
+            <small><a href="{{folder.stuff.get_absolute_url}}">{{ folder.stuff }}</a></small><br>
+            <small>Etat innitial : <b>{{folder.steps.first.observation}}</b> / dernier état : <b>{{folder.steps.last.status}}</b></small>
+        </div>
+        <div class="card-body p-0 table-responsive collapse" id="collapse{{folder.pk}}">
+            <table class="table">
+            <thead>
+                <tr>
+                <th scope="col">Date</th>
+                <th scope="col">Observation</th>
+                <th scope="col">Raisonement</th>
+                <th scope="col">Action</th>
+                <th scope="col">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for step in folder.steps.all %}
+                <tr>
+                <td>
+                    {% if step.event %}
+                    <small>
+                        <a href="{{step.event.get_absolute_url}}">{{ step.event }}</a>
+                    </small>
+                    {% else %}
+                    {{ step.repair_date|date:"d M, Y" }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if step.observation %}
+                    {{ step.observation }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if step.reasoning %}
+                    {{ step.reasoning }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if step.action %}
+                    {{ step.action }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if step.status %}
+                    {{ step.status }}
+                    {% endif %}
+                </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+            </table>
+        </div>
+    </div>
+{% endfor %}

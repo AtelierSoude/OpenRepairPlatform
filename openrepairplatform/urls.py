@@ -22,7 +22,7 @@ urlpatterns = [
     ),
     path(
         "api/user/",
-        include("ateliersoude.user.api_urls", namespace="api_user"),
+        include("openrepairplatform.user.api_urls", namespace="api_user"),
     ),
     path(
         "place_autocomplete/", 

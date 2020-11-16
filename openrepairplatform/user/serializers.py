@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from ateliersoude.user.models import (
+from openrepairplatform.user.models import (
     CustomUser,
 )
 

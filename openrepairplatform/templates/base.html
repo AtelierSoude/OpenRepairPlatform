@@ -49,7 +49,7 @@
 
 <body class="bg-grey">
 {% include "menu.html" %}
-
+<div style="padding-left: 75px; padding-top: 75px;">
 <div class="container-fluid">
   {% for message in messages %}
     <div class="alert alert-{{ message.level_tag }} alert-dismissible fade show mb-0" role="alert">
@@ -64,6 +64,7 @@
 <main class="content-page">
   {% block content %}{% endblock %}
 </main>
+</div>
 
 <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 <script src="{% static 'js/lib/sticky_polyfill.js' %}"></script>

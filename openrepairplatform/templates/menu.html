@@ -3,7 +3,43 @@
 {% load initialavatar %}
 {% load static %}
 
-<header class="header">
+<header class="header" style=" height:100%; width:75px; position: fixed;">
+  <nav class="navbar navbar-expand-lg p-0" id="header" style=" height:100%; width:75px;" >
+    <ul class="navbar-nav flex-column" style="width:75px;">
+      <li class="nav-item text-center">
+      <a href="{% url "event:list" %}">
+        <i class="far fa-calendar-alt fa-2x"></i><br>
+        <small>Évenements</small>
+      </a>
+      </li>
+      <li class="nav-item">
+      <a href="{% url "event:activity_list" %}">
+        <i class="fas fa- fa-2x"></i><br>
+        <small>Activités</small>
+      </a>
+      </li>
+      <li class="nav-item text-center">
+      <a href="{% url "user:organization_list" %}">
+        <i class="fas fa-network-wired fa-2x"></i><br>
+        <small>Organisations</small>
+      </a>
+      </li>
+      <li class="nav-item text-center">
+        <a href="{% url "user:organization_list" %}">
+          <i class="fas fa-box-open fa-2x"></i><br>
+          <small>Stock</small>
+        </a>
+        </li>
+      <li class="nav-item text-center">
+        <a href="{% url "user:organization_list" %}">
+          <i class="fas fa-tools fa-2x"></i><br>
+          <small>Réparations</small>
+        </a>
+        </li>
+    </ul>
+  </nav>
+</header>
+<header class="header" style="width:100%; position:fixed">
   <nav class="navbar navbar-expand-lg p-0" id="header">
     <a href="{% url "homepage" %}" class="float-left d-block d-sm-none" style="width:60px;"> 
       <img src="{% static 'img/logo-reparons-beta.png' %}" class="brand-logo p-1 w-100">

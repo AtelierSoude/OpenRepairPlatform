@@ -170,10 +170,7 @@ td {
   position: relative;
   z-index: 4 !important;
 }
-.navbar ul li a {
-  margin-left: 1em;
-  color: white;
-}
+
 .navbar .fa, .avatar a, .dropdown-toggle  {
   color: white;
 }
@@ -181,10 +178,17 @@ td {
   color: gray;
   text-decoration: none;
 }
-.navbar ul li a{
-  margin-left: 1em;
-  color : #fee56e !important;
-}
+
+.navbar ul li{
+  margin-top: 10px;
+  margin-bottom: 10px;
+  a {
+    color : #fee56e !important;
+    small{
+      font-size: 75%;
+    }
+  }
+} 
 
 .navbar-brand.avatar{
   margin: 0px !important;

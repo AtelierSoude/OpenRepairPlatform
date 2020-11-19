@@ -1,6 +1,7 @@
 FROM debian:buster
 
 RUN apt update && apt upgrade -y && apt install -y --force-yes python3-pip libpq-dev locales locales-all cron make ruby ruby-dev
+RUN apt-get install -y nodejs npm
 RUN gem install sass
 RUN pip3 install uwsgi
 
@@ -24,6 +25,9 @@ COPY deployment/django/uwsgi.ini .
 COPY deployment/django/start.sh /
 COPY openrepairplatform ./openrepairplatform
 COPY deployment/django/openrepairplatform.cron /etc/cron.d/openrepairplatform
+
+RUN cd openrepairplatform/static && npm ci && npm run build && cd - && rm -rf openrepairplatform/static/node_modules/
+RUN apt-get purge --auto-remove -y nodejs
 
 RUN chmod 0644 /etc/cron.d/openrepairplatform
 RUN cron

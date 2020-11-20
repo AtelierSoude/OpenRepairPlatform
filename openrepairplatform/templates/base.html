@@ -74,7 +74,6 @@ src="{% static 'django_tables2_column_shifter/js/django_tables2_column_shifter.m
 
 {% block extra_js %}
 {% assets "js_base" %}
-
 <script>
     $(document).ready(function(){
       $(".jumbotron").sticky({topSpacing:0});
@@ -98,8 +97,11 @@ src="{% static 'django_tables2_column_shifter/js/django_tables2_column_shifter.m
   });
 </script>
 
-    <script src="{{ ASSET_URL }}"></script>
+<script src="{{ ASSET_URL }}"></script>
 {% endassets %}
+
+<script type="application/javascript" src="{% static 'js/vue/app.js' %}"></script>
+
 {% endblock %}
 
 </body>

@@ -49,7 +49,7 @@
 
 <body class="bg-grey">
 {% include "menu.html" %}
-
+<div style="padding-left: 75px; padding-top: 75px;">
 <div class="container-fluid">
   {% for message in messages %}
     <div class="alert alert-{{ message.level_tag }} alert-dismissible fade show mb-0" role="alert">
@@ -64,6 +64,7 @@
 <main class="content-page">
   {% block content %}{% endblock %}
 </main>
+</div>
 
 <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 <script src="{% static 'js/lib/sticky_polyfill.js' %}"></script>
@@ -74,7 +75,6 @@ src="{% static 'django_tables2_column_shifter/js/django_tables2_column_shifter.m
 
 {% block extra_js %}
 {% assets "js_base" %}
-
 <script>
     $(document).ready(function(){
       $(".jumbotron").sticky({topSpacing:0});
@@ -98,8 +98,11 @@ src="{% static 'django_tables2_column_shifter/js/django_tables2_column_shifter.m
   });
 </script>
 
-    <script src="{{ ASSET_URL }}"></script>
+<script src="{{ ASSET_URL }}"></script>
 {% endassets %}
+
+<script type="application/javascript" src="{% static 'js/vue/app.js' %}"></script>
+
 {% endblock %}
 
 </body>

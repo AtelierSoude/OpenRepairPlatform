@@ -1,4 +1,4 @@
-from dal import autocomplete 
+from dal import autocomplete
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
 from django.utils.safestring import mark_safe
@@ -36,6 +36,10 @@ from openrepairplatform.event.forms import (
 from django.db.models import Count
 from datetime import datetime
 EVENTS_PER_PAGE = 6
+
+
+class TestInventoryVueView(TemplateView):
+    template_name = "test_inventory_vue.html"
 
 
 class HomeView(TemplateView, FormView):

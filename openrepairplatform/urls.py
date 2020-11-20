@@ -8,9 +8,15 @@ from openrepairplatform.inventory.views import OrganizationStockView
 
 
 urlpatterns = [
+    # View test vuejs
+    path(
+        "test_inventory_vue",
+        views.TestInventoryVueView.as_view(),
+        name="test_vue_inventory",
+    ),
     path("", views.HomeView.as_view(), name="homepage"),
     path("user/", include("openrepairplatform.user.urls", namespace="user")),
-    path("avatar/", include('initial_avatars.urls')),
+    path("avatar/", include("initial_avatars.urls")),
     path("admin/", admin.site.urls),
     path("accounts/", include("django.contrib.auth.urls")),
     path("event/", include("openrepairplatform.event.urls", namespace="event")),
@@ -31,23 +37,23 @@ urlpatterns = [
         include("openrepairplatform.user.api_urls", namespace="api_user"),
     ),
     path(
-        "place_autocomplete/", 
-        views.PlaceAutocomplete.as_view(), 
+        "place_autocomplete/",
+        views.PlaceAutocomplete.as_view(),
         name="place_autocomplete",
     ),
     path(
-        "activity_autocomplete/", 
-        views.ActivityAutocomplete.as_view(), 
+        "activity_autocomplete/",
+        views.ActivityAutocomplete.as_view(),
         name="activity_autocomplete",
     ),
     path(
         "user_autocomplete/",
-        views.CustomUserAutocomplete.as_view(), 
+        views.CustomUserAutocomplete.as_view(),
         name="user_autocomplete",
     ),
     path(
         "<str:orga_slug>/user_orga_autocomplete/",
-        views.ActiveOrgaAutocomplete.as_view(), 
+        views.ActiveOrgaAutocomplete.as_view(),
         name="user_orga_autocomplete",
     ),
     path(
@@ -68,17 +74,17 @@ urlpatterns = [
     path(
         "<str:orga_slug>/details/",
         views.OrganizationDetailsView.as_view(),
-        name="organization_details"
+        name="organization_details",
     ),
     path(
         "<str:orga_slug>/controls/",
         views.OrganizationControlsView.as_view(),
-        name="organization_controls"
+        name="organization_controls",
     ),
     path(
         "<str:orga_slug>/events/",
         views.OrganizationEventsView.as_view(),
-        name="organization_events"
+        name="organization_events",
     ),
     path(
         "<str:orga_slug>/stock/",
@@ -88,7 +94,7 @@ urlpatterns = [
     path(
         "<str:orga_slug>/accounting/",
         views.OrganizationFeesView.as_view(),
-        name="organization_fees"
+        name="organization_fees",
     ),
     path(r"tinymce/", include("tinymce.urls")),
 ]
@@ -96,10 +102,6 @@ urlpatterns = [
 if settings.DEBUG:
     import debug_toolbar  # noqa
 
-    urlpatterns = [
-        path("__debug__/", include(debug_toolbar.urls))
-    ] + urlpatterns
+    urlpatterns = [path("__debug__/", include(debug_toolbar.urls))] + urlpatterns
 
-    urlpatterns += static(
-        settings.MEDIA_URL, document_root=settings.MEDIA_ROOT
-    )
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

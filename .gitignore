@@ -169,3 +169,9 @@ openrepairplatform/static/import_export/
 openrepairplatform/static/rest_framework/
 openrepairplatform/static/tiny_mce/
 openrepairplatform/staticfiles/
+
+
+openrepairplatform/static/node_modules/
+openrepairplatform/static/js/vue/app.js
+openrepairplatform/static/css/vue-app.css
+

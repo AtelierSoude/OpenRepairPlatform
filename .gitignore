@@ -82,7 +82,7 @@ celerybeat-schedule
 
 # dotenv
 deployment/django/django.env
-.env
+openrepairplatform/.env
 deployment/postgres/postgres.env
 deployment/nginx/nginx.env
 

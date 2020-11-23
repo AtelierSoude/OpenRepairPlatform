@@ -26,6 +26,7 @@ COPY deployment/django/start.sh /
 COPY openrepairplatform ./openrepairplatform
 COPY deployment/django/openrepairplatform.cron /etc/cron.d/openrepairplatform
 
+RUN npm install npm@latest -g
 RUN cd openrepairplatform/static && npm ci && npm run build && cd - && rm -rf openrepairplatform/static/node_modules/
 RUN apt-get purge --auto-remove -y nodejs
 

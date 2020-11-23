@@ -37,11 +37,6 @@ from django.db.models import Count
 from datetime import datetime
 EVENTS_PER_PAGE = 6
 
-
-class TestInventoryVueView(TemplateView):
-    template_name = "test_inventory_vue.html"
-
-
 class HomeView(TemplateView, FormView):
     form_class = EventSearchForm
     template_name = "home.html"

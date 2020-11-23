@@ -214,8 +214,8 @@ class Status(models.Model):
 # The initial (first) DiagnosisOrRepairStep instance would contain 
 # . the initial Observation and
 # . the intial status (probably "broken" unless the user comes for an enhancement or minor issue)
-class DiagnosisOrRepairStep(models.Model):
-    folder = models.ForeignKey("inventory.RepairFolder", related_name="steps", on_delete=models.SET_NULL, null=True, blank=True)
+class Intervention(models.Model):
+    folder = models.ForeignKey("inventory.RepairFolder", related_name="interventions", on_delete=models.SET_NULL, null=True, blank=True)
     event = models.ForeignKey("event.Event", on_delete=models.SET_NULL, null=True, blank=True)
     repair_date = models.DateField(null=True, blank=True)
     observation = models.ForeignKey("inventory.Observation", on_delete=models.SET_NULL, null=True, blank=True)

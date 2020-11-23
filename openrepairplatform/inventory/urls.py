@@ -16,7 +16,7 @@ urlpatterns = [
     ),
       path(
         "create_stuff/<int:user_pk>/",
-        views.StuffUserCreateView.as_view(),
+        views.StuffCreateView.as_view(),
         name="create_user_stuff"
     ),
     path(

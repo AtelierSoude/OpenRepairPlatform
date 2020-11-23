@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load assets app_filters thumbnail initialavatar %}
+{% load assets app_filters thumbnail initialavatar static %}
 {% block title %}Page de {{stuff}} {% endblock %}
 
 {% block content %}
@@ -14,6 +14,15 @@
         </div>
         {% include "inventory/modal_stuff.html" with stuff=stuff stuff_form=stuff_form|initial_stuff:stuff %}
         <div class="col-md-8 p-4">
+          <script>  
+            $(document).ready(function(){
+              var stuff_pk = "{{stuff.pk}}";
+              window.localStorage.setItem('stuff_pk', stuff_pk);
+            });
+            </script>
+          <div id="stuff">
+          </div> 
+<!-- 
             <h4 class="pt-2 pb-2 header_detail_page_title">{{ stuff }}
               <a class="btn btn-success btn-sm rounded-circle" data-toggle="modal" data-target="#modalStuff{{ stuff.pk }}">
                   <i class="fa fa-pencil-alt"></i>
@@ -70,7 +79,7 @@
                   <i class="fa fa-pencil-alt"></i>
                 </a>
               </span>
-            </div>
+            </div>-->
           </div>
     </section>
     <section class="row">
@@ -130,7 +139,9 @@
       </div>
       <div class="col-md-8 p-4">
         <h4 class="">Dossiers de réparation</h4>
-          {% include "inventory/repair_folder.html" %}
+          <!-- {% include "inventory/repair_folder.html" %} -->
+          <div id="repairfolder">
+          </div>
       </div>
     </section>
   </div>
@@ -144,5 +155,23 @@
     $("#breadcrumb").sticky({topSpacing:0});
   });
 </script>
+
+<script>
+
+function readCookie (name) {
+  var nameEQ = name + '=';
+  var ca = document.cookie.split(';');
+    for(var i=0;i < ca.length;i++) {
+      var c = ca[i];
+      while (c.charAt(0)==' ') c = c.substring(1,c.length);
+      if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+    }
+    return null;
+}
+
+var csrftoken = readCookie('csrftoken');
+
+</script>
+<script type="application/javascript" src="{% static 'js/vue/app.js' %}"></script>
 {% endblock %}
 

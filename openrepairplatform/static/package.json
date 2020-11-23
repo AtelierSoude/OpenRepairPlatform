@@ -8,7 +8,12 @@
     "css-minimizer-webpack-plugin": "^1.1.5",
     "postcss": "^8.1.6",
     "postcss-cli": "^8.2.0",
-    "postcss-loader": "^4.0.4"
+    "postcss-loader": "^4.0.4",
+    "save": "^2.4.0",
+    "sortablejs": "1.12.0",
+    "vue-draggable-next": "^2.0.0",
+    "vue-hooks-form": "^0.2.2",
+    "vue-select": "^3.10.8"
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.15.1",
@@ -16,6 +21,8 @@
     "@kazupon/vue-i18n-loader": "^0.5.0",
     "@vue/compiler-sfc": "^3.0.2",
     "bootstrap": "^4.5.3",
+    "jquery": "3.5.1",
+    "popper.js": "^1.16.1",
     "css-loader": "^5.0.1",
     "eslint": "^7.13.0",
     "eslint-config-standard": "^16.0.1",

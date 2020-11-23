@@ -64,10 +64,6 @@ class StuffDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["stuff_form"] = StuffForm
-        context["stuff_owner_form"] = StuffOwnerForm
-        context["stuff_place_form"] = StuffPlaceForm
-        context["stuff_state_form"] = StuffStateForm
-        context["stuff_device_form"] = StuffDeviceForm
         return context
 
 

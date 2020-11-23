@@ -6,6 +6,11 @@
 
 {% block menu_content %}
   <section class="container">
+
+    <div id="inventory"></div>
+
+
+    
     <h2 class="text-center mt-4">Stock de {{ organization }}</h2>
     {% if is_active %}   
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalStuff" aria-pressed="false" autocomplete="off">

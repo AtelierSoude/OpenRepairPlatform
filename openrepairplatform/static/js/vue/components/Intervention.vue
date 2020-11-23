@@ -1,19 +1,28 @@
 <template>
-  <h1>{{ title }}</h1>
 </template>
 
 <script>
 
 export default {
-  name: 'Intervention',
-  components: {},
+  name: 'intervention',
+  components: {
+  },
   data () {
     return {
-      title: 'Intervention'
+      stuff: {},
     }
   },
-  methods: {},
-  created () {},
+  methods: {
+  },
+  created () {
+    fetch('/api/inventory/stuff/14')
+      .then(response => {
+        return response.json()
+      })
+      .then(data => {
+        this.stuff = data
+      })
+  },
   mounted () {}
 }
 </script>

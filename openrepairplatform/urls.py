@@ -9,11 +9,6 @@ from openrepairplatform.inventory.views import OrganizationStockView
 
 urlpatterns = [
     # View test vuejs
-    path(
-        "test_inventory_vue",
-        views.TestInventoryVueView.as_view(),
-        name="test_vue_inventory",
-    ),
     path("", views.HomeView.as_view(), name="homepage"),
     path("user/", include("openrepairplatform.user.urls", namespace="user")),
     path("avatar/", include("initial_avatars.urls")),
@@ -35,6 +30,10 @@ urlpatterns = [
     path(
         "api/user/",
         include("openrepairplatform.user.api_urls", namespace="api_user"),
+    ),
+    path(
+        "api/inventory/",
+        include("openrepairplatform.inventory.api_urls", namespace="api_inventory"),
     ),
     path(
         "place_autocomplete/",

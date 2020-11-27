@@ -104,6 +104,10 @@ class RecurrentEventForm(forms.ModelForm):
             (2, "2 jours avant"),
             (7, "Une semaine avant"),
             (14, "Deux semaines avant"),
+            (21, "Trois semaines avant"),
+            (28, "Quatre semaines avant"),
+            (35, "Cinq semaines avant"),
+            (42, "Six semaines avant"),
         ],
         label="Publication",
     )

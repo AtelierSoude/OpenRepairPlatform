@@ -119,13 +119,17 @@ class RecurrentEventForm(forms.ModelForm):
             queryset=(
                 self.orga.actives.all() | self.orga.admins.all() | self.orga.volunteers.all() 
             ).distinct(),
-            widget=forms.CheckboxSelectMultiple,
+            widget=autocomplete.ModelSelect2Multiple(url='/' + self.orga.slug + '/user_orga_autocomplete/'),
             required=False,
         )
         self.fields["conditions"] = forms.ModelMultipleChoiceField(
             queryset=self.orga.conditions,
-            widget=forms.CheckboxSelectMultiple,
+            widget=autocomplete.ModelSelect2Multiple(url='/event/' + self.orga.slug + '/condition_orga_autocomplete/'),
             required=False,
+        )
+        self.fields["activity"] = forms.ModelChoiceField(
+            widget=autocomplete.ModelSelect2(url='activity_autocomplete'),
+            queryset=Activity.objects.all()
         )
 
     def clean_weeks(self):
@@ -201,6 +205,7 @@ class RecurrentEventForm(forms.ModelForm):
             "external_url",
             "description",
             "organizers",
+            "needed_organizers",
             "conditions",
             "location",
             "recurrent_type",
@@ -212,6 +217,9 @@ class RecurrentEventForm(forms.ModelForm):
             "end_date",
             "period_before_publish",
         ]
+        widgets = {
+            'location': autocomplete.ModelSelect2(url='place_autocomplete'),
+        }
 
 
 class ActivityForm(ModelForm):

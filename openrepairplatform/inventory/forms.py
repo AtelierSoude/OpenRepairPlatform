@@ -3,9 +3,45 @@ from django.forms import ModelForm
 from django import forms
 from openrepairplatform.user.models import CustomUser
 from openrepairplatform.location.models import Place
-from .models import Stuff, Device, Category, Observation
+from .models import Stuff, Device, Category, Observation, RepairFolder
 from dal import autocomplete, forward
+from bootstrap_modal_forms.forms import BSModalModelForm
 
+class StuffEditForm(BSModalModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['device'] = forms.ModelChoiceField(
+            widget=autocomplete.ModelSelect2(url='inventory:device_autocomplete',),
+            queryset= Device.objects.all()
+        )
+    
+    class Meta:
+        model = Stuff
+        fields = [
+            "state",
+            "device",
+            "member_owner",
+            "organization_owner",
+            "place",
+            'information',
+        ]
+
+class FolderForm(BSModalModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['open_date'] = forms.DateField(
+        initial=dt.today(),
+        widget=forms.DateInput(attrs={"type": "date"}, format="%Y-%m-%d"),
+        label="date"
+    )
+    class Meta:
+        model = RepairFolder
+        fields = [
+            "open_date",
+            "ongoing",
+        ]
 
 class StuffForm(ModelForm):
     category = forms.ChoiceField(
@@ -25,6 +61,7 @@ class StuffForm(ModelForm):
     brand = forms.ChoiceField(
         widget=autocomplete.Select2(url='inventory:brand_autocomplete'),
         label="Marque",
+        required=False,
         )
     model = forms.CharField(
         label="Designation/modèle",
@@ -76,3 +113,5 @@ class StuffForm(ModelForm):
             "state",
             'information',
         ]
+
+

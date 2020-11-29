@@ -60,8 +60,13 @@ urlpatterns = [
         name="create_organization_stuff"
     ),
     path(
-        "update_stuff/<int:stuff_pk>/",
+        "update_stuff/<int:pk>/",
         views.StuffUpdateView.as_view(),
         name="update_stuff"
+    ),
+    path(
+        "create_folder/<int:pk>/",
+        views.FolderCreateView.as_view(),
+        name="create_folder"
     ),
 ]

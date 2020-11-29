@@ -26,6 +26,7 @@ def initial_stuff(form, stuff):
             "organization_owner": stuff.organization_owner,
             "member_owner": stuff.member_owner,
             "place": stuff.place,
+            "device": stuff.device,
 
         }
     )

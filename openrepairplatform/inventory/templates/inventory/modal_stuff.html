@@ -1,12 +1,10 @@
-{% load bootstrap4 assets static %}
+{% load bootstrap4 assets static app_filters %}
 
 <div class="modal fade" {% if stuff %}id="modalStuff{{ stuff.pk }}"{% else %}id="modalStuff"{% endif %} tabindex="-1" role="dialog" aria-labelledby="modalStuffTitle" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        {% if stuff %}
-          <h5 class="modal-title" id="modalStuffTitle">Modifier</h5>
-        {% elif owner_member %}
+        {% if owner_member %}
           <h5 class="modal-title" id="modalStuffTitle">Créer un appareil pour {{owner_member}}</h5>
         {% elif owner_organization %}
         <h5 class="modal-title" id="modalStuffTitle">Créer un appareil pour {{owner_organization}}</h5>
@@ -17,19 +15,15 @@
       </div>
       <div class="modal-body">
         <form id="modalStuffForm" method="post"
-          {% if stuff %}
-            action="{% url 'inventory:update_stuff' stuff.pk %}"
+          {% if owner_member %}
+          action="{% url 'inventory:create_user_stuff' owner_member.pk %}"
+          {% elif owner_organization %}
+          action="{% url 'inventory:create_organization_stuff' owner_organization.slug %}"
           {% else %}
-            {% if owner_member %}
-            action="{% url 'inventory:create_user_stuff' owner_member.pk %}"
-            {% elif owner_organization %}
-            action="{% url 'inventory:create_organization_stuff' owner_organization.slug %}"
-            {% else %}
-            action="{% url 'inventory:create_stuff' %}"
-            {% endif %}
+          action="{% url 'inventory:create_stuff' %}"
           {% endif %}
         >
-        {% include "inventory/stuff_form.html" with form=add_stuff %}
+          {% include "inventory/stuff_edit_form.html" with form=stuff_form %}
         </form> 
       </div>
     </div>

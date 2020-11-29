@@ -1,6 +1,13 @@
 from dal import autocomplete
 from django.urls import reverse, reverse_lazy
 from django.db.models import Q
+from bootstrap_modal_forms.generic import (
+  BSModalCreateView,
+  BSModalUpdateView,
+  BSModalReadView,
+  BSModalDeleteView
+)
+
 
 from django.views.generic import (
     ListView,
@@ -23,7 +30,7 @@ from .tables import StockTable
 from .models import Stuff, Device, Category, Observation, Status, Reasoning, Action, Brand, Intervention, RepairFolder
 from openrepairplatform.location.models import Place
 from .filters import StockFilter
-from .forms import StuffForm
+from .forms import StuffForm, StuffEditForm, FolderForm
 from openrepairplatform.user.models import CustomUser, Organization
 
 from rest_framework.views import APIView
@@ -71,44 +78,41 @@ class StuffDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["stuff_form"] = StuffForm
         return context
 
+class FolderCreateView(BSModalCreateView):
+    model = RepairFolder
+    template_name = 'inventory/folder_create_form.html'
+    form_class = FolderForm
+    success_message = "Le dossier a bien été créé"
 
-class StuffFormView(PermissionOrgaContextMixin):
+    def form_valid(self, form, *args, **kwargs): 
+        stuff = Stuff.objects.get(pk=self.kwargs["pk"])
+        form.instance.stuff = stuff
+        messages.success(self.request, self.success_message)
+        return super().form_valid(form)
+
+    def get_success_url(self, *args, **kwargs):
+        stuff = Stuff.objects.get(pk=self.kwargs["pk"])
+        return stuff.get_absolute_url()
+
+class StuffUpdateView(BSModalUpdateView):
     model = Stuff
-    form_class = StuffForm
-    http_methods = ["post"]
+    template_name = 'inventory/stuff_edit_form.html'
+    form_class = StuffEditForm
+    success_message = "L'appareil a bien été modifié"
 
     def get(self, request, *args, **kwargs):
-        self.object = self.organization
         return super().get(request, *args, **kwargs)
 
-    def get_success_url(self, message):
-        messages.success(self.request, message)
+    def get_success_url(self):
         return self.object.get_absolute_url()
-
-
-class StuffCreateView(StuffFormView, CreateView):
-
-    def get_success_url(self, *args, **kwargs):
-        message = f"Vous avez créé {self.object} avec succès."
-        return super().get_success_url(message)
-
-
-class StuffUpdateView(StuffFormView, UpdateView):
-    pk_url_kwarg = "stuff_pk"
-
-    def get_success_url(self, *args, **kwargs):
-        message = f"Vous avez modifié {self.object} avec succès."
-        return super().get_success_url(message)
-
-
 
 class StuffUserFormView(RedirectView):
     model = Stuff
     form_class = StuffForm
     http_methods = ["post"]
+    success_message = "L'appareil a bien été ajouté à l'inventaire"
 
     def get(self, request, *args, **kwargs):
         self.object = kwargs["user_pk"]
@@ -163,6 +167,7 @@ class StuffOrganizationFormView(HasActivePermissionMixin, RedirectView):
     model = Stuff
     form_class = StuffForm
     http_methods = ["post"]
+    success_message = "L'appareil a bien été ajouté à votre stock"
 
     def get(self, request, *args, **kwargs):
         self.object = self.organization

@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'django_tables2_column_shifter',
     'django_filters',
     'treebeard',
+    'bootstrap_modal_forms',
 ]
 
 

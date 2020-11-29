@@ -3,9 +3,19 @@
 {% block title %}Page de {{stuff}} {% endblock %}
 
 {% block content %}
+<script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>
+
 <div class="container-fluid">
   {% include "breadcrumb.html" with current=stuff first_parent_url="" first_parent_text="Appareils" %}
   <div class="container">
+
+    <!-- modals -->
+    <div class="modal fade" tabindex="-1" role="dialog" id="modal">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content"></div>
+      </div>
+    </div>
+
     <section class="h-100 row">
         <div class="col-md-4 p-4 d-flex flex-wrap align-items-center bg-light">
           {% if stuff.device.picture %}
@@ -18,7 +28,7 @@
         </div>
         <div class="col-md-8 p-4">
             <h4 class="pt-2 pb-2 header_detail_page_title">{{ stuff }}
-              <a class="btn btn-success btn-sm rounded-circle" data-toggle="modal" data-target="#modalStuff{{ stuff.pk }}">
+              <a class="btn btn-success btn-sm rounded-circle bs-modal" id="update-stuff" data-form-url="{% url 'inventory:update_stuff' stuff.pk %}">
                   <i class="fa fa-pencil-alt"></i>
               </a>
             </h4>
@@ -29,9 +39,6 @@
                   {{ parent }} > 
                 {% endfor %}
                 <a href="{{ stuff.device.get_absolute_url }}">{{ stuff.device }}</a>
-                <a class="btn btn-default rounded-circle btn-sm float-right">
-                  <i class="fa fa-pencil-alt"></i>
-                </a>
               </span>
             </div>
             <div class="card col-md-12 mb-2 p-3">
@@ -45,9 +52,6 @@
                   {% endif %}
                   {{stuff.owner}}
                 </a>
-                <a class="btn btn-default rounded-circle btn-sm float-right">
-                  <i class="fa fa-pencil-alt"></i>
-                </a>
               </span>
             </div>
             <div class="card col-md-12 mb-2 p-3">
@@ -60,18 +64,12 @@
               {% else %}
                 Chez l'utilisateur
               {% endif %}
-              <a class="btn btn-default rounded-circle btn-sm float-right">
-                <i class="fa fa-pencil-alt"></i>
-              </a>
             </span>
             </div>
             <div class="card col-md-12 mb-2 p-3">
               <span>
                 <b class="pr-2">Etat</b> 
                 {% include "inventory/stuff_state_display.html" with stuff_state=stuff.get_state_display %}
-                <a class="btn btn-default rounded-circle btn-sm float-right">
-                  <i class="fa fa-pencil-alt"></i>
-                </a>
               </span>
             </div>
           </div>
@@ -132,7 +130,10 @@
         </div>
       </div>
       <div class="col-md-8 p-4">
-        <h4 class="">Dossiers de réparation</h4>
+        <h4 class="">Dossiers de réparation</h4> 
+        <a class="btn btn-success btn-sm rounded-circle bs-modal" data-form-url="{% url 'inventory:create_folder' stuff.pk %}">
+          <i class="fa fa-plus-alt"></i>
+      </a>
           {% include "inventory/repair_folder.html" %}
       </div>
     </section>
@@ -141,29 +142,22 @@
 {% endblock %}
 
 {% block extra_js %}
+<script type="text/javascript">
+  $(function () {
+   $.fn.modal.Constructor.prototype._enforceFocus = function() {};
+   $(".bs-modal").each(function () {
+     $(this).modalForm({
+         formURL: $(this).data('form-url')
+     });
+   });
+ });
+ </script>
+
 <script>
   $(document).ready(function(){
     $("#side_nav").sticky({topSpacing:40});
     $("#breadcrumb").sticky({topSpacing:0});
   });
 </script>
-
-<script>
-
-function readCookie (name) {
-  var nameEQ = name + '=';
-  var ca = document.cookie.split(';');
-    for(var i=0;i < ca.length;i++) {
-      var c = ca[i];
-      while (c.charAt(0)==' ') c = c.substring(1,c.length);
-      if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
-    }
-    return null;
-}
-
-var csrftoken = readCookie('csrftoken');
-
-</script>
-<script type="application/javascript" src="{% static 'js/vue/app.js' %}"></script>
 {% endblock %}
 

@@ -1,0 +1,24 @@
+{% load bootstrap4 assets static app_filters %}
+
+<form method="post" action="">
+  {% csrf_token %}
+  <div class="modal-header">
+    <h3 class="modal-title">Modifier</h3>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+      {% for error in form.non_field_errors %}
+        {{ error }}
+      {% endfor %}
+    </div>
+    {% bootstrap_form form %}
+    {{form.media}}
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="submit-btn btn btn-primary">Update</button>
+  </div>
+
+</form>

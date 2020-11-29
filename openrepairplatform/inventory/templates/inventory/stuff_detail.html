@@ -7,22 +7,16 @@
   {% include "breadcrumb.html" with current=stuff first_parent_url="" first_parent_text="Appareils" %}
   <div class="container">
     <section class="h-100 row">
-        <div class="col-md-4 p-4 d-flex flex-wrap align-items-center">
+        <div class="col-md-4 p-4 d-flex flex-wrap align-items-center bg-light">
           {% if stuff.device.picture %}
             <img class="img-responsive w-100" src="{{ stuff.device.picture.url }}" alt="image_device">
+          {% else %}
+            <div class="w-100">
+              <h3 class="text-center text-muted">Pas d'apercu</h3>
+            </div>
           {% endif %}
         </div>
-        {% include "inventory/modal_stuff.html" with stuff=stuff stuff_form=stuff_form|initial_stuff:stuff %}
         <div class="col-md-8 p-4">
-          <script>  
-            $(document).ready(function(){
-              var stuff_pk = "{{stuff.pk}}";
-              window.localStorage.setItem('stuff_pk', stuff_pk);
-            });
-            </script>
-          <div id="stuff">
-          </div> 
-<!-- 
             <h4 class="pt-2 pb-2 header_detail_page_title">{{ stuff }}
               <a class="btn btn-success btn-sm rounded-circle" data-toggle="modal" data-target="#modalStuff{{ stuff.pk }}">
                   <i class="fa fa-pencil-alt"></i>
@@ -31,8 +25,8 @@
             <div class="card col-md-12 mb-2 p-3">
               <span>
                 <b class="pr-2">Categorie</b> 
-                {% for tree in stuff.device.category.get_tree %}
-                  {{ tree }} > 
+                {% for parent in stuff.device.category.get_ancestors %}
+                  {{ parent }} > 
                 {% endfor %}
                 <a href="{{ stuff.device.get_absolute_url }}">{{ stuff.device }}</a>
                 <a class="btn btn-default rounded-circle btn-sm float-right">
@@ -79,7 +73,7 @@
                   <i class="fa fa-pencil-alt"></i>
                 </a>
               </span>
-            </div>-->
+            </div>
           </div>
     </section>
     <section class="row">
@@ -139,9 +133,7 @@
       </div>
       <div class="col-md-8 p-4">
         <h4 class="">Dossiers de réparation</h4>
-          <!-- {% include "inventory/repair_folder.html" %} -->
-          <div id="repairfolder">
-          </div>
+          {% include "inventory/repair_folder.html" %}
       </div>
     </section>
   </div>

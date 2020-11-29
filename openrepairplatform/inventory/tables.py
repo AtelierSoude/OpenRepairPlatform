@@ -50,5 +50,6 @@ class StockTable(ColumnShiftTable):
           "organization_owner",
           "subpart",
           "added_date",
+          "information",
         )
 

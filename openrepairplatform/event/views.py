@@ -92,6 +92,10 @@ class ActivityView(PermissionOrgaContextMixin, DetailView):
     model = Activity
     template_name = "event/activity/detail.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["activity_menu"] = 'active'
+        return context
 
 class ActivityListView(ListView):
     model = Activity
@@ -102,6 +106,10 @@ class ActivityListView(ListView):
         queryset = queryset.order_by('category__name')
         return queryset
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["activity_menu"] = 'active'
+        return context
 
 class ActivityFormView(HasAdminPermissionMixin):
     model = Activity
@@ -113,14 +121,16 @@ class ActivityFormView(HasAdminPermissionMixin):
         messages.success(self.request, self.success_message)
         return super().form_valid(form)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["activity_menu"] = 'active'
+        return context
 
 class ActivityCreateView(RedirectQueryParamView, ActivityFormView, CreateView):
     success_message = "L'activité a bien été créée"
 
-
 class ActivityEditView(RedirectQueryParamView, ActivityFormView, UpdateView):
     success_message = "L'activité a bien été mise à jour"
-
 
 class ActivityDeleteView(
     HasAdminPermissionMixin, RedirectQueryParamView, DeleteView
@@ -145,6 +155,7 @@ class EventView(PermissionOrgaContextMixin, DetailView):
             for user in CustomUser.objects.all()
         ]
         ctx["register_form"] = CustomUserEmailForm
+        ctx["event_menu"] = 'active'
         ctx["present_form"] = MoreInfoCustomUserForm
         ctx["total_fees"] = sum(
             [fee.amount for fee in self.get_object().participations.all()]
@@ -163,6 +174,7 @@ class EventListView(ListView):
         context = super().get_context_data(**kwargs)
         context["search_form"] = EventSearchForm(self.request.GET)
         context["register_form"] = CustomUserEmailForm
+        context["event_menu"] = 'active'
         context["results_number"] = self.get_queryset().count()
         return context
 
@@ -209,8 +221,8 @@ class EventFormView(HasActivePermissionMixin):
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         ctx["orga"] = self.organization
+        ctx["event_menu"] = 'active'
         return ctx
-
 
 class EventEditView(RedirectQueryParamView, EventFormView, UpdateView):
     success_message = "L'évènement a bien été modifié"
@@ -271,6 +283,7 @@ class RecurrentEventCreateView(HasActivePermissionMixin, FormView):
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         ctx["orga"] = self.organization
+        ctx["event_menu"] = 'active'
         return ctx
 
 

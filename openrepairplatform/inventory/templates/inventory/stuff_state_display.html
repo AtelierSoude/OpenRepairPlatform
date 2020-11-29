@@ -1,10 +1,10 @@
-{% if stuff_state == "Broken" %}
+{% if stuff_state == "En panne" %}
 <span class="badge badge-pill badge-danger">En panne</span>
-{% elif stuff_state == "Disassembled" %}
+{% elif stuff_state == "Désassemblé" %}
 <span class="badge badge-pill badge-danger">Désassemblé</span>
-{% elif stuff_state == "Thrown" %}
+{% elif stuff_state == "Evaporé" %}
 <span class="badge badge-pill badge-primary">Evaporé</span>
-{% elif stuff_state == "Fixing" %}
+{% elif stuff_state == "En réparation" %}
 <span class="badge badge-pill badge-secondary">En réparation</span>
 {% else %}
 <span class="badge badge-pill badge-success">Fonctionnel</span>

@@ -13,10 +13,11 @@
     
     <h2 class="text-center mt-4">Stock de {{ organization }}</h2>
     {% if is_active %}   
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalStuff" aria-pressed="false" autocomplete="off">
-      Ajouter un objet à l'inventaire
+    <button class="btn btn-success btn-absolute" data-toggle="modal" data-target="#modalStuff">
+      <i class="fa fa-plus"></i><i class="fas fa-box-open"></i>
+      <span class="btn-label d-none pl-1">Ajouter un objet</span>
     </button>
-    {% include "inventory/modal_stuff.html" with owner_organization=organization %}
+    {% include "inventory/modal_stuff.html" with owner_organization=organization add_stuff=add_organization_stuff %}
     {% endif %}
   </section>
   {% if filter %}
@@ -27,7 +28,7 @@
     </form>
   </div>
   {% endif %}
-  <h4 class="text-center mt-4">TANT objets</h4>
+  <h4 class="text-center mt-4">{{stuff_count}} objets</h4>
   <section class="box-shadow">
     {% if is_active %}
       <span class="float-right">Télécharger le résultat :
@@ -43,15 +44,13 @@
 
 <script>
   $(document).ready(function(){
-    $( "#more-button" ).hover(
+    $( ".btn-absolute" ).hover(
   function() {
-    $( ".btn-event" ).addClass( "d-block" );
-    $( this ).css( "width", "250px" );
-    $( ".btn-reccurent-event" ).addClass( "d-block" ).css( "width", "250px" );
+    $( ".btn-label" ).addClass( "d-block" );
+    $( this ).css( "width", "200px" );
   }, function() {
-    $( ".btn-event" ).removeClass( "d-block" );
+    $( ".btn-label" ).removeClass( "d-block" );
     $( this ).css( "width", "63px" );
-    $( ".btn-reccurent-event" ).removeClass( "d-block" ).css( "width", "0px" );
   }
   );
   });

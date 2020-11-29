@@ -10,7 +10,7 @@
             {% endif %}
             </span><br>
             <small><a href="{{folder.stuff.get_absolute_url}}">{{ folder.stuff }}</a></small><br>
-            <small>Etat innitial : <b>{{folder.steps.first.observation}}</b> / dernier état : <b>{{folder.steps.last.status}}</b></small>
+            <small>Etat innitial : <b>{{folder.interventions.first.observation}}</b> / dernier état : <b>{{folder.interventions.last.status}}</b></small>
         </div>
         <div class="card-body p-0 table-responsive collapse" id="collapse{{folder.pk}}">
             <table class="table">
@@ -24,35 +24,35 @@
                 </tr>
             </thead>
             <tbody>
-            {% for step in folder.steps.all %}
+            {% for intervention in folder.interventions.all %}
                 <tr>
                 <td>
-                    {% if step.event %}
+                    {% if intervention.event %}
                     <small>
-                        <a href="{{step.event.get_absolute_url}}">{{ step.event }}</a>
+                        <a href="{{intervention.event.get_absolute_url}}">{{ intervention.event }}</a>
                     </small>
                     {% else %}
-                    {{ step.repair_date|date:"d M, Y" }}
+                    {{ intervention.repair_date|date:"d M, Y" }}
                     {% endif %}
                 </td>
                 <td>
-                    {% if step.observation %}
-                    {{ step.observation }}
+                    {% if intervention.observation %}
+                    {{ intervention.observation }}
                     {% endif %}
                 </td>
                 <td>
-                    {% if step.reasoning %}
-                    {{ step.reasoning }}
+                    {% if intervention.reasoning %}
+                    {{ intervention.reasoning }}
                     {% endif %}
                 </td>
                 <td>
-                    {% if step.action %}
-                    {{ step.action }}
+                    {% if intervention.action %}
+                    {{ intervention.action }}
                     {% endif %}
                 </td>
                 <td>
-                    {% if step.status %}
-                    {{ step.status }}
+                    {% if intervention.status %}
+                    {{ intervention.status }}
                     {% endif %}
                 </td>
                 </tr>

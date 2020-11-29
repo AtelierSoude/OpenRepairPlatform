@@ -31,10 +31,10 @@ h4 {
 h5{
   line-height: 1 !important;
 }
-.brand-logo{
+.brand-logo img{
   max-width: 220px;
   height: auto;
-  padding-left: 20px;
+  padding-top: 0px;
 }
 
 .bg-grey { 
@@ -159,6 +159,20 @@ td {
 
 /* Menu */
 
+.main-container {
+  padding-top: 65px;
+}
+
+.header {
+  width: 100%;
+  position: fixed;
+  height: 65px;
+}
+
+.navbar-collapse {
+  width: 75px;
+}
+
 .header_detail_page, #h_nav, #breadcrumb, #jumbotron, #search_tab, #event_title, #event_about, .jumbotron {
  /* z-index: 2 !important; */
   position: relative;
@@ -180,8 +194,8 @@ td {
 }
 
 .navbar ul li{
-  margin-top: 10px;
-  margin-bottom: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
   a {
     color : #fee56e !important;
     small{
@@ -190,6 +204,12 @@ td {
   }
 } 
 
+.navbar ul li.active{
+  background-color:#fee56e;
+  a{
+    color: #083342 !important;
+  }
+} 
 .navbar-brand.avatar{
   margin: 0px !important;
 }
@@ -450,16 +470,30 @@ position: relative;
 
 // Menu hack for mobile slide left up // 
 
+
+@media (min-width: 992px) {
+
+  .main-container {
+    padding-left: 75px; 
+  }
+
+  .vertical-nav {
+      position: fixed;
+      top: 65px;
+      left: 0;
+      width: 75px;
+      height: 100%;
+      overflow-y: auto;
+      padding-top: 30px;
+  }
+}
+
 @media (max-width: 992px) {
 
   .navbar-collapse {
       position: fixed;
-      top: 50px;
-      left:-600px;
-      padding-left: 15px;
-      padding-right: 15px;
-      padding-bottom: 15px;
-      width: 80%;
+      top: 65px;
+      left:-400px;
       height: 800px;
       transition: all 0.3s ease;
       display: block;
@@ -473,11 +507,6 @@ position: relative;
   .navbar-collapse.show {
       right:20%;
       left:0px;
-  }
-  .navbar-collapse .nav-item {
-    text-transform: uppercase;
-    font-size: 18px;
-    padding: 10px;
   }
 }
 

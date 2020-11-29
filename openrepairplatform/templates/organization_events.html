@@ -9,7 +9,7 @@
     <h2 class="text-center mt-4">Evénements de {{ organization }}</h2>
     {% if is_active %}
       <button class="btn-absolute btn btn-success" id="more-button">
-        <i class="fa fa-plus"></i>
+        <i class="fa fa-plus"></i><i class="fa fa-calendar-alt"></i>  
         <a class="d-none btn-event pl-1" href="{% url 'event:create' organization.id %}">
           ajouter un événement
         </a>        

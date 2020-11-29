@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load assets app_filters thumbnail initialavatar %}
+{% load assets app_filters thumbnail initialavatar bootstrap4 %}
 {% block title %}Profil de {{object}} sur Reparons{% endblock %}
 
 {% block extra_css %}
@@ -395,7 +395,7 @@
       <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalStuff" aria-pressed="false" autocomplete="off">
         Ajouter un objet à l'inventaire
       </button>
-      {% include "inventory/modal_stuff.html" with owner_member=object %}
+      {% include "inventory/modal_stuff.html" with owner_member=object add_stuff=add_member_stuff%}
       <h4 class="mt-4"> {{ stock.all.count}} Objets inventoriés </h4>
       <div class="card p-2 pt-4">
           <div class="table-responsive">

@@ -1,4 +1,5 @@
-{% load bootstrap4 %}
+{% load bootstrap4 assets static %}
+
 <div class="modal fade" {% if stuff %}id="modalStuff{{ stuff.pk }}"{% else %}id="modalStuff"{% endif %} tabindex="-1" role="dialog" aria-labelledby="modalStuffTitle" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -28,22 +29,8 @@
             {% endif %}
           {% endif %}
         >
-          {% csrf_token %}
-
-          {% if stuff %}
-            {% bootstrap_form stuff_form %}
-          {% else %}
-            {% if owner_member %}
-              {% bootstrap_form add_member_stuff %}
-            {% elif owner_organization %}
-              {% bootstrap_form add_organization_stuff %}
-            {% endif %}
-          {% endif %}
-
-          <div class="form-group p-2">
-            <button type="submit" class="btn btn-success w-100 p-3">Valider</button>
-          </div>
-        </form>
+        {% include "inventory/stuff_form.html" with form=add_stuff %}
+        </form> 
       </div>
     </div>
   </div>

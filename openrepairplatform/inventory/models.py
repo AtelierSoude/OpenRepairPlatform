@@ -23,7 +23,7 @@ class Brand(models.Model):
         return self.name
 
 class Category(MP_Node):
-    name = models.CharField(max_length=150)
+    name = models.CharField(max_length=350)
 
     node_order_by = ['name']
     
@@ -37,17 +37,18 @@ class Stuff(models.Model):
     FIXING = "F"
     THROWN = "T"
     STATES = [
-        (BROKEN, "Broken"),
-        (WORKING, "Working"),
-        (DISASSEMBLED, "Disassembled"),
-        (FIXING, "Fixing"),
-        (THROWN, "Thrown"),
+        (BROKEN, "En panne"),
+        (WORKING, "Fonctionnel"),
+        (DISASSEMBLED, "Désassemblé"),
+        (FIXING, "Réparé"),
+        (THROWN, "Evaporé"),
     ]
     device = models.ForeignKey(
         "inventory.device",
         related_name="stuffs",
         null=True,
         blank=True,
+        verbose_name=_("Type d'appareil"),
         on_delete=models.SET_NULL
     )
     member_owner = models.ForeignKey(
@@ -76,6 +77,8 @@ class Stuff(models.Model):
         related_name="place",
         null=True,
         blank=True,
+        verbose_name=_("Localisation"),
+        help_text="Où se trouve l'appareil ?",
         on_delete=models.SET_NULL
     )
     added_date = models.DateField(
@@ -84,11 +87,14 @@ class Stuff(models.Model):
     state = models.CharField(
         max_length=1,
         choices=STATES,
-        default=BROKEN
+        default=BROKEN,
+        verbose_name=_("Etat")
     )
     information = CleanHTMLField(
         null=True,
-        blank=True
+        blank=True,
+        verbose_name=_("Information optionnelles sur cet appareil"),
+        help_text="D'où vient-il, a t'il des caractéristiques spéciales... bref, tout ce qui peut le décrire",
     )
     history = HistoricalRecords()
 
@@ -161,43 +167,28 @@ class Device(models.Model):
         return f"{self.category}-{self.brand}-{self.model}"
 
 
-# NOTE: Comments below are present to help modelling the repair process and objects
-# and list fields that should be in the classes
-
-# Observation as done by the owner of the device (either initially or during repair or diagnosis)
-# Implement a string e.g. "No power on the output of the switch even when on"
-# or "After house was hit by a lightning, the dishwasher would not start anymore" as the initial observation
-# Maybe add a list of strings that would be hashtags for indexing e.g. "#NoPower", "#Switch", "#PowerSupply"
-# Maybe link to a user or fixer to indicate who made the Observation
 class Observation(models.Model):
     name = models.CharField(max_length=150, default="")
     
     def __str__(self):
         return self.name
     
-# A reasoning that takes place during repair or diagnosis
-# Implement a string that would detail fixer reasoning from an Observation and leading to an Action
-# e.g. "There is no power at the output pin of the switch even when the switch is on. The switch must be defective"
-# Maybe link to a user or fixer to indicate who made the Reasoning
+
 class Reasoning(models.Model):
     name = models.CharField(max_length=150, default="")
-    
+    verbose_name=_("raisonnement")
+
     def __str__(self):
         return self.name
 
-# An action taken by the fixer during repair or diagnosis
-# Could be implemented as a verb (from a list that must be easily maintained) associated to a Part
-# e.g. Replace capacitor C3
-# or Resolder Wire Red wire
-# Maybe link to a user or fixer to indicate who took the Action
+
 class Action(models.Model):
     name = models.CharField(max_length=150, default="")
     
     def __str__(self):
         return self.name
-    
-# Implements a status (be it the initial one or the one resulting from an Action being taken)
-# Take it from the Stuff class above
+
+
 class Status(models.Model):
     name = models.CharField(max_length=150, default="")
     
@@ -205,23 +196,51 @@ class Status(models.Model):
         return self.name
 
 
-# Implements a step in diagnosis or repair.
-# This consists of:
-# 1. An Observation
-# 2. An optional Reasoning (from the observation) leading to an optional Action
-# 3. An optional Action
-# 4. A resulting status after Action is taken
-# The initial (first) DiagnosisOrRepairStep instance would contain 
-# . the initial Observation and
-# . the intial status (probably "broken" unless the user comes for an enhancement or minor issue)
 class Intervention(models.Model):
-    folder = models.ForeignKey("inventory.RepairFolder", related_name="interventions", on_delete=models.SET_NULL, null=True, blank=True)
-    event = models.ForeignKey("event.Event", on_delete=models.SET_NULL, null=True, blank=True)
-    repair_date = models.DateField(null=True, blank=True)
-    observation = models.ForeignKey("inventory.Observation", on_delete=models.SET_NULL, null=True, blank=True)
-    reasoning = models.ForeignKey("inventory.Reasoning", on_delete=models.SET_NULL, null=True, blank=True)
-    action = models.ForeignKey("inventory.Action", on_delete=models.SET_NULL, null=True, blank=True)
-    status = models.ForeignKey("inventory.Status", on_delete=models.SET_NULL, null=True, blank=True)
+    folder = models.ForeignKey(
+        "inventory.RepairFolder", 
+        related_name="interventions", 
+        on_delete=models.SET_NULL, null=True,
+        blank=True
+        )
+    event = models.ForeignKey(
+        "event.Event", 
+        on_delete=models.SET_NULL, 
+        null=True, 
+        blank=True
+        )
+    repair_date = models.DateField(
+        null=True, 
+        blank=True
+        )
+    observation = models.ForeignKey(
+        "inventory.Observation", 
+        on_delete=models.SET_NULL, 
+        null=True, 
+        blank=True,
+        help_text="Quel est (ou était) le problème ?"
+        )
+    reasoning = models.ForeignKey(
+        "inventory.Reasoning", 
+        on_delete=models.SET_NULL,
+        null=True, 
+        blank=True,
+        help_text="Quel en est (ou serait) la cause ?"
+    )
+    action = models.ForeignKey(
+        "inventory.Action", 
+        on_delete=models.SET_NULL, 
+        null=True, 
+        blank=True,
+        help_text="Qu'avez-vous fait ?"
+    )
+    status = models.ForeignKey(
+        "inventory.Status", 
+        on_delete=models.SET_NULL, 
+        null=True, 
+        blank=True,
+        help_text="Quel est le résultat de l'action ?"
+    )
 
     @property
     def date(self):
@@ -233,7 +252,13 @@ class Intervention(models.Model):
         return f"actions réalisées sur {self.folder} le {self.repair_date}"
 
 class RepairFolder(models.Model):
-    stuff = models.ForeignKey("inventory.Stuff", related_name="folders", on_delete=models.SET_NULL, null=True, blank=True)
+    stuff = models.ForeignKey(
+        "inventory.Stuff", 
+        related_name="folders", 
+        on_delete=models.SET_NULL, 
+        null=True, 
+        blank=True
+        )
     ongoing = models.BooleanField(default=True)
     open_date = models.DateField(null=True, blank=True)
 

@@ -51,8 +51,9 @@ $(document).ready(function(){
 
 </script>
 
-
-{% csrf_token %}
+<form method="post" action="">
+  {% bootstrap_form_errors form %}
+  {% csrf_token %}
     {% bootstrap_field form.category %}
     <div id="devicesearch" style="display: none;">
         {% bootstrap_field form.device form_group_class="device-search-form" %}
@@ -91,3 +92,4 @@ $(document).ready(function(){
 <button type="submit" id="submit" style="display: none;" class="btn btn-success w-100 p-3">Valider</button>
 </div>
 {{ form.media }}
+</form>

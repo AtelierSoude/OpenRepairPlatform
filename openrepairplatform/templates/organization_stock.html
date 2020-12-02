@@ -7,17 +7,19 @@
 {% block menu_content %}
   <section class="container">
 
-    <div id="inventory"></div>
+     <!-- modals -->
+     <div class="modal fade" tabindex="-1" role="dialog" id="modal">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content"></div>
+      </div>
+    </div>
 
-
-    
     <h2 class="text-center mt-4">Stock de {{ organization }}</h2>
     {% if is_active %}   
-    <button class="btn btn-success btn-absolute" data-toggle="modal" data-target="#modalStuff">
+    <button class="btn btn-success btn-absolute bs-modal" data-form-url="{% url 'inventory:create_organization_stuff' organization.slug %}">
       <i class="fa fa-plus"></i><i class="fas fa-box-open"></i>
       <span class="btn-label d-none pl-1">Ajouter un objet</span>
     </button>
-    {% include "inventory/modal_stuff.html" with owner_organization=organization add_stuff=add_organization_stuff %}
     {% endif %}
   </section>
   {% if filter %}
@@ -55,6 +57,16 @@
   );
   });
 </script>
+<script type="text/javascript">
+  $(function () {
+   $.fn.modal.Constructor.prototype._enforceFocus = function() {};
+   $(".bs-modal").each(function () {
+     $(this).modalForm({
+         formURL: $(this).data('form-url')
+     });
+   });
+ });
+ </script>
 
   <script>
     $(document).ready(function(){

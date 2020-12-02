@@ -15,6 +15,7 @@ from django.views.generic import (
     UpdateView,
     DetailView,
     RedirectView,
+    FormView,
 )
 from django.contrib import messages
 from openrepairplatform.mixins import HasActivePermissionMixin, RedirectQueryParamView
@@ -67,7 +68,6 @@ class OrganizationStockView(
         context["stuff_count"] = self.get_queryset().count()
         context["stock_tab"] = 'active'
         context["organization_menu"] = 'active'
-        context["add_organization_stuff"] = StuffForm
         return context
 
 
@@ -98,7 +98,6 @@ class FolderCreateView(BSModalCreateView):
 
 class StuffUpdateView(BSModalUpdateView):
     model = Stuff
-    template_name = 'inventory/stuff_edit_form.html'
     form_class = StuffEditForm
     success_message = "L'appareil a bien été modifié"
 
@@ -108,116 +107,39 @@ class StuffUpdateView(BSModalUpdateView):
     def get_success_url(self):
         return self.object.get_absolute_url()
 
-class StuffUserFormView(RedirectView):
+class StuffFormMixin(BSModalCreateView):
     model = Stuff
     form_class = StuffForm
-    http_methods = ["post"]
+    template_name = 'inventory/stuff_form.html'
     success_message = "L'appareil a bien été ajouté à l'inventaire"
 
-    def get(self, request, *args, **kwargs):
-        self.object = kwargs["user_pk"]
-        return super().get(request, *args, **kwargs)
-
     def form_valid(self, form):
         messages.success(self.request, self.success_message)
         return super().form_valid(form)
 
-    def get_redirect_url(self, *args, **kwargs):
-        rq = self.request.POST
-        user = CustomUser.objects.get(pk=self.object)
-        if rq.get('create_device'):
-            device = Device.objects.create(
-                brand = Brand.objects.get(pk=rq.get('brand')),
-                model = rq.get('model'),
-                category = Category.objects.get(pk=rq.get('category')),
-            )
-        else:
-            device = Device.objects.get(pk=rq.get('device'))
-        stuff = Stuff.objects.create(
-            member_owner = user,
-            device = device,
-            state = rq['state'],
-            information = rq['information'],
+    #def post(self, request, *args, **kwargs):
+    ### import pdb; pdb.set_trace()
+
+class StuffUserFormView(StuffFormMixin, BSModalCreateView):
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = CustomUser.objects.get(pk=self.kwargs["user_pk"])
+        return kwargs
+
+class StuffOrganizationFormView(StuffFormMixin, CreateView):
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["organization"] = Organization.objects.get(slug=self.kwargs["orga_slug"])
+        return kwargs
+
+    def get_success_url(self, *args, **kwargs):
+        return reverse(
+            "organization_stock",
+            kwargs={"orga_slug": self.kwargs["orga_slug"]},
         )
-        if rq.get('create_folder'):
-            if rq.get('ongoing'):
-                ongoing_val = False
-            else:
-                ongoing_val = True
-            folder = RepairFolder.objects.create(
-                open_date = rq['repair_date'],
-                stuff = stuff,
-                ongoing = ongoing_val
-            )
-            intervention = Intervention.objects.create(      
-                repair_date = rq['repair_date'],
-                folder = folder,
-                observation = Observation.objects.filter(pk=rq.get('observation')).first(),
-                reasoning = Reasoning.objects.filter(pk=rq.get('reasoning')).first(),
-                action = Action.objects.filter(pk=rq.get('action')).first(),
-                status = Status.objects.filter(pk=rq.get('status')).first(),
-            )
-        return reverse("inventory:stuff_view", args=[stuff.pk])
-
-class StuffUserCreateView(RedirectQueryParamView, StuffUserFormView, CreateView):
-    success_message = "l'appareil a bien été créé"
-
-
-class StuffOrganizationFormView(HasActivePermissionMixin, RedirectView):
-    model = Stuff
-    form_class = StuffForm
-    http_methods = ["post"]
-    success_message = "L'appareil a bien été ajouté à votre stock"
-
-    def get(self, request, *args, **kwargs):
-        self.object = self.organization
-        return super().get(request, *args, **kwargs)
-
-    def form_valid(self, form):
-        messages.success(self.request, self.success_message)
-        return super().form_valid(form)
-
-    def get_redirect_url(self, *args, **kwargs):
-        rq = self.request.POST
-        if rq.get('create_device'):
-            device = Device.objects.create(
-                brand = Brand.objects.get(pk=rq.get('brand')),
-                model = rq.get('model'),
-                category = Category.objects.get(pk=rq.get('category')),
-            )
-        else:
-            device = Device.objects.get(pk=rq.get('device'))
-        stuff = Stuff.objects.create(
-            organization_owner = self.object,
-            device = device,
-            place = Place.objects.filter(pk=rq.get('place')).first(),
-            state = rq['state'],
-            information = rq['information'],
-        )
-        if rq.get('create_folder'):
-            if rq.get('ongoing'):
-                ongoing_val = False
-            else:
-                ongoing_val = True
-            folder = RepairFolder.objects.create(
-                open_date = rq['repair_date'],
-                stuff = stuff,
-                ongoing = ongoing_val
-            )
-            intervention = Intervention.objects.create(        
-                folder = folder,
-                repair_date = rq['repair_date'],
-                observation = Observation.objects.filter(pk=rq.get('observation')).first(),
-                reasoning = Reasoning.objects.filter(pk=rq.get('reasoning')).first(),
-                action = Action.objects.filter(pk=rq.get('action')).first(),
-                status = Status.objects.filter(pk=rq.get('status')).first(),
-            )
-        return reverse("organization_stock", args=[self.object.slug])
-
-class StuffOrganizationCreateView(RedirectQueryParamView, StuffOrganizationFormView, CreateView):
-    success_message = "l'appareil a bien été créé"
-
-
+        
 #### views for autocompletion 
 
 

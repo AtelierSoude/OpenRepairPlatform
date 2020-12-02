@@ -51,12 +51,12 @@ urlpatterns = [
     ),
       path(
         "create_stuff/<int:user_pk>/",
-        views.StuffUserCreateView.as_view(),
+        views.StuffUserFormView.as_view(),
         name="create_user_stuff"
     ),
     path(
         "create_stuff/<str:orga_slug>/",
-        views.StuffOrganizationCreateView.as_view(),
+        views.StuffOrganizationFormView.as_view(),
         name="create_organization_stuff"
     ),
     path(

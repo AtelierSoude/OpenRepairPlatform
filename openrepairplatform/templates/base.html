@@ -37,6 +37,7 @@
   <!-- Bootstrap -->
  <!-- <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}"> -->
 <script src="{% static 'bootstrap/js/jquery.min.js' %}"></script>
+<script src="{% static 'js/jquery.bootstrap.modal.forms.js' %}"></script> 
   <!-- Custom -->
   {% assets "css_custom_bootstrap" %}
   <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet"/>
@@ -44,11 +45,6 @@
   {% assets "css_openrepairplatform" %}
     <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet"/>
   {% endassets %}
-  {% block extra_css %}{% endblock %}
-
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>    <script src="{% static 'js/jquery.bootstrap.modal.forms.js' %}"></script> 
-    <!-- You can alternatively load the minified version -->
-    
 </head>
 
 <body class="bg-grey">

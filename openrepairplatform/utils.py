@@ -7,7 +7,7 @@ from django.http import HttpRequest
 from django.urls import resolve, Resolver404, ResolverMatch
 from django.utils import timezone
 
-MAX_SIZE_MB = 1
+MAX_SIZE_MB = 2
 
 
 def validate_image(image):

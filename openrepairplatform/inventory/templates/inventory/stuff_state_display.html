@@ -6,6 +6,8 @@
 <span class="badge badge-pill badge-primary">Evaporé</span>
 {% elif stuff_state == "En réparation" %}
 <span class="badge badge-pill badge-secondary">En réparation</span>
+{% elif stuff_state == "Partiel" %}
+<span class="badge badge-pill badge-secondary">Incomplet / fonctionnement partiel</span>
 {% else %}
 <span class="badge badge-pill badge-success">Fonctionnel</span>
 {% endif %}

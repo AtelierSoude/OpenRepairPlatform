@@ -1,6 +1,7 @@
 from datetime import timedelta, date as dt
 from django.forms import ModelForm
 from django import forms
+from openrepairplatform.utils import validate_image
 from openrepairplatform.user.models import CustomUser
 from openrepairplatform.location.models import Place
 from .models import Stuff, Device, Category, Observation, RepairFolder, Intervention, Brand, Reasoning, Action, Status
@@ -72,6 +73,10 @@ class StuffForm(BSModalModelForm):
         help_text="Si vous n'êtes pas sûr, ne remplissez pas ce champ",
         required=False
     )
+    picture = forms.ImageField(
+        required=False,
+        label="Photo"
+    )
     create_folder = forms.BooleanField(
         label = "Je souhaite ajouter un dossier de réparation",
         required = False
@@ -82,7 +87,7 @@ class StuffForm(BSModalModelForm):
         required = False, 
     )
     ongoing = forms.BooleanField(
-        label = "Ce dossier est-il en cours ?",
+        label = "Dossier en cours",
         required = False, 
         initial= True,
     )
@@ -119,6 +124,7 @@ class StuffForm(BSModalModelForm):
             device["category"] = self.cleaned_data['category']
             device["brand"] = self.cleaned_data['brand']
             device["model"] = self.cleaned_data['model']
+            device["picture"] = self.cleaned_data['picture']
             if not device["category"]:
               self.add_error("category", "Ce champ ne peut pas être vide")
             device = Device.objects.create(**device)
@@ -138,9 +144,8 @@ class StuffForm(BSModalModelForm):
         for key, value in self.folder.items():
             if not value:
                 self.add_error(key, f'le champ {key} ne peut pas être vide.')
-        for key, value in self.intervention.items():
-            if not value:
-                self.add_error(key, f'le champ {key} ne peut pas être vide.')
+        if not self.intervention['observation']:
+            self.add_error(f'Veuillez rentrer au moins une observation.')
         self.create_folder = data['create_folder']
 
     def clean(self):
@@ -148,12 +153,13 @@ class StuffForm(BSModalModelForm):
             self.cleaned_data["member_owner"] = self.user
         if getattr(self, "organization", False):
             self.cleaned_data["organization_owner"] = self.organization
-        if self.cleaned_data['create_folder']: 
+        if self.cleaned_data["create_folder"]:
             self.init_folder(self.cleaned_data)
 
     def save(self, commit=True):
             instance = super().save(commit=commit)
-            if self.create_folder:
+            if self.cleaned_data["create_folder"]:
+                import pdb; pdb.set_trace()
                 self.folder['stuff'] = instance
                 folder = RepairFolder.objects.create(**self.folder)
                 self.intervention['folder'] = folder
@@ -183,6 +189,7 @@ class StuffForm(BSModalModelForm):
             "create_device",
             "brand",
             "model",
+            "picture",
             "state",
             "organization_owner",
             "member_owner",
@@ -193,6 +200,7 @@ class StuffForm(BSModalModelForm):
             "action",
             "reasoning",
             "status",
+            "place",
             "repair_date",
         )
 

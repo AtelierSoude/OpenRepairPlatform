@@ -131,6 +131,9 @@ STATIC_URL = "/static/"
 MEDIA_URL = "/media/"
 MEDIA_ROOT = join(BASE_DIR, "media")
 
+FILE_UPLOAD_HANDLERS = [
+    'django.core.files.uploadhandler.TemporaryFileUploadHandler',
+]
 
 # Email Settings
 EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"

@@ -36,12 +36,14 @@ class Stuff(models.Model):
     DISASSEMBLED = "D"
     FIXING = "F"
     THROWN = "T"
+    PARTIAL = "P"
     STATES = [
         (BROKEN, "En panne"),
         (WORKING, "Fonctionnel"),
         (DISASSEMBLED, "Désassemblé"),
-        (FIXING, "Réparé"),
+        (FIXING, "En réparation"),
         (THROWN, "Evaporé"),
+        (PARTIAL, "Partiel"),
     ]
     device = models.ForeignKey(
         "inventory.device",

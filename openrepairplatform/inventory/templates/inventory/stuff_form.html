@@ -68,9 +68,7 @@ $(document).ready(function(){
         </div>
         </div>
     <div id="stuffcreate" style="display:none">
-        {% if owner_organization %}
-            {% bootstrap_field form.place %}
-        {% endif %}
+        {% bootstrap_field form.place %}
         {% bootstrap_field form.state %}
         {% bootstrap_field form.information %}
         {% bootstrap_field form.create_folder %}

@@ -320,14 +320,14 @@
     {{ users|json_script:"emails-data" }}
   {% endif %}
   <script>
-      const longitude = {{ event.location.longitude|unlocalize }};
-      const latitude = {{ event.location.latitude|unlocalize }};
+      const longitude = {{event.location.longitude|unlocalize}};
+      const latitude = {{event.location.latitude|unlocalize}};
   </script>
 
 <script>
     $(document).ready(function(){
-      $("#event_title").sticky({topSpacing:0});
-      $(".booking_form").sticky({topSpacing:45});
+      $("#event_title").sticky({topSpacing:65});
+      $(".booking_form").sticky({topSpacing:105});
     });
   </script>
 

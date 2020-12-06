@@ -27,11 +27,19 @@
           {% endif %}
         </div>
         <div class="col-md-8 p-4">
-            <h4 class="pt-2 pb-2 header_detail_page_title">{{ stuff }}
-              <a class="btn btn-success btn-sm rounded-circle bs-modal" id="update-stuff" data-form-url="{% url 'inventory:update_stuff' stuff.pk %}">
-                  <i class="fa fa-pencil-alt"></i>
+            <h4 class="pt-2 pb-2">{{ stuff }}
+              <a class="btn btn-success rounded-circle btn-sm bs-modal" data-form-url="{% url 'inventory:update_stuff' stuff.pk %}">
+                <i class="fa fa-pencil-alt"></i>
               </a>
             </h4>
+              {{ stuff.information | safe }}
+              <span>
+              {% if stuff.is_visible %}
+                Visibilité publique
+              {% else %}
+                Non visible du public
+              {% endif %}
+            </span>
             <div class="card col-md-12 mb-2 p-3">
               <span>
                 <b class="pr-2">Categorie</b> 
@@ -44,13 +52,20 @@
             <div class="card col-md-12 mb-2 p-3">
               <span>
                 <b class="pr-2">Propriétaire</b> 
-                <a href="{{ stuff.owner.get_absolute_url }}">
                   {% if stuff.owner.picture %}
                     {% thumbnail stuff.owner.picture "30x30" crop="left" format="PNG" as im %}
                       <img class="img-fluid rounded-circle square-2" src="{{ im.url }}" alt="organization img">
                     {% endthumbnail %}
                   {% endif %}
-                  {{stuff.owner}}
+                  {% if stuff.owner %}
+                  <a href="{{ stuff.owner.get_absolute_url }}">
+                    {{stuff.owner}}
+                  </a>
+                  {% else %}
+                    Utilisateur non connu sur ce site
+                  {% endif %}
+                <a class="btn btn-default rounded-circle btn-sm bs-modal float-right" data-form-url="{% url 'inventory:update_owner_stuff' stuff.pk %}">
+                  <i class="fa fa-pencil-alt"></i>
                 </a>
               </span>
             </div>
@@ -64,12 +79,18 @@
               {% else %}
                 Chez l'utilisateur
               {% endif %}
+              <a class="btn btn-default rounded-circle btn-sm bs-modal float-right" data-form-url="{% url 'inventory:update_place_stuff' stuff.pk %}">
+                <i class="fa fa-pencil-alt"></i>
+              </a>
             </span>
             </div>
             <div class="card col-md-12 mb-2 p-3">
               <span>
                 <b class="pr-2">Etat</b> 
                 {% include "inventory/stuff_state_display.html" with stuff_state=stuff.get_state_display %}
+                <a class="btn btn-default rounded-circle btn-sm bs-modal float-right" data-form-url="{% url 'inventory:update_state_stuff' stuff.pk %}">
+                  <i class="fa fa-pencil-alt"></i>
+                </a>
               </span>
             </div>
           </div>
@@ -78,63 +99,20 @@
       <div class="col-md-4 p-4">
         <h4 class="">Historique</h4>
         <div class="card p-4 mt-2 overflowded">
-          <p>
-            {% for h in stuff.history.all %}
-            <span>
-            <a href="{{h.history_user.get_absolute_url}}">{{h.history_user}}</a>
-              {% if h.history_type == '+' %}
-                à créé l'appareil comme étant
-                  {% include "inventory/stuff_state_display.html" with stuff_state=h.get_state_display %}
-                , localisé 
-                  {% if h.place %}
-                  à {{h.place}}
-                  {% else %}
-                  chez l'utilisateur
-                  {% endif %}
-                , appartenant à 
-                {% if h.ower %}
-                  {{ h.owner }}
-                {% else %}
-                  personne
-                {% endif %}
-                , le {{ h.history_date }}
-              {% elif h.history_type == '~' %}
-                a modifié l'appareil comme 
-                {% if h.get_state_display != h.prev_record.get_state_display %}
-                  {% include "inventory/stuff_state_display.html" with stuff_state=h.get_state_display %}
-                {% endif %}
-                {% if h.place != h.prev_record.place %}
-                  étant déplacé 
-                  {% if h.place %}
-                  à {{h.place}}
-                  {% else %}
-                  chez l'utilisateur 
-                  {% endif %}
-                {% endif %}
-                {% if h.member_owner == None and h.organization_owner == None %}
-                appartenant à personne,
-                {% else %}
-                  {% if h.member_owner != h.prev_record.member_owner and h.member_owner != None %}
-                    appartenant à {{ h.member_owner }},
-                  {% endif %}
-                  {% if h.organization_owner != h.prev_record.organization_owner and h.organization_owner != None %}
-                    appartenant à {{ h.organization_owner }},
-                  {% endif %}
-                {% endif %}
-                le {{ h.history_date }}
-              {% endif %}
-              <br>
-            </span>
-            {% endfor %}
-          </p>
+          {% include "inventory/stuff_history.html" %}
         </div>
       </div>
       <div class="col-md-8 p-4">
-        <h4 class="">Dossiers de réparation</h4> 
-        <a class="btn btn-success btn-sm rounded-circle bs-modal" data-form-url="{% url 'inventory:create_folder' stuff.pk %}">
-          <i class="fa fa-plus-alt"></i>
-      </a>
+        <h4 class="">Dossiers de réparation  
+          <a class="btn btn-success btn-sm rounded-circle bs-modal" data-form-url="{% url 'inventory:create_folder' stuff.pk %}">
+            <i class="fa fa-plus"></i>
+          </a>
+        </h4> 
+        {% for folder in stuff.folders.all %}
           {% include "inventory/repair_folder.html" %}
+        {% empty %}
+          Pas de dossiers pour l'instant. 
+        {% endfor %}
       </div>
     </section>
   </div>
@@ -155,8 +133,7 @@
 
 <script>
   $(document).ready(function(){
-    $("#side_nav").sticky({topSpacing:40});
-    $("#breadcrumb").sticky({topSpacing:0});
+    $("#breadcrumb").sticky({topSpacing:65});
   });
 </script>
 {% endblock %}

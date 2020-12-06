@@ -90,10 +90,11 @@ class UserCreateAndBookView(CreateView):
                 )
                 return redirect(
                     reverse(
-                        'event:detail',
+                        'event:book_confirm',
                         kwargs={
                             "pk": request.GET["event"],
-                            "slug": event.slug
+                            "slug": event.slug,
+                            "user_pk": self.object.pk,
                         })
                 )
             return redirect(self.get_success_url())

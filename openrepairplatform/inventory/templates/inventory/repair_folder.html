@@ -1,6 +1,5 @@
-{% for folder in stuff.folders.all %}
     <div class="card mb-2">
-        <div class="card-header" data-toggle="collapse" href="#collapse{{folder.pk}}" role="button" aria-expanded="false" aria-controls="{{folder.pk}}">
+        <div class="card-header">
             ouvert le {{ folder.open_date }} 
             <span class="float-right">
             {% if folder.ongoing == True %}
@@ -11,6 +10,12 @@
             </span><br>
             <small><a href="{{folder.stuff.get_absolute_url}}">{{ folder.stuff }}</a></small><br>
             <small>Etat innitial : <b>{{folder.interventions.first.observation}}</b> / dernier état : <b>{{folder.interventions.last.status}}</b></small>
+            <button class="btn btn-sm bs-modal text-success float-right" data-form-url="{% url 'inventory:create_intervention' folder.pk %}">
+                <i class="fa fa-plus"></i> Ajouter une intervention 
+            </button>
+            <div class="text-left" data-toggle="collapse" href="#collapse{{folder.pk}}" role="button" aria-expanded="false" aria-controls="{{folder.pk}}">
+                <small><i class="fas fa-arrow-down"></i> Voir les interventions</small>
+            </div>
         </div>
         <div class="card-body p-0 table-responsive collapse" id="collapse{{folder.pk}}">
             <table class="table">
@@ -61,6 +66,4 @@
             </table>
         </div>
     </div>
-{% empty %}
- Pas de dossiers pour l'instant. 
-{% endfor %}
+

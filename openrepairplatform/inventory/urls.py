@@ -49,10 +49,20 @@ urlpatterns = [
         views.StuffDetailView.as_view(),
         name="stuff_view"
     ),
-      path(
+    path(
+        "user_stuff_list/<int:user_pk>/",
+        views.StuffUserListView,
+        name="user_stuff_list"
+    ),
+    path(
         "create_stuff/<int:user_pk>/",
         views.StuffUserFormView.as_view(),
         name="create_user_stuff"
+    ),
+    path(
+        "create_stuff/<int:event_pk>/<int:user_pk>/",
+        views.StuffUserEventFormView.as_view(),
+        name="create_user_event_stuff"
     ),
     path(
         "create_stuff/<str:orga_slug>/",
@@ -65,8 +75,28 @@ urlpatterns = [
         name="update_stuff"
     ),
     path(
+        "update_owner_stuff/<int:pk>/",
+        views.StuffUpdateOwnerView.as_view(),
+        name="update_owner_stuff"
+    ),
+    path(
+        "update_place_stuff/<int:pk>/",
+        views.StuffUpdatePlaceView.as_view(),
+        name="update_place_stuff"
+    ),
+    path(
+        "update_state_stuff/<int:pk>/",
+        views.StuffUpdateStateView.as_view(),
+        name="update_state_stuff"
+    ),
+    path(
         "create_folder/<int:pk>/",
         views.FolderCreateView.as_view(),
         name="create_folder"
+    ),
+    path(
+        "create_intervention/<int:pk>/",
+        views.InterventionCreateView.as_view(),
+        name="create_intervention"
     ),
 ]

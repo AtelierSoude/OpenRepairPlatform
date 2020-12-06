@@ -73,9 +73,9 @@
           <small>Évenements</small>
         </a>
         </li>
-        <li class="nav-item {{activity_menu}}" >
+        <li class="nav-item text-center {{activity_menu}}" >
         <a href="{% url "event:activity_list" %}">
-          <i class="fas fa- fa-2x"></i><br>
+          <i class="fas fa-fist-raised fa-2x"></i><br>
           <small>Activités</small>
         </a>
         </li>
@@ -87,137 +87,17 @@
         </li>
         <li class="nav-item text-center {{stock_menu}}" >
           <a>
-            <i class="fas fa-box-open fa-2x"></i><br>
-            <small>Stock</small>
+            <i class="fas fa-box-open fa-2x text-muted"></i><br>
+            <small class="text-muted">Stock</small>
           </a>
           </li>
-        <li class="nav-item text-center {{repair_menu}}">
+        <li class="nav-item text-center text-muted {{repair_menu}}">
           <a>
-            <i class="fas fa-tools fa-2x"></i><br>
-            <small>Réparations</small>
+            <i class="fas fa-tools fa-2x text-muted"></i><br>
+            <small class="text-muted">Réparations</small>
           </a>
           </li>
     </ul>
   </div>
 </nav>
-<!--
-<header class="header d-block d-sm-none " style=" height:100%; width:75px; position: fixed;"  id="navbarTogglerDemo03">
-  <nav class="navbar navbar-expand-lg p-0" id="header" style=" height:100%; width:75px;">
-    <ul class="navbar-nav flex-column" style="width:75px;">
-      <li class="nav-item text-center {% if 'event' in request.path %}active{% endif %}">
-      <a href="{% url "event:list" %}">
-        <i class="far fa-calendar-alt fa-2x"></i><br>
-        <small>Évenements</small>
-      </a>
-      </li>
-      <li class="nav-item  {% if 'activity' in request.path %}active{% endif %}">
-      <a href="{% url "event:activity_list" %}">
-        <i class="fas fa- fa-2x"></i><br>
-        <small>Activités</small>
-      </a>
-      </li>
-      <li class="nav-item text-center  {% if 'organizations' in request.path %}active{% endif %}">
-      <a href="{% url "user:organization_list" %}">
-        <i class="fas fa-network-wired fa-2x"></i><br>
-        <small>Organisations</small>
-      </a>
-      </li>
-      <li class="nav-item text-center">
-        <a href="{% url "user:organization_list" %}">
-          <i class="fas fa-box-open fa-2x"></i><br>
-          <small>Stock</small>
-        </a>
-        </li>
-      <li class="nav-item text-center">
-        <a href="{% url "user:organization_list" %}">
-          <i class="fas fa-tools fa-2x"></i><br>
-          <small>Réparations</small>
-        </a>
-        </li>
-    </ul>
-  </nav>
-</header>
-<header class="header" style="width:100%; position:fixed">
-  <nav class="navbar navbar-expand-lg p-0" id="header">
-    <a href="{% url "homepage" %}" class="float-left d-block d-sm-none" style="width:60px;"> 
-      <img src="{% static 'img/logo-reparons-beta.png' %}" class="brand-logo p-1 w-100">
-    </a>
-    <button class="navbar-toggler float-left" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon">
-        <i class="fa fa-bars" style="font-size: 30px;" id="toggler"></i>
-      </span>
-    </button>
-    <a href="{% url "homepage" %}">
-      <img src="{% static 'img/reparons-logo.png' %}" class="brand-logo d-none d-sm-block">
-    </a>
-    <div class="collapse navbar-collapse bg-primary" id="navbarTogglerDemo03">
-      <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-        <li class="nav-item">
-        <a href="{% url "event:list" %}">Évenements</a>
-        </li>
-        <li class="nav-item">
-        <a href="{% url "event:activity_list" %}">Activités</a>
-        </li>
-        <li class="nav-item">
-        <a href="{% url "user:organization_list" %}">Organisations</a>
-        </li>
-      </ul>
-    </div>
-    <div class="navbar navbar-expand-lg d-flex justify-content-end float-right">
-      {% if not user.is_authenticated %}
-
-        <div class="navbar-brand p-0">
-          <small>
-              <a class="nav-link p-2 btn btn-success" href="{% url "login" %}">
-                  Se connecter <i class="fa fa-user text-primary"></i>
-              </a>
-          </small>
-        </div>
-
-      {% else %}
-
-      <div class="navbar-brand avatar float-right">
-        <a class="nav-link" href="{{ user.get_absolute_url }}"> 
-          {% if user.avatar_img %}
-            {% thumbnail user.avatar_img "35x35" crop="center" format="PNG" as im %}
-              <img src="{{ im.url }}" class="rounded-circle"/>
-            {% endthumbnail %}
-          {% else %}
-            {% if user.first_name %}
-              {% get_initial_avatar user 35 'circle' %}
-            {% endif %}
-          {% endif %}
-         <small>{{ user.first_name }}</small> 
-        </a>
-      </div>
-
-      <div class="navbar-brand arrow-login">
-        <a class="nav-link mr-2 dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <i class=""></i>
-        </a>
-        <div class="dropdown-menu " aria-labelledby="navbarDropdownMenuLink">
-          <a class="dropdown-item" href="{{ user.get_absolute_url }}"> voir profil </a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="{{ user.get_absolute_url }}"> mes rendez-vous</a>
-          {% if user.admin_organizations.all %}
-          <div class="dropdown-divider"></div>
-          {% for organization in user.admin_organizations.all %}
-            <a class="dropdown-item" href="{% url "organization_page" organization.slug %}">
-              Gérer {{ organization.name }}
-            </a>
-          {% endfor %}
-          {% endif %}
-
-          <div class="dropdown-divider"></div>
-          <a class="nav-link dropdown-item" href="{% url 'logout' %}" title="Logout">
-            Déconnexion
-          </a>
-        </div>
-      </div>
-      {% endif %}
-    </div>
-  </nav>
-</header>
-
--->
 {% endblock %}

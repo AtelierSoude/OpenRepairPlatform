@@ -21,6 +21,7 @@ header{
 }
 #event_map {
   z-index: 0;
+  overflow: hidden;
 }
 h1, h2, h3, h4, h5 {
   color : #083342;
@@ -372,6 +373,9 @@ position: relative;
   color:#ff2241; 
 }
 
+.tox-tinymce{
+  max-height: 250px;
+}
 
 /* sizes */
 

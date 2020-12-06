@@ -29,13 +29,13 @@
 {% endblock menu_content %}
 
 {% block extra_js %}
-  <script>
-    $(document).ready(function(){
-      $("#h_nav").sticky({topSpacing:40});
-      $("#side_nav").sticky({topSpacing:80});
-      $("#breadcrumb").sticky({topSpacing:0});
-    });
-  </script>
+<script>
+  $(document).ready(function(){
+    $("#h_nav").sticky({topSpacing:105});
+    $("#breadcrumb").sticky({topSpacing:65});
+  });
+</script>
+
   <script src="{% static 'js/lib/jquery.waypoints.js' %}"></script>
   <script src="{% static 'js/lib/infinite.min.js' %}"></script>
   <script>

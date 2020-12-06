@@ -9,6 +9,15 @@
 {% endblock %}
 
 {% block content %}
+
+
+<!-- modals -->
+<div class="modal fade" tabindex="-1" role="dialog" id="modal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content"></div>
+  </div>
+</div>
+
 <div class="container-fluid">
 
   {% if request.user.pk == object.pk and not object.first_name or not object.last_name or not object.street_address %}
@@ -38,7 +47,7 @@
       </div> 
       <h2 class="header_detail_page_title">{{ object }}</h2>
       {% if object.pk == request.user.pk %}
-      <a class="btn btn-success btn rounded-circle" href="{% url "user:user_update" object.pk %}">
+      <a class="btn ml-2 btn-success btn rounded-circle" href="{% url "user:user_update" object.pk %}">
           <i class="fa fa-pencil-alt"></i>
       </a>
       {% endif %}   
@@ -390,12 +399,12 @@
               </div>
           {% endfor %}
         </div>
-<!--
     <div class="tab-pane fade" id="v-pills-stock" role="tabpanel" aria-labelledby="v-pills-stock-tab">
-      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalStuff" aria-pressed="false" autocomplete="off">
+      {% if object.organizations.all in user.admin_organizations.all or user.volunteer_organizations.all or user.active_organizations.all %}
+      <button type="button" class="btn btn-primary bs-modal" data-form-url="{% url 'inventory:create_user_stuff' user.pk %}">
         Ajouter un objet à l'inventaire
       </button>
-      {% include "inventory/modal_stuff.html" with owner_member=object form=add_member_stuff%} -->
+      {% endif %}
       <h4 class="mt-4"> {{ stock.all.count}} Objets inventoriés </h4>
       <div class="card p-2 pt-4">
           <div class="table-responsive">
@@ -443,10 +452,20 @@
 
 
 {% block extra_js %}
+<script type="text/javascript">
+  $(function () {
+   $.fn.modal.Constructor.prototype._enforceFocus = function() {};
+   $(".bs-modal").each(function () {
+     $(this).modalForm({
+         formURL: $(this).data('form-url')
+     });
+   });
+ });
+ </script>
 <script>
   $(document).ready(function(){
-    $("#v-pills-tab").sticky({topSpacing:40});
-    $("#breadcrumb").sticky({topSpacing:0});
+    $("#v-pills-tab").sticky({topSpacing:105});
+    $("#breadcrumb").sticky({topSpacing:65});
   });
 </script>
 {% endblock %}

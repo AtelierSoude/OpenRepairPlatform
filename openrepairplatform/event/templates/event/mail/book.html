@@ -240,7 +240,7 @@
 <p style="line-height: 1.5; word-break: break-word; text-align: left; font-family: 'Bitter', Georgia, Times, 'Times New Roman', serif; font-size: 14px; mso-line-height-alt: 21px; margin: 0;"><span style="font-size: 14px;"><strong>type : {{event.activity.category}} - {{event.activity.name}} </strong></span></p>
 <p style="line-height: 1.5; word-break: break-word; text-align: left; font-family: 'Bitter', Georgia, Times, 'Times New Roman', serif; font-size: 14px; mso-line-height-alt: 21px; margin: 0;"><span style="font-size: 14px;"><strong>Lieux : {{ event.location.name }} ({{ event.location.address }})</strong></span></p>
 <p style="line-height: 1.5; word-break: break-word; text-align: left; font-family: 'Bitter', Georgia, Times, 'Times New Roman', serif; font-size: 14px; mso-line-height-alt: 21px; margin: 0;"><span style="font-size: 14px;">{% if event.collaborator %} Partenaire : {{ event.colaborator }} {% endif %}</span></p>
-<p style="line-height: 1.5; word-break: break-word; text-align: left; font-family: 'Bitter', Georgia, Times, 'Times New Roman', serif; font-size: 14px; mso-line-height-alt: 21px; margin: 0;"><span style="font-size: 14px;">{% if event.description %} {{ event.description }} {% endif %}</span></p>
+<p style="line-height: 1.5; word-break: break-word; text-align: left; font-family: 'Bitter', Georgia, Times, 'Times New Roman', serif; font-size: 14px; mso-line-height-alt: 21px; margin: 0;"><span style="font-size: 14px;">{% if event.description %} {{ event.description | safe | truncatewords_html:40 }} {% endif %}</span></p>
 </div>
 </div>
 <!--[if mso]></td></tr></table><![endif]-->

@@ -3,6 +3,7 @@ from datetime import timedelta
 from dal import autocomplete
 
 from django.contrib import messages
+from django.shortcuts import get_object_or_404, redirect
 from django.db.models import Count
 from django.core import signing
 from django.core.mail import send_mail
@@ -18,6 +19,8 @@ from django.views.generic import (
     DeleteView,
     RedirectView,
     FormView,
+    TemplateView,
+    View
 )
 
 from openrepairplatform import utils
@@ -31,6 +34,7 @@ from openrepairplatform.event.forms import (
 from openrepairplatform.event.models import Activity, Condition, Event, Participation
 from openrepairplatform.location.models import Place
 from openrepairplatform.inventory.forms import StuffForm
+from openrepairplatform.inventory.models import Stuff
 from openrepairplatform.user.models import CustomUser
 from openrepairplatform.event.templatetags.app_filters import tokenize
 from openrepairplatform.mixins import (
@@ -431,7 +435,11 @@ class BookView(RedirectView):
 
         next_url = self.request.GET.get("redirect")
         if not utils.is_valid_path(next_url):
-            next_url = reverse("event:detail", args=[event.id, event.slug])
+            if user: 
+                user_pk = user.pk 
+            else:
+                user_pk = id_current_user
+            next_url = reverse("event:book_confirm", args=[event.id, event.slug, user_pk])
 
         if event.remaining_seats <= 0 and not is_authorized:
             messages.error(
@@ -480,6 +488,35 @@ class BookView(RedirectView):
 
         return next_url
 
+class EventBookStuffView(TemplateView):
+    template_name = "event/book_confirm_add_stuff.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["event"] = Event.objects.get(pk=kwargs["pk"])
+        context["registered_user"] = CustomUser.objects.get(pk=kwargs["user_pk"])
+        return context
+
+class EventAddStuffView(View):
+    model = Event
+    http_method_names = ["post"]
+
+    def post(self, request, *args, **kwargs):
+        stuff_pk = self.request.POST.get("selectedstuff")
+        stuff = Stuff.objects.get(pk=stuff_pk)
+        event = Event.objects.get(pk=kwargs["pk"])
+        event.stuffs.add(stuff)
+        event.save()
+        return redirect(self.get_success_url())
+        return super().post(request, *args, **kwargs)
+
+    def get_success_url(self):
+        event =  Event.objects.get(pk=self.kwargs["pk"])
+        messages.success(
+            self.request,
+            f"L'appareil a bien été ajouté à votre réservation !",
+        )
+        return reverse("event:detail", args=[event.id, event.slug])
 
 class CloseEventView(HasActivePermissionMixin, RedirectView):
     http_method_names = ["post"]

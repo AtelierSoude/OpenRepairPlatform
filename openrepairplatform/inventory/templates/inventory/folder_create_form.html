@@ -1,24 +1,46 @@
 {% load bootstrap4 assets static app_filters %}
-
 <form method="post" action="">
   {% csrf_token %}
   <div class="modal-header">
-    <h3 class="modal-title">Modifier</h3>
+    <h3 class="modal-title">Ajouter un dossier de réparation</h3>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
   <div class="modal-body">
-    <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
-      {% for error in form.non_field_errors %}
-        {{ error }}
-      {% endfor %}
+    <small class="text-danger"> IMPORTANT : vous devez renseigner au moins une observation</small>
+    {% bootstrap_field form.open_date %}
+    {% bootstrap_field form.ongoing %}
+    <div class="bordered p-2 m-2">
+        <div class="row">
+            {% bootstrap_field form.observation form_group_class="col-md-6" %}
+            {% bootstrap_field form.reasoning form_group_class="col-md-6" %}
+        </div>
+        <div class="row">
+            {% bootstrap_field form.action form_group_class="col-md-6" %}
+            {% bootstrap_field form.status form_group_class="col-md-6" %}
+        </div>
     </div>
-    {% bootstrap_form form %}
-    {{form.media}}
+      {% bootstrap_field form.change_stuff_state %}
+    <div id="changestate" style="display: none;">
+        {% bootstrap_field form.stuff_state %} 
+    </div>
+    <div class="form-group p-2">
+    <button type="submit" id="submit" class="btn btn-success w-100 p-3">Créer</button>
+    </div>
   </div>
-  <div class="modal-footer">
-    <button type="button" class="submit-btn btn btn-primary">Update</button>
-  </div>
-
+{{ form.media }}
 </form>
+<script>
+$(document).ready(function(){
+    $.fn.modal.Constructor.prototype._enforceFocus = function() {};
+      $("#id_change_stuff_state").change(function () {
+      if($(this).is(":checked")) {
+          $('#changestate').show();
+      }
+      else {
+          $('#changestate').hide();
+      }
+      })
+  });
+</script>

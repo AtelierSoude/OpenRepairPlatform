@@ -1,0 +1,14 @@
+{% for stuff in stuffs.all %}
+                <tr>
+                  <td scope="row"><a href="{{stuff.get_absolute_url}}"> {{ stuff }}</a></td>
+                  <td>
+                    {% include "inventory/stuff_state_display.html" with stuff_state=stuff.get_state_display %}
+                  </td>
+                </tr>
+              {% empty %}
+              <tr>
+                <td colspan="3">
+                Cet utilisateur n'a pas d'objet dans son inventaire
+                </td>
+              </tr>
+{% endfor %}

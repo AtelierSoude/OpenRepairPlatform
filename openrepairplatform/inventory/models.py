@@ -55,14 +55,14 @@ class Stuff(models.Model):
     )
     member_owner = models.ForeignKey(
         "user.CustomUser",
-        related_name="member_owner",
+        related_name="user_stuffs",
         null=True,
         blank=True,
         on_delete=models.CASCADE
     )
     organization_owner = models.ForeignKey(
         "user.Organization",
-        related_name="organization_owner",
+        related_name="organization_stuffs",
         null=True,
         blank=True,
         on_delete=models.CASCADE
@@ -76,7 +76,6 @@ class Stuff(models.Model):
     )
     place = models.ForeignKey(
         "location.Place",
-        related_name="place",
         null=True,
         blank=True,
         verbose_name=_("Localisation"),
@@ -97,6 +96,11 @@ class Stuff(models.Model):
         blank=True,
         verbose_name=_("Information optionnelles sur cet appareil"),
         help_text="D'où vient-il, a t'il des caractéristiques spéciales... bref, tout ce qui peut le décrire",
+    )
+    is_visible = models.BooleanField(
+        _("Appareil visible"),
+        default=False,
+        help_text=_("Cet appareil est-il visible du public ? (par exemple, s'il est mis en vente)"),
     )
     history = HistoricalRecords()
 

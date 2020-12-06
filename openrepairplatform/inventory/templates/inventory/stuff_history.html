@@ -1,0 +1,47 @@
+{% for h in stuff.history.all %}
+    <span>
+    <a href="{{h.history_user.get_absolute_url}}">{{h.history_user}}</a>
+        {% if h.history_type == '+' %}
+        à créé l'appareil comme étant
+            {% include "inventory/stuff_state_display.html" with stuff_state=h.get_state_display %}
+        , localisé 
+            {% if h.place %}
+            à {{h.place}}
+            {% else %}
+            chez l'utilisateur
+            {% endif %}
+        , appartenant à 
+        {% if h.ower %}
+            {{ h.owner }}
+        {% else %}
+            personne
+        {% endif %}
+        , le {{ h.history_date }}
+        {% elif h.history_type == '~' %}
+        a modifié l'appareil comme 
+        {% if h.get_state_display != h.prev_record.get_state_display %}
+            {% include "inventory/stuff_state_display.html" with stuff_state=h.get_state_display %}
+        {% endif %}
+        {% if h.place != h.prev_record.place %}
+            étant déplacé 
+            {% if h.place %}
+            à {{h.place}}
+            {% else %}
+            chez l'utilisateur 
+            {% endif %}
+        {% endif %}
+        {% if h.member_owner == None and h.organization_owner == None %}
+        appartenant à personne,
+        {% else %}
+            {% if h.member_owner != h.prev_record.member_owner and h.member_owner != None %}
+            appartenant à {{ h.member_owner }},
+            {% endif %}
+            {% if h.organization_owner != h.prev_record.organization_owner and h.organization_owner != None %}
+            appartenant à {{ h.organization_owner }},
+            {% endif %}
+        {% endif %}
+        le {{ h.history_date }}
+        {% endif %}
+        <br>
+    </span>
+{% endfor %}

@@ -1,0 +1,22 @@
+{% load bootstrap4 assets static %}
+<div class="modal-header">
+    <h3 class="modal-title">Modifier la localisation </h3>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <form method="post" action="" enctype="multipart/form-data">
+        {% bootstrap_form_errors form %}
+        {% csrf_token %}
+        <div class="form-group p-2">
+            <small>
+                Renseignez uniquement une localisation si le propriétaire est une organisation ou si l'utilisateur 
+                à déposé l'appareil dans un lieu (afin de reprendre la réparation ulterieurement par exemple )
+            </small>
+            {% bootstrap_field form.place %}
+        <button type="submit" id="submit" class="btn btn-success w-100 p-3">Valider</button>
+        </div>
+        {{ form.media }}
+    </form>
+</div>

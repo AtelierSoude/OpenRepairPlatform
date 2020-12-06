@@ -49,7 +49,7 @@
             </div>
             <small>Pensez à vous <a href="{% url "login" %}" title="se connecter">connecter ou créer/activer votre compte</a></small>
             <form action="{% url 'user:create_and_book' %}?event={{ event.pk }}" method="post">
-                {% csrf_token %}
+                {% csrf_token %} 
                 {% bootstrap_form form=register_form %}
             <div class="modal-footer">
               <input type="submit" value="Réserver" class="btn btn-primary"/>

@@ -163,6 +163,9 @@ js_groups_organization = Bundle(
 js_create_stuff = Bundle(
     "js/inventory/create_stuff.js",
 )
+js_edit_owner_stuff = Bundle(
+    "js/inventory/edit_owner_stuff.js",
+)
 js_waypoints = Bundle(
     "js/lib/jquery.waypoints.js",
     filters="jsmin",
@@ -194,5 +197,6 @@ register("js_create_edit_event", js_create_edit_event)
 register("js_recurrent_event", js_recurrent_event)
 register("js_groups_organization", js_groups_organization)
 register("js_create_stuff", js_create_stuff)
+register("js_edit_owner_stuff", js_edit_owner_stuff)
 register("js_waypoints", js_waypoints)
 register("js_infinite", js_infinite)

@@ -1,24 +1,28 @@
-{% load bootstrap4 assets static app_filters %}
-
-<form method="post" action="">
+{% load bootstrap4 assets static %}
+<h5 class="modal-title">Editer l'appareil</h5>
+<form method="post" action="" enctype="multipart/form-data">
+  {% bootstrap_form_errors form %}
   {% csrf_token %}
-  <div class="modal-header">
-    <h3 class="modal-title">Modifier</h3>
-    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
-      {% for error in form.non_field_errors %}
-        {{ error }}
-      {% endfor %}
-    </div>
-    {% bootstrap_form form %}
-    {{form.media}}
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="submit-btn btn btn-primary">Update</button>
-  </div>
-
+    {% if form.is_visible %}
+      {% bootstrap_field form.is_visible %}
+    {% endif %}
+    {% bootstrap_field form.device form_group_class="device-search-form" %}
+    {% bootstrap_field form.create_device %}
+      <div class="row bordered p-2 m-2" id="adddevice" style="display: none;">
+        {% bootstrap_field form.category form_group_class="col-md-12 "%}
+        <small><i>Vous allez créer un type d'appareil appartenant à la catégorie sélectionnée</i></small>
+        {% bootstrap_field form.brand form_group_class="col-md-6" %}
+        {% bootstrap_field form.model form_group_class="col-md-6" %}
+        <small>Vous pouvez rajouter une image</small>
+        {% bootstrap_field form.picture %}
+      </div>
+        {% bootstrap_field form.information %}
+<div class="form-group p-2">
+<button type="submit" id="submit" class="btn btn-success w-100 p-3">Valider</button>
+</div>
+{{ form.media }}
 </form>
+
+{% assets "js_create_stuff" %}
+<script src="{{ ASSET_URL }}"></script>
+{% endassets %}

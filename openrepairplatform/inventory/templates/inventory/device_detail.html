@@ -4,14 +4,8 @@
 
 {% block content %}
 <div class="container">
-    <h2>{{device}}</h2>
-    {{device.category}}
-    {% for tree in device.category.get_tree %}
-    {{ tree }} > 
-  {% endfor %}
-    Réparations relatives à cet appareil ... 
-    {% for stuff in device.stuffs.all %}
-    {% include "inventory/repair_folder.html" %}
-    {% endfor %}
+  Page dédiée aux contenus d'une device
+  <h2>{{device}}</h2>
+    {{device.category}} 
 </div>
 {% endblock %}

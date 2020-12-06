@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% load assets app_filters thumbnail initialavatar %}
+{% block title %}Page de {{device}} {% endblock %}
+
+{% block content %}
+<div class="container">
+  Page dédiée aux contenus d'une device
+  <h2>{{device}}</h2>
+    {{device.category}} 
+</div>
+{% endblock %}

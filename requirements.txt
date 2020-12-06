@@ -23,7 +23,7 @@ django-import-export==1.2.0
 django-initial-avatars==0.9.1
 django-simple-history==2.7.0
 django-tinymce==3.1.0
-django==2.2.13
+django==2.2.4
 djangorestframework==3.9.2
 entrypoints==0.3          # via flake8
 factory-boy==2.11.1
@@ -60,10 +60,10 @@ six==1.12.0               # via bleach, diff-cover, faker, html5lib, pytest, pyt
 sorl-thumbnail==12.5.0
 sqlparse==0.3.0           # via django
 text-unidecode==1.2       # via faker
-tinycss2==1.0.2           # via cairosvg, cssselect2, weasyprint
+tinycss2        # via cairosvg, cssselect2, weasyprint
 weasyprint==47
 webassets==0.12.1         # via django-assets
-webencodings==0.5.1       # via bleach, html5lib, tinycss2
+webencodings      # via bleach, html5lib, tinycss2
 django-gravatar2
 django-autocomplete-light
 django-recaptcha
@@ -73,3 +73,5 @@ django-filter
 tablib
 python-dotenv
 django-extensions
+django-treebeard
+django-bootstrap-modal-forms

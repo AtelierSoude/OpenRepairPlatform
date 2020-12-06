@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load assets app_filters thumbnail initialavatar %}
+{% load assets app_filters thumbnail initialavatar bootstrap4 %}
 {% block title %}Profil de {{object}} sur Reparons{% endblock %}
 
 {% block extra_css %}
@@ -9,6 +9,15 @@
 {% endblock %}
 
 {% block content %}
+
+
+<!-- modals -->
+<div class="modal fade" tabindex="-1" role="dialog" id="modal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content"></div>
+  </div>
+</div>
+
 <div class="container-fluid">
 
   {% if request.user.pk == object.pk and not object.first_name or not object.last_name or not object.street_address %}
@@ -22,7 +31,6 @@
   {% include "breadcrumb.html" with current=object first_parent_url=user_list_url first_parent_text="Communauté" %}
 
   <div class="jumbotron jumbotron-fluid no-padding-jumbotron" id="jumbotron">
-
     <div class="container text-center d-flex justify-content-center align-items-center flex-md-column">
       <div class="header_detail_page_picture">
         <div class="mt-2 header_detail_page_picture rounded">
@@ -39,7 +47,7 @@
       </div> 
       <h2 class="header_detail_page_title">{{ object }}</h2>
       {% if object.pk == request.user.pk %}
-      <a class="btn btn-success btn rounded-circle" href="{% url "user:user_update" object.pk %}">
+      <a class="btn ml-2 btn-success btn rounded-circle" href="{% url "user:user_update" object.pk %}">
           <i class="fa fa-pencil-alt"></i>
       </a>
       {% endif %}   
@@ -54,6 +62,10 @@
         <a class="nav-link" id="v-pills-membership-tab" data-toggle="pill" href="#v-pills-membership" role="tab" aria-controls="v-pills-membership" aria-selected="false">Adhésions
           <span class="badge badge-light">
             {{object.memberships.all.count}}</span>
+        </a>
+        <a class="nav-link" id="v-pills-stock-tab" data-toggle="pill" href="#v-pills-stock" role="tab" aria-controls="v-pills-stock" aria-selected="false">Inventaire
+          <span class="badge badge-light">
+            {{stock.all.count}}</span>
         </a>
       </nav>
     </div>
@@ -275,14 +287,57 @@
                   </table>
                 </div>
               {% endif %}
+
+      <div class="card p-2">
+          <h4 class="mt-4 text-center"> {{ object.passed_rendezvous.all.count}} Passés</h4>
+          <div class="table-responsive">
+              <table class="table">
+                  <tbody class="">
+                  {% for event, status in passed_rendezvous reversed %}
+                  {% ifchanged %}
+                  <tr>
+                    <td colspan="4" class="bg-light">
+                      <b>{{ event.date|date:"F" }} {{event.date|date:"Y" }}</b>
+                    </td>
+                  </tr>
+                {% endifchanged %}
+                <tr class="{% if event.date <= today %}bg-light text-muted{% else %}bg-white{% endif %}">
+                  <td>
+                    <div class="row border-secondary border text-center">
+                      <span class="col-12 bg-secondary">
+                        {{ event.date|date:"N"|upper }}
+                      </span>
+                      <span class="col-12">
+                        {{ event.date|date:"d" }}
+                      </span>
+                    </div>
+                  </td>
+                  <td>
+                    <a href="{% url 'event:detail' event.pk event.activity.slug %}">
+                      <b>{{ event.activity }}</b>
+                    </a>
+                  </td>
+                  <td>
+                    <small>{{ event.location }}</small>
+                  </td>
+                  <td>
+                    {% if status == "organizer" %}
+                        <span class="badge badge-pill badge-success">Orga</span>
+                      {% elif status == "absent" %}
+                        <span class="badge badge-pill badge-secondary">Absent</span>
+                      {% elif status == "present" %}
+                        <span class="badge badge-pill badge-info">A participé</span>
+                    {% endif %}
+                  </td>
+                </tr>
+                {% empty %}
+                Pas d'évènements 
+                {% endfor %}
+                </table>
+              </div>
+            {% endif %}
+        </div>
           </div>
-        {% else %}
-          <div class="card p-4 mb-4">
-            <div class="bg-light p-2 m-2 text-warning">
-              Cet utilisateur n'a pas de réservation
-            </div>
-          </div>
-        {% endif %}
       </div>
         <div class="tab-pane fade" id="v-pills-membership" role="tabpanel" aria-labelledby="v-pills-membership-tab">
           <h4 class="mt-4">Etat des adhésions</h4>
@@ -344,19 +399,73 @@
               </div>
           {% endfor %}
         </div>
+    <div class="tab-pane fade" id="v-pills-stock" role="tabpanel" aria-labelledby="v-pills-stock-tab">
+      {% if object.organizations.all in user.admin_organizations.all or user.volunteer_organizations.all or user.active_organizations.all %}
+      <button type="button" class="btn btn-primary bs-modal" data-form-url="{% url 'inventory:create_user_stuff' user.pk %}">
+        Ajouter un objet à l'inventaire
+      </button>
+      {% endif %}
+      <h4 class="mt-4"> {{ stock.all.count}} Objets inventoriés </h4>
+      <div class="card p-2 pt-4">
+          <div class="table-responsive">
+            <table class="table table-striped table-hover">
+              <thead>
+                <tr>
+                  <th>Objet</th>
+                  <th>Localisation</th>
+                  <th>Etat</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for stuff in stock %}
+                  <tr>
+                    <td scope="row"><a href="{{stuff.get_absolute_url}}"> {{ stuff }}</a></td>
+                    <td>
+                      {% if stuff.place %}
+                        <a href="{% url 'location:detail' stuff.place.id stuff.place.slug %}">
+                            {{ stuff.place.name }}
+                        </a>
+                      {% else %}
+                        Chez l'utilisateur 
+                      {% endif %}
+                    </td>
+                    <td>
+                      {% include "inventory/stuff_state_display.html" with stuff_state=stuff.get_state_display %}
+                    </td>
+                  </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="3">
+                  Cet utilisateur n'a pas d'objet dans son inventaire
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>  
     </section>
-    </div>
   </div>
 </div>
 {% endblock %}
 
 
 {% block extra_js %}
+<script type="text/javascript">
+  $(function () {
+   $.fn.modal.Constructor.prototype._enforceFocus = function() {};
+   $(".bs-modal").each(function () {
+     $(this).modalForm({
+         formURL: $(this).data('form-url')
+     });
+   });
+ });
+ </script>
 <script>
   $(document).ready(function(){
-    $("#v-pills-tab").sticky({topSpacing:40});
-    $("#breadcrumb").sticky({topSpacing:0});
+    $("#v-pills-tab").sticky({topSpacing:105});
+    $("#breadcrumb").sticky({topSpacing:65});
   });
 </script>
 {% endblock %}

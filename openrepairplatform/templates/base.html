@@ -33,10 +33,16 @@
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.10.2/css/all.css">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.10.2/css/v4-shims.css">
 
-
+  <!-- for leaflet -->
+  <link rel="stylesheet" 
+  href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
+  integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+  crossorigin=""/>
+  
   <!-- Bootstrap -->
  <!-- <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}"> -->
 <script src="{% static 'bootstrap/js/jquery.min.js' %}"></script>
+<script src="{% static 'js/jquery.bootstrap.modal.forms.js' %}"></script> 
   <!-- Custom -->
   {% assets "css_custom_bootstrap" %}
   <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet"/>
@@ -44,12 +50,11 @@
   {% assets "css_openrepairplatform" %}
     <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet"/>
   {% endassets %}
-  {% block extra_css %}{% endblock %}
 </head>
 
 <body class="bg-grey">
 {% include "menu.html" %}
-<div style="padding-left: 75px; padding-top: 75px;">
+<div class="main-container">
 <div class="container-fluid">
   {% for message in messages %}
     <div class="alert alert-{{ message.level_tag }} alert-dismissible fade show mb-0" role="alert">
@@ -62,7 +67,8 @@
 </div>
 
 <main class="content-page">
-  {% block content %}{% endblock %}
+  {% block content %}
+  {% endblock %}
 </main>
 </div>
 
@@ -100,11 +106,6 @@ src="{% static 'django_tables2_column_shifter/js/django_tables2_column_shifter.m
 
 <script src="{{ ASSET_URL }}"></script>
 {% endassets %}
-
-<script type="application/javascript" src="{% static 'js/vue/app.js' %}"></script>
-
 {% endblock %}
-
 </body>
-
 </html>

@@ -12,7 +12,7 @@ from openrepairplatform.fields import CleanHTMLField
 from openrepairplatform.location.models import Place
 from openrepairplatform.user.models import CustomUser, Organization, Fee
 from openrepairplatform.utils import get_future_published_events, validate_image
-
+from openrepairplatform.inventory.models import Stuff
 
 class Condition(models.Model):
     name = models.CharField(verbose_name=_("Condition Type"), max_length=100)
@@ -168,6 +168,7 @@ class Event(models.Model):
     location = models.ForeignKey(
         Place, on_delete=models.SET_NULL, null=True, related_name="events"
     )
+    stuffs = models.ManyToManyField(Stuff, related_name="events")
     is_free = models.BooleanField(default=False, verbose_name=_("No booking limit ?"))
     booking = models.BooleanField(default=True, verbose_name=_("This event demands internal booking ?"))
     created_at = models.DateTimeField(auto_now_add=True)

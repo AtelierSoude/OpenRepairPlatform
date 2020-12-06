@@ -4,20 +4,21 @@ from django.contrib import admin
 from django.conf.urls.static import static
 
 from . import views
+from openrepairplatform.inventory.views import OrganizationStockView
+
 
 urlpatterns = [
     # View test vuejs
-    path(
-        "test_inventory_vue",
-        views.TestInventoryVueView.as_view(),
-        name="test_vue_inventory",
-    ),
     path("", views.HomeView.as_view(), name="homepage"),
     path("user/", include("openrepairplatform.user.urls", namespace="user")),
     path("avatar/", include("initial_avatars.urls")),
     path("admin/", admin.site.urls),
     path("accounts/", include("django.contrib.auth.urls")),
     path("event/", include("openrepairplatform.event.urls", namespace="event")),
+    path(
+        "inventory/",
+        include("openrepairplatform.inventory.urls", namespace="inventory")
+    ),
     path(
         "location/",
         include("openrepairplatform.location.urls", namespace="location"),
@@ -29,6 +30,10 @@ urlpatterns = [
     path(
         "api/user/",
         include("openrepairplatform.user.api_urls", namespace="api_user"),
+    ),
+    path(
+        "api/inventory/",
+        include("openrepairplatform.inventory.api_urls", namespace="api_inventory"),
     ),
     path(
         "place_autocomplete/",
@@ -79,6 +84,11 @@ urlpatterns = [
         "<str:orga_slug>/events/",
         views.OrganizationEventsView.as_view(),
         name="organization_events",
+    ),
+    path(
+        "<str:orga_slug>/stock/",
+        OrganizationStockView.as_view(),
+        name="organization_stock"
     ),
     path(
         "<str:orga_slug>/accounting/",

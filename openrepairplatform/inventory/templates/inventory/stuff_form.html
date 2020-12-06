@@ -1,0 +1,61 @@
+{% load bootstrap4 assets static %}
+<div class="modal-header">
+    Vous allez créer un appareil 
+</div>
+<form method="post" action="" enctype="multipart/form-data">
+  {% bootstrap_form_errors form %}
+  {% csrf_token %}
+    {% bootstrap_field form.category %}
+    <div id="devicesearch" style="display:none">
+        {% bootstrap_field form.device form_group_class="device-search-form" %}
+        {% bootstrap_field form.create_device %}
+    </div>
+    <div id="adddevice" style="display:none">
+        <div class="row bordered p-2 m-2">
+            <small><i>Vous allez créer un type d'appareil appartenant à la catégorie précédemment sélectionnée</i></small>
+            {% bootstrap_field form.brand form_group_class="col-md-6" %}
+            {% bootstrap_field form.model form_group_class="col-md-6" %}
+            <small>Vous pouvez ajouter une photo si vous le souhaitez</small>
+            {% bootstrap_field form.picture %}
+        </div>
+    </div>
+    <div id="stuffcreate" style="display:none">
+
+        {% if form.place %}
+            {% bootstrap_field form.place %}
+        {% endif %}
+        {% if form.is_visible %}
+            {% bootstrap_field form.is_visible %}
+        {% endif %}
+        {% bootstrap_field form.state %}
+        {% bootstrap_field form.information %}
+        {% bootstrap_field form.create_folder %}
+        <div id="addfolder" style="display:none" class="bordered p-2 m-2">
+            <small>Merci de renseigner au moins une observation</small>
+            {% bootstrap_field form.repair_date %}
+            {% bootstrap_field form.ongoing %}
+            <div class="row">
+            {% bootstrap_field form.observation form_group_class="col-md-6" %}
+            {% if form.reasoning %}
+                {% bootstrap_field form.reasoning form_group_class="col-md-6" %}
+            {% endif %}
+            </div>
+            <div class="row">
+            {% if form.action %}
+                {% bootstrap_field form.action form_group_class="col-md-6" %}
+            {% endif %}
+            {% if form.status %}
+                {% bootstrap_field form.status form_group_class="col-md-6" %}
+            {% endif %}
+            </div>
+        </div>
+    </div>
+<div class="form-group p-2">
+<button type="submit" id="submit" style="display:none" class="btn submit-btn btn-success w-100 p-3">Valider</button>
+</div>
+{{ form.media }}
+</form>
+
+{% assets "js_create_stuff" %}
+<script src="{{ ASSET_URL }}"></script>
+{% endassets %}

@@ -1,0 +1,69 @@
+    <div class="card mb-2">
+        <div class="card-header">
+            ouvert le {{ folder.open_date }} 
+            <span class="float-right">
+            {% if folder.ongoing == True %}
+            <span class="badge badge-pill badge-secondary">En cours</span>
+            {% else %}
+            <span class="badge badge-pill badge-success">Terminé</span>
+            {% endif %}
+            </span><br>
+            <small><a href="{{folder.stuff.get_absolute_url}}">{{ folder.stuff }}</a></small><br>
+            <small>Etat innitial : <b>{{folder.interventions.first.observation}}</b> / dernier état : <b>{{folder.interventions.last.status}}</b></small>
+            <button class="btn btn-sm bs-modal text-success float-right" data-form-url="{% url 'inventory:create_intervention' folder.pk %}">
+                <i class="fa fa-plus"></i> Ajouter une intervention 
+            </button>
+            <div class="text-left" data-toggle="collapse" href="#collapse{{folder.pk}}" role="button" aria-expanded="false" aria-controls="{{folder.pk}}">
+                <small><i class="fas fa-arrow-down"></i> Voir les interventions</small>
+            </div>
+        </div>
+        <div class="card-body p-0 table-responsive collapse" id="collapse{{folder.pk}}">
+            <table class="table">
+            <thead>
+                <tr>
+                <th scope="col">Date</th>
+                <th scope="col">Observation</th>
+                <th scope="col">Raisonement</th>
+                <th scope="col">Action</th>
+                <th scope="col">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for intervention in folder.interventions.all %}
+                <tr>
+                <td>
+                    {% if intervention.event %}
+                    <small>
+                        <a href="{{intervention.event.get_absolute_url}}">{{ intervention.event }}</a>
+                    </small>
+                    {% else %}
+                    {{ intervention.repair_date|date:"d M, Y" }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if intervention.observation %}
+                    {{ intervention.observation }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if intervention.reasoning %}
+                    {{ intervention.reasoning }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if intervention.action %}
+                    {{ intervention.action }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if intervention.status %}
+                    {{ intervention.status }}
+                    {% endif %}
+                </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+            </table>
+        </div>
+    </div>
+

@@ -1,5 +1,6 @@
 from datetime import timedelta, date as dt
 from dateutil import rrule, relativedelta
+from dal import autocomplete
 
 from django import forms
 from django.forms import ModelForm

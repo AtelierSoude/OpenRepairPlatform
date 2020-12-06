@@ -11,7 +11,7 @@
     <div class="col-lg">
       <div class="mb-4 text-center">
         <button class="btn btn-success btn-absolute" data-toggle="modal" data-target="#more-info-{{ anonymous_user.pk }}">
-          <i class="fa fa-plus"></i>
+          <i class="fa fa-plus"></i><i class="fas fa-user"></i>
           <span class="btn-label d-none pl-1">Ajouter un membre</span>
         </button>
         {% include "user/organization/modal_more_info.html" with object=organization form=add_member_form %}
@@ -54,13 +54,11 @@
 {% assets "js_groups_organization" %}
 <script src="{{ ASSET_URL }}"></script>
 {% endassets %}
-
-  <script>
-    $(document).ready(function(){
-      $.fn.modal.Constructor.prototype.enforceFocus = function () {};
-      $("#h_nav").sticky({topSpacing:40});
-      $("#side_nav").sticky({topSpacing:80});
-      $("#breadcrumb").sticky({topSpacing:0});
-    });
-  </script>
+<script>
+  $(document).ready(function(){
+    $.fn.modal.Constructor.prototype.enforceFocus = function () {};
+    $("#h_nav").sticky({topSpacing:105});
+    $("#breadcrumb").sticky({topSpacing:65});
+  });
+</script>
 {% endblock extra_js %}

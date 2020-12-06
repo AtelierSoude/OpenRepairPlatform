@@ -31,6 +31,8 @@ from openrepairplatform.mixins import (
     RedirectQueryParamView
 )
 from openrepairplatform.user.models import CustomUser, Organization, Membership, Fee
+from openrepairplatform.inventory.models import Stuff
+from openrepairplatform.inventory.forms import StuffForm
 
 from .forms import (
     UserUpdateForm,
@@ -88,10 +90,11 @@ class UserCreateAndBookView(CreateView):
                 )
                 return redirect(
                     reverse(
-                        'event:detail',
+                        'event:book_confirm',
                         kwargs={
                             "pk": request.GET["event"],
-                            "slug": event.slug
+                            "slug": event.slug,
+                            "user_pk": self.object.pk,
                         })
                 )
             return redirect(self.get_success_url())
@@ -362,6 +365,8 @@ class UserDetailView(DetailView):
             key=lambda evt: evt[0].date, reverse=True
         )
         context["future_rendezvous"].sort(key=lambda evt: evt[0].date)
+        context["stock"] = Stuff.objects.filter(member_owner=self.get_object())
+        context["add_member_stuff"] = StuffForm
         return context
 
 
@@ -399,6 +404,10 @@ class OrganizationListView(ListView):
     model = Organization
     template_name = "user/organization/organization_list.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["organization_menu"] = 'active'
+        return context
 
 @method_decorator(staff_member_required, name="dispatch")
 class OrganizationCreateView(CreateView):
@@ -412,6 +421,10 @@ class OrganizationCreateView(CreateView):
         messages.success(self.request, "L'organisation a bien été créée")
         return res
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["organization_menu"] = 'active'
+        return context
 
 class OrganizationUpdateView(HasAdminPermissionMixin, UpdateView):
     template_name = "user/organization/organization_form.html"
@@ -424,7 +437,11 @@ class OrganizationUpdateView(HasAdminPermissionMixin, UpdateView):
             self.request, "L'organisation a bien été mise à jour."
         )
         return res
-
+        
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["organization_menu"] = 'active'
+        return context
 
 class OrganizationDeleteView(HasAdminPermissionMixin, DeleteView):
     template_name = "user/organization/confirmation_delete.html"

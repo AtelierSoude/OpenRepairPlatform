@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+{% load assets app_filters thumbnail initialavatar static %}
+{% block title %}Page de {{stuff}} {% endblock %}
+
+{% block content %}
+<script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>
+
+<div class="container-fluid">
+  {% include "breadcrumb.html" with current=stuff first_parent_url="" first_parent_text="Appareils" %}
+  <div class="container">
+
+    <!-- modals -->
+    <div class="modal fade" tabindex="-1" role="dialog" id="modal">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content"></div>
+      </div>
+    </div>
+
+    <section class="h-100 row">
+        <div class="col-md-4 p-4 d-flex flex-wrap align-items-center bg-light">
+          {% if stuff.device.picture %}
+            <img class="img-responsive w-100" src="{{ stuff.device.picture.url }}" alt="image_device">
+          {% else %}
+            <div class="w-100">
+              <h3 class="text-center text-muted">Pas d'apercu</h3>
+            </div>
+          {% endif %}
+        </div>
+        <div class="col-md-8 p-4">
+            <h4 class="pt-2 pb-2">{{ stuff }}
+              <a class="btn btn-success rounded-circle btn-sm bs-modal" data-form-url="{% url 'inventory:update_stuff' stuff.pk %}">
+                <i class="fa fa-pencil-alt"></i>
+              </a>
+            </h4>
+              {{ stuff.information | safe }}
+              <span>
+              {% if stuff.is_visible %}
+                Visibilité publique
+              {% else %}
+                Non visible du public
+              {% endif %}
+            </span>
+            <div class="card col-md-12 mb-2 p-3">
+              <span>
+                <b class="pr-2">Categorie</b> 
+                {% for parent in stuff.device.category.get_ancestors %}
+                  {{ parent }} > 
+                {% endfor %}
+                <a href="{{ stuff.device.get_absolute_url }}">{{ stuff.device }}</a>
+              </span>
+            </div>
+            <div class="card col-md-12 mb-2 p-3">
+              <span>
+                <b class="pr-2">Propriétaire</b> 
+                  {% if stuff.owner.picture %}
+                    {% thumbnail stuff.owner.picture "30x30" crop="left" format="PNG" as im %}
+                      <img class="img-fluid rounded-circle square-2" src="{{ im.url }}" alt="organization img">
+                    {% endthumbnail %}
+                  {% endif %}
+                  {% if stuff.owner %}
+                  <a href="{{ stuff.owner.get_absolute_url }}">
+                    {{stuff.owner}}
+                  </a>
+                  {% else %}
+                    Utilisateur non connu sur ce site
+                  {% endif %}
+                <a class="btn btn-default rounded-circle btn-sm bs-modal float-right" data-form-url="{% url 'inventory:update_owner_stuff' stuff.pk %}">
+                  <i class="fa fa-pencil-alt"></i>
+                </a>
+              </span>
+            </div>
+            <div class="card col-md-12 mb-2 p-3">
+              <span>
+              <b class="pr-2">Localisation</b> 
+              {% if stuff.place %}
+                <a href="{{stuff.place.get_absolute_url}}">
+                    {{stuff.place}}
+                </a>
+              {% else %}
+                Chez l'utilisateur
+              {% endif %}
+              <a class="btn btn-default rounded-circle btn-sm bs-modal float-right" data-form-url="{% url 'inventory:update_place_stuff' stuff.pk %}">
+                <i class="fa fa-pencil-alt"></i>
+              </a>
+            </span>
+            </div>
+            <div class="card col-md-12 mb-2 p-3">
+              <span>
+                <b class="pr-2">Etat</b> 
+                {% include "inventory/stuff_state_display.html" with stuff_state=stuff.get_state_display %}
+                <a class="btn btn-default rounded-circle btn-sm bs-modal float-right" data-form-url="{% url 'inventory:update_state_stuff' stuff.pk %}">
+                  <i class="fa fa-pencil-alt"></i>
+                </a>
+              </span>
+            </div>
+          </div>
+    </section>
+    <section class="row">
+      <div class="col-md-4 p-4">
+        <h4 class="">Historique</h4>
+        <div class="card p-4 mt-2 overflowded">
+          {% include "inventory/stuff_history.html" %}
+        </div>
+      </div>
+      <div class="col-md-8 p-4">
+        <h4 class="">Dossiers de réparation  
+          <a class="btn btn-success btn-sm rounded-circle bs-modal" data-form-url="{% url 'inventory:create_folder' stuff.pk %}">
+            <i class="fa fa-plus"></i>
+          </a>
+        </h4> 
+        {% for folder in stuff.folders.all %}
+          {% include "inventory/repair_folder.html" %}
+        {% empty %}
+          Pas de dossiers pour l'instant. 
+        {% endfor %}
+      </div>
+    </section>
+  </div>
+</div>  
+{% endblock %}
+
+{% block extra_js %}
+<script type="text/javascript">
+  $(function () {
+   $.fn.modal.Constructor.prototype._enforceFocus = function() {};
+   $(".bs-modal").each(function () {
+     $(this).modalForm({
+         formURL: $(this).data('form-url')
+     });
+   });
+ });
+ </script>
+
+<script>
+  $(document).ready(function(){
+    $("#breadcrumb").sticky({topSpacing:65});
+  });
+</script>
+{% endblock %}
+

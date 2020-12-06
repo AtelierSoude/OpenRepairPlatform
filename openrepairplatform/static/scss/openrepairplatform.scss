@@ -21,6 +21,7 @@ header{
 }
 #event_map {
   z-index: 0;
+  overflow: hidden;
 }
 h1, h2, h3, h4, h5 {
   color : #083342;
@@ -31,10 +32,10 @@ h4 {
 h5{
   line-height: 1 !important;
 }
-.brand-logo{
+.brand-logo img{
   max-width: 220px;
   height: auto;
-  padding-left: 20px;
+  padding-top: 0px;
 }
 
 .bg-grey { 
@@ -159,6 +160,20 @@ td {
 
 /* Menu */
 
+.main-container {
+  padding-top: 65px;
+}
+
+.header {
+  width: 100%;
+  position: fixed;
+  height: 65px;
+}
+
+.navbar-collapse {
+  width: 75px;
+}
+
 .header_detail_page, #h_nav, #breadcrumb, #jumbotron, #search_tab, #event_title, #event_about, .jumbotron {
  /* z-index: 2 !important; */
   position: relative;
@@ -180,8 +195,8 @@ td {
 }
 
 .navbar ul li{
-  margin-top: 10px;
-  margin-bottom: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
   a {
     color : #fee56e !important;
     small{
@@ -190,6 +205,12 @@ td {
   }
 } 
 
+.navbar ul li.active{
+  background-color:#fee56e;
+  a{
+    color: #083342 !important;
+  }
+} 
 .navbar-brand.avatar{
   margin: 0px !important;
 }
@@ -206,6 +227,9 @@ td {
 
 /* buttons */ 
 
+.btn-default {
+  background-color: #eaeaea;
+}
 .btn-absolute {
   font-size: 1.2rem;
   display: flex;
@@ -248,6 +272,7 @@ td {
 }
 .card {
   border: 1px solid #cecece;
+  border-radius: 5px;
   a.card-link {
     text-decoration: none;
     color: inherit;
@@ -255,6 +280,11 @@ td {
   small {
     color:initial;
   }
+}
+
+.card.overflowded{
+  max-height: 300px;
+  overflow-y: auto;
 }
 
 .mini-organizers {
@@ -343,6 +373,9 @@ position: relative;
   color:#ff2241; 
 }
 
+.tox-tinymce{
+  max-height: 250px;
+}
 
 /* sizes */
 
@@ -434,23 +467,37 @@ position: relative;
 
 @media screen and (max-width: 576px) {
   .container{
-    margin: 0px !important;
-    padding: 0px !important;
+  /*  margin: 0px !important;
+    padding: 0px !important; */
   }
 }
 
 // Menu hack for mobile slide left up // 
 
+
+@media (min-width: 992px) {
+
+  .main-container {
+    padding-left: 75px; 
+  }
+
+  .vertical-nav {
+      position: fixed;
+      top: 65px;
+      left: 0;
+      width: 75px;
+      height: 100%;
+      overflow-y: auto;
+      padding-top: 30px;
+  }
+}
+
 @media (max-width: 992px) {
 
   .navbar-collapse {
       position: fixed;
-      top: 50px;
-      left:-600px;
-      padding-left: 15px;
-      padding-right: 15px;
-      padding-bottom: 15px;
-      width: 80%;
+      top: 65px;
+      left:-400px;
       height: 800px;
       transition: all 0.3s ease;
       display: block;
@@ -464,11 +511,6 @@ position: relative;
   .navbar-collapse.show {
       right:20%;
       left:0px;
-  }
-  .navbar-collapse .nav-item {
-    text-transform: uppercase;
-    font-size: 18px;
-    padding: 10px;
   }
 }
 

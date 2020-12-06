@@ -7,7 +7,7 @@ from django.views.generic import (
     TemplateView,
     DetailView,
     ListView,
-    FormView
+    FormView,
 )
 import django_tables2 as tables
 from django_filters.views import FilterView
@@ -36,11 +36,6 @@ from openrepairplatform.event.forms import (
 from django.db.models import Count
 from datetime import datetime
 EVENTS_PER_PAGE = 6
-
-
-class TestInventoryVueView(TemplateView):
-    template_name = "test_inventory_vue.html"
-
 
 class HomeView(TemplateView, FormView):
     form_class = EventSearchForm
@@ -96,6 +91,7 @@ class OrganizationPageView(PermissionOrgaContextMixin, DetailView):
         context["future_event"] = Event.future_published_events().filter(
             organization=self.organization).order_by('date')
         context["page_tab"] = 'active'
+        context["organization_menu"] = 'active'
         return context
 
 class OrganizationEventsView(
@@ -123,6 +119,7 @@ class OrganizationEventsView(
         context = super().get_context_data(**kwargs)
         organization = Organization.objects.get(slug=self.kwargs.get("orga_slug"))
         context["events_tab"] = 'active'
+        context["organization_menu"] = 'active'
         context["organization"] = organization
         context["search_form"] = self.form_class
         filtered_data = EventFilter(self.request.GET, queryset=self.get_queryset().all())
@@ -157,6 +154,7 @@ class OrganizationGroupsView(PermissionOrgaContextMixin, DetailView):
         )
         context["add_member_form"] = MoreInfoCustomUserForm
         context["groups_tab"] = 'active'
+        context["organization_menu"] = 'active'
         context["future_event"] = Event.future_published_events().filter(
             organization=self.organization).order_by('date')
         return context
@@ -185,6 +183,7 @@ class OrganizationMembersView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["members_tab"] = 'active'
+        context["organization_menu"] = 'active'
         context["organization"] = self.organization
         context["search_form"] = CustomUserSearchForm
         context["emails"] = [
@@ -220,6 +219,7 @@ class OrganizationFeesView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["accounting_tab"] = 'active'
+        context["organization_menu"] = 'active'
         context["organization"] = self.organization
         filtered_data = FeeFilter(self.request.GET, queryset=self.get_queryset().all())
         context["total_fees"] = sum(
@@ -241,6 +241,7 @@ class OrganizationControlsView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["controls_tab"] = 'active'
+        context["organization_menu"] = 'active'
         context["future_event"] = Event.future_published_events().filter(
             organization=self.organization).order_by('date')
         return context
@@ -256,6 +257,7 @@ class OrganizationDetailsView(PermissionOrgaContextMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["organization"] = self.object
+        context["organization_menu"] = 'active'
         return context
 
 #### autocomplete ####

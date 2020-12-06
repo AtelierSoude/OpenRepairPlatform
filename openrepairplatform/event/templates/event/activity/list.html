@@ -3,6 +3,15 @@
 
 {% block content %}
   {% include "breadcrumb.html" with current="Activités" %}
+
+  <div class="jumbotron jumbotron-fluid" id="jumbotron">
+    <div class="container text-center">
+      <h2>Activités</h2>
+      <hr>
+      <span>Retrouvez ici les différentes activités proposées sur cette plateforme</span>
+    </div>
+  </div>
+
   <section class="container pt-3">
     <div class="">
       <div class="event_list_cards">
@@ -10,4 +19,10 @@
       </div>
     </div>
   </section>
+  <script>
+    $(document).ready(function(){
+      $("#jumbotron").sticky({topSpacing:105});
+      $("#breadcrumb").sticky({topSpacing:65});
+    });
+  </script>
 {% endblock %}

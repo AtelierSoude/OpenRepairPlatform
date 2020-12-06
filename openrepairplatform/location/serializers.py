@@ -13,10 +13,12 @@ class PlaceSerializer(serializers.ModelSerializer):
             return True
 
     def get_orga_url(self, place):
-        return place.organization.get_absolute_url()
+        if place.organization:
+            return place.organization.get_absolute_url()
 
     def get_orga_name(self, place):
-        return place.organization.name
+        if place.organization:
+            return place.organization.name
 
     class Meta:
         model = Place

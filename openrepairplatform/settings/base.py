@@ -22,9 +22,10 @@ INSTALLED_APPS = [
     'dal',
     'dal_select2',
     'tinymce',
-    "openrepairplatform.event",
     "openrepairplatform.user",
+    "openrepairplatform.event",
     "openrepairplatform.location",
+    "openrepairplatform.inventory",
     "django.contrib.sites",
     "django.contrib.admin",
     "django.contrib.admindocs",
@@ -48,6 +49,8 @@ INSTALLED_APPS = [
     "django_tables2",
     'django_tables2_column_shifter',
     'django_filters',
+    'treebeard',
+    'bootstrap_modal_forms',
 ]
 
 
@@ -128,6 +131,9 @@ STATIC_URL = "/static/"
 MEDIA_URL = "/media/"
 MEDIA_ROOT = join(BASE_DIR, "media")
 
+FILE_UPLOAD_HANDLERS = [
+    'django.core.files.uploadhandler.TemporaryFileUploadHandler',
+]
 
 # Email Settings
 EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"

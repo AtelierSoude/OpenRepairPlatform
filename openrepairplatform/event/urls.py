@@ -82,6 +82,8 @@ urlpatterns = [
     ),
     path("<int:pk>/close/", views.CloseEventView.as_view(), name="close"),
     path("<int:pk>/<slug>/", views.EventView.as_view(), name="detail"),
+    path("<int:pk>/<slug>/book/<int:user_pk>", views.EventBookStuffView.as_view(), name="book_confirm"),
+    path("<int:pk>/add_stuff/<int:user_pk>", views.EventAddStuffView.as_view(), name="add_stuff_event"),
     path(
         "cancel_reservation/<token>/",
         views.CancelReservationView.as_view(),

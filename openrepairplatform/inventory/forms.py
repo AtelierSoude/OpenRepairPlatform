@@ -113,15 +113,17 @@ class FolderForm(BSModalModelForm):
         self.folder = {}
         self.intervention = {}
         self.folder['open_date'] = data['open_date']
-        self.folder['ongoing'] = data['ongoing']
+        if data['ongoing']:
+            self.folder['ongoing'] = True
+        else:
+            self.folder['ongoing'] = False
         self.intervention['repair_date'] = data['open_date']
         self.intervention['observation'] = data['observation']
         self.intervention['reasoning'] = data['reasoning']
         self.intervention['action'] = data['action']
         self.intervention['status'] = data['status']
-        for key, value in self.folder.items():
-            if not value:
-                self.add_error(key, f'le champ {key} ne peut pas être vide.')
+        if not self.self.folder['open_date']:
+            self.add_error(f'La date ne peut pas être vide')
         if not self.intervention['observation']:
             self.add_error(f'Veuillez rentrer au moins une observation.')
     
@@ -139,8 +141,8 @@ class FolderForm(BSModalModelForm):
                 if state:
                     self.stuff.__dict__.update(state=state)
                     self.stuff.save()
-            else: 
-                self.add_error(f"Si vous souhaitez modifier l'état de l'appareil, renseignez un état")
+                else: 
+                    self.add_error(f"Si vous souhaitez modifier l'état de l'appareil, renseignez un état")
             return instance 
 
     def __init__(self, stuff=None, *args, **kwargs):
@@ -151,10 +153,12 @@ class FolderForm(BSModalModelForm):
             initial=dt.today(),
             widget=forms.DateInput(attrs={"type": "date"}, format="%Y-%m-%d"),
             label="date",
+            required=False,
         )
         self.fields['ongoing'] = forms.BooleanField(
             label = "Dossier en cours",
-            initial = True
+            initial = True,
+            required = False,
         )
 
     class Meta:
@@ -361,7 +365,10 @@ class StuffForm(BSModalModelForm, CreateUpdateAjaxMixin):
         self.folder = {}
         self.intervention = {}
         self.folder['open_date'] = data['repair_date']
-        self.folder['ongoing'] = data['ongoing']
+        if data['ongoing']:
+            self.folder['ongoing'] = True
+        else:
+            self.folder['ongoing'] = False
         self.intervention['repair_date'] = data['repair_date']
         if getattr(self, "event", False):
             self.intervention['event'] = self.event
@@ -369,9 +376,8 @@ class StuffForm(BSModalModelForm, CreateUpdateAjaxMixin):
         self.intervention['reasoning'] = data['reasoning']
         self.intervention['action'] = data['action']
         self.intervention['status'] = data['status']
-        for key, value in self.folder.items():
-            if not value:
-                self.add_error(key, f'le champ {key} ne peut pas être vide.')
+        if not self.folder['open_date']:
+            self.add_error(f'La date ne peut pas être vide')
         if not self.intervention['observation']:
             self.add_error(f'Veuillez rentrer au moins une observation.')
         self.create_folder = data['create_folder']

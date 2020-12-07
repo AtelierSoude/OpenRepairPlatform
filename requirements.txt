@@ -65,7 +65,7 @@ weasyprint==47
 webassets==0.12.1         # via django-assets
 webencodings      # via bleach, html5lib, tinycss2
 django-gravatar2
-django-autocomplete-light
+django-autocomplete-light==3.5
 django-recaptcha
 django-tables2
 django-tables2-column-shifter

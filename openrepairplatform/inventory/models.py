@@ -35,6 +35,7 @@ class Stuff(models.Model):
     WORKING = "W"
     DISASSEMBLED = "D"
     FIXING = "F"
+    FIXED = "O"
     THROWN = "T"
     PARTIAL = "P"
     STATES = [
@@ -42,6 +43,7 @@ class Stuff(models.Model):
         (WORKING, "Fonctionnel"),
         (DISASSEMBLED, "Désassemblé"),
         (FIXING, "En réparation"),
+        (FIXED, "Réparé"),
         (THROWN, "Evaporé"),
         (PARTIAL, "Partiel"),
     ]

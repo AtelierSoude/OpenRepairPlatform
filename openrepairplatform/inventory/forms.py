@@ -59,6 +59,7 @@ class FolderForm(BSModalModelForm):
     WORKING = "W"
     DISASSEMBLED = "D"
     FIXING = "F"
+    FIXED = "O"
     THROWN = "T"
     PARTIAL = "P"
     STATES = [
@@ -66,6 +67,7 @@ class FolderForm(BSModalModelForm):
         (WORKING, "Fonctionnel"),
         (DISASSEMBLED, "Désassemblé"),
         (FIXING, "En réparation"),
+        (FIXED, "Réparé"),
         (THROWN, "Evaporé"),
         (PARTIAL, "Partiel"),
     ]
@@ -122,7 +124,7 @@ class FolderForm(BSModalModelForm):
         self.intervention['reasoning'] = data['reasoning']
         self.intervention['action'] = data['action']
         self.intervention['status'] = data['status']
-        if not self.self.folder['open_date']:
+        if not self.folder['open_date']:
             self.add_error(f'La date ne peut pas être vide')
         if not self.intervention['observation']:
             self.add_error(f'Veuillez rentrer au moins une observation.')
@@ -179,6 +181,7 @@ class InterventionForm(BSModalModelForm):
     WORKING = "W"
     DISASSEMBLED = "D"
     FIXING = "F"
+    FIXED = "O"
     THROWN = "T"
     PARTIAL = "P"
     STATES = [
@@ -186,6 +189,7 @@ class InterventionForm(BSModalModelForm):
         (WORKING, "Fonctionnel"),
         (DISASSEMBLED, "Désassemblé"),
         (FIXING, "En réparation"),
+        (FIXED, "Réparé"),
         (THROWN, "Evaporé"),
         (PARTIAL, "Partiel"),
     ]

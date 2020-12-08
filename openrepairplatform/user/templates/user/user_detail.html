@@ -83,7 +83,6 @@
                 <a href="{% url 'organization_page' organization.slug %}">
                     {{ organization.name }}
                 </a>
-              </div>
               {% endfor %}
               {% for organization in object.member_organizations.all %}
               <small class="badge badge-light">
@@ -288,7 +287,7 @@
                 </div>
               {% endif %}
 
-      <div class="card p-2">
+        <div class="card p-2">
           <h4 class="mt-4 text-center"> {{ object.passed_rendezvous.all.count}} Passés</h4>
           <div class="table-responsive">
               <table class="table">
@@ -336,8 +335,8 @@
                 </table>
               </div>
             {% endif %}
-        </div>
           </div>
+        </div>
       </div>
         <div class="tab-pane fade" id="v-pills-membership" role="tabpanel" aria-labelledby="v-pills-membership-tab">
           <h4 class="mt-4">Etat des adhésions</h4>
@@ -445,6 +444,7 @@
           </div>
         </div>
       </div>  
+    </div>
     </section>
   </div>
 </div>

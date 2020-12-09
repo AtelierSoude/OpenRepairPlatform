@@ -2,7 +2,7 @@
 <div class="modal-header">
     Vous allez créer un appareil 
 </div>
-<form method="post" action="" enctype="multipart/form-data">
+<form method="post">
   {% bootstrap_form_errors form %}
   {% csrf_token %}
     {% bootstrap_field form.category %}

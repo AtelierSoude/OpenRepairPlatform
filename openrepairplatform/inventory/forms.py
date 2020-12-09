@@ -287,7 +287,7 @@ class InterventionForm(BSModalModelForm):
             "stuff_state",
         ]
 
-class StuffForm(BSModalModelForm, CreateUpdateAjaxMixin):
+class StuffForm(BSModalModelForm):
     category = forms.ModelChoiceField(
         widget=autocomplete.ModelSelect2(url='inventory:category_autocomplete'),
         label="Catégorie d'appareil",
@@ -362,13 +362,11 @@ class StuffForm(BSModalModelForm, CreateUpdateAjaxMixin):
     )
 
     def clean_device(self):
-        device = self.cleaned_data['device']
-        if not device:
+        if not self.cleaned_data['device']:
             device = {}
             device["category"] = self.cleaned_data['category']
             device["brand"] = self.cleaned_data['brand']
             device["model"] = self.cleaned_data['model']
-            device["picture"] = self.cleaned_data['picture']
             if not device["category"]:
               self.add_error("category", "Ce champ ne peut pas être vide")
             device = Device.objects.create(**device)
@@ -405,16 +403,18 @@ class StuffForm(BSModalModelForm, CreateUpdateAjaxMixin):
             self.init_folder(self.cleaned_data)
 
     def save(self, commit=True):
-            if not self.request.is_ajax() or self.request.POST.get('asyncUpdate') == 'True':
-                instance = super().save(commit=commit)
-            else:
-                instance = super().save(commit=False)
-            if self.cleaned_data["create_folder"]:
-                self.folder['stuff'] = instance
-                folder = RepairFolder.objects.create(**self.folder)
-                self.intervention['folder'] = folder
-                intervention = Intervention.objects.create(**self.intervention)
-            return instance 
+        if not self.request.is_ajax() or self.request.POST.get('asyncUpdate') == 'True':
+            instance = super(StuffForm, self).save(commit=False)
+            instance.device = self.cleaned_data['device']
+            instance.save()
+        else:
+            instance = super(StuffForm, self).save(commit=False)
+        if self.cleaned_data["create_folder"]:
+            self.folder['stuff'] = instance
+            folder = RepairFolder.objects.create(**self.folder)
+            self.intervention['folder'] = folder
+            intervention = Intervention.objects.create(**self.intervention)
+        return instance
 
     def __init__(self, organization=None, user=None, visitor_user=None, event=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -436,7 +436,7 @@ class StuffForm(BSModalModelForm, CreateUpdateAjaxMixin):
                 required = False
             )
         elif visitor_user:
-            self.user = user
+            self.user = visitor_user
             del self.fields['action']
             del self.fields['reasoning']
             del self.fields['status']

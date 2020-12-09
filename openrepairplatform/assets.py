@@ -92,7 +92,7 @@ css_create_edit_event = Bundle(
 css_detail_organization = Bundle(
     scss_detail_organization,
     filters="cssrewrite,cssmin",
-    output="css/deatil_organization.min.css",
+    output="css/detail_organization.min.css",
 )
 
 
@@ -151,9 +151,16 @@ js_recurrent_event = Bundle(
     filters="jsmin",
     output="js/events/recurrent_event.min.js",
 )
+js_detail_organization = Bundle(
+    "js/lib/auto-complete.js",
+    "js/user/create_edit.js",
+    "js/lib/gov_addresses.js",
+    "js/user/autocomplete.js",
+    filters="jsmin",
+    output="js/user/detail_organization.min.js",
+)
 js_groups_organization = Bundle(
     "js/lib/auto-complete.js",
-    "js/user/user_exist_api_autocomplete.js",
     "js/user/create_edit.js",
     "js/lib/gov_addresses.js",
     "js/user/autocomplete.js",
@@ -195,6 +202,7 @@ register("js_detail_place", js_detail_place)
 register("js_detail_event", js_detail_event)
 register("js_create_edit_event", js_create_edit_event)
 register("js_recurrent_event", js_recurrent_event)
+register("js_detail_organization", js_detail_organization)
 register("js_groups_organization", js_groups_organization)
 register("js_create_stuff", js_create_stuff)
 register("js_edit_owner_stuff", js_edit_owner_stuff)

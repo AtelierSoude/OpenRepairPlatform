@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load assets l10n app_filters %}
+{% load assets l10n app_filters static %}
 {% load thumbnail %}
 {% load initialavatar %}
 {% block title %} {{event}} {% endblock %}
@@ -316,9 +316,11 @@
 {% endblock %}
 
 {% block extra_js %}
-  {% if is_volunteer %}
+
+  {% if is_active %}
     {{ users|json_script:"emails-data" }}
   {% endif %}
+
   <script>
       const longitude = {{event.location.longitude|unlocalize}};
       const latitude = {{event.location.latitude|unlocalize}};

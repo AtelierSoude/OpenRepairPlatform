@@ -102,7 +102,6 @@ class StuffFormMixin(BSModalCreateView):
 
     def form_valid(self, form):
         res = super().form_valid(form)
-        messages.success(self.request, self.success_message)
         return res
 
 class StuffUserFormView(StuffFormMixin):
@@ -134,7 +133,7 @@ class StuffUserEventFormView(StuffFormMixin):
                 },
         )
 
-class StuffOrganizationFormView(StuffFormMixin, CreateView):
+class StuffOrganizationFormView(StuffFormMixin):
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -157,8 +156,9 @@ class StuffUpdateViewMixin(BSModalUpdateView):
         res = super().form_valid(form)
         return res
 
-    def get_success_url(self):
-        return self.object.get_absolute_url()
+    def get_success_url(self, *args, **kwargs):
+        stuff = Stuff.objects.get(pk=self.kwargs["pk"])
+        return stuff.get_absolute_url()
 
 class StuffUpdateView(StuffUpdateViewMixin, UpdateView):
     form_class = StuffForm

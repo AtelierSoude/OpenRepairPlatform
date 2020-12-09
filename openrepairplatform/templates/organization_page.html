@@ -166,6 +166,9 @@
 {% endblock %}
 
 {% block extra_js %}
+{% assets "js_detail_organization" %}
+<script src="{{ ASSET_URL }}"></script>
+{% endassets %}
 <script>
   $(document).ready(function(){
     $("#h_nav").sticky({topSpacing:105});

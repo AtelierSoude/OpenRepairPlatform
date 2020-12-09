@@ -399,7 +399,7 @@
           {% endfor %}
         </div>
     <div class="tab-pane fade" id="v-pills-stock" role="tabpanel" aria-labelledby="v-pills-stock-tab">
-      <button type="button" class="btn btn-primary bs-modal" data-form-url="{% url 'inventory:create_user_stuff' user.pk %}">
+      <button type="button" class="btn btn-primary bs-modal" data-form-url="{% url 'inventory:create_user_stuff' object.pk %}">
         Ajouter un objet à l'inventaire
       </button>
       <h4 class="mt-4"> {{ stock.all.count}} Objets inventoriés </h4>

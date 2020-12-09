@@ -432,14 +432,14 @@ class BookView(RedirectView):
                 is_authorized = True
         except Exception:
             pass
-
+        import pdb; pdb.set_trace()
         next_url = self.request.GET.get("redirect")
         if not utils.is_valid_path(next_url):
             if user: 
                 user_pk = user.pk 
             else:
                 user_pk = id_current_user
-            next_url = reverse("event:book_confirm", args=[event.id, event.slug, user_pk])
+            next_url = reverse("event:book_confirm", args=[event.id, event.slug, user_pk, token])
 
         if event.remaining_seats <= 0 and not is_authorized:
             messages.error(
@@ -447,6 +447,7 @@ class BookView(RedirectView):
                 "Désolé, il n'y a plus de place "
                 "disponibles pour cet évènement",
             )
+            next_url = reverse("event:detail", args=[event.id, event.slug])
             return next_url
 
         if user in event.presents.all().union(event.registered.all()):
@@ -454,6 +455,7 @@ class BookView(RedirectView):
                 self.request,
                 "Vous êtes déjà inscrit à cet évènement, à bientôt !",
             )
+            next_url = reverse("event:detail", args=[event.id, event.slug])
             return next_url
 
         event.registered.add(user)

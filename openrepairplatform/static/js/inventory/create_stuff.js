@@ -37,7 +37,6 @@ $(document).ready(function(){
       $(".device-search-form").hide()
       $("#id_device").val("") 
       $("#select2-id_device-container").html('')
-      console.log($("#id_device").val())
     }
     else{
       $("#adddevice").hide()  

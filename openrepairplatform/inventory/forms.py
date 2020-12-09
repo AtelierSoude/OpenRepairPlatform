@@ -16,8 +16,13 @@ class StuffEditOwnerForm(BSModalModelForm):
         self.fields["member_owner"] = forms.ModelChoiceField(
             queryset=CustomUser.objects.all(),
             widget=autocomplete.ModelSelect2(url='user_autocomplete', attrs={'data-html': True, 'data-allow-clear': "true"}),
-            label="Cherchez un utilisateur"
+            label="Cherchez un utilisateur",
+            required = False,
         )
+
+    def save(self, commit=True):
+        instance = super().save(commit=commit)
+        return instance 
 
     class Meta:
         model = Stuff
@@ -28,6 +33,10 @@ class StuffEditOwnerForm(BSModalModelForm):
 
 class StuffEditPlaceForm(BSModalModelForm):
 
+    def save(self, commit=True):
+        instance = super().save(commit=commit)
+        return instance 
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['place'] = forms.ModelChoiceField(
@@ -35,6 +44,7 @@ class StuffEditPlaceForm(BSModalModelForm):
             label="Localisation",
             queryset= Place.objects.all(),
             help_text="Où se trouve l'appareil ?",
+            required=False,
         )
 
     class Meta:

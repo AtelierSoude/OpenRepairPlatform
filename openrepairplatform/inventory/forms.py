@@ -427,6 +427,7 @@ class StuffForm(BSModalModelForm, CreateUpdateAjaxMixin):
                 label="Localisation",
                 queryset= Place.objects.all(),
                 help_text="Où se trouve l'appareil ?",
+                required = False
             )
             self.fields['is_visible'] = forms.BooleanField(
                 label="Cet appareil est-il visible du public ?",

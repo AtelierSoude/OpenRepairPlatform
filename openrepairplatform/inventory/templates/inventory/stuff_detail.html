@@ -15,7 +15,6 @@
         <div class="modal-content"></div>
       </div>
     </div>
-
     <section class="h-100 row">
         <div class="col-md-4 p-4 d-flex flex-wrap align-items-center bg-light">
           {% if stuff.device.picture %}
@@ -28,9 +27,11 @@
         </div>
         <div class="col-md-8 p-4">
             <h4 class="pt-2 pb-2">{{ stuff }}
+              {% if can_edit %}
               <a class="btn btn-success rounded-circle btn-sm bs-modal" data-form-url="{% url 'inventory:update_stuff' stuff.pk %}">
                 <i class="fa fa-pencil-alt"></i>
               </a>
+              {% endif %}
             </h4>
               {{ stuff.information | safe }}
               <span>
@@ -64,9 +65,11 @@
                   {% else %}
                     Utilisateur non connu sur ce site
                   {% endif %}
-                <a class="btn btn-default rounded-circle btn-sm bs-modal float-right" data-form-url="{% url 'inventory:update_owner_stuff' stuff.pk %}">
-                  <i class="fa fa-pencil-alt"></i>
-                </a>
+                  {% if can_edit %}
+                    <a class="btn btn-default rounded-circle btn-sm bs-modal float-right" data-form-url="{% url 'inventory:update_owner_stuff' stuff.pk %}">
+                      <i class="fa fa-pencil-alt"></i>
+                    </a>
+                  {% endif %}
               </span>
             </div>
             <div class="card col-md-12 mb-2 p-3">
@@ -79,18 +82,22 @@
               {% else %}
                 Chez l'utilisateur
               {% endif %}
-              <a class="btn btn-default rounded-circle btn-sm bs-modal float-right" data-form-url="{% url 'inventory:update_place_stuff' stuff.pk %}">
-                <i class="fa fa-pencil-alt"></i>
-              </a>
+              {% if can_edit %}
+                <a class="btn btn-default rounded-circle btn-sm bs-modal float-right" data-form-url="{% url 'inventory:update_place_stuff' stuff.pk %}">
+                  <i class="fa fa-pencil-alt"></i>
+                </a>
+              {% endif %}
             </span>
             </div>
             <div class="card col-md-12 mb-2 p-3">
               <span>
                 <b class="pr-2">Etat</b> 
                 {% include "inventory/stuff_state_display.html" with stuff_state=stuff.get_state_display %}
-                <a class="btn btn-default rounded-circle btn-sm bs-modal float-right" data-form-url="{% url 'inventory:update_state_stuff' stuff.pk %}">
-                  <i class="fa fa-pencil-alt"></i>
-                </a>
+                {% if can_edit %}
+                  <a class="btn btn-default rounded-circle btn-sm bs-modal float-right" data-form-url="{% url 'inventory:update_state_stuff' stuff.pk %}">
+                    <i class="fa fa-pencil-alt"></i>
+                  </a>
+                {% endif %}
               </span>
             </div>
           </div>
@@ -104,9 +111,11 @@
       </div>
       <div class="col-md-8 p-4">
         <h4 class="">Dossiers de réparation  
-          <a class="btn btn-success btn-sm rounded-circle bs-modal" data-form-url="{% url 'inventory:create_folder' stuff.pk %}">
-            <i class="fa fa-plus"></i>
-          </a>
+          {% if can_edit %}
+            <a class="btn btn-success btn-sm rounded-circle bs-modal" data-form-url="{% url 'inventory:create_folder' stuff.pk %}">
+              <i class="fa fa-plus"></i>
+            </a>
+          {% endif %}
         </h4> 
         {% for folder in stuff.folders.all %}
           {% include "inventory/repair_folder.html" %}

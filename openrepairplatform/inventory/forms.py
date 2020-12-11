@@ -362,7 +362,8 @@ class StuffForm(BSModalModelForm):
     )
 
     def clean_device(self):
-        if not self.cleaned_data['device']:
+        device = self.cleaned_data['device']
+        if not device:
             device = {}
             device["category"] = self.cleaned_data['category']
             device["brand"] = self.cleaned_data['brand']
@@ -371,7 +372,7 @@ class StuffForm(BSModalModelForm):
               self.add_error("category", "Ce champ ne peut pas être vide")
             device = Device.objects.create(**device)
             self.cleaned_data['device'] = device
-        return self.cleaned_data['device']
+            return self.cleaned_data['device']
 
     def init_folder(self, data):
         self.folder = {}
@@ -403,18 +404,12 @@ class StuffForm(BSModalModelForm):
             self.init_folder(self.cleaned_data)
 
     def save(self, commit=True):
-        if not self.request.is_ajax() or self.request.POST.get('asyncUpdate') == 'True':
-            instance = super(StuffForm, self).save(commit=False)
-            instance.device = self.cleaned_data['device']
-            instance.save()
-        else:
-            instance = super(StuffForm, self).save(commit=False)
+        instance = super().save(commit=commit)
         if self.cleaned_data["create_folder"]:
             self.folder['stuff'] = instance
             folder = RepairFolder.objects.create(**self.folder)
             self.intervention['folder'] = folder
             intervention = Intervention.objects.create(**self.intervention)
-        return instance
 
     def __init__(self, organization=None, user=None, visitor_user=None, event=None, *args, **kwargs):
         super().__init__(*args, **kwargs)

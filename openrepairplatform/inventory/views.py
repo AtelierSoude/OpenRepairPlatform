@@ -20,6 +20,7 @@ from django.views.generic import (
 from django.contrib import messages
 from openrepairplatform.mixins import HasActivePermissionMixin, RedirectQueryParamView
 from openrepairplatform.user.mixins import PermissionOrgaContextMixin
+from openrepairplatform.inventory.mixins import PermissionEditStuffMixin
 from django.urls import reverse, reverse_lazy
 
 import django_tables2 as tables
@@ -85,13 +86,13 @@ class OrganizationStockView(
         return context
 
 
-class StuffDetailView(DetailView):
+class StuffDetailView(PermissionEditStuffMixin, DetailView):
     model = Stuff
     template_name = "inventory/stuff_detail.html"
     pk_url_kwarg = "stuff_pk"
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
         return context
 
 class StuffFormMixin(BSModalCreateView):
@@ -105,6 +106,7 @@ class StuffFormMixin(BSModalCreateView):
         return res
 
 class StuffUserFormView(StuffFormMixin):
+    form_class = StuffForm
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -134,6 +136,7 @@ class StuffUserEventFormView(StuffFormMixin):
         )
 
 class StuffOrganizationFormView(StuffFormMixin):
+    form_class = StuffForm
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()

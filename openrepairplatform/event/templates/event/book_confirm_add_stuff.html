@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load assets thumbnail static initialavatar bootstrap4 %}
+{% load thumbnail initialavatar %}
 {% block title %} réservation {{event}} {% endblock %}
 
 {% block content %}
@@ -58,7 +58,7 @@
           <small>
             <i class="fa fa-map-marker-alt"></i>
             {{ event.location }}
-          </b>
+          </small>
           <hr>
           {% if event.description %}
           <small>
@@ -83,7 +83,6 @@
               {% endfor %}
         </div>
     </div>
-    <!--
     <span class="mb-4">Maintenant, vous pouvez nous indiquer avec quel(s) appareil(s) vous allez participer</span>
     <span> S'agit-il d'appareils avec lesquels vous êtes déjà venu ? </span>
     {% if registered_user.user_stuffs %}
@@ -129,16 +128,19 @@
       </div>
     </div>
     {% endif %}
---></div>
+  </div>
   </div>
   <a class="btn btn-success w-100" href="{% url 'event:detail' event.pk event.slug %}">Retour à l'événement</a>
 </div>
-{% endblock content %}
+</div>
+{% endblock %}
+
 {% block extra_js %}
 <script>
 $(document).ready(function(){
    $.fn.modal.Constructor.prototype._enforceFocus = function() {};
    $(".bs-modal").each(function () {
+     console.log("pouet")
      $(this).modalForm({
       formURL: $(this).data('form-url')
      });
@@ -150,8 +152,6 @@ $(document).ready(function(){
     $("#breadcrumb").sticky({topSpacing:0});
   });
 </script>
-{% endblock extra_js %}
-
-
+{% endblock %}
 
 

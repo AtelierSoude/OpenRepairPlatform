@@ -16,7 +16,7 @@
 
     <h2 class="text-center mt-4">Stock de {{ organization }}</h2>
     {% if is_active %}   
-    <button class="btn btn-success btn-absolute bs-modal" data-form-url="{% url 'inventory:create_organization_stuff' organization.slug %}">
+    <button class="btn btn-success btn-absolute bs-modal" id="add-stuff">
       <i class="fa fa-plus"></i><i class="fas fa-box-open"></i>
       <span class="btn-label d-none pl-1">Ajouter un objet</span>
     </button>
@@ -57,13 +57,11 @@
   });
 </script>
 <script type="text/javascript">
-  $(function () {
+$(document).ready(function(){
    $.fn.modal.Constructor.prototype._enforceFocus = function() {};
-   $(".bs-modal").each(function () {
-     $(this).modalForm({
-         formURL: $(this).data('form-url')
+     $("#add-stuff").modalForm({
+         formURL: "{% url 'inventory:create_organization_stuff' organization.slug %}"
      });
-   });
  });
  </script>
  <script>

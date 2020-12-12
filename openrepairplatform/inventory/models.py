@@ -9,7 +9,7 @@ from openrepairplatform.utils import validate_image
 from django.utils.translation import ugettext_lazy as _
 
 class Brand(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=100)
     picture = models.ImageField(
         upload_to=None,
         height_field=None,
@@ -142,7 +142,7 @@ class Device(models.Model):
         null=True,
     )
     model = models.CharField(
-        max_length=50, 
+        max_length=100, 
         null=True,
         blank=True
     )
@@ -176,14 +176,14 @@ class Device(models.Model):
 
 
 class Observation(models.Model):
-    name = models.CharField(max_length=150, default="")
+    name = models.CharField(max_length=250, default="")
     
     def __str__(self):
         return self.name
     
 
 class Reasoning(models.Model):
-    name = models.CharField(max_length=150, default="")
+    name = models.CharField(max_length=250, default="")
     verbose_name=_("raisonnement")
 
     def __str__(self):
@@ -191,14 +191,14 @@ class Reasoning(models.Model):
 
 
 class Action(models.Model):
-    name = models.CharField(max_length=150, default="")
+    name = models.CharField(max_length=250, default="")
     
     def __str__(self):
         return self.name
 
 
 class Status(models.Model):
-    name = models.CharField(max_length=150, default="")
+    name = models.CharField(max_length=250, default="")
     
     def __str__(self):
         return self.name

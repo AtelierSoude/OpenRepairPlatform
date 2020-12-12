@@ -500,6 +500,7 @@ class EventBookStuffView(TemplateView):
         context = super().get_context_data(**kwargs)
         context["token"] = self.kwargs['token']
         context["event"] = Event.objects.get(pk=self.kwargs["pk"])
+        ctx["event_menu"] = 'active'
         context["registered_user"] = CustomUser.objects.get(pk=self.kwargs["user_pk"])
         return context
 

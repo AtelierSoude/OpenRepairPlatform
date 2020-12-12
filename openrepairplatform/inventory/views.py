@@ -5,6 +5,7 @@ from django.db.models import Q
 from bootstrap_modal_forms.generic import (
   BSModalCreateView,
   BSModalUpdateView,
+  BSModalFormView
 )
 from bootstrap_modal_forms.mixins import CreateUpdateAjaxMixin
 from django.template.loader import render_to_string
@@ -114,7 +115,7 @@ class StuffFormMixin(BSModalCreateView):
         res = super().form_valid(form)
         return res
 
-class StuffUserFormView(StuffFormMixin):
+class StuffUserFormView(StuffFormMixin, CreateView):
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -125,7 +126,7 @@ class StuffUserFormView(StuffFormMixin):
         return self.object.get_absolute_url()
 
 
-class StuffOrganizationFormView(StuffFormMixin):
+class StuffOrganizationFormView(StuffFormMixin, CreateView):
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()

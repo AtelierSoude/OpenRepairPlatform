@@ -142,10 +142,14 @@ class FolderForm(BSModalModelForm):
         else:
             self.folder['ongoing'] = False
         self.intervention['repair_date'] = data['open_date']
-        self.intervention['observation'] = data['observation']
-        self.intervention['reasoning'] = data['reasoning']
-        self.intervention['action'] = data['action']
-        self.intervention['status'] = data['status']
+        if data['observation']:
+            self.intervention['observation'] = data['observation']
+        if data['reasoning']:
+            self.intervention['reasoning'] = data['reasoning']
+        if data['action']:
+            self.intervention['action'] = data['action']
+        if data['status']: 
+            self.intervention['status'] = data['status']
         if not self.folder['open_date']:
             self.add_error(f'La date ne peut pas être vide')
         if not self.intervention['observation']:
@@ -384,10 +388,14 @@ class StuffForm(BSModalModelForm):
         self.intervention['repair_date'] = data['repair_date']
         if getattr(self, "event", False):
             self.intervention['event'] = self.event
-        self.intervention['observation'] = data['observation']
-        self.intervention['reasoning'] = data['reasoning']
-        self.intervention['action'] = data['action']
-        self.intervention['status'] = data['status']
+        if data['observation']:
+            self.intervention['observation'] = data['observation']
+        if data['reasoning']:
+            self.intervention['reasoning'] = data['reasoning']
+        if data['action']:
+            self.intervention['action'] = data['action']
+        if data['status']: 
+            self.intervention['status'] = data['status']
         if not self.folder['open_date']:
             self.add_error(f'La date ne peut pas être vide')
         if not self.intervention['observation']:
@@ -395,16 +403,17 @@ class StuffForm(BSModalModelForm):
         self.create_folder = data['create_folder']
 
     def clean_device(self):
-        device = self.cleaned_data['device']
-        if not device:
-            device = {}
-            device["category"] = self.cleaned_data['category']
-            device["brand"] = self.cleaned_data['brand']
-            device["model"] = self.cleaned_data['model']
-            if not device["category"]:
-              self.add_error("category", "Ce champ ne peut pas être vide")
-            device = Device.objects.create(**device)
-            self.cleaned_data['device'] = device
+        if not self.request.is_ajax():
+            device = self.cleaned_data['device']
+            if not device:
+                device = {}
+                device["category"] = self.cleaned_data['category']
+                device["brand"] = self.cleaned_data['brand']
+                device["model"] = self.cleaned_data['model']
+                if not device["category"]:
+                    self.add_error("category", "Ce champ ne peut pas être vide")
+                device = Device.objects.create(**device)
+                self.cleaned_data['device'] = device
         return self.cleaned_data['device']
 
     def clean(self):
@@ -414,16 +423,14 @@ class StuffForm(BSModalModelForm):
             self.cleaned_data["organization_owner"] = self.organization
         if self.cleaned_data["create_folder"]:
             self.init_folder(self.cleaned_data)
-
+   
     def save(self, commit=True):
-        import pdb; pdb.set_trace()
-        instance = super().save(commit=commit)
+        instance = super(StuffForm, self).save(commit=commit)
         if self.cleaned_data["create_folder"]:
             self.folder['stuff'] = instance
             folder = RepairFolder.objects.create(**self.folder)
             self.intervention['folder'] = folder
             intervention = Intervention.objects.create(**self.intervention)
-        return instance
 
     def __init__(self, organization=None, user=None, visitor_user=None, event=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -444,14 +451,16 @@ class StuffForm(BSModalModelForm):
                 help_text = "par exemple s'il est en vente",
                 required = False
             )
-        elif visitor_user:
+        if visitor_user:
             self.user = visitor_user
             del self.fields['action']
+            del self.fields['is_visible']
             del self.fields['reasoning']
             del self.fields['status']
             del self.fields['place']
-        elif user:
+        if user:
             self.user = user 
+            del self.fields['is_visible']
             del self.fields['place']
 
     class Meta:
@@ -467,7 +476,6 @@ class StuffForm(BSModalModelForm):
             "organization_owner",
             "member_owner",
             "information",
-            "device",
             "ongoing",
             "observation",
             "action",
@@ -475,6 +483,8 @@ class StuffForm(BSModalModelForm):
             "status",
             "place",
             "repair_date",
+            "device",
+            "is_visible",
         )
 
 class StuffUpdateForm(BSModalModelForm):
@@ -512,17 +522,18 @@ class StuffUpdateForm(BSModalModelForm):
     )
 
     def clean_device(self):
-        device = self.cleaned_data['device']
-        if not device:
-            device = {}
-            device["category"] = self.cleaned_data['category']
-            device["brand"] = self.cleaned_data['brand']
-            device["model"] = self.cleaned_data['model']
-            if not device["category"]:
-              self.add_error("category", "Ce champ ne peut pas être vide")
-            device = Device.objects.create(**device)
-            self.cleaned_data['device'] = device
-            return self.cleaned_data['device']
+        if not self.request.is_ajax():
+            device = self.cleaned_data['device']
+            if not device:
+                device = {}
+                device["category"] = self.cleaned_data['category']
+                device["brand"] = self.cleaned_data['brand']
+                device["model"] = self.cleaned_data['model']
+                if not device["category"]:
+                    self.add_error("category", "Ce champ ne peut pas être vide")
+                device = Device.objects.create(**device)
+                self.cleaned_data['device'] = device
+        return self.cleaned_data['device']
 
     def save(self, commit=True):
         instance = super().save(commit=commit)

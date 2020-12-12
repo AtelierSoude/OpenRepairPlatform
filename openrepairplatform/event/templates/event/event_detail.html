@@ -74,6 +74,9 @@
       <span class="badge badge-success badge-pill">Animateur</span>
       {% endif %}
     </h6>
+    {% if event.allow_stuffs %}
+      <h6 class="text-muted"><i class="fas fa-tools"></i> Cet événement gère les réparations</h6>
+    {% endif %}
     {% if event.external == True %}
       <a class="btn btn-block btn-success" target="_blank" href="{{event.external_url}}"> Réservation externe</a>
     {% elif event.booking == True %}

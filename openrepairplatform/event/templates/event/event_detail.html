@@ -221,7 +221,9 @@
     <div class="text-center d-flex justify-content-center align-items-center flex-md-column" id="v-pills-tab" role="tablist" aria-orientation="horizontal">
       <nav class="nav nav-pills justify-content-center w-100" id="h_nav">
         <a class="nav-link active" id="v-pills-reservation-tab" data-toggle="pill" href="#v-pills-reservation" role="tab" aria-controls="v-pills-reservation" aria-selected="false">Participants</a>
-        <a class="nav-link" id="v-pills-repair-tab" data-toggle="pill" href="#v-pills-repair" role="tab" aria-controls="v-pills-repair" aria-selected="false">Réparations</a>
+          {% if is_volunteer %}
+            <a class="nav-link" id="v-pills-repair-tab" data-toggle="pill" href="#v-pills-repair" role="tab" aria-controls="v-pills-repair" aria-selected="false">Réparations</a>
+          {% endif %}
       </nav>
     </div>
     <div class="tab-content" id="v-pills-tabContent">    
@@ -320,31 +322,33 @@
         {% endif %}
       {% endif %}
       </div>
-      <div class="tab-pane fade show p-2 h-100" id="v-pills-repair" role="tabpanel" aria-labelledby="v-pills-repair-tab">
-        <h5>Réparations en cours</h5>
-        <hr>
-              {% for stuff in event.stuffs.all %}
-              <div class="card col-md-12 mb-2 p-3">
-                  <h6><a href="{{stuff.get_absolute_url}}"> {{ stuff }}</a>
-                    {% if stuff.owner %}
-                      appartenant à <a href="{{stuff.owner.get_absolute.url}}">
-                          {{ stuff.owner }}
-                      </a>
-                    {% endif %}
-                    <div class="float-right">{% include "inventory/stuff_state_display.html" with stuff_state=stuff.get_state_display %}</div>
-                  </h6>
-                  {% if stuff.folders.all %} 
-                    {{stuff.folders.all.count}} dossiers en cours 
-                  {% else %}
-                  Pas de dossiers pour l'instant. 
+      {% if is_volunteer %}
+        <div class="tab-pane fade show p-2 h-100" id="v-pills-repair" role="tabpanel" aria-labelledby="v-pills-repair-tab">
+          <h5>Réparations en cours</h5>
+          <hr>
+            {% for stuff in event.stuffs.all %}
+            <div class="card col-md-12 mb-2 p-3">
+                <h6><a href="{{stuff.get_absolute_url}}"> {{ stuff }}</a>
+                  {% if stuff.owner %}
+                    appartenant à <a href="{{stuff.owner.get_absolute.url}}">
+                        {{ stuff.owner }}
+                    </a>
                   {% endif %}
-                </div>
-              {% empty %}
-              <div>
-                  Pas de réparation en cours
-              <div>
-              {% endfor %}
-      </div>
+                  <div class="float-right">{% include "inventory/stuff_state_display.html" with stuff_state=stuff.get_state_display %}</div>
+                </h6>
+                {% if stuff.folders.all %} 
+                  {{stuff.folders.all.count}} dossiers en cours 
+                {% else %}
+                Pas de dossiers pour l'instant. 
+                {% endif %}
+              </div>
+            {% empty %}
+            <div>
+                Pas de réparation en cours
+            <div>
+            {% endfor %}
+        </div>
+      {% endif %}
     </div>
   </div>
 </section>

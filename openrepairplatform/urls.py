@@ -32,10 +32,6 @@ urlpatterns = [
         include("openrepairplatform.user.api_urls", namespace="api_user"),
     ),
     path(
-        "api/inventory/",
-        include("openrepairplatform.inventory.api_urls", namespace="api_inventory"),
-    ),
-    path(
         "place_autocomplete/",
         views.PlaceAutocomplete.as_view(),
         name="place_autocomplete",

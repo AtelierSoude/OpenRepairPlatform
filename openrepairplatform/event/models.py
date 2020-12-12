@@ -168,13 +168,20 @@ class Event(models.Model):
     location = models.ForeignKey(
         Place, on_delete=models.SET_NULL, null=True, related_name="events", verbose_name="Lieu"
     )
+    allow_stuffs = models.BooleanField(
+        verbose_name=_("Souhaitez-vous gérer des réparations ?"),
+        default=False,
+        blank=True,
+        help_text="Les participants pourront déclarer leurs réparations lors de la réservation"
+
+    )
     stuffs = models.ManyToManyField(
         Stuff, 
         verbose_name=_("Appareils attendus"),
         related_name="events",
         blank=True,
     )
-    is_free = models.BooleanField(default=False, verbose_name=_("Pas de limite de pace ?"))
+    is_free = models.BooleanField(default=False, verbose_name=_("Pas de limite de place ?"))
     booking = models.BooleanField(default=True, verbose_name=_("Réservation interne au site ?"))
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

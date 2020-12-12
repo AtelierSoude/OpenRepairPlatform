@@ -82,60 +82,62 @@
       </div>
     </div>
   </div>
-  <div class="m-2 mt-5 mb-5 text-center">
-    <h5 class="m-4">Dites-nous quels appareils vous apportez !</h5>
-    <span> Sélectionner un appareil dans votre inventaire ci-dessous, ou 
-      <a class="bs-modal" href="#" data-form-url="{% url 'event:create_user_event_stuff' event.pk registered_user.pk token %}">
-        créez-en un nouveau 
-      </a> puis selectionnez-le 
-    </span>
-      {% if registered_user.user_stuffs %}
-      <div class="d-flex justify-content-center">
-        <div class="p-4 pt-4">
-          <form method="POST" action="{% url 'event:add_stuff_event' event.pk registered_user.pk %}">
-            {% csrf_token %}
-          <div class="table-responsive shadow bordered">
-            <table class="table table-hover text-left" if="stuffs-table">
-              <thead>
-                <tr>
-                  <th colspan="2">Mon inventaire</th>
-                  <td>Sélectionner</td>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                 <td colspan="3" class="text-center">
-                  <a class="bs-modal" href="#" data-form-url="{% url 'event:create_user_event_stuff' event.pk registered_user.pk token %}">
-                    créer un autre appareil
-                  </a>
-                </td>
-                </tr>
-                  {% for stuff in registered_user.user_stuffs.all %}
-                  <tr>
-                    <td scope="row">{{ stuff }}</td>
-                    <td>
-                      {% include "inventory/stuff_state_display.html" with stuff_state=stuff.get_state_display %}
+  {% if event.allow_stuffs %}
+    <div class="m-2 mt-5 mb-5 text-center">
+      <h5 class="m-4">Dites-nous quel appareil vous apportez !</h5>
+      <span> Sélectionner un appareil dans votre inventaire ci-dessous, ou 
+        <a class="bs-modal" href="#" data-form-url="{% url 'event:create_user_event_stuff' event.pk registered_user.pk token %}">
+          créez-en un nouveau 
+        </a> puis selectionnez-le 
+      </span>
+        {% if registered_user.user_stuffs %}
+          <div class="d-flex justify-content-center">
+            <div class="p-4 pt-4">
+              <form method="POST" action="{% url 'event:add_stuff_event' event.pk registered_user.pk %}">
+                {% csrf_token %}
+              <div class="table-responsive shadow bordered">
+                <table class="table table-hover text-left" if="stuffs-table">
+                  <thead>
+                    <tr>
+                      <th colspan="2">Mon inventaire</th>
+                      <td>Sélectionner</td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                    <td colspan="3" class="text-center">
+                      <a class="bs-modal" href="#" data-form-url="{% url 'event:create_user_event_stuff' event.pk registered_user.pk token %}">
+                        créer un autre appareil
+                      </a>
                     </td>
-                    <td class="text-right">
-                      <input class="form-check-input" type="radio" name="selectedstuff" value="{{stuff.pk}}">
-                    </td>
-                  </tr>
-                  {% empty %}
-                  <tr>
-                    <td colspan="3">
-                    Cet utilisateur n'a pas d'objet dans son inventaire
-                    </td>
-                  </tr>
-              {% endfor %}
-              </tbody>
-            </table>
+                    </tr>
+                      {% for stuff in registered_user.user_stuffs.all %}
+                      <tr>
+                        <td scope="row">{{ stuff }}</td>
+                        <td>
+                          {% include "inventory/stuff_state_display.html" with stuff_state=stuff.get_state_display %}
+                        </td>
+                        <td class="text-right">
+                          <input class="form-check-input" type="radio" name="selectedstuff" value="{{stuff.pk}}">
+                        </td>
+                      </tr>
+                      {% empty %}
+                      <tr>
+                        <td colspan="3">
+                        Cet utilisateur n'a pas d'objet dans son inventaire
+                        </td>
+                      </tr>
+                  {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+              <button type="submit" id="submit" class="btn btn-success w-100 p-3">Valider mon choix</button>
+              </form>
+            </div>
           </div>
-          <button type="submit" id="submit" class="btn btn-success w-100 p-3">Valider mon choix</button>
-          </form>
+          {% endif %}
         </div>
-      </div>
       {% endif %}
-    </div>
   </div>
 {% endblock %}
 

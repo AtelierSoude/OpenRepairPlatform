@@ -25,7 +25,7 @@
             </div>
           {% endif %}
         </div>
-        <div class="col-md-8 p-4">
+        <div class="col-md-8">
             <h4 class="pt-2 pb-2">{{ stuff }}
               {% if can_edit %}
               <a class="btn btn-success rounded-circle btn-sm bs-modal" data-form-url="{% url 'inventory:update_stuff' stuff.pk %}">
@@ -35,11 +35,6 @@
             </h4>
               {{ stuff.information | safe }}
               <span>
-              {% if stuff.is_visible %}
-                Visibilité publique
-              {% else %}
-                Non visible du public
-              {% endif %}
             </span>
             <div class="card col-md-12 mb-2 p-3">
               <span>
@@ -48,6 +43,21 @@
                   {{ parent }} > 
                 {% endfor %}
                 <a href="{{ stuff.device.get_absolute_url }}">{{ stuff.device }}</a>
+              </span>
+            </div>
+            <div class="card col-md-12 mb-2 p-3">
+              <span>
+                <b class="pr-2">Visibilité</b> 
+                {% if stuff.is_visible %}
+                  Visibilité publique
+                {% else %}
+                  Non visible du public
+                {% endif %}
+                {% if can_edit %}
+                <a class="btn btn-default rounded-circle btn-sm bs-modal float-right" data-form-url="{% url 'inventory:update_visibility_stuff' stuff.pk %}">
+                  <i class="fa fa-pencil-alt"></i>
+                </a>
+              {% endif %}
               </span>
             </div>
             <div class="card col-md-12 mb-2 p-3">

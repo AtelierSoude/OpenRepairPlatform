@@ -31,6 +31,18 @@ class StuffEditOwnerForm(BSModalModelForm):
             "organization_owner",
         ]
 
+class StuffVisibilityForm(BSModalModelForm):
+
+    def save(self, commit=True):
+        instance = super().save(commit=commit)
+        return instance 
+
+    class Meta:
+        model = Stuff
+        fields = [
+            "is_visible",
+        ]
+
 class StuffEditPlaceForm(BSModalModelForm):
 
     def save(self, commit=True):
@@ -361,19 +373,6 @@ class StuffForm(BSModalModelForm):
         queryset = Status.objects.all()
     )
 
-    def clean_device(self):
-        device = self.cleaned_data['device']
-        if not device:
-            device = {}
-            device["category"] = self.cleaned_data['category']
-            device["brand"] = self.cleaned_data['brand']
-            device["model"] = self.cleaned_data['model']
-            if not device["category"]:
-              self.add_error("category", "Ce champ ne peut pas être vide")
-            device = Device.objects.create(**device)
-            self.cleaned_data['device'] = device
-            return self.cleaned_data['device']
-
     def init_folder(self, data):
         self.folder = {}
         self.intervention = {}
@@ -395,6 +394,19 @@ class StuffForm(BSModalModelForm):
             self.add_error(f'Veuillez rentrer au moins une observation.')
         self.create_folder = data['create_folder']
 
+    def clean_device(self):
+        device = self.cleaned_data['device']
+        if not device:
+            device = {}
+            device["category"] = self.cleaned_data['category']
+            device["brand"] = self.cleaned_data['brand']
+            device["model"] = self.cleaned_data['model']
+            if not device["category"]:
+              self.add_error("category", "Ce champ ne peut pas être vide")
+            device = Device.objects.create(**device)
+            self.cleaned_data['device'] = device
+        return self.cleaned_data['device']
+
     def clean(self):
         if getattr(self, "user", False):
             self.cleaned_data["member_owner"] = self.user
@@ -404,12 +416,14 @@ class StuffForm(BSModalModelForm):
             self.init_folder(self.cleaned_data)
 
     def save(self, commit=True):
+        import pdb; pdb.set_trace()
         instance = super().save(commit=commit)
         if self.cleaned_data["create_folder"]:
             self.folder['stuff'] = instance
             folder = RepairFolder.objects.create(**self.folder)
             self.intervention['folder'] = folder
             intervention = Intervention.objects.create(**self.intervention)
+        return instance
 
     def __init__(self, organization=None, user=None, visitor_user=None, event=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -462,5 +476,72 @@ class StuffForm(BSModalModelForm):
             "place",
             "repair_date",
         )
+
+class StuffUpdateForm(BSModalModelForm):
+    category = forms.ModelChoiceField(
+        widget=autocomplete.ModelSelect2(url='inventory:category_autocomplete'),
+        label="Catégorie d'appareil",
+        required = False,
+        queryset = Category.objects.all(),
+    )
+    device = forms.ModelChoiceField(
+        widget=autocomplete.ModelSelect2(url='inventory:device_autocomplete', 
+        forward=['category']),
+        label="Type d'appareil",
+        queryset = Device.objects.all(),
+        required = False
+    )
+    create_device = forms.BooleanField(
+        label = "Je ne trouve pas mon type d'appareil dans la liste ci dessus",
+        required = False,
+    )
+    brand = forms.ModelChoiceField(
+        widget=autocomplete.ModelSelect2(url='inventory:brand_autocomplete'),
+        label="Marque",
+        required=False,
+        queryset = Brand.objects.all()
+        )
+    model = forms.CharField(
+        label="Designation/modèle",
+        help_text="Si vous n'êtes pas sûr, ne remplissez pas ce champ",
+        required=False
+    )
+    picture = forms.ImageField(
+        required=False,
+        label="Photo"
+    )
+
+    def clean_device(self):
+        device = self.cleaned_data['device']
+        if not device:
+            device = {}
+            device["category"] = self.cleaned_data['category']
+            device["brand"] = self.cleaned_data['brand']
+            device["model"] = self.cleaned_data['model']
+            if not device["category"]:
+              self.add_error("category", "Ce champ ne peut pas être vide")
+            device = Device.objects.create(**device)
+            self.cleaned_data['device'] = device
+            return self.cleaned_data['device']
+
+    def save(self, commit=True):
+        instance = super().save(commit=commit)
+        return instance
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    class Meta:
+        model = Stuff
+        fields = (
+            "category",
+            "create_device",
+            "brand",
+            "model",
+            "picture",
+            "information",
+            "device",
+        )
+
 
 

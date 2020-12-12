@@ -32,7 +32,16 @@ from .tables import StockTable
 from .models import Stuff, Device, Category, Observation, Status, Reasoning, Action, Brand, Intervention, RepairFolder
 from openrepairplatform.location.models import Place
 from .filters import StockFilter
-from .forms import StuffForm, FolderForm, StuffEditOwnerForm, StuffEditPlaceForm, StuffEditStateForm, InterventionForm
+from .forms import (
+    StuffForm, 
+    FolderForm, 
+    StuffEditOwnerForm,
+    StuffVisibilityForm, 
+    StuffEditPlaceForm, 
+    StuffEditStateForm, 
+    InterventionForm, 
+    StuffUpdateForm
+)
 from openrepairplatform.user.models import CustomUser, Organization
 from openrepairplatform.event.models import Event
 
@@ -106,7 +115,6 @@ class StuffFormMixin(BSModalCreateView):
         return res
 
 class StuffUserFormView(StuffFormMixin):
-    form_class = StuffForm
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -116,27 +124,8 @@ class StuffUserFormView(StuffFormMixin):
     def get_success_url(self, *args, **kwargs):
         return self.object.get_absolute_url()
 
-class StuffUserEventFormView(StuffFormMixin):
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs["visitor_user"] = CustomUser.objects.get(pk=self.kwargs["user_pk"])
-        kwargs["event"] = Event.objects.get(pk=self.kwargs["event_pk"])
-        return kwargs
-    
-    def get_success_url(self, *args, **kwargs):
-        event = Event.objects.get(pk=self.kwargs["event_pk"])
-        return reverse(
-            "event:book_confirm",
-            kwargs={
-                "pk": self.kwargs["event_pk"],
-                "slug" : event.slug,
-                "user_pk": self.kwargs["user_pk"],
-                },
-        )
 
 class StuffOrganizationFormView(StuffFormMixin):
-    form_class = StuffForm
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -164,9 +153,14 @@ class StuffUpdateViewMixin(BSModalUpdateView):
         return stuff.get_absolute_url()
 
 class StuffUpdateView(StuffUpdateViewMixin, UpdateView):
-    form_class = StuffForm
+    form_class = StuffUpdateForm
     template_name = 'inventory/stuff_edit_form.html'
     success_message = "L'appareil a bien été modifié"
+
+class  StuffEditVisibilityStuffView(StuffUpdateViewMixin, UpdateView):
+    form_class =  StuffVisibilityForm
+    template_name = 'inventory/stuff_edit_visibility_form.html'
+    success_message = "La visibilité a bien été modifié"
 
 class StuffUpdateOwnerView(StuffUpdateViewMixin, UpdateView):
     form_class = StuffEditOwnerForm

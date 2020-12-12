@@ -1,156 +1,158 @@
 {% extends 'base.html' %}
-{% load thumbnail initialavatar %}
+{% load assets app_filters thumbnail initialavatar bootstrap4 static %}
 {% block title %} réservation {{event}} {% endblock %}
 
-{% block content %}
+{% block content %}   
 {% url "event:list" as event_list_url %}
 {% include "breadcrumb.html" with current="votre réservation" second_parent_url=event_list_url second_parent_text="Évènements" first_parent_url=event.get_absolute_url first_parent_text=event %}
 
-<div class="container d-flex justify-content-center">
-
-<!-- modals -->
-<div class="modal fade" tabindex="-1" role="dialog" id="modal-stuff">
+<div class="modal fade" tabindex="-1" role="dialog" id="modal">
   <div class="modal-dialog" role="document">
     <div class="modal-content"></div>
   </div>
 </div>
 
-  <div class="card mt-5 mb-5 text-center">
-    <div class="card-header bg-secondary">
-      Votre réservation
-    </div>
-    <div class="card-body">
-    <div class="col-12 mb-1">
-      {% if registered_user.avatar_img %}
-        {% thumbnail registered_user.avatar_img "50x50" crop="center" format="PNG" as im %}
-          <img src="{{ im.url }}" class="m-2 rounded-circle"/>
-        {% endthumbnail %}
-      {% else %}
-        {% if registered_user.first_name %}
-          {% get_initial_avatar registered_user 50 'circle' %}
-        {% endif %}
-      {% endif %}
-      <h3>{{registered_user}}</h3>
-    </div>
-    <h5 class="text-success"><i class="mt-4 far fa-hand-peace fa-3x"></i> Félicitation !</h5>
-    <i>Votre réservation a bien été prise en compte ! </i><br>
-
-    <span class="text-danger mt-2 mb-2">Important ! Réserver une place vous engage à participer.</span>
-    <div class="card text-left">
-      <div class="card-header bg-primary"> 
-        <span class="text-secondary">
-          <i class="far fa-calendar-alt"></i>    
-          {{ event.date|date:"l j F Y " }} <br>
-          <span class="text-white">
-            <i class="far fa-clock"></i>  
-            {{ event.starts_at }} à {{ event.ends_at }}
+<div class="container">
+  <div class="d-flex justify-content-center">
+    <div class="m-2 mt-5 text-center">
+      <div class="pt-2">
+      <h5 class="text-success"><i class="mt-2 far fa-hand-peace fa-3x"></i> Réservation confirmée !</h5>
+      <span class="mt-2 d-block mb-3"><i class="text-danger">Noubliez-pas : réserver une place vous engage à participer.</i></span>
+      <div class="card shadow text-left" style="max-width: 350px; margin:auto">
+        <div class="card-header bg-primary"> 
+          <span class="text-secondary">
+            <i class="far fa-calendar-alt"></i>    
+            {{ event.date|date:"l j F Y " }} <br>
+            <span class="text-white">
+              <i class="far fa-clock"></i>  
+              {{ event.starts_at }} à {{ event.ends_at }}
+            </span>
           </span>
-        </span>
-      </div>
-      <div class="card-body p-0 d-flex flex-column">
+        </div>
         <div class="p-2">
-          <div style="min-height: 48px;">
-            <h6 class="text-muted mb-0">{{ event.activity.category.name }}</h6>
-            <h6 class="mb-0">{{ event.activity.name|truncatechars:40 }}</h6>
-          </div>
-          <hr>
-          <h6 class="text-muted mb-0">Adresse</h6>
-          <small>
-            <i class="fa fa-map-marker-alt"></i>
-            {{ event.location }}
-          </small>
-          <hr>
-          {% if event.description %}
-          <small>
-            {{ event.description | safe | truncatewords_html:40 }}
-          </small>
+          <h6 class="text-muted mb-0">Participant.e</h6>
+          {% if registered_user.avatar_img %}
+            {% thumbnail registered_user.avatar_img "25x25" crop="center" format="PNG" as im %}
+              <img src="{{ im.url }}" class="m-2 rounded-circle"/>
+            {% endthumbnail %}
+          {% else %}
+            {% if registered_user.first_name %}
+              {% get_initial_avatar registered_user 25 'circle' %}
+            {% endif %}
           {% endif %}
-          <h6 class="text-muted mb-0">Conditions</h6>
-          <ul class="pl-3">
-          {% for condition in event.conditions.all %}
-              <li class="text-left">
-                {% if condition.price > 0 %}
-                  <span class="badge badge-pill badge-secondary">
-                    {{ condition.price }}€</span> 
-                  {% else %}
-                  {% endif %}
-                <span>{{ condition.description | safe }}</span>
-              </li>
-              {% empty %}
-              <li class="text-left pb-3"><span>La participation est libre / pas de condition d'accès</span>
-              </li>
-            </ul>
-              {% endfor %}
+          <b>{{registered_user}}</b>
         </div>
-    </div>
-    <span class="mb-4">Maintenant, vous pouvez nous indiquer avec quel(s) appareil(s) vous allez participer</span>
-    <span> S'agit-il d'appareils avec lesquels vous êtes déjà venu ? </span>
-    {% if registered_user.user_stuffs %}
-    <div class="d-flex justify-content-center">
-      <div class="card col-md-6 p-2 pt-4">
-        <button type="button" class="btn btn-primary bs-modal" data-form-url="{% url 'inventory:create_user_event_stuff' event.pk registered_user.pk %}">
-          Ajouter un objet à l'inventaire
-        </button>
-        <form method="POST" action="{% url 'event:add_stuff_event' event.pk registered_user.pk %}">
-          {% csrf_token %}
-        <div class="table-responsive">
-          <table class="table table-striped table-hover" if="stuffs-table">
-            <thead>
-              <tr>
-                <th>Objet</th>
-                <th>Etat</th>
-                <td>Sélectionner</td>
-              </tr>
-            </thead>
-            <tbody>
-                {% for stuff in registered_user.user_stuffs.all %}
-                <tr>
-                  <td scope="row">{{ stuff }}</td>
-                  <td>
-                    {% include "inventory/stuff_state_display.html" with stuff_state=stuff.get_state_display %}
-                  </td>
-                  <td>
-                    <input class="form-check-input" type="radio" name="selectedstuff" value="{{stuff.pk}}">
-                  </td>
-                </tr>
+        <hr>
+          <div class="card-body p-0 d-flex flex-column">
+          <div class="p-2">
+            <div style="min-height: 48px;">
+              <h6 class="text-muted mb-0">{{ event.activity.category.name }}</h6>
+              <h6 class="mb-0">{{ event.activity.name|truncatechars:40 }}</h6>
+            </div>
+            <hr>
+            <h6 class="text-muted mb-0">Adresse</h6>
+            <small>
+              <i class="fa fa-map-marker-alt"></i>
+              {{ event.location }}
+            </small>
+            <hr>
+            {% if event.description %}
+            <small>
+              {{ event.description | safe | truncatewords_html:40 }}
+            </small>
+            {% endif %}
+            <h6 class="text-muted mb-0">Conditions</h6>
+            <ul class="pl-3">
+            {% for condition in event.conditions.all %}
+                <li class="text-left">
+                  {% if condition.price > 0 %}
+                    <small class="badge badge-pill badge-secondary">
+                      {{ condition.price }}€</small> 
+                    {% endif %}
+                  <small>{{ condition.description | safe }}</small>
+                </li>
                 {% empty %}
-                <tr>
-                  <td colspan="3">
-                  Cet utilisateur n'a pas d'objet dans son inventaire
-                  </td>
-                </tr>
+                <li class="text-left pb-3"><small>La participation est libre / pas de condition d'accès</small>
+                </li>
             {% endfor %}
-            </tbody>
-          </table>
+            </ul>
+          </div> 
+          <a class="btn btn-default w-100" href="{% url 'event:detail' event.pk event.slug %}">Retour à l'événement</a> 
         </div>
-        <button type="submit" id="submit" class="btn btn-success w-100 p-3">Valider</button>
-        </form>
       </div>
     </div>
-    {% endif %}
   </div>
+  <div class="m-2 mt-5 mb-5 text-center">
+    <h5 class="m-4">Dites-nous quels appareils vous apportez !</h5>
+    <span> Sélectionner un appareil dans votre inventaire ci-dessous, ou 
+      <a class="bs-modal" href="#" data-form-url="{% url 'event:create_user_event_stuff' event.pk registered_user.pk token %}">
+        créez-en un nouveau 
+      </a> puis selectionnez-le 
+    </span>
+      {% if registered_user.user_stuffs %}
+      <div class="d-flex justify-content-center">
+        <div class="p-4 pt-4">
+          <form method="POST" action="{% url 'event:add_stuff_event' event.pk registered_user.pk %}">
+            {% csrf_token %}
+          <div class="table-responsive shadow bordered">
+            <table class="table table-hover text-left" if="stuffs-table">
+              <thead>
+                <tr>
+                  <th colspan="2">Mon inventaire</th>
+                  <td>Sélectionner</td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                 <td colspan="3" class="text-center">
+                  <a class="bs-modal" href="#" data-form-url="{% url 'event:create_user_event_stuff' event.pk registered_user.pk token %}">
+                    créer un autre appareil
+                  </a>
+                </td>
+                </tr>
+                  {% for stuff in registered_user.user_stuffs.all %}
+                  <tr>
+                    <td scope="row">{{ stuff }}</td>
+                    <td>
+                      {% include "inventory/stuff_state_display.html" with stuff_state=stuff.get_state_display %}
+                    </td>
+                    <td class="text-right">
+                      <input class="form-check-input" type="radio" name="selectedstuff" value="{{stuff.pk}}">
+                    </td>
+                  </tr>
+                  {% empty %}
+                  <tr>
+                    <td colspan="3">
+                    Cet utilisateur n'a pas d'objet dans son inventaire
+                    </td>
+                  </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          <button type="submit" id="submit" class="btn btn-success w-100 p-3">Valider mon choix</button>
+          </form>
+        </div>
+      </div>
+      {% endif %}
+    </div>
   </div>
-  <a class="btn btn-success w-100" href="{% url 'event:detail' event.pk event.slug %}">Retour à l'événement</a>
-</div>
-</div>
 {% endblock %}
 
 {% block extra_js %}
-<script>
-$(document).ready(function(){
-   $.fn.modal.Constructor.prototype._enforceFocus = function() {};
-   $(".bs-modal").each(function () {
-     console.log("pouet")
-     $(this).modalForm({
-      formURL: $(this).data('form-url')
-     });
+  <script type="text/javascript">
+    $(document).ready(function(){
+    $(".bs-modal").each(function () {
+      $(this).modalForm({
+          formURL: $(this).data('form-url')
+      });
     });
- });
-</script>
-<script>
-  $(document).ready(function(){
-    $("#breadcrumb").sticky({topSpacing:0});
-  });
+    });
+  </script>
+  <script>
+    $(document).ready(function(){
+      $("#breadcrumb").sticky({topSpacing:0});
+    });
 </script>
 {% endblock %}
 

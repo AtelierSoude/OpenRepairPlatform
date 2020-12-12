@@ -34,6 +34,7 @@ from openrepairplatform.event.forms import (
 from openrepairplatform.event.models import Activity, Condition, Event, Participation
 from openrepairplatform.location.models import Place
 from openrepairplatform.inventory.forms import StuffForm
+from openrepairplatform.inventory.views import StuffFormMixin
 from openrepairplatform.inventory.models import Stuff
 from openrepairplatform.user.models import CustomUser
 from openrepairplatform.event.templatetags.app_filters import tokenize
@@ -497,10 +498,31 @@ class EventBookStuffView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["event"] = Event.objects.get(pk=kwargs["pk"])
-        context["registered_user"] = CustomUser.objects.get(pk=kwargs["user_pk"])
+        context["token"] = self.kwargs['token']
+        context["event"] = Event.objects.get(pk=self.kwargs["pk"])
+        context["registered_user"] = CustomUser.objects.get(pk=self.kwargs["user_pk"])
         return context
 
+class StuffUserEventFormView(StuffFormMixin):
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["visitor_user"] = CustomUser.objects.get(pk=self.kwargs["registered_pk"])
+        kwargs["event"] = Event.objects.get(pk=self.kwargs["event_pk"])
+        return kwargs
+    
+    def get_success_url(self, *args, **kwargs):
+        event = Event.objects.get(pk=self.kwargs["event_pk"])
+        import pdb; pdb.set_trace()
+        return reverse(
+            "event:book_confirm",
+            kwargs={
+                "pk": self.kwargs["event_pk"],
+                "slug" : event.slug,
+                "user_pk": self.kwargs["registered_pk"],
+                "token": self.kwargs["token"]
+                },
+        )
 class EventAddStuffView(View):
     model = Event
     http_method_names = ["post"]

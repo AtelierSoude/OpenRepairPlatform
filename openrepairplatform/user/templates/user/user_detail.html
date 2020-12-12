@@ -277,7 +277,7 @@
                                   <span class="badge badge-pill badge-secondary">Absent</span>
                                 {% elif status == "present" %}
                                   <span class="badge badge-pill badge-info">A participé</span>
-                                {% endif %}
+                              {% endif %}
                             </td>
                           </tr>
                       {% empty %}
@@ -285,59 +285,10 @@
                       {% endfor %}
                   </table>
                 </div>
-              {% endif %}
-
-        <div class="card p-2">
-          <h4 class="mt-4 text-center"> {{ object.passed_rendezvous.all.count}} Passés</h4>
-          <div class="table-responsive">
-              <table class="table">
-                  <tbody class="">
-                  {% for event, status in passed_rendezvous reversed %}
-                  {% ifchanged %}
-                  <tr>
-                    <td colspan="4" class="bg-light">
-                      <b>{{ event.date|date:"F" }} {{event.date|date:"Y" }}</b>
-                    </td>
-                  </tr>
-                {% endifchanged %}
-                <tr class="{% if event.date <= today %}bg-light text-muted{% else %}bg-white{% endif %}">
-                  <td>
-                    <div class="row border-secondary border text-center">
-                      <span class="col-12 bg-secondary">
-                        {{ event.date|date:"N"|upper }}
-                      </span>
-                      <span class="col-12">
-                        {{ event.date|date:"d" }}
-                      </span>
-                    </div>
-                  </td>
-                  <td>
-                    <a href="{% url 'event:detail' event.pk event.slug %}">
-                      <b>{{ event.activity }}</b>
-                    </a>
-                  </td>
-                  <td>
-                    <small>{{ event.location }}</small>
-                  </td>
-                  <td>
-                    {% if status == "organizer" %}
-                        <span class="badge badge-pill badge-success">Orga</span>
-                      {% elif status == "absent" %}
-                        <span class="badge badge-pill badge-secondary">Absent</span>
-                      {% elif status == "present" %}
-                        <span class="badge badge-pill badge-info">A participé</span>
-                    {% endif %}
-                  </td>
-                </tr>
-                {% empty %}
-                Pas d'évènements 
-                {% endfor %}
-                </table>
               </div>
             {% endif %}
-          </div>
+          {% endif %}
         </div>
-      </div>
         <div class="tab-pane fade" id="v-pills-membership" role="tabpanel" aria-labelledby="v-pills-membership-tab">
           <h4 class="mt-4">Etat des adhésions</h4>
           {% for membership in object.memberships.all %}
@@ -442,6 +393,7 @@
           </div>
         </div>
       </div>  
+    </div>
     </div>
     </section>
   </div>

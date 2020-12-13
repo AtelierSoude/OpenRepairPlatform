@@ -1,6 +1,12 @@
 {% load bootstrap4 assets static %}
 <div class="modal-header">
-    <h3 class="modal-title">Ajouter une intervention</h3>
+    <h3 class="modal-title">
+        {% if update_intervention %}
+            Modifier l'intervention
+        {% else %}
+            Ajouter une intervention
+        {% endif %}
+    </h3>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
       <span aria-hidden="true">&times;</span>
     </button>

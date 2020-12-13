@@ -28,6 +28,7 @@
                 <th scope="col">Raisonement</th>
                 <th scope="col">Action</th>
                 <th scope="col">Status</th>
+                <th scope="col">Modifier</th>
                 </tr>
             </thead>
             <tbody>
@@ -62,7 +63,13 @@
                     {{ intervention.status }}
                     {% endif %}
                 </td>
-                </tr>
+                <td class="text-center">
+                {% if can_edit %}
+                <a class="btn btn-default rounded-circle btn-sm bs-modal" data-form-url="{% url 'inventory:update_intervention' intervention.pk %}">
+                    <i class="fa fa-pencil-alt"></i>
+                </a>
+                {% endif %}
+                </td>
             {% endfor %}
             </tbody>
             </table>

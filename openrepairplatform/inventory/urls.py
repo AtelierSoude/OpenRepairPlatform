@@ -99,4 +99,9 @@ urlpatterns = [
         views.InterventionCreateView.as_view(),
         name="create_intervention"
     ),
+    path(
+        "update_intervention/<int:pk>/",
+        views.InterventionUpdateView.as_view(),
+        name="update_intervention"
+    ),
 ]

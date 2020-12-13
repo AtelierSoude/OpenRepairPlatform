@@ -221,7 +221,35 @@ class InterventionCreateView(BSModalCreateView):
         context = super().get_context_data(**kwargs)
         context['folder'] = RepairFolder.objects.get(pk=self.kwargs["pk"])
         return context
+
+class InterventionUpdateView(BSModalUpdateView):
+    model = Intervention
+    template_name = 'inventory/intervention_create_form.html'
+    form_class = InterventionForm
+    success_message = "L'intervention a bien été modifiée"
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        intervention = Intervention.objects.get(pk=self.kwargs["pk"])
+        kwargs['folder'] = intervention.folder
+        kwargs["stuff"] = kwargs["folder"].stuff
+        return kwargs
+
+    def form_valid(self, form, *args, **kwargs): 
+        return super().form_valid(form)
+
+    def get_success_url(self, *args, **kwargs):
+        intervention = Intervention.objects.get(pk=self.kwargs["pk"])
+        stuff = intervention.folder.stuff 
+        return stuff.get_absolute_url()
     
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        intervention = Intervention.objects.get(pk=self.kwargs["pk"])
+        context['folder'] = intervention.folder
+        context['update_intervention'] = intervention
+        return context
+
 #### views for autocompletion 
 class DeviceAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):

@@ -221,7 +221,8 @@ class InterventionForm(BSModalModelForm):
     ]
     stuff_state = forms.ChoiceField(
         choices=STATES,
-        label="Etat"
+        label="Etat",
+        initial= "O"
     )
     close_folder = forms.BooleanField(
         label = "Cette intervention clos ce dossier",

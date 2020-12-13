@@ -86,9 +86,9 @@
         </a>
         </li>
         <li class="nav-item text-center {{stock_menu}}" >
-          <a>
-            <i class="fas fa-box-open fa-2x text-muted"></i><br>
-            <small class="text-muted">Stock</small>
+          <a href="{% url "inventory:stock_list" %}">
+            <i class="fas fa-box-open fa-2x"></i><br>
+            <small class="">Stocks</small>
           </a>
           </li>
         <li class="nav-item text-center text-muted {{repair_menu}}">

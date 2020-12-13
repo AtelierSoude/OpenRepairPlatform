@@ -172,7 +172,7 @@ class Device(models.Model):
         return reverse("inventory:device_view", args=(self.pk, self.slug))
 
     def __str__(self):
-        return f"{self.category}-{self.brand}-{self.model}"
+        return f"{self.category} {self.brand} {self.model}"
 
 
 class Observation(models.Model):

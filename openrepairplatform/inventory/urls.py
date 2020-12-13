@@ -45,7 +45,12 @@ urlpatterns = [
         name="device_view"
     ),
     path(
-        "<int:stuff_pk>/",
+        "",
+        views.StockListView.as_view(),
+        name="stock_list"
+    ),
+    path(
+        "stuff/<int:stuff_pk>/",
         views.StuffDetailView.as_view(),
         name="stuff_view"
     ),

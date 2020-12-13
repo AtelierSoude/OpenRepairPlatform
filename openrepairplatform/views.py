@@ -274,8 +274,9 @@ class ActiveOrgaAutocomplete(HasActivePermissionMixin, autocomplete.Select2Query
         qs = organization.actives.all().union(
             organization.admins.all(), organization.volunteers.all()
             )
+
         if self.q:
-            qs = qs.filter(Q(first_name__icontains=self.q) | Q(last_name__icontains=self.q) | Q(email__icontains=self.q))
+            qs = qs.filter(Q(first_name__icontains=self.q) | Q(last_name__icontains=self.q))
         return qs
 
 class CustomUserAutocomplete(autocomplete.Select2QuerySetView):

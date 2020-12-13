@@ -1,6 +1,6 @@
 {% load bootstrap4 assets static %}
 <div class="modal-header">
-    Vous allez créer un appareil 
+    Vous allez ajouter un objet à cet inventaire
 </div>
 <form method="post">
   {% bootstrap_form_errors form %}
@@ -20,7 +20,6 @@
         </div>
     </div>
     <div id="stuffcreate" style="display:none">
-
         {% if form.place %}
             {% bootstrap_field form.place %}
         {% endif %}

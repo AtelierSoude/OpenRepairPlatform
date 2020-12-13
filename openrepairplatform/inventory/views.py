@@ -50,6 +50,19 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import authentication, permissions
 
+class StockListView(FilterView):
+    model = Stuff
+    filterset_class = StockFilter
+    template_name = "inventory/stock_list.html"
+
+    def get_queryset(self):
+        queryset = Stuff.objects.filter(is_visible=True)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["stock_menu"] = 'active'
+        return context
 
 class DeviceDetailView(DetailView):
     model = Device

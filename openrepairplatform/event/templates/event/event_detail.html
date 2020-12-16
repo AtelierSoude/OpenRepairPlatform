@@ -31,7 +31,7 @@
       <h3 class="bg-white" id="event_title">{% if event.activity.category %} {{event.activity.category}} - {% endif %} {{ event.activity }} du {{ event.date }}      
         <div class="lead float-right ml-2">
         {% if is_active %}
-          <a href="{% url 'event:edit' event.pk %}" class="btn btn-warning rounded-circle"><i class="fa fa-pencil-alt"></i></a>
+          <a href="{% url 'event:edit' event.pk %}" class="btn btn-secondary rounded-circle"><i class="fa fa-pencil-alt"></i></a>
         {% endif %}
         {% if is_admin %}
           <a href="{% url 'event:delete' event.pk %}" class="btn btn-danger rounded-circle"><i class="fa fa-trash"></i></a>
@@ -93,7 +93,7 @@
           class="d-inline">
         {% csrf_token %}
         {% if user in event.organizers.all %}
-        <button class="btn btn-warning btn-block" type="submit">
+        <button class="btn btn-secondary btn-block" type="submit">
           je n'anime plus
         </button>
         {% else %}

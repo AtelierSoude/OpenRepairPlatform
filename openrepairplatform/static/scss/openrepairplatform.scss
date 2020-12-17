@@ -1,9 +1,6 @@
 /* éléments généraux */
 @import url('https://fonts.googleapis.com/css?family=Inconsolata&display=swap');
-
-$primary: #083342;
-$secondary: #fee56e;
-$link: #49d3be;
+@import 'variables.scss';
 
 .container-fluid{
   padding: 0;

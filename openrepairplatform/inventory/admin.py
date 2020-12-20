@@ -8,7 +8,12 @@ from treebeard.forms import movenodeform_factory
 
 from .models import Stuff, Device, Brand, Category, Observation, Action, Reasoning, Intervention, RepairFolder, Status
 
-class CategoryAdmin(TreeAdmin, ImportExportModelAdmin):
+class CategoryResource(resources.ModelResource):
+    class Meta:
+        model = Category
+
+class CategoryAdmin(ImportExportModelAdmin, TreeAdmin):
+    ressource_class = CategoryResource
     form = movenodeform_factory(Category)
 
 admin.site.register(Brand, SimpleHistoryAdmin)

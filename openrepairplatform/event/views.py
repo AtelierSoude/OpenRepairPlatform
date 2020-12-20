@@ -440,7 +440,7 @@ class BookView(RedirectView):
             else:
                 user_pk = id_current_user
             if is_authorized:
-                next_url = reverse("event:detail", args=[event.id, event.slug])
+                next_url = reverse("event:book_confirm", args=[event.id, event.slug, user_pk, token])
             else: 
                 next_url = reverse("event:book_confirm", args=[event.id, event.slug, user_pk, token])
 

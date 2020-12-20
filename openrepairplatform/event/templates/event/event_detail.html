@@ -23,7 +23,7 @@
   </div>
 
 <div class="row">
-  <section class="{% if is_volunteer %} col-md-4 {% else %}col-md-6{% endif %}  bg-white">
+  <section class="{% if is_volunteer %} col-md-5 {% else %}col-md-6{% endif %}  bg-white">
       {% url "event:list" as event_list_url %}
   {% include "breadcrumb.html" with current=event first_parent_url=event_list_url first_parent_text="Évènements" %}
 
@@ -177,7 +177,7 @@
 
 </section>
 
-<section class="{% if is_volunteer %} col-md-8 {% else %}col-md-6{% endif %} no-gutters">
+<section class="{% if is_volunteer %} col-md-7 {% else %}col-md-6{% endif %} no-gutters">
   {% if event.booking == False or event.external == True %}
     {% if is_volunteer %}
     {% if event.booking == False and event.external == False %}

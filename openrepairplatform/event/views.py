@@ -541,7 +541,7 @@ class EventAddStuffView(View):
         event =  Event.objects.get(pk=self.kwargs["pk"])
         messages.success(
             self.request,
-            f"L'appareil a bien été ajouté à votre réservation !",
+            f"L'objet a bien été ajouté à votre réservation !",
         )
         return reverse("event:detail", args=[event.id, event.slug])
 

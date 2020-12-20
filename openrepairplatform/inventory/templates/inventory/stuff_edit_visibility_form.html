@@ -1,13 +1,13 @@
 {% load bootstrap4 assets static %}
 <div class="modal-header">
-    <h3 class="modal-title">Modifier la visibilité de l'appareil</h3>
+    <h3 class="modal-title">Modifier la visibilité de l'objet</h3>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
     </button>
 </div>
 <div class="modal-body">
     <form method="post" action="" enctype="multipart/form-data">
-    En cochant cette case, vous allez rendre l'appareil visible des visiteurs. 
+    En cochant cette case, vous allez rendre l'objet visible des visiteurs. 
     Cela permet de l'afficher dans la page "Stock" publique. <br>
     {% bootstrap_form_errors form %}
     {% csrf_token %}

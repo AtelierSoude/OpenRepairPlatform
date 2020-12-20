@@ -177,7 +177,7 @@ class Event(models.Model):
     )
     stuffs = models.ManyToManyField(
         Stuff, 
-        verbose_name=_("Appareils attendus"),
+        verbose_name=_("Objets attendus"),
         related_name="events",
         blank=True,
     )

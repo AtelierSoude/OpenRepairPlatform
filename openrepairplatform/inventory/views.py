@@ -121,7 +121,7 @@ class StuffFormMixin(BSModalCreateView):
     model = Stuff
     form_class = StuffForm
     template_name = 'inventory/stuff_form.html'
-    success_message = "L'appareil a bien été ajouté à l'inventaire"
+    success_message = "L'objet a bien été ajouté à l'inventaire"
 
     def form_valid(self, form):
         res = super().form_valid(form)
@@ -155,7 +155,7 @@ class StuffUpdateViewMixin(BSModalUpdateView):
     model = Stuff
     form_class = StuffForm
     template_name = 'inventory/stuff_edit_form.html'
-    success_message = "L'appareil a bien été modifié"
+    success_message = "L'objet a bien été modifié"
 
     def form_valid(self, form):
         res = super().form_valid(form)
@@ -168,7 +168,7 @@ class StuffUpdateViewMixin(BSModalUpdateView):
 class StuffUpdateView(StuffUpdateViewMixin, UpdateView):
     form_class = StuffUpdateForm
     template_name = 'inventory/stuff_edit_form.html'
-    success_message = "L'appareil a bien été modifié"
+    success_message = "L'objet a bien été modifié"
 
 class  StuffEditVisibilityStuffView(StuffUpdateViewMixin, UpdateView):
     form_class =  StuffVisibilityForm

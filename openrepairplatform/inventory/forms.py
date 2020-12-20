@@ -55,7 +55,7 @@ class StuffEditPlaceForm(BSModalModelForm):
             widget=autocomplete.ModelSelect2(url='place_autocomplete'),
             label="Localisation",
             queryset= Place.objects.all(),
-            help_text="Où se trouve l'appareil ?",
+            help_text="Où se trouve l'objet ?",
             required=False,
         )
 
@@ -98,7 +98,7 @@ class FolderForm(BSModalModelForm):
         label="Etat"
     )
     change_stuff_state = forms.BooleanField(
-        label = "Ce dossier change l'état général de l'appareil",
+        label = "Ce dossier change l'état général de l'objet",
         required = False, 
         initial= False,
     )
@@ -170,7 +170,7 @@ class FolderForm(BSModalModelForm):
                     self.stuff.__dict__.update(state=state)
                     self.stuff.save()
                 else: 
-                    self.add_error(f"Si vous souhaitez modifier l'état de l'appareil, renseignez un état")
+                    self.add_error(f"Si vous souhaitez modifier l'état de l'objet, renseignez un état")
             return instance 
 
     def __init__(self, stuff=None, *args, **kwargs):
@@ -230,7 +230,7 @@ class InterventionForm(BSModalModelForm):
         initial= False,
     )
     change_stuff_state = forms.BooleanField(
-        label = "Cette intervention a modifié l'état général de l'appareil",
+        label = "Cette intervention a modifié l'état général de l'objet",
         required = False, 
         initial= False,
     )
@@ -250,7 +250,7 @@ class InterventionForm(BSModalModelForm):
                 self.stuff.__dict__.update(state=state)
                 self.stuff.save()
             else: 
-                self.add_error(f"Si vous souhaitez modifier l'état de l'appareil, renseignez un état")
+                self.add_error(f"Si vous souhaitez modifier l'état de l'objet, renseignez un état")
         return instance 
 
     def __init__(self, folder=None, stuff=None, *args, **kwargs):
@@ -443,11 +443,11 @@ class StuffForm(BSModalModelForm):
                 widget=autocomplete.ModelSelect2(url='place_autocomplete'),
                 label="Localisation",
                 queryset= Place.objects.all(),
-                help_text="Où se trouve l'appareil ?",
+                help_text="Où se trouve l'objet ?",
                 required = False
             )
             self.fields['is_visible'] = forms.BooleanField(
-                label="Cet appareil est-il visible du public ?",
+                label="Cet objet est-il visible du public ?",
                 initial=False,
                 help_text = "par exemple s'il est en vente",
                 required = False

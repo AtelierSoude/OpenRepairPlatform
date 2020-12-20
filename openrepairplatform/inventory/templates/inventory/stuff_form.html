@@ -31,10 +31,16 @@
         {% bootstrap_field form.create_folder %}
         <div id="addfolder" style="display:none" class="bordered p-2 m-2">
             <small>Merci de renseigner au moins une observation</small>
-            {% bootstrap_field form.repair_date %}
-            {% bootstrap_field form.ongoing %}
+            {% if form.action %}
+                {% bootstrap_field form.repair_date %}
+                {% bootstrap_field form.ongoing %}
+            {% endif %}
             <div class="row">
-            {% bootstrap_field form.observation form_group_class="col-md-6" %}
+            {% if form.action %}
+                {% bootstrap_field form.observation form_group_class="col-md-6" %}
+            {% else %}
+                {% bootstrap_field form.observation form_group_class="col-md-12" %}
+            {% endif %}
             {% if form.reasoning %}
                 {% bootstrap_field form.reasoning form_group_class="col-md-6" %}
             {% endif %}

@@ -84,8 +84,8 @@
   </div>
   {% if event.allow_stuffs %}
     <div class="m-2 mt-5 mb-5 text-center">
-      <h5 class="m-4">Dites-nous quel appareil vous apportez !</h5>
-      <span> Sélectionner un appareil dans votre inventaire ci-dessous, ou 
+      <h5 class="m-4">Dites-nous quel objet vous apportez !</h5>
+      <span> Sélectionner un objet dans votre inventaire ci-dessous, ou 
         <a class="bs-modal" href="#" data-form-url="{% url 'event:create_user_event_stuff' event.pk registered_user.pk token %}">
           créez-en un nouveau 
         </a> puis selectionnez-le 
@@ -107,7 +107,7 @@
                     <tr>
                     <td colspan="3" class="text-center">
                       <a class="bs-modal" href="#" data-form-url="{% url 'event:create_user_event_stuff' event.pk registered_user.pk token %}">
-                        créer un autre appareil
+                        créer un autre objet
                       </a>
                     </td>
                     </tr>

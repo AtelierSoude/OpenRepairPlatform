@@ -1,6 +1,7 @@
 class PermissionEditStuffMixin:
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        can_create = False
         if self.request.user.is_authenticated:
             user = self.request.user        
             if self.object.member_owner == user: 
@@ -16,8 +17,8 @@ class PermissionEditStuffMixin:
                         user.admin_organizations.all()
                         )
                     for organization in owner_organizations:
-                            if user in (organization.actives.all().union(organization.volunteers.all(),organization.admins.all())):
-                                can_edit = True
+                        if user in (organization.actives.all().union(organization.volunteers.all(),organization.admins.all())):
+                            can_edit = True
                     if can_edit:
                         context['can_edit'] = True
         return context
@@ -27,6 +28,7 @@ class PermissionCreateUserStuffMixin:
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user = self.object 
+        can_create = False
         if self.request.user.is_authenticated:
             if user == self.request.user: 
                 context['can_create'] = user 
@@ -37,8 +39,8 @@ class PermissionCreateUserStuffMixin:
                     user.admin_organizations.all()
                     )
                 for organization in user_organizations:
-                        if self.request.user in (organization.actives.all().union(organization.volunteers.all(),organization.admins.all())):
-                            can_create = True
-                if can_create:
+                    if self.request.user in (organization.actives.all().union(organization.volunteers.all(),organization.admins.all())):
+                        can_create = True
+                if can_create == True:
                     context['can_create'] = True
         return context

@@ -230,7 +230,7 @@ class InterventionForm(BSModalModelForm):
         initial= False,
     )
     change_stuff_state = forms.BooleanField(
-        label = "Cette intervention a modifier l'état général de l'appareil",
+        label = "Cette intervention a modifié l'état général de l'appareil",
         required = False, 
         initial= False,
     )

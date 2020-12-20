@@ -514,7 +514,6 @@ class StuffUserEventFormView(StuffFormMixin):
     
     def get_success_url(self, *args, **kwargs):
         event = Event.objects.get(pk=self.kwargs["event_pk"])
-        import pdb; pdb.set_trace()
         return reverse(
             "event:book_confirm",
             kwargs={

@@ -381,22 +381,22 @@ class StuffForm(BSModalModelForm):
     def init_folder(self, data):
         self.folder = {}
         self.intervention = {}
-        self.folder['open_date'] = data['repair_date']
-        if data['ongoing']:
-            self.folder['ongoing'] = True
-        else:
-            self.folder['ongoing'] = False
         self.intervention['repair_date'] = data['repair_date']
         if getattr(self, "event", False):
             self.intervention['event'] = self.event
-        if data['observation']:
-            self.intervention['observation'] = data['observation']
-        if data['reasoning']:
+        self.intervention['observation'] = data['observation']
+        if not getattr(self, "visitor_user", False):
             self.intervention['reasoning'] = data['reasoning']
-        if data['action']:
             self.intervention['action'] = data['action']
-        if data['status']: 
             self.intervention['status'] = data['status']
+            self.folder['open_date'] = data['repair_date']
+            if data['ongoing']:
+                self.folder['ongoing'] = True
+            else:
+                self.folder['ongoing'] = False
+        else:
+            self.folder['open_date'] = dt.today()
+            self.folder['ongoing'] = True
         if not self.folder['open_date']:
             self.add_error(f'La date ne peut pas être vide')
         if not self.intervention['observation']:
@@ -454,6 +454,7 @@ class StuffForm(BSModalModelForm):
             )
         if visitor_user:
             self.user = visitor_user
+            self.visitor_user = visitor_user
             del self.fields['action']
             del self.fields['is_visible']
             del self.fields['reasoning']

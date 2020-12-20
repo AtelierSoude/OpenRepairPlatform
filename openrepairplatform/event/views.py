@@ -368,9 +368,12 @@ class CancelReservationView(RedirectView):
                 self.request, "Une erreur est survenue lors de votre requête"
             )
             return reverse("event:list")
-
+        if event.allow_stuffs:
+            user_stuffs = event.stuffs.all().filter(member_owner=user)
+            if user_stuffs:
+                for stuff in user_stuffs: 
+                    event.stuffs.remove(stuff)
         event.registered.remove(user)
-
         event_url = reverse("event:detail", args=[event.id, event.slug])
         event_url = self.request.build_absolute_uri(event_url)
 

@@ -135,8 +135,8 @@ class StuffUserFormView(StuffFormMixin, CreateView):
         return kwargs
     
     def get_success_url(self, *args, **kwargs):
-        return self.object.get_absolute_url()
-
+        user = CustomUser.objects.get(pk=self.kwargs["user_pk"])
+        return user.get_absolute_url()
 
 class StuffOrganizationFormView(StuffFormMixin, CreateView):
 

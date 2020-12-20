@@ -17,7 +17,7 @@ class StockTable(ColumnShiftTable):
     id = tables.Column(
         attrs={"td": {"class": "small-column"},"th": {"class": "small-column"}}
         )
-
+    
     state = tables.TemplateColumn(
         template_name="extra_column_data.html",
          extra_context={"column": "stuff_state"},
@@ -43,6 +43,7 @@ class StockTable(ColumnShiftTable):
          "device",
          "place",
          "state",
+         "is_visible",
          'action',
         )
         exclude = (

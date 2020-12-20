@@ -122,31 +122,31 @@ class Event(models.Model):
         Activity, on_delete=models.SET_NULL, null=True, related_name="events"
     )
     description = CleanHTMLField(
-        verbose_name=_("Event extra description"), blank=True
+        verbose_name=_("Description supplémentaire de l'événément (remplace la définition par défaut de l'activité)"), blank=True
     )
-    collaborator = models.CharField(verbose_name=_("In association with"), 
+    collaborator = models.CharField(verbose_name=_("En association avec"), 
         max_length=100,
         blank=True
     )
-    external = models.BooleanField(verbose_name=_("External booking ?"), default=False)
+    external = models.BooleanField(verbose_name=_("Réservation externe au site ?"), default=False)
     external_url = models.URLField(
         max_length=200, 
-        verbose_name=_("Link to an external website for booking or just for infos"), 
+        verbose_name=_("Lien vers un site externe. Pour la réservation externe (si activée) ou simplement pour info"), 
         blank=True
     )
     slug = models.SlugField(blank=True)
-    date = models.DateField(verbose_name=_("Event day"), default=date.today)
+    date = models.DateField(verbose_name=_("Jour"), default=date.today)
     starts_at = models.TimeField(
-        verbose_name=_("Start time"), default=timezone.now
+        verbose_name=_("Heure de début"), default=timezone.now
     )
-    ends_at = models.TimeField(verbose_name=_("End time"))
+    ends_at = models.TimeField(verbose_name=_("Heure de fin"))
     available_seats = models.PositiveIntegerField(
-        verbose_name=_("Available seats"), default=0
+        verbose_name=_("Places disponibles"), default=0
     )
     registered = models.ManyToManyField(
         CustomUser,
         related_name="registered_events",
-        verbose_name=_("Registered"),
+        verbose_name=_("Utilisateurs attendus"),
         blank=True,
     )
     presents = models.ManyToManyField(
@@ -157,20 +157,32 @@ class Event(models.Model):
         through="Participation",
     )
     needed_organizers = models.PositiveIntegerField(
-        verbose_name=_("Needed organizers"), default=0
+        verbose_name=_("Nombre d'animateurs attendus"), default=0
     )
     organizers = models.ManyToManyField(
         CustomUser,
         related_name="organizers_events",
-        verbose_name=_("Organizers"),
+        verbose_name=_("Organisateurs / animateurs "),
         blank=True,
     )
     location = models.ForeignKey(
-        Place, on_delete=models.SET_NULL, null=True, related_name="events"
+        Place, on_delete=models.SET_NULL, null=True, related_name="events", verbose_name="Lieu"
     )
-    stuffs = models.ManyToManyField(Stuff, related_name="events")
-    is_free = models.BooleanField(default=False, verbose_name=_("No booking limit ?"))
-    booking = models.BooleanField(default=True, verbose_name=_("This event demands internal booking ?"))
+    allow_stuffs = models.BooleanField(
+        verbose_name=_("Souhaitez-vous gérer des réparations ?"),
+        default=False,
+        blank=True,
+        help_text="Les participants pourront déclarer leurs réparations lors de la réservation"
+
+    )
+    stuffs = models.ManyToManyField(
+        Stuff, 
+        verbose_name=_("Objets attendus"),
+        related_name="events",
+        blank=True,
+    )
+    is_free = models.BooleanField(default=False, verbose_name=_("Pas de limite de place ?"))
+    booking = models.BooleanField(default=True, verbose_name=_("Réservation interne au site ?"))
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     history = HistoricalRecords()
@@ -238,10 +250,10 @@ class Participation(models.Model):
     PAYMENT_LOCAL_CASH = "5"
     PAYMENTS = (
         (PAYMENT_CASH, _("Espèces")),
-        (PAYMENT_BANK, _("Online")),
+        (PAYMENT_BANK, _("En ligne")),
         (PAYMENT_BANK_CHECK, _("Chèque")),
         (PAYMENT_CB, _("CB")),
-        (PAYMENT_LOCAL_CASH, _("Gonettes")),
+        (PAYMENT_LOCAL_CASH, _("Monnaie locale")),
     )
     payment = models.CharField(
         max_length=1, choices=PAYMENTS, blank=True, default=PAYMENT_CASH
@@ -252,7 +264,7 @@ class Participation(models.Model):
     )
     saved = models.BooleanField(default=False)
     amount = models.PositiveIntegerField(
-        verbose_name=_("Amount paid"), default=0, blank=True
+        verbose_name=_("Montant payé"), default=0, blank=True
     )
     fee = models.OneToOneField(
         Fee, on_delete=models.SET_NULL, null=True, blank=True

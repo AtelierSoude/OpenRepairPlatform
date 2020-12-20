@@ -10,6 +10,10 @@
     {% bootstrap_form_errors form %}
     {% csrf_token %}
     <h5 class="text-center"><b>Propriétaire actuel  : {{object.owner}}</b></h5><br>
+    <small class="text-danger">
+        Attention : Si le nouveau propriétaire n'est pas l'une de vos organization ou utilisateur 
+        qui en est membre, vous n'aurez plus de droits de modifier cet objet
+    </small><br>
     Le nouveau propriétaire est :
     <div class="form-group">
         <select class="form-control" id="ownerchoice">

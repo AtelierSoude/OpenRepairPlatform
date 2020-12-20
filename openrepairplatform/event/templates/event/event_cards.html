@@ -66,13 +66,15 @@
               <small class="text-muted mb-1">en partenariat avec {{ event.collaborator }}</small>
             {% endif %}
           </div>
+          {% if event.allow_stuffs %}
+             <small class="text-muted"><i class="fas fa-tools"></i> Cet événement gère les réparations</small>
+             <br>
+          {% endif %}
           <small class="text-muted">
             <i class="fa fa-map-marker-alt"></i>
             {{ event.location.name }}
           </small>
-          <br>
-
-          <div class="mini-organizers">
+          <div class="mini-organizers pl-2 pt-1">
             {% for orga in event.organizers.all %}
             <div class="position-relative float-left mini">
               {% if orga.avatar_img %}
@@ -134,7 +136,7 @@
     class="d-inline">
   {% csrf_token %}
   {% if user in event.organizers.all %}
-  <button class="btn btn-warning btn-block" type="submit">
+  <button class="btn btn-secondary btn-block" type="submit">
     je n'anime plus
   </button>
   {% else %}

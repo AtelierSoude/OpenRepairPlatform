@@ -2,10 +2,9 @@
 {% load static i18n l10n %}
 {% load bootstrap4 app_filters %}
 
-{% block title %}Bienvenue sur l'application Reparons{% endblock %}
+{% block title %}Bienvenue sur l'application {{site_title}}{% endblock %}
 
 {% block content %}
-
 <div class="text-center">
     <div class="container-fluid bg-secondary text-center v-align pt-5 home-picture pb-5">
         <h3 class="text-white pt-5">Prenez rendez-vous en ligne pour tout réparer !</h3>
@@ -78,7 +77,6 @@
     </div>
     {% endif %}
 </div>
-
 {{ form.media }}
 
 {% endblock %}

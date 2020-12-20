@@ -16,8 +16,13 @@ class StuffEditOwnerForm(BSModalModelForm):
         self.fields["member_owner"] = forms.ModelChoiceField(
             queryset=CustomUser.objects.all(),
             widget=autocomplete.ModelSelect2(url='user_autocomplete', attrs={'data-html': True, 'data-allow-clear': "true"}),
-            label="Cherchez un utilisateur"
+            label="Cherchez un utilisateur",
+            required = False,
         )
+
+    def save(self, commit=True):
+        instance = super().save(commit=commit)
+        return instance 
 
     class Meta:
         model = Stuff
@@ -26,7 +31,23 @@ class StuffEditOwnerForm(BSModalModelForm):
             "organization_owner",
         ]
 
+class StuffVisibilityForm(BSModalModelForm):
+
+    def save(self, commit=True):
+        instance = super().save(commit=commit)
+        return instance 
+
+    class Meta:
+        model = Stuff
+        fields = [
+            "is_visible",
+        ]
+
 class StuffEditPlaceForm(BSModalModelForm):
+
+    def save(self, commit=True):
+        instance = super().save(commit=commit)
+        return instance 
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -34,7 +55,8 @@ class StuffEditPlaceForm(BSModalModelForm):
             widget=autocomplete.ModelSelect2(url='place_autocomplete'),
             label="Localisation",
             queryset= Place.objects.all(),
-            help_text="Où se trouve l'appareil ?",
+            help_text="Où se trouve l'objet ?",
+            required=False,
         )
 
     class Meta:
@@ -59,6 +81,7 @@ class FolderForm(BSModalModelForm):
     WORKING = "W"
     DISASSEMBLED = "D"
     FIXING = "F"
+    FIXED = "O"
     THROWN = "T"
     PARTIAL = "P"
     STATES = [
@@ -66,6 +89,7 @@ class FolderForm(BSModalModelForm):
         (WORKING, "Fonctionnel"),
         (DISASSEMBLED, "Désassemblé"),
         (FIXING, "En réparation"),
+        (FIXED, "Réparé"),
         (THROWN, "Evaporé"),
         (PARTIAL, "Partiel"),
     ]
@@ -74,7 +98,7 @@ class FolderForm(BSModalModelForm):
         label="Etat"
     )
     change_stuff_state = forms.BooleanField(
-        label = "Ce dossier change l'état général de l'appareil",
+        label = "Ce dossier change l'état général de l'objet",
         required = False, 
         initial= False,
     )
@@ -118,11 +142,15 @@ class FolderForm(BSModalModelForm):
         else:
             self.folder['ongoing'] = False
         self.intervention['repair_date'] = data['open_date']
-        self.intervention['observation'] = data['observation']
-        self.intervention['reasoning'] = data['reasoning']
-        self.intervention['action'] = data['action']
-        self.intervention['status'] = data['status']
-        if not self.self.folder['open_date']:
+        if data['observation']:
+            self.intervention['observation'] = data['observation']
+        if data['reasoning']:
+            self.intervention['reasoning'] = data['reasoning']
+        if data['action']:
+            self.intervention['action'] = data['action']
+        if data['status']: 
+            self.intervention['status'] = data['status']
+        if not self.folder['open_date']:
             self.add_error(f'La date ne peut pas être vide')
         if not self.intervention['observation']:
             self.add_error(f'Veuillez rentrer au moins une observation.')
@@ -142,7 +170,7 @@ class FolderForm(BSModalModelForm):
                     self.stuff.__dict__.update(state=state)
                     self.stuff.save()
                 else: 
-                    self.add_error(f"Si vous souhaitez modifier l'état de l'appareil, renseignez un état")
+                    self.add_error(f"Si vous souhaitez modifier l'état de l'objet, renseignez un état")
             return instance 
 
     def __init__(self, stuff=None, *args, **kwargs):
@@ -179,6 +207,7 @@ class InterventionForm(BSModalModelForm):
     WORKING = "W"
     DISASSEMBLED = "D"
     FIXING = "F"
+    FIXED = "O"
     THROWN = "T"
     PARTIAL = "P"
     STATES = [
@@ -186,12 +215,14 @@ class InterventionForm(BSModalModelForm):
         (WORKING, "Fonctionnel"),
         (DISASSEMBLED, "Désassemblé"),
         (FIXING, "En réparation"),
+        (FIXED, "Réparé"),
         (THROWN, "Evaporé"),
         (PARTIAL, "Partiel"),
     ]
     stuff_state = forms.ChoiceField(
         choices=STATES,
-        label="Etat"
+        label="Etat",
+        initial= "O"
     )
     close_folder = forms.BooleanField(
         label = "Cette intervention clos ce dossier",
@@ -199,7 +230,7 @@ class InterventionForm(BSModalModelForm):
         initial= False,
     )
     change_stuff_state = forms.BooleanField(
-        label = "Cette intervention a modifier l'état général de l'appareil",
+        label = "Cette intervention a modifié l'état général de l'objet",
         required = False, 
         initial= False,
     )
@@ -219,7 +250,7 @@ class InterventionForm(BSModalModelForm):
                 self.stuff.__dict__.update(state=state)
                 self.stuff.save()
             else: 
-                self.add_error(f"Si vous souhaitez modifier l'état de l'appareil, renseignez un état")
+                self.add_error(f"Si vous souhaitez modifier l'état de l'objet, renseignez un état")
         return instance 
 
     def __init__(self, folder=None, stuff=None, *args, **kwargs):
@@ -273,7 +304,7 @@ class InterventionForm(BSModalModelForm):
             "stuff_state",
         ]
 
-class StuffForm(BSModalModelForm, CreateUpdateAjaxMixin):
+class StuffForm(BSModalModelForm):
     category = forms.ModelChoiceField(
         widget=autocomplete.ModelSelect2(url='inventory:category_autocomplete'),
         label="Catégorie d'appareil",
@@ -347,40 +378,44 @@ class StuffForm(BSModalModelForm, CreateUpdateAjaxMixin):
         queryset = Status.objects.all()
     )
 
-    def clean_device(self):
-        device = self.cleaned_data['device']
-        if not device:
-            device = {}
-            device["category"] = self.cleaned_data['category']
-            device["brand"] = self.cleaned_data['brand']
-            device["model"] = self.cleaned_data['model']
-            device["picture"] = self.cleaned_data['picture']
-            if not device["category"]:
-              self.add_error("category", "Ce champ ne peut pas être vide")
-            device = Device.objects.create(**device)
-            self.cleaned_data['device'] = device
-        return self.cleaned_data['device']
-
     def init_folder(self, data):
         self.folder = {}
         self.intervention = {}
-        self.folder['open_date'] = data['repair_date']
-        if data['ongoing']:
-            self.folder['ongoing'] = True
-        else:
-            self.folder['ongoing'] = False
         self.intervention['repair_date'] = data['repair_date']
         if getattr(self, "event", False):
             self.intervention['event'] = self.event
         self.intervention['observation'] = data['observation']
-        self.intervention['reasoning'] = data['reasoning']
-        self.intervention['action'] = data['action']
-        self.intervention['status'] = data['status']
+        if not getattr(self, "visitor_user", False):
+            self.intervention['reasoning'] = data['reasoning']
+            self.intervention['action'] = data['action']
+            self.intervention['status'] = data['status']
+            self.folder['open_date'] = data['repair_date']
+            if data['ongoing']:
+                self.folder['ongoing'] = True
+            else:
+                self.folder['ongoing'] = False
+        else:
+            self.folder['open_date'] = dt.today()
+            self.folder['ongoing'] = True
         if not self.folder['open_date']:
             self.add_error(f'La date ne peut pas être vide')
         if not self.intervention['observation']:
             self.add_error(f'Veuillez rentrer au moins une observation.')
         self.create_folder = data['create_folder']
+
+    def clean_device(self):
+        if not self.request.is_ajax():
+            device = self.cleaned_data['device']
+            if not device:
+                device = {}
+                device["category"] = self.cleaned_data['category']
+                device["brand"] = self.cleaned_data['brand']
+                device["model"] = self.cleaned_data['model']
+                if not device["category"]:
+                    self.add_error("category", "Ce champ ne peut pas être vide")
+                device = Device.objects.create(**device)
+                self.cleaned_data['device'] = device
+        return self.cleaned_data['device']
 
     def clean(self):
         if getattr(self, "user", False):
@@ -389,18 +424,14 @@ class StuffForm(BSModalModelForm, CreateUpdateAjaxMixin):
             self.cleaned_data["organization_owner"] = self.organization
         if self.cleaned_data["create_folder"]:
             self.init_folder(self.cleaned_data)
-
+   
     def save(self, commit=True):
-            if not self.request.is_ajax() or self.request.POST.get('asyncUpdate') == 'True':
-                instance = super().save(commit=commit)
-            else:
-                instance = super().save(commit=False)
-            if self.cleaned_data["create_folder"]:
-                self.folder['stuff'] = instance
-                folder = RepairFolder.objects.create(**self.folder)
-                self.intervention['folder'] = folder
-                intervention = Intervention.objects.create(**self.intervention)
-            return instance 
+        instance = super(StuffForm, self).save(commit=commit)
+        if self.cleaned_data["create_folder"]:
+            self.folder['stuff'] = instance
+            folder = RepairFolder.objects.create(**self.folder)
+            self.intervention['folder'] = folder
+            intervention = Intervention.objects.create(**self.intervention)
 
     def __init__(self, organization=None, user=None, visitor_user=None, event=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -412,22 +443,26 @@ class StuffForm(BSModalModelForm, CreateUpdateAjaxMixin):
                 widget=autocomplete.ModelSelect2(url='place_autocomplete'),
                 label="Localisation",
                 queryset= Place.objects.all(),
-                help_text="Où se trouve l'appareil ?",
+                help_text="Où se trouve l'objet ?",
+                required = False
             )
             self.fields['is_visible'] = forms.BooleanField(
-                label="Cet appareil est-il visible du public ?",
+                label="Cet objet est-il visible du public ?",
                 initial=False,
                 help_text = "par exemple s'il est en vente",
                 required = False
             )
-        elif visitor_user:
-            self.user = user
+        if visitor_user:
+            self.user = visitor_user
+            self.visitor_user = visitor_user
             del self.fields['action']
+            del self.fields['is_visible']
             del self.fields['reasoning']
             del self.fields['status']
             del self.fields['place']
-        elif user:
+        if user:
             self.user = user 
+            del self.fields['is_visible']
             del self.fields['place']
 
     class Meta:
@@ -443,7 +478,6 @@ class StuffForm(BSModalModelForm, CreateUpdateAjaxMixin):
             "organization_owner",
             "member_owner",
             "information",
-            "device",
             "ongoing",
             "observation",
             "action",
@@ -451,6 +485,76 @@ class StuffForm(BSModalModelForm, CreateUpdateAjaxMixin):
             "status",
             "place",
             "repair_date",
+            "device",
+            "is_visible",
         )
+
+class StuffUpdateForm(BSModalModelForm):
+    category = forms.ModelChoiceField(
+        widget=autocomplete.ModelSelect2(url='inventory:category_autocomplete'),
+        label="Catégorie d'appareil",
+        required = False,
+        queryset = Category.objects.all(),
+    )
+    device = forms.ModelChoiceField(
+        widget=autocomplete.ModelSelect2(url='inventory:device_autocomplete', 
+        forward=['category']),
+        label="Type d'appareil",
+        queryset = Device.objects.all(),
+        required = False
+    )
+    create_device = forms.BooleanField(
+        label = "Je ne trouve pas mon type d'appareil dans la liste ci dessus",
+        required = False,
+    )
+    brand = forms.ModelChoiceField(
+        widget=autocomplete.ModelSelect2(url='inventory:brand_autocomplete'),
+        label="Marque",
+        required=False,
+        queryset = Brand.objects.all()
+        )
+    model = forms.CharField(
+        label="Designation/modèle",
+        help_text="Si vous n'êtes pas sûr, ne remplissez pas ce champ",
+        required=False
+    )
+    picture = forms.ImageField(
+        required=False,
+        label="Photo"
+    )
+
+    def clean_device(self):
+        if not self.request.is_ajax():
+            device = self.cleaned_data['device']
+            if not device:
+                device = {}
+                device["category"] = self.cleaned_data['category']
+                device["brand"] = self.cleaned_data['brand']
+                device["model"] = self.cleaned_data['model']
+                if not device["category"]:
+                    self.add_error("category", "Ce champ ne peut pas être vide")
+                device = Device.objects.create(**device)
+                self.cleaned_data['device'] = device
+        return self.cleaned_data['device']
+
+    def save(self, commit=True):
+        instance = super().save(commit=commit)
+        return instance
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    class Meta:
+        model = Stuff
+        fields = (
+            "category",
+            "create_device",
+            "brand",
+            "model",
+            "picture",
+            "information",
+            "device",
+        )
+
 
 

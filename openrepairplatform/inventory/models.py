@@ -9,7 +9,7 @@ from openrepairplatform.utils import validate_image
 from django.utils.translation import ugettext_lazy as _
 
 class Brand(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=100)
     picture = models.ImageField(
         upload_to=None,
         height_field=None,
@@ -35,6 +35,7 @@ class Stuff(models.Model):
     WORKING = "W"
     DISASSEMBLED = "D"
     FIXING = "F"
+    FIXED = "O"
     THROWN = "T"
     PARTIAL = "P"
     STATES = [
@@ -42,6 +43,7 @@ class Stuff(models.Model):
         (WORKING, "Fonctionnel"),
         (DISASSEMBLED, "Désassemblé"),
         (FIXING, "En réparation"),
+        (FIXED, "Réparé"),
         (THROWN, "Evaporé"),
         (PARTIAL, "Partiel"),
     ]
@@ -79,7 +81,7 @@ class Stuff(models.Model):
         null=True,
         blank=True,
         verbose_name=_("Localisation"),
-        help_text="Où se trouve l'appareil ?",
+        help_text="Où se trouve l'objet ?",
         on_delete=models.SET_NULL
     )
     added_date = models.DateField(
@@ -94,13 +96,13 @@ class Stuff(models.Model):
     information = CleanHTMLField(
         null=True,
         blank=True,
-        verbose_name=_("Information optionnelles sur cet appareil"),
+        verbose_name=_("Information optionnelles sur cet objet"),
         help_text="D'où vient-il, a t'il des caractéristiques spéciales... bref, tout ce qui peut le décrire",
     )
     is_visible = models.BooleanField(
-        _("Appareil visible"),
+        _("Objet visible"),
         default=False,
-        help_text=_("Cet appareil est-il visible du public ? (par exemple, s'il est mis en vente)"),
+        help_text=_("Cet objet est-il visible du public ? (par exemple, s'il est mis en vente)"),
     )
     history = HistoricalRecords()
 
@@ -140,7 +142,7 @@ class Device(models.Model):
         null=True,
     )
     model = models.CharField(
-        max_length=50, 
+        max_length=100, 
         null=True,
         blank=True
     )
@@ -170,18 +172,18 @@ class Device(models.Model):
         return reverse("inventory:device_view", args=(self.pk, self.slug))
 
     def __str__(self):
-        return f"{self.category}-{self.brand}-{self.model}"
+        return f"{self.category} {self.brand} {self.model}"
 
 
 class Observation(models.Model):
-    name = models.CharField(max_length=150, default="")
+    name = models.CharField(max_length=250, default="")
     
     def __str__(self):
         return self.name
     
 
 class Reasoning(models.Model):
-    name = models.CharField(max_length=150, default="")
+    name = models.CharField(max_length=250, default="")
     verbose_name=_("raisonnement")
 
     def __str__(self):
@@ -189,14 +191,14 @@ class Reasoning(models.Model):
 
 
 class Action(models.Model):
-    name = models.CharField(max_length=150, default="")
+    name = models.CharField(max_length=250, default="")
     
     def __str__(self):
         return self.name
 
 
 class Status(models.Model):
-    name = models.CharField(max_length=150, default="")
+    name = models.CharField(max_length=250, default="")
     
     def __str__(self):
         return self.name

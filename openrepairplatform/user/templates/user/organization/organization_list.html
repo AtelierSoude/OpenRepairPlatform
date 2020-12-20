@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}Découvrez les organisations présentes sur Reparons{% endblock %}
+{% block title %}Découvrez les organisations présentes sur {{site_title}}{% endblock %}
 
 
 {% block content %}
@@ -19,7 +19,7 @@
   </div>
 
   <section class="container">
-    <div class="row col-md-12">
+    <div class="row col-md-12 mt-5">
       <div class="card-columns m-auto pt-2">
         {% include 'user/organization/organization_card.html' with organizations=object_list %}
       </div>

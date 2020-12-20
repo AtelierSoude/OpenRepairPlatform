@@ -5,6 +5,7 @@ from django.db.models import Q
 from bootstrap_modal_forms.generic import (
   BSModalCreateView,
   BSModalUpdateView,
+  BSModalFormView
 )
 from bootstrap_modal_forms.mixins import CreateUpdateAjaxMixin
 from django.template.loader import render_to_string
@@ -20,6 +21,7 @@ from django.views.generic import (
 from django.contrib import messages
 from openrepairplatform.mixins import HasActivePermissionMixin, RedirectQueryParamView
 from openrepairplatform.user.mixins import PermissionOrgaContextMixin
+from openrepairplatform.inventory.mixins import PermissionEditStuffMixin
 from django.urls import reverse, reverse_lazy
 
 import django_tables2 as tables
@@ -31,7 +33,16 @@ from .tables import StockTable
 from .models import Stuff, Device, Category, Observation, Status, Reasoning, Action, Brand, Intervention, RepairFolder
 from openrepairplatform.location.models import Place
 from .filters import StockFilter
-from .forms import StuffForm, FolderForm, StuffEditOwnerForm, StuffEditPlaceForm, StuffEditStateForm, InterventionForm
+from .forms import (
+    StuffForm, 
+    FolderForm, 
+    StuffEditOwnerForm,
+    StuffVisibilityForm, 
+    StuffEditPlaceForm, 
+    StuffEditStateForm, 
+    InterventionForm, 
+    StuffUpdateForm
+)
 from openrepairplatform.user.models import CustomUser, Organization
 from openrepairplatform.event.models import Event
 
@@ -39,6 +50,19 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import authentication, permissions
 
+class StockListView(FilterView):
+    model = Stuff
+    filterset_class = StockFilter
+    template_name = "inventory/stock_list.html"
+
+    def get_queryset(self):
+        queryset = Stuff.objects.filter(is_visible=True)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["stock_menu"] = 'active'
+        return context
 
 class DeviceDetailView(DetailView):
     model = Device
@@ -79,33 +103,31 @@ class OrganizationStockView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["organization"] = self.organization
-        context["stuff_count"] = self.get_queryset().count()
         context["stock_tab"] = 'active'
         context["organization_menu"] = 'active'
         return context
 
 
-class StuffDetailView(DetailView):
+class StuffDetailView(PermissionEditStuffMixin, DetailView):
     model = Stuff
     template_name = "inventory/stuff_detail.html"
     pk_url_kwarg = "stuff_pk"
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
         return context
 
 class StuffFormMixin(BSModalCreateView):
     model = Stuff
     form_class = StuffForm
     template_name = 'inventory/stuff_form.html'
-    success_message = "L'appareil a bien été ajouté à l'inventaire"
+    success_message = "L'objet a bien été ajouté à l'inventaire"
 
     def form_valid(self, form):
         res = super().form_valid(form)
-        messages.success(self.request, self.success_message)
         return res
 
-class StuffUserFormView(StuffFormMixin):
+class StuffUserFormView(StuffFormMixin, CreateView):
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -113,26 +135,8 @@ class StuffUserFormView(StuffFormMixin):
         return kwargs
     
     def get_success_url(self, *args, **kwargs):
-        return self.object.get_absolute_url()
-
-class StuffUserEventFormView(StuffFormMixin):
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs["visitor_user"] = CustomUser.objects.get(pk=self.kwargs["user_pk"])
-        kwargs["event"] = Event.objects.get(pk=self.kwargs["event_pk"])
-        return kwargs
-    
-    def get_success_url(self, *args, **kwargs):
-        event = Event.objects.get(pk=self.kwargs["event_pk"])
-        return reverse(
-            "event:book_confirm",
-            kwargs={
-                "pk": self.kwargs["event_pk"],
-                "slug" : event.slug,
-                "user_pk": self.kwargs["user_pk"],
-                },
-        )
+        user = CustomUser.objects.get(pk=self.kwargs["user_pk"])
+        return user.get_absolute_url()
 
 class StuffOrganizationFormView(StuffFormMixin, CreateView):
 
@@ -151,19 +155,25 @@ class StuffUpdateViewMixin(BSModalUpdateView):
     model = Stuff
     form_class = StuffForm
     template_name = 'inventory/stuff_edit_form.html'
-    success_message = "L'appareil a bien été modifié"
+    success_message = "L'objet a bien été modifié"
 
     def form_valid(self, form):
         res = super().form_valid(form)
         return res
 
-    def get_success_url(self):
-        return self.object.get_absolute_url()
+    def get_success_url(self, *args, **kwargs):
+        stuff = Stuff.objects.get(pk=self.kwargs["pk"])
+        return stuff.get_absolute_url()
 
 class StuffUpdateView(StuffUpdateViewMixin, UpdateView):
-    form_class = StuffForm
+    form_class = StuffUpdateForm
     template_name = 'inventory/stuff_edit_form.html'
-    success_message = "L'appareil a bien été modifié"
+    success_message = "L'objet a bien été modifié"
+
+class  StuffEditVisibilityStuffView(StuffUpdateViewMixin, UpdateView):
+    form_class =  StuffVisibilityForm
+    template_name = 'inventory/stuff_edit_visibility_form.html'
+    success_message = "La visibilité a bien été modifié"
 
 class StuffUpdateOwnerView(StuffUpdateViewMixin, UpdateView):
     form_class = StuffEditOwnerForm
@@ -223,7 +233,35 @@ class InterventionCreateView(BSModalCreateView):
         context = super().get_context_data(**kwargs)
         context['folder'] = RepairFolder.objects.get(pk=self.kwargs["pk"])
         return context
+
+class InterventionUpdateView(BSModalUpdateView):
+    model = Intervention
+    template_name = 'inventory/intervention_create_form.html'
+    form_class = InterventionForm
+    success_message = "L'intervention a bien été modifiée"
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        intervention = Intervention.objects.get(pk=self.kwargs["pk"])
+        kwargs['folder'] = intervention.folder
+        kwargs["stuff"] = kwargs["folder"].stuff
+        return kwargs
+
+    def form_valid(self, form, *args, **kwargs): 
+        return super().form_valid(form)
+
+    def get_success_url(self, *args, **kwargs):
+        intervention = Intervention.objects.get(pk=self.kwargs["pk"])
+        stuff = intervention.folder.stuff 
+        return stuff.get_absolute_url()
     
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        intervention = Intervention.objects.get(pk=self.kwargs["pk"])
+        context['folder'] = intervention.folder
+        context['update_intervention'] = intervention
+        return context
+
 #### views for autocompletion 
 class DeviceAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):

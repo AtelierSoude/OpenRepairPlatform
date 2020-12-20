@@ -34,6 +34,7 @@ from openrepairplatform.event.forms import (
 from openrepairplatform.event.models import Activity, Condition, Event, Participation
 from openrepairplatform.location.models import Place
 from openrepairplatform.inventory.forms import StuffForm
+from openrepairplatform.inventory.views import StuffFormMixin
 from openrepairplatform.inventory.models import Stuff
 from openrepairplatform.user.models import CustomUser
 from openrepairplatform.event.templatetags.app_filters import tokenize
@@ -367,9 +368,12 @@ class CancelReservationView(RedirectView):
                 self.request, "Une erreur est survenue lors de votre requête"
             )
             return reverse("event:list")
-
+        if event.allow_stuffs:
+            user_stuffs = event.stuffs.all().filter(member_owner=user)
+            if user_stuffs:
+                for stuff in user_stuffs: 
+                    event.stuffs.remove(stuff)
         event.registered.remove(user)
-
         event_url = reverse("event:detail", args=[event.id, event.slug])
         event_url = self.request.build_absolute_uri(event_url)
 
@@ -432,14 +436,16 @@ class BookView(RedirectView):
                 is_authorized = True
         except Exception:
             pass
-
         next_url = self.request.GET.get("redirect")
         if not utils.is_valid_path(next_url):
             if user: 
                 user_pk = user.pk 
             else:
                 user_pk = id_current_user
-            next_url = reverse("event:book_confirm", args=[event.id, event.slug, user_pk])
+            if is_authorized:
+                next_url = reverse("event:book_confirm", args=[event.id, event.slug, user_pk, token])
+            else: 
+                next_url = reverse("event:book_confirm", args=[event.id, event.slug, user_pk, token])
 
         if event.remaining_seats <= 0 and not is_authorized:
             messages.error(
@@ -447,6 +453,7 @@ class BookView(RedirectView):
                 "Désolé, il n'y a plus de place "
                 "disponibles pour cet évènement",
             )
+            next_url = reverse("event:detail", args=[event.id, event.slug])
             return next_url
 
         if user in event.presents.all().union(event.registered.all()):
@@ -454,6 +461,7 @@ class BookView(RedirectView):
                 self.request,
                 "Vous êtes déjà inscrit à cet évènement, à bientôt !",
             )
+            next_url = reverse("event:detail", args=[event.id, event.slug])
             return next_url
 
         event.registered.add(user)
@@ -493,10 +501,31 @@ class EventBookStuffView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["event"] = Event.objects.get(pk=kwargs["pk"])
-        context["registered_user"] = CustomUser.objects.get(pk=kwargs["user_pk"])
+        context["token"] = self.kwargs['token']
+        context["event"] = Event.objects.get(pk=self.kwargs["pk"])
+        context["event_menu"] = 'active'
+        context["registered_user"] = CustomUser.objects.get(pk=self.kwargs["user_pk"])
         return context
 
+class StuffUserEventFormView(StuffFormMixin):
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["visitor_user"] = CustomUser.objects.get(pk=self.kwargs["registered_pk"])
+        kwargs["event"] = Event.objects.get(pk=self.kwargs["event_pk"])
+        return kwargs
+    
+    def get_success_url(self, *args, **kwargs):
+        event = Event.objects.get(pk=self.kwargs["event_pk"])
+        return reverse(
+            "event:book_confirm",
+            kwargs={
+                "pk": self.kwargs["event_pk"],
+                "slug" : event.slug,
+                "user_pk": self.kwargs["registered_pk"],
+                "token": self.kwargs["token"]
+                },
+        )
 class EventAddStuffView(View):
     model = Event
     http_method_names = ["post"]
@@ -514,7 +543,7 @@ class EventAddStuffView(View):
         event =  Event.objects.get(pk=self.kwargs["pk"])
         messages.success(
             self.request,
-            f"L'appareil a bien été ajouté à votre réservation !",
+            f"L'objet a bien été ajouté à votre réservation !",
         )
         return reverse("event:detail", args=[event.id, event.slug])
 

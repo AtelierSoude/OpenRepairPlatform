@@ -1,8 +1,8 @@
 {% load bootstrap4 assets static %}
 <div class="modal-header">
-    Vous allez créer un appareil 
+    Vous allez ajouter un objet à cet inventaire
 </div>
-<form method="post" action="" enctype="multipart/form-data">
+<form method="post">
   {% bootstrap_form_errors form %}
   {% csrf_token %}
     {% bootstrap_field form.category %}
@@ -20,7 +20,6 @@
         </div>
     </div>
     <div id="stuffcreate" style="display:none">
-
         {% if form.place %}
             {% bootstrap_field form.place %}
         {% endif %}
@@ -32,10 +31,16 @@
         {% bootstrap_field form.create_folder %}
         <div id="addfolder" style="display:none" class="bordered p-2 m-2">
             <small>Merci de renseigner au moins une observation</small>
-            {% bootstrap_field form.repair_date %}
-            {% bootstrap_field form.ongoing %}
+            {% if form.action %}
+                {% bootstrap_field form.repair_date %}
+                {% bootstrap_field form.ongoing %}
+            {% endif %}
             <div class="row">
-            {% bootstrap_field form.observation form_group_class="col-md-6" %}
+            {% if form.action %}
+                {% bootstrap_field form.observation form_group_class="col-md-6" %}
+            {% else %}
+                {% bootstrap_field form.observation form_group_class="col-md-12" %}
+            {% endif %}
             {% if form.reasoning %}
                 {% bootstrap_field form.reasoning form_group_class="col-md-6" %}
             {% endif %}
@@ -51,11 +56,11 @@
         </div>
     </div>
 <div class="form-group p-2">
-<button type="submit" id="submit" style="display:none" class="btn submit-btn btn-success w-100 p-3">Valider</button>
+<button role="button" type="submit" id="submit" style="display:none" class="btn submit-btn btn-success w-100 p-3">Valider</button>
 </div>
-{{ form.media }}
 </form>
 
 {% assets "js_create_stuff" %}
+{{ form.media }}
 <script src="{{ ASSET_URL }}"></script>
 {% endassets %}

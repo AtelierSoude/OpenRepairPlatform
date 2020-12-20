@@ -30,6 +30,7 @@ from openrepairplatform.mixins import (
     HasVolunteerPermissionMixin,
     RedirectQueryParamView
 )
+from openrepairplatform.inventory.mixins import PermissionCreateUserStuffMixin
 from openrepairplatform.user.models import CustomUser, Organization, Membership, Fee
 from openrepairplatform.inventory.models import Stuff
 from openrepairplatform.inventory.forms import StuffForm
@@ -90,11 +91,10 @@ class UserCreateAndBookView(CreateView):
                 )
                 return redirect(
                     reverse(
-                        'event:book_confirm',
+                        'event:detail',
                         kwargs={
                             "pk": request.GET["event"],
                             "slug": event.slug,
-                            "user_pk": self.object.pk,
                         })
                 )
             return redirect(self.get_success_url())
@@ -297,7 +297,7 @@ class UpdateMemberView(HasActivePermissionMixin, UpdateView):
         )
 
 
-class UserDetailView(DetailView):
+class UserDetailView(PermissionCreateUserStuffMixin, DetailView):
     model = CustomUser
     template_name = "user/user_detail.html"
 

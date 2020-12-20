@@ -5,10 +5,10 @@
 
 <nav class="header nav-header navbar navbar-expand-lg" style="width:100%; position:fixed">
   <a href="{% url "homepage" %}" class="navbar-brand float-left d-block d-sm-none" style="width:50px; z-index: 150;"> 
-    <img src="{% static 'img/logo-reparons-beta.png' %}" class="brand-logo w-100">
+    <img src="{% static 'img/logo-simple.png' %}" class="brand-logo w-100">
   </a>
   <a href="{% url "homepage" %}" class="brand-logo d-none d-sm-block">
-    <img src="{% static 'img/reparons-logo.png' %}">
+    <img src="{% static 'img/logo.png' %}">
   </a>
   <div class="collapse navbar-collapse bg-primary" style="width:100%">
   </div>
@@ -86,9 +86,9 @@
         </a>
         </li>
         <li class="nav-item text-center {{stock_menu}}" >
-          <a>
-            <i class="fas fa-box-open fa-2x text-muted"></i><br>
-            <small class="text-muted">Stock</small>
+          <a href="{% url "inventory:stock_list" %}">
+            <i class="fas fa-box-open fa-2x"></i><br>
+            <small class="">Stocks</small>
           </a>
           </li>
         <li class="nav-item text-center text-muted {{repair_menu}}">

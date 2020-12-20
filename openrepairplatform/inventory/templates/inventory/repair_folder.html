@@ -10,9 +10,11 @@
             </span><br>
             <small><a href="{{folder.stuff.get_absolute_url}}">{{ folder.stuff }}</a></small><br>
             <small>Etat innitial : <b>{{folder.interventions.first.observation}}</b> / dernier état : <b>{{folder.interventions.last.status}}</b></small>
-            <button class="btn btn-sm bs-modal text-success float-right" data-form-url="{% url 'inventory:create_intervention' folder.pk %}">
-                <i class="fa fa-plus"></i> Ajouter une intervention 
-            </button>
+            {% if can_edit or is_active %}
+                <button class="btn btn-sm bs-modal text-success float-right" data-form-url="{% url 'inventory:create_intervention' folder.pk %}">
+                    <i class="fa fa-plus"></i> Ajouter une intervention 
+                </button>
+            {% endif %}
             <div class="text-left" data-toggle="collapse" href="#collapse{{folder.pk}}" role="button" aria-expanded="false" aria-controls="{{folder.pk}}">
                 <small><i class="fas fa-arrow-down"></i> Voir les interventions</small>
             </div>
@@ -26,6 +28,7 @@
                 <th scope="col">Raisonement</th>
                 <th scope="col">Action</th>
                 <th scope="col">Status</th>
+                <th scope="col">Modifier</th>
                 </tr>
             </thead>
             <tbody>
@@ -60,7 +63,13 @@
                     {{ intervention.status }}
                     {% endif %}
                 </td>
-                </tr>
+                <td class="text-center">
+                {% if can_edit %}
+                <a class="btn btn-default rounded-circle btn-sm bs-modal" data-form-url="{% url 'inventory:update_intervention' intervention.pk %}">
+                    <i class="fa fa-pencil-alt"></i>
+                </a>
+                {% endif %}
+                </td>
             {% endfor %}
             </tbody>
             </table>

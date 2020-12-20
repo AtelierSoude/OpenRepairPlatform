@@ -30,7 +30,7 @@ class EventForm(ModelForm):
         self.fields["organizers"] = forms.ModelMultipleChoiceField(
             queryset=(
                 self.orga.actives.all() | self.orga.admins.all() | self.orga.volunteers.all() 
-            ).distinct(),
+            ),
             widget=autocomplete.ModelSelect2Multiple(url='/' + self.orga.slug + '/user_orga_autocomplete/'),
             required=False,
         )
@@ -51,6 +51,7 @@ class EventForm(ModelForm):
             "is_free",
             "available_seats",
             "booking",
+            "allow_stuffs",
             "collaborator",
             "external",
             "external_url",
@@ -201,6 +202,7 @@ class RecurrentEventForm(forms.ModelForm):
             "is_free",
             "available_seats",
             "booking",
+            "allow_stuffs",
             "collaborator",
             "external",
             "external_url",

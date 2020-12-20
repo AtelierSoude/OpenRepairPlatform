@@ -10,9 +10,13 @@
       </button>
         {{ admin_text }}
       {% else %}
-      <button class="btn btn-success btn-block booking_form" data-toggle="modal" data-target="#reservation{{ event.pk }}">  
-        Je participe !
-      </button>
+        {% if event.remaining_seats > 0 %}
+          <button class="btn btn-success btn-block booking_form" data-toggle="modal" data-target="#reservation{{ event.pk }}">  
+            Je participe !
+          </button>
+        {% else %}
+          <a class="btn btn-block btn-outline-danger"> Complet</a>
+        {% endif %}
       {% endif %}
     <div class="modal" id="reservation{{ event.pk }}" tabindex="-1" role="dialog">
       <div class="modal-dialog" role="document">
@@ -62,10 +66,10 @@
 {% else %}
   {% if event.booking == False %}
     <a class="btn btn-outline-warning">Événement sans réservation</a>
-  {% elif event.booking == True and event.remaining_seats >= 0 or event.is_free %}
+  {% elif event.booking == True and event.remaining_seats > 0 or event.is_free %}
     {% if request.user in event.registered.all %}
       {% tokenize user=request.user event=event action='cancel' as tok %}
-      <a href="{% url 'event:cancel_reservation' tok %}" class="btn btn-block btn-warning">Je ne participe plus</a>
+      <a href="{% url 'event:cancel_reservation' tok %}" class="btn btn-block btn-secondary">Je ne participe plus</a>
     {% elif request.user not in event.presents.all and request.user not in event.organizers.all %}
       {% tokenize user=request.user event=event action='book' as tok %}
       <a href="{% url 'event:book' tok %}" class="btn btn-block btn-success">Je participe !</a>

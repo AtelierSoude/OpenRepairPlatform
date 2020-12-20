@@ -6,7 +6,7 @@
 <script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>
 
 <div class="container-fluid">
-  {% include "breadcrumb.html" with current=stuff first_parent_url="" first_parent_text="Objets %}
+  {% include "breadcrumb.html" with current=stuff first_parent_url="" first_parent_text="Objets" %}
   <div class="container">
 
     <!-- modals -->
@@ -63,6 +63,7 @@
             <div class="card col-md-12 mb-2 p-3">
               <span>
                 <b class="pr-2">Propriétaire</b> 
+                {% if can_edit or stuff.organization_owner %}
                   {% if stuff.owner.picture %}
                     {% thumbnail stuff.owner.picture "30x30" crop="left" format="PNG" as im %}
                       <img class="img-fluid rounded-circle square-2" src="{{ im.url }}" alt="organization img">
@@ -80,6 +81,9 @@
                       <i class="fa fa-pencil-alt"></i>
                     </a>
                   {% endif %}
+                {% else %}
+                 Vous ne pouvez pas voir qui est propriétaire
+                {% endif %}
               </span>
             </div>
             <div class="card col-md-12 mb-2 p-3">

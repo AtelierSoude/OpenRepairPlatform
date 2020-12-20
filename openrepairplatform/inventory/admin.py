@@ -1,12 +1,14 @@
 from django.contrib import admin
 from simple_history.admin import SimpleHistoryAdmin
+from import_export import resources
+from import_export.admin import ImportExportModelAdmin
 
 from treebeard.admin import TreeAdmin
 from treebeard.forms import movenodeform_factory
 
 from .models import Stuff, Device, Brand, Category, Observation, Action, Reasoning, Intervention, RepairFolder, Status
 
-class CategoryAdmin(TreeAdmin):
+class CategoryAdmin(TreeAdmin, ImportExportModelAdmin):
     form = movenodeform_factory(Category)
 
 admin.site.register(Brand, SimpleHistoryAdmin)

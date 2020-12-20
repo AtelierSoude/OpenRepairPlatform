@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+SITE_NAME = "pouet"
 PROJECT_DIR = dirname(dirname(abspath(__file__)))
 BASE_DIR = dirname(PROJECT_DIR)
 
@@ -76,6 +77,7 @@ TEMPLATES = [
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
+                "openrepairplatform.context_processors.site_title",
                 "django.template.context_processors.debug",
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",

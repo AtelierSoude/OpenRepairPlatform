@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'django_filters',
     'treebeard',
     'bootstrap_modal_forms',
+    'django_better_admin_arrayfield'
 ]
 
 

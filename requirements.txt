@@ -75,3 +75,4 @@ python-dotenv
 django-extensions
 django-treebeard
 django-bootstrap-modal-forms
+django-better-admin-arrayfield

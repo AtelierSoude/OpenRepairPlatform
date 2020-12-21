@@ -3,6 +3,7 @@ from treebeard.mp_tree import MP_Node
 from django.urls import reverse
 from django.utils.text import slugify
 from simple_history.models import HistoricalRecords
+from django_better_admin_arrayfield.models.fields import ArrayField
 from openrepairplatform.fields import CleanHTMLField
 from openrepairplatform.user.models import Organization
 from openrepairplatform.utils import validate_image
@@ -157,6 +158,7 @@ class Device(models.Model):
         validators=[validate_image],
         verbose_name=_("Image"),
     )
+    links = ArrayField(models.URLField(),blank=True, null=True)
     slug = models.SlugField(
         default="",
         unique=True,

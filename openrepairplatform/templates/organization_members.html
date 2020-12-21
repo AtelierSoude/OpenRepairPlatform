@@ -7,27 +7,24 @@
 
 {% block menu_content %}
   <section class="container">
-    <h2 class="text-center p-4">Membres adhérents de {{organization}}</h2>
-  </section>
-  <section class="container">
+    <h2 class="text-center mt-4">Membres adhérents de {{organization}}</h2>
     <div class="col-lg">
-      <div class="card mb-4 text-center">
-        <button class="btn btn-success" data-toggle="modal" data-target="#more-info-{{ anonymous_user.pk }}">
-          <i class="fa fa-plus"></i>
-          Ajouter un membre
+      <div class="mb-4 text-center">
+        <button class="btn btn-success btn-absolute" data-toggle="modal" data-target="#more-info-{{ anonymous_user.pk }}">
+          <i class="fa fa-plus"></i><i class="fas fa-user"></i>
+          <span class="btn-label d-none pl-1">Ajouter un membre</span>
         </button>
         {% include "user/organization/modal_more_info.html" with object=organization form=add_member_form %}
       </div>
       {% if filter %}
       <div class="card mb-4 text-center">
         <form action="" method="get" class="form-inline justify-content-center form-xs">
-          <h4 class="d-block w-100">Rechercher</h4>
             {% bootstrap_form filter.form %}
-            <a class="btn-secondary w-100">{% bootstrap_button 'filtrer' %}</a>
+            {% bootstrap_button 'filtrer' button_class="btn-secondary" %}
         </form>
       </div>
       {% endif %}
-      <div class="border border-primary mb-5">
+      <div class="box-shadow mb-5">
         <span class="float-right">Télécharger le résultat :
           <a class="btn btn-success btn-sm" href="{% querystring '_export'='csv' %}">CSV</a>
           <a class="btn btn-success btn-sm" href="{% querystring '_export'='ods' %}">ODS</a>
@@ -39,14 +36,29 @@
 {% endblock menu_content %}
 
 {% block extra_js %}
-  <script>
-    $(document).ready(function(){
-      $("#h_nav").sticky({topSpacing:40});
-      $("#side_nav").sticky({topSpacing:80});
-      $("#breadcrumb").sticky({topSpacing:0});
-    });
-  </script>
-  {% assets "js_detail_organization" %}
-    <script src="{{ ASSET_URL }}"></script>
-  {% endassets %}
+
+<script>
+  $(document).ready(function(){
+    $( ".btn-absolute" ).hover(
+  function() {
+    $( ".btn-label" ).addClass( "d-block" );
+    $( this ).css( "width", "200px" );
+  }, function() {
+    $( ".btn-label" ).removeClass( "d-block" );
+    $( this ).css( "width", "63px" );
+  }
+  );
+  });
+</script>
+
+{% assets "js_groups_organization" %}
+<script src="{{ ASSET_URL }}"></script>
+{% endassets %}
+<script>
+  $(document).ready(function(){
+    $.fn.modal.Constructor.prototype.enforceFocus = function () {};
+    $("#h_nav").sticky({topSpacing:105});
+    $("#breadcrumb").sticky({topSpacing:65});
+  });
+</script>
 {% endblock extra_js %}

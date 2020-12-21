@@ -20,6 +20,9 @@ class EventTable(ColumnShiftTable):
         verbose_name="Date",
         extra_context={"column": "date"},
         )
+    location = tables.Column(
+        attrs={"td": {"class": "small"}}
+        )
     needed_organizers = tables.TemplateColumn(
         accessor='needed_organizers', 
         template_name="extra_column_data.html",
@@ -38,7 +41,6 @@ class EventTable(ColumnShiftTable):
         extra_context={"column": "details"},
         verbose_name="Action",
         linkify=True,
-
         )
     class Meta:
         model = Event
@@ -113,8 +115,6 @@ class MemberTable(ColumnShiftTable):
             'avatar_img',
             'first_name',
             )
-
-
 
 
 class FeeTable(tables.Table):

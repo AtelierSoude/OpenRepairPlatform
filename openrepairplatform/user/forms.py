@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 from datetime import date as dt
 from captcha.fields import ReCaptchaField
+from dal import autocomplete 
 
 from .models import CustomUser, Organization, Fee
 
@@ -44,17 +45,16 @@ class UserUpdateForm(forms.ModelForm):
             )
         }
 
-
 class CustomUserEmailForm(forms.ModelForm):
     class Meta:
         model = CustomUser
         fields = ["email"]
 
-
-class CustomUserForm(forms.Form):
-    main_field = forms.CharField(
-        label="Rechercher un utilisateur",
-        max_length=100
+class CustomUserSearchForm(forms.Form):
+    user = forms.ModelChoiceField(
+        queryset=CustomUser.objects.all(),
+        label = "Veuillez rechercher si l'utilisateur existe avant de le créer",
+        widget=autocomplete.ModelSelect2(url='user_autocomplete', attrs={'data-html': True, 'data-allow-clear': "true"})
     )
 
 class MoreInfoCustomUserForm(forms.ModelForm):

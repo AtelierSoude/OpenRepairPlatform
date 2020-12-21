@@ -1,6 +1,7 @@
 import django_filters
 from django.db import models
 from django import forms
+from dal import autocomplete 
 
 from openrepairplatform.user.models import (
     Fee, CustomUser
@@ -8,10 +9,19 @@ from openrepairplatform.user.models import (
 from openrepairplatform.event.models import (
     Event
 )
+from openrepairplatform.location.models import Place
+from openrepairplatform.event.models import Activity
 
 class EventFilter(django_filters.FilterSet):
     date = django_filters.DateFromToRangeFilter()
-
+    location = django_filters.ModelChoiceFilter(
+        widget=autocomplete.ModelSelect2(url='place_autocomplete'),
+        queryset=Place.objects.all()
+    )
+    activity = django_filters.ModelChoiceFilter(
+        widget=autocomplete.ModelSelect2(url='activity_autocomplete'),
+        queryset=Activity.objects.all()
+    )
     class Meta:
         model = Event 
         fields = ['date', 'activity', 'location']

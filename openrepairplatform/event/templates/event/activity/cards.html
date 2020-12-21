@@ -5,7 +5,7 @@
     <div class="clearfix"></div>
     <h4 class="pl-3 pt-3 d-block">{{activity.category}}</h4>
   {% endifchanged %}
-    <div class="card float-left col-md-4" style="background-color: #86868600 !important;">
+    <div class="card col-md-3 float-left m-2">
       <a class="card-link card-img-crop" href="{% url 'event:activity_detail' activity.pk activity.slug %}">
         {% if activity.picture %}
         {% thumbnail activity.picture "400" format="PNG" as im %}

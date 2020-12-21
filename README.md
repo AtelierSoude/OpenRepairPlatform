@@ -1,10 +1,19 @@
-# Be aware 
 
-This application is still in developpment. There is no available realease at this point. 
+# OpenRepairPlatform
+
+Ce projet cherche à faciliter l’accessibilité de la réparation par le plus grand nombre. Par une interface simple et claire, l'application web invite participants et organisations à collaborer autours de l’auto-réparation et de la réparation participative.
+
+OpenRepairPlateform est une application basée sur Django, pensée pour organiser les structures de réparations participatives.
+Elle intègre principalement des fonctionnalités de gestion d'organisation, de membres, de comptabilité, la publication d'événements, d'inventaire et de suivi/partage de réparations.
+
+Cette application est développée et notamment utilisée par [l'Atelier Soudé](https://atelier-soude.fr) pour la plateforme [Réparons](https://dev.atelier-soude.fr).
+
+Toute la documentation d'installation et d'utilisation est disposible [ici](https://openrepairplatform.readthedocs.io/en/latest/).
+
+----- ENG -----
+
+This application is still in developpment.
 Any contributes are welcome. Please contact us if you want to contribute and we tell you how to.
-
-This is not a stable version.
-You may have to make some little modifications to make it work properly for your usage. 
 
 # Atelier Soudé
 
@@ -12,6 +21,9 @@ OpenRepairPlatform is a Django based application designed to organize collaborat
 
 The plateform is created by Atelier Soudé, an organization which repair everyday's people electric and electronic objects in Lyon, France.
 
+Full installation and user documentation are avalaible [here](https://openrepairplatform.readthedocs.io/en/latest/). (sorry, only in French at this point !)
+
+For basic develop installation, follow those steps:
 
 ## Run the application (in Develop mode only)
 

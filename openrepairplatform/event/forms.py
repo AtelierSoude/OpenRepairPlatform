@@ -1,5 +1,6 @@
 from datetime import timedelta, date as dt
 from dateutil import rrule, relativedelta
+from dal import autocomplete
 
 from django import forms
 from django.forms import ModelForm
@@ -27,7 +28,9 @@ class EventForm(ModelForm):
         self.orga = kwargs.pop("orga")
         super().__init__(*args, **kwargs)
         self.fields["organizers"] = forms.ModelMultipleChoiceField(
-            queryset=CustomUser.objects.all(),
+            queryset=(
+                self.orga.actives.all() | self.orga.admins.all() | self.orga.volunteers.all() 
+            ),
             widget=autocomplete.ModelSelect2Multiple(url='/' + self.orga.slug + '/user_orga_autocomplete/'),
             required=False,
         )
@@ -48,6 +51,7 @@ class EventForm(ModelForm):
             "is_free",
             "available_seats",
             "booking",
+            "allow_stuffs",
             "collaborator",
             "external",
             "external_url",
@@ -102,6 +106,10 @@ class RecurrentEventForm(forms.ModelForm):
             (2, "2 jours avant"),
             (7, "Une semaine avant"),
             (14, "Deux semaines avant"),
+            (21, "Trois semaines avant"),
+            (28, "Quatre semaines avant"),
+            (35, "Cinq semaines avant"),
+            (42, "Six semaines avant"),
         ],
         label="Publication",
     )
@@ -111,15 +119,19 @@ class RecurrentEventForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields["organizers"] = forms.ModelMultipleChoiceField(
             queryset=(
-                self.orga.actives.all() | self.orga.admins.all()
+                self.orga.actives.all() | self.orga.admins.all() | self.orga.volunteers.all() 
             ).distinct(),
-            widget=forms.CheckboxSelectMultiple,
+            widget=autocomplete.ModelSelect2Multiple(url='/' + self.orga.slug + '/user_orga_autocomplete/'),
             required=False,
         )
         self.fields["conditions"] = forms.ModelMultipleChoiceField(
             queryset=self.orga.conditions,
-            widget=forms.CheckboxSelectMultiple,
+            widget=autocomplete.ModelSelect2Multiple(url='/event/' + self.orga.slug + '/condition_orga_autocomplete/'),
             required=False,
+        )
+        self.fields["activity"] = forms.ModelChoiceField(
+            widget=autocomplete.ModelSelect2(url='activity_autocomplete'),
+            queryset=Activity.objects.all()
         )
 
     def clean_weeks(self):
@@ -190,11 +202,13 @@ class RecurrentEventForm(forms.ModelForm):
             "is_free",
             "available_seats",
             "booking",
+            "allow_stuffs",
             "collaborator",
             "external",
             "external_url",
             "description",
             "organizers",
+            "needed_organizers",
             "conditions",
             "location",
             "recurrent_type",
@@ -206,6 +220,9 @@ class RecurrentEventForm(forms.ModelForm):
             "end_date",
             "period_before_publish",
         ]
+        widgets = {
+            'location': autocomplete.ModelSelect2(url='place_autocomplete'),
+        }
 
 
 class ActivityForm(ModelForm):

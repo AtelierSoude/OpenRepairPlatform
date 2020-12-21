@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}Connectez vous à Reparons{% endblock %}
+{% block title %}Connectez vous à {{site_title}}{% endblock %}
 
 {% load bootstrap4 %}
 {% load thumbnail %}
@@ -10,7 +10,7 @@
 
 <section class="container-fluid row bg-white">
   <div class="col-md-12 text-center mb-4">
-    <img src="{% static 'img/logo-reparons-beta.png' %}" class="mt-5 mb-5">
+    <img src="{% static 'img/logo-simple.png' %}" class="mt-5 mb-5">
     <h2 class="card-title">Bienvenue ! </h2>
     <small>Se connecter ou <a href="{% url 'user:user_create' %}">Créer un compte</a></small>
   </div>
@@ -43,7 +43,7 @@
         <b>Vous avez déjà participé <br> à un évènement sur le site ?</b>
         <br>
         <br>
-        <a class="btn btn-warning btn-block" href="{% url 'password_reset' %}">Activez votre compte !</a>
+        <a class="btn btn-secondary btn-block" href="{% url 'password_reset' %}">Activez votre compte !</a>
         <br>
         <span>Sinon....</span>
         <br>

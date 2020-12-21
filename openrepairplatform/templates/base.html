@@ -33,10 +33,23 @@
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.10.2/css/all.css">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.10.2/css/v4-shims.css">
 
-
+  <!-- for leaflet -->
+  <link rel="stylesheet" 
+  href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
+  integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+  crossorigin=""/>
+  
   <!-- Bootstrap -->
  <!-- <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}"> -->
-<script src="{% static 'bootstrap/js/jquery.min.js' %}"></script>
+  <script src="{% static 'bootstrap/js/jquery.min.js' %}"></script>
+  <script src="{% static 'js/jquery.bootstrap.modal.forms.js' %}"></script> 
+  <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'js/lib/sticky_polyfill.js' %}"></script>
+  <script type="text/javascript" src="{% static 'django_tables2_column_shifter/js/django_tables2_column_shifter.min.js' %}">
+  </script>
+  {% assets "js_base" %}
+  <script src="{{ ASSET_URL }}"></script>
+  {% endassets %}
   <!-- Custom -->
   {% assets "css_custom_bootstrap" %}
   <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet"/>
@@ -44,11 +57,14 @@
   {% assets "css_openrepairplatform" %}
     <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet"/>
   {% endassets %}
-  {% block extra_css %}{% endblock %}
+  {% assets "css_autocomplete" %}
+  <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet"/>
+  {% endassets %}
 </head>
+
 <body class="bg-grey">
 {% include "menu.html" %}
-
+<div class="main-container">
 <div class="container-fluid">
   {% for message in messages %}
     <div class="alert alert-{{ message.level_tag }} alert-dismissible fade show mb-0" role="alert">
@@ -61,86 +77,17 @@
 </div>
 
 <main class="content-page">
-  {% block content %}{% endblock %}
+  {% block content %}
+  {% endblock %}
 </main>
-
-<!-- Footer 
-<footer class="page-footer font-small bg-white mt-3">
-    <div class="container text-center text-md-left">
-      <div class="row">
-          <div class="col-md-6 text-secondary pt-5">
-
-  
-              <h5 class="text-uppercase font-weight-bold text-success">Footer text 1</h5>
-              <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Expedita sapiente sint, nulla, nihil
-                repudiandae commodi voluptatibus corrupti animi sequi aliquid magnam debitis, maxime quam recusandae
-                harum esse fugiat. Itaque, culpa?</p>
-      
-            </div>
-  
-        <div class="col-md-3 mx-auto">
-          <h5 class="font-weight-bold text-secondary text-uppercase mt-3 mb-4">Links</h5>
-  
-          <ul class="list-unstyled">
-            <li>
-              <a href="#!">Link 1</a>
-            </li>
-            <li>
-              <a href="#!">Link 2</a>
-            </li>
-            <li>
-              <a href="#!">Link 3</a>
-            </li>
-            <li>
-              <a href="#!">Link 4</a>
-            </li>
-          </ul>
-      </div>
-  
-        <div class="col-md-3 mx-auto">
-          <h5 class="font-weight-bold text-secondary text-uppercase mt-3 mb-4">Links</h5>
-          <ul class="list-unstyled">
-            <li>
-              <a href="#!">Link 1</a>
-            </li>
-            <li>
-              <a href="#!">Link 2</a>
-            </li>
-            <li>
-              <a href="#!">Link 3</a>
-            </li>
-            <li>
-              <a href="#!">Link 4</a>
-            </li>
-          </ul>
-        </div>
-    </div>
-  
-    <div class="footer-copyright text-center py-3"> 2019 Creative Common 
-      <a href="https://mdbootstrap.com/education/bootstrap/"> Atelier Soudé</a>
-    </div>
-  
-  </footer>
--->
-
-<!-- Script & librairy-->
-
-<script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-<script src="{% static 'js/lib/sticky_polyfill.js' %}"></script>
-<script
-type="text/javascript"
-src="{% static 'django_tables2_column_shifter/js/django_tables2_column_shifter.min.js' %}">
-</script>
+</div>
 
 {% block extra_js %}
-{% assets "js_base" %}
-
 <script>
     $(document).ready(function(){
       $(".jumbotron").sticky({topSpacing:0});
     });
 </script>
-
 <script>
   jQuery(document).ready(function(){
     jQuery("#toggler").click(function() {
@@ -157,11 +104,6 @@ src="{% static 'django_tables2_column_shifter/js/django_tables2_column_shifter.m
     });
   });
 </script>
-
-    <script src="{{ ASSET_URL }}"></script>
-{% endassets %}
 {% endblock %}
-
 </body>
-
 </html>

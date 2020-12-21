@@ -4,6 +4,7 @@
 #
 #    pip-compile --output-file openrepairplatform.egg-info/requirements.txt openrepairplatform.egg-info/requirements.in
 #
+wheel
 atomicwrites==1.3.0       # via pytest
 attrs==19.1.0             # via pytest
 bleach==3.1.4
@@ -16,13 +17,13 @@ cssselect2==0.2.1         # via cairosvg, weasyprint
 defusedxml==0.5.0         # via cairosvg
 diff-cover==2.0.0
 django-assets==0.12
-django-bootstrap-static==4.0.0
-django-bootstrap4==0.0.8
-django-import-export==1.2.0
+django-bootstrap-static
+django-bootstrap4
+django-import-export
 django-initial-avatars==0.9.1
 django-simple-history==2.7.0
 django-tinymce==3.1.0
-django==2.2.13
+django==2.2.4
 djangorestframework==3.9.2
 entrypoints==0.3          # via flake8
 factory-boy==2.11.1
@@ -59,15 +60,19 @@ six==1.12.0               # via bleach, diff-cover, faker, html5lib, pytest, pyt
 sorl-thumbnail==12.5.0
 sqlparse==0.3.0           # via django
 text-unidecode==1.2       # via faker
-tinycss2==1.0.2           # via cairosvg, cssselect2, weasyprint
+tinycss2        # via cairosvg, cssselect2, weasyprint
 weasyprint==47
 webassets==0.12.1         # via django-assets
-webencodings==0.5.1       # via bleach, html5lib, tinycss2
+webencodings      # via bleach, html5lib, tinycss2
 django-gravatar2
-django-autocomplete-light
+django-autocomplete-light==3.5
 django-recaptcha
 django-tables2
 django-tables2-column-shifter
 django-filter
 tablib
 python-dotenv
+django-extensions
+django-treebeard
+django-bootstrap-modal-forms
+django-better-admin-arrayfield

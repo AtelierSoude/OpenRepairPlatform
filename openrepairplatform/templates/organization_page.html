@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
-{% load static bootstrap4 %}
-{% block title %}Page de {{organization.name}} sur Reparons{% endblock %}
+{% load static bootstrap4 thumbnail%}
+{% block title %}Page de {{organization.name}} sur {{site_title}}{% endblock %}
 
 {% load assets app_filters thumbnail %}
 
@@ -14,157 +14,165 @@
 <div class="container-fluid">
     {% url "user:organization_list" as organization_list_url %}
     {% include "breadcrumb.html" with current=organization first_parent_url=organization_list_url first_parent_text="Organisations" %}
-    {% include "organization_menu.html" with organization=organization%}
-  <div class="container">
-    <div class="tab-content row no-gutters" id="v-pills-tabContent">
-      {% block menu_content %}
-      <section class="header_detail_page p-0 text-center col-md-3">
-        <div class="bg-grey" id="side_nav">
-            <div class="pt-5 header_detail_page_picture">
-                {% if organization.picture %}
-                  {% thumbnail object.picture "150x150" crop="center" format="PNG" as im %}
-                    <img src="{{ im.url }}" class="m-2 rounded-circle"/>
-                  {% endthumbnail %}
-                {% endif %}
-            </div> 
-            <h2 class="pt-5 header_detail_page_title">{{ organization.name }}</h2>
-          <div class="nav flex-md-column flex-sm-row nav-pills justify-content-center p-4 text-left" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-              <a class="nav-link active" id="v-pills-about-tab" data-toggle="pill" href="#v-pills-about" role="tab" aria-controls="v-pills-rdv" aria-selected="true">Informations générales</a>
-              <a class="nav-link" id="v-pills-events-tab" data-toggle="pill" href="#v-pills-events" role="tab" aria-controls="v-pills-events" aria-selected="false">Evènements</a>
-              <a class="nav-link" id="v-pills-community-tab" data-toggle="pill" href="#v-pills-community" role="tab" aria-controls="v-pills-community" aria-selected="false">Membres actifs</a>
-          </div>
-        </div>
-      </section>
-      <section class="h-100 col-md-9 p-4">
-        <div class="tab-content" id="v-pills-tabContent">
-            <div class="tab-pane fade show" id="v-pills-events" role="tabpanel" aria-labelledby="v-pills-events-tab">
-                  <h4>Les {{ event_list|length }} Prochains évènements</h4>
-                  <a href="{% url 'user:organization_all_events' organization.pk organization.slug 1 %}" class="btn btn-success mb-4">
-                      <i class="fa fa-search"></i>
-                      Voir tous les évènements
-                  </a>
-                  <div class="">
-                    {% include "event/event_cards.html" with event_list=event_list minimal=True card_size='col-md-6' %}
-                  </div>
-              </div>    
+    <div class="jumbotron jumbotron-fluid no-padding-jumbotron">
+      <div class="container text-center d-flex justify-content-center align-items-center flex-md-column">
+        <div class="header_detail_page_picture">
+          {% if organization.picture %}
+            {% thumbnail organization.picture "100x100" crop="center" format="PNG" as im %}
+              <img src="{{ im.url }}" class="m-2 rounded-circle"/>
+            {% endthumbnail %}
+          {% endif %}
+        </div> 
+        <h2 class="header_detail_page_title">{{ organization.name }}</h2>
+      </div>
+      {% include "organization_menu.html" with organization=organization %}
+    </div>
+    <div class="container">
+    {% block menu_content %}
+      <section class="p-2 row">
+            <div class="d-flex flex-column col-md-4">
+              <div class="card p-2 m-2">
+                <h4 class="mt-2">Communauté</h4>
+                <span>
+                <span class="badge badge-pill">{{organization.memberships.all.count}} membres</span> 
+                <span class="badge badge-pill">{{organization.admins.all.count}} administrateurs</span> 
+                <span class="badge badge-pill">{{organization.actives.all.count}} actifs</span> 
+                <span class="badge badge-pill">{{organization.volunteers.all.count}} volontaires</span> 
+              </span>
 
-            <div class="tab-pane fade show active" id="v-pills-about" role="tabpanel" aria-labelledby="v-pills-about-tab">
-            <h4 class="mt-4">Informations  
-              {% if is_admin %}
-                <a class="btn btn-success btn-sm float-right" href="{% url 'user:organization_update' organization.pk %}">
-                  <i class="fa fa-pencil-alt"></i> Editer
-                </a>
-              {% endif %}
-            </h4>
-            <div class="card p-4">
-              <div class="row">
-                <div class="col-md-6 p-1">
-                  <i class="fa fa-phone pr-2"></i>Téléphone
-                </div>
-                <div class="col-md-6 p-1">
-                  {% if organization.phone_number %}
-                    {{ organization.phone_number }}
-                  {% else %}
-                    Non renseigné
+              </div>
+
+              <div class="card p-2 m-2">
+                <h4 class="mt-2">Informations  
+                  {% if is_admin %}
+                    <a class="btn btn-success btn-sm float-right" href="{% url 'user:organization_update' organization.pk %}">
+                      <i class="fa fa-pencil-alt"></i> Editer
+                    </a>
                   {% endif %}
-                </div>
-                <div class="col-md-6 p-1">
-                  <i class="fa fa-envelope pr-2"></i>Adresse mail
-                </div>
-                <div class="col-md-6 p-1">
-                  {% if object.email %}
-                  <a href="{{organization.email}}">{{ object.email }}</a>
-                  {% else %}
-                    Non renseigné
-                  {% endif %}
-                </div>
-                <div class="col-md-6 p-1">
-                  <i class="fa fa-map pr-2"></i>Site internet
-                </div>
-                <div class="col-md-6 p-1">
-                  {% if organization.website %}
-                    <a href="{{organization.website}}">{{ organization.website }}</a>
-                  {% else %}
-                      Non renseigné
-                  {% endif %}
-                </div>
-                {% if organization.advised_fee %}
-                <div class="col-md-6 p-1">
-                  <p class="mt-1">
-                    {% if organization.fee_description %}
-                      {{ organization.fee_description }}
+                </h4>
+                <div class="">
+                  <div class="p-1">
+                    <i class="fa fa-phone pr-2"></i>
+                    {% if organization.phone_number %}
+                      {{ organization.phone_number }}
                     {% else %}
-                      L'adhésion est de 
+                      Non renseigné
                     {% endif %}
-                  </p>
+                  </div>
+                  <div class="p-1">
+                    <i class="fa fa-envelope pr-2"></i>
+                    {% if object.email %}
+                    <a href="{{organization.email}}">{{ object.email }}</a>
+                    {% else %}
+                      Non renseigné
+                    {% endif %}
+                  </div>
+                  <div class="p-1">
+                    <i class="fa fa-map pr-2"></i>
+                    {% if organization.website %}
+                      <a href="{{organization.website}}">{{ organization.website }}</a>
+                    {% else %}
+                        Non renseigné
+                    {% endif %}
+                  </div>
+                  {% if organization.advised_fee %}
+                  <div class="p-1">
+                    <p class="mt-1">
+                      {% if organization.fee_description %}
+                        {{ organization.fee_description }}
+                      {% else %}
+                        L'adhésion est de 
+                      {% endif %}
+                      <span class="badge badge-pill badge-secondary">
+                        {% if organization.min_fee %}
+                          {{ organization.min_fee }} - 
+                        {% endif %}    
+                        {{ organization.advised_fee }}€
+                      </span>
+                    </p>
+                  </div>
+                  {% endif %}
                 </div>
-                <div class="col-md-6 p-1">
-                  <span class="badge badge-pill badge-secondary">
-                    {% if organization.min_fee %}
-                      {{ organization.min_fee }} - 
-                    {% endif %}    
-                    {{ organization.advised_fee }}€
-                  </span>
-                </div>
-                {% endif %}
+              </div>
+              <div class="card p-2 m-2">
+                <h4 class="mt-2">Description</h4>
+                {{ organization.description | safe }}
               </div>
             </div>
-            <h4 class="mt-4">Description</h4>
-            <div class="card p-4">
-              {{ organization.description | safe }}
-            </div>
-            <h4 class="mt-4">Activités</h4>
-            <div class="clearfix">
-              {% include "event/activity/cards.html" with activities=activities_list %}
-            </div>
-            <h4 class="mt-4">Locaux</h4>
-            {% if organization.places.all %}
-            <div class="card-columns">
-              {% for place in organization.places.all %}
-               {% if place.is_visible %}
-                <div class="card">  
-                  <a class="card-link" href="{% url 'location:detail' place.pk place.slug %}">
-                    <div class="card-body">
-                      <h4 class="card-title">{{ place.name }}</h4>
-                      <h6 class="card-subtitle mb-2 text-muted">{{ place.address }}</h6>
-                      <span class="badge badge-secondary">{{ place.category }}</span>
-                      {{ place.description | safe | truncatewords_html:10 }}
-                    </div>
-                  </a>
+            <div class="d-flex flex-column col-md-8">
+              <div class="card p-2 m-2">
+                <h4 class="mt-2">Locaux</h4>
+                {% if organization.places.all %}
+                <div class="card-rows">
+                  {% for place in organization.places.all %}
+                    {% if place.is_visible %}
+                      <div class="card m-2">  
+                        <a class="card-link" href="{% url 'location:detail' place.pk place.slug %}">
+                          <div class="card-body">
+                            <h5 class="card-title">{{ place.name }}</h5>
+                            <small class="card-subtitle mb-2 text-muted">{{ place.address }}</small><br>
+                            <span class="badge badge-secondary">{{ place.category }}</span><br>
+                            <small>{{ place.description | safe | truncatewords_html:10 }}</small>
+                          </div>
+                        </a>
+                      </div>
+                    {% endif %}
+                  {% endfor %}
                 </div>
+                {% else %}
+                  <div>Il n'y a pas de local associé à cette organisation.</div>
                 {% endif %}
-              {% endfor %}
+              </div>
+              <div class="card p-2 m-2">
+                <h4 class="mt-2">Evenements à venir</h4>
+                <div class="table-responsive">
+                  <table class="table table-fixed">
+                      <tbody class="">
+                        {% for event in future_event %}
+                          <tr class="{% if event.date <= today %}bg-light text-muted{% else %}bg-white{% endif %}">
+                            <td>
+                             {% include "extra_column_data.html" with column="date" record=event %}
+                            </td>
+                            <td>
+                              <a href="{% url 'event:detail' event.pk event.slug %}">
+                                <b>
+                                  {% if event.activity %}
+                                    {{ event.activity }}
+                                  {% else %}
+                                    Type d'activité supprimé
+                                  {% endif %}
+                                </b>
+                              </a>
+                            </td>
+                            <td>
+                              <small>{{ event.location }}</sm`ll>
+                            </td>
+                            <td class="small-column">
+                              {% include "extra_column_data.html" with column="seats" record=event %}
+                            </td>
+                          </tr>
+                        {% empty %}
+                        Pas d'évènements 
+                        {% endfor %}
+                      </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
-          {% else %}
-            <div>Il n'y a pas de local associé à cette organisation.</div>
-          {% endif %}
-        </div>
-
-        <div class="tab-pane fade show" id="v-pills-community" role="tabpanel" aria-labelledby="v-pills-community-tab">
-          <div class="">
-              {% include 'user/organization/manage_user.html' %}
-          </div>
-        </div>
-      </section>
+        </section>
       {% endblock menu_content %}
-
     </div>
   </div>
-</div>
 {% endblock %}
 
 {% block extra_js %}
+{% assets "js_detail_organization" %}
+<script src="{{ ASSET_URL }}"></script>
+{% endassets %}
 <script>
   $(document).ready(function(){
-    $("#h_nav").sticky({topSpacing:40});
-    $("#side_nav").sticky({topSpacing:80});
-    $("#breadcrumb").sticky({topSpacing:0});
+    $("#h_nav").sticky({topSpacing:105});
+    $("#breadcrumb").sticky({topSpacing:65});
   });
 </script>
-  {% if is_volunteer %}
-    {{ emails|json_script:"emails-data" }}
-  {% endif %}
-  {% assets "js_detail_organization" %}
-    <script src="{{ ASSET_URL }}"></script>
-  {% endassets %}
 {% endblock %}

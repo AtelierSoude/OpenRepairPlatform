@@ -3,86 +3,101 @@
 {% load initialavatar %}
 {% load static %}
 
-<header class="header">
-  <nav class="navbar navbar-expand-lg p-0" id="header">
-    <a href="{% url "homepage" %}" class="float-left d-block d-sm-none" style="width:60px;"> 
-      <img src="{% static 'img/logo-reparons-beta.png' %}" class="brand-logo p-1 w-100">
-    </a>
-    <button class="navbar-toggler float-left" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon">
-        <i class="fa fa-bars" style="font-size: 30px;" id="toggler"></i>
-      </span>
-    </button>
-    <a href="{% url "homepage" %}">
-      <img src="{% static 'img/reparons-logo.png' %}" class="brand-logo d-none d-sm-block">
-    </a>
-    <div class="collapse navbar-collapse bg-primary" id="navbarTogglerDemo03">
-      <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-        <li class="nav-item">
-        <a href="{% url "event:list" %}">Évenements</a>
-        </li>
-        <li class="nav-item">
-        <a href="{% url "event:activity_list" %}">Activités</a>
-        </li>
-        <li class="nav-item">
-        <a href="{% url "user:organization_list" %}">Organisations</a>
-        </li>
-      </ul>
-    </div>
-    <div class="navbar navbar-expand-lg d-flex justify-content-end float-right">
-      {% if not user.is_authenticated %}
-
-        <div class="navbar-brand p-0">
-          <small>
-              <a class="nav-link p-2 btn btn-success" href="{% url "login" %}">
-                  Se connecter <i class="fa fa-user text-primary"></i>
-              </a>
-          </small>
-        </div>
-
-      {% else %}
-
-      <div class="navbar-brand avatar float-right">
-        <a class="nav-link" href="{{ user.get_absolute_url }}"> 
-          {% if user.avatar_img %}
-            {% thumbnail user.avatar_img "35x35" crop="center" format="PNG" as im %}
-              <img src="{{ im.url }}" class="rounded-circle"/>
-            {% endthumbnail %}
-          {% else %}
-            {% if user.first_name %}
-              {% get_initial_avatar user 35 'circle' %}
-            {% endif %}
-          {% endif %}
-         <small>{{ user.first_name }}</small> 
-        </a>
-      </div>
-
-      <!-- Menu dropdown -->
-      <div class="navbar-brand arrow-login">
-        <a class="nav-link mr-2 dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <i class=""></i>
-        </a>
-        <div class="dropdown-menu " aria-labelledby="navbarDropdownMenuLink">
-          <a class="dropdown-item" href="{{ user.get_absolute_url }}"> voir profil </a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="{{ user.get_absolute_url }}"> mes rendez-vous</a>
-          {% if user.admin_organizations.all %}
-          <div class="dropdown-divider"></div>
-          {% for organization in user.admin_organizations.all %}
-            <a class="dropdown-item" href="{% url "organization_page" organization.slug %}">
-              Gérer {{ organization.name }}
+<nav class="header nav-header navbar navbar-expand-lg" style="width:100%; position:fixed">
+  <a href="{% url "homepage" %}" class="navbar-brand float-left d-block d-sm-none" style="width:50px; z-index: 150;"> 
+    <img src="{% static 'img/logo-simple.png' %}" class="brand-logo w-100">
+  </a>
+  <a href="{% url "homepage" %}" class="brand-logo d-none d-sm-block">
+    <img src="{% static 'img/logo.png' %}">
+  </a>
+  <div class="collapse navbar-collapse bg-primary" style="width:100%">
+  </div>
+  <div class="navbar navbar-expand-lg d-flex justify-content-end p-0">
+    {% if not user.is_authenticated %}
+      <div class="navbar-brand p-0">
+        <small>
+            <a class="nav-link p-2 text-secondary" href="{% url "login" %}">
+                Se connecter <i class="fas fa-sign-in-alt"></i>
             </a>
-          {% endfor %}
-          {% endif %}
-
-          <div class="dropdown-divider"></div>
-          <a class="nav-link dropdown-item" href="{% url 'logout' %}" title="Logout">
-            Déconnexion
-          </a>
-        </div>
+        </small>
       </div>
-      {% endif %}
+    {% else %}
+    <div class="navbar-brand avatar">
+      <a class="nav-link" href="{{ user.get_absolute_url }}"> 
+        {% if user.avatar_img %}
+          {% thumbnail user.avatar_img "35x35" crop="center" format="PNG" as im %}
+            <img src="{{ im.url }}" class="rounded-circle"/>
+          {% endthumbnail %}
+        {% else %}
+          {% if user.first_name %}
+            {% get_initial_avatar user 35 'circle' %}
+          {% endif %}
+        {% endif %}
+       <small>{{ user.first_name }}</small> 
+      </a>
     </div>
-  </nav>
-</header>
+    <div class="navbar-brand arrow-login">
+      <a class="nav-link mr-2 dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <i class=""></i>
+      </a>
+      <div class="dropdown-menu " aria-labelledby="navbarDropdownMenuLink">
+        <a class="dropdown-item" href="{{ user.get_absolute_url }}"> voir profil </a>
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item" href="{{ user.get_absolute_url }}"> mes rendez-vous</a>
+        {% if user.admin_organizations.all %}
+        <div class="dropdown-divider"></div>
+        {% for organization in user.admin_organizations.all %}
+          <a class="dropdown-item" href="{% url "organization_page" organization.slug %}">
+            Gérer {{ organization.name }}
+          </a>
+        {% endfor %}
+        {% endif %}
+        <div class="dropdown-divider"></div>
+        <a class="nav-link dropdown-item" href="{% url 'logout' %}" title="Logout">
+          Déconnexion
+        </a>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon text-secondary">
+      <i class="fa fa-bars text-secondary" style="font-size: 30px;" id="toggler"></i>
+    </span>
+  </button>
+  <div class="collapse navbar-collapse bg-primary" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto flex-column vertical-nav bg-primary">
+      <li class="nav-item text-center {{event_menu}}">
+        <a href="{% url "event:list" %}">
+          <i class="far fa-calendar-alt fa-2x"></i><br>
+          <small>Évenements</small>
+        </a>
+        </li>
+        <li class="nav-item text-center {{activity_menu}}" >
+        <a href="{% url "event:activity_list" %}">
+          <i class="fas fa-fist-raised fa-2x"></i><br>
+          <small>Activités</small>
+        </a>
+        </li>
+        <li class="nav-item text-center {{organization_menu}}">
+        <a href="{% url "user:organization_list" %}">
+          <i class="fas fa-network-wired fa-2x"></i><br>
+          <small>Organisations</small>
+        </a>
+        </li>
+        <li class="nav-item text-center {{stock_menu}}" >
+          <a href="{% url "inventory:stock_list" %}">
+            <i class="fas fa-box-open fa-2x"></i><br>
+            <small class="">Stocks</small>
+          </a>
+          </li>
+        <li class="nav-item text-center text-muted {{repair_menu}}">
+          <a>
+            <i class="fas fa-tools fa-2x text-muted"></i><br>
+            <small class="text-muted">Réparations</small>
+          </a>
+          </li>
+    </ul>
+  </div>
+</nav>
 {% endblock %}

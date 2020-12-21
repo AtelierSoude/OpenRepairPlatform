@@ -30,7 +30,10 @@ from openrepairplatform.mixins import (
     HasVolunteerPermissionMixin,
     RedirectQueryParamView
 )
+from openrepairplatform.inventory.mixins import PermissionCreateUserStuffMixin
 from openrepairplatform.user.models import CustomUser, Organization, Membership, Fee
+from openrepairplatform.inventory.models import Stuff
+from openrepairplatform.inventory.forms import StuffForm
 
 from .forms import (
     UserUpdateForm,
@@ -91,7 +94,7 @@ class UserCreateAndBookView(CreateView):
                         'event:detail',
                         kwargs={
                             "pk": request.GET["event"],
-                            "slug": event.slug
+                            "slug": event.slug,
                         })
                 )
             return redirect(self.get_success_url())
@@ -187,7 +190,7 @@ class PresentCreateUserView(HasActivePermissionMixin, RedirectView):
             return next_url
         return reverse("event:detail", args=[event.id, event.slug]) + "#manage"
 
-
+### in future : change or mix AddMemberToOrganization and UpdateMembre Views 
 class AddMemberToOrganization(HasActivePermissionMixin, RedirectView):
     model = Organization
     form_class = MoreInfoCustomUserForm
@@ -200,24 +203,52 @@ class AddMemberToOrganization(HasActivePermissionMixin, RedirectView):
         url = reverse(
             "organization_members", kwargs={"orga_slug": self.organization.slug},
         )
-        if user in self.organization.members.all():
-            messages.warning(self.request, "L'utilisateur est déjà membre.")
-            return url
         if user:
             form = MoreInfoCustomUserForm(self.request.POST, instance=user)
         else:
             form = MoreInfoCustomUserForm(self.request.POST)
         user = form.save()
-        paid = form.cleaned_data["amount_paid"]
+        amount = form.cleaned_data["amount_paid"]
         date = form.cleaned_data["date"]
-        fee = Fee.objects.create(
-            amount=paid, user=user, organization=self.organization, date=date
-        )
-        Membership.objects.create(
+        if user in self.organization.members.all():
+            fees = Fee.objects.filter(organization=self.organization, user=user)
+            up_date_fees = fees.filter(date__gte=date)
+            membership = Membership.objects.get(
+                organization=self.organization, user=user
+            )
+            if amount != 0 or form.cleaned_data["first_fee"]:
+                fee = Fee.objects.create(
+                    amount=amount,
+                    user=user,
+                    organization=self.organization,
+                    date=date,
+                    payment=form.cleaned_data["payment"]
+                )
+                if form.cleaned_data["first_fee"] or membership.first_payment < timezone.now() - timedelta(days=365) or not fees :
+                    membership.first_payment = date
+                    membership.amount = 0
+                    membership.fee = fee
+                    for fee in up_date_fees:
+                        membership.amount += fee.amount
+                elif date < membership.first_payment.date():
+                    pass
+                elif date > membership.first_payment.date():
+                    membership.amount += amount
+                membership.save()
+            messages.success(self.request, f"Vous avez modifié {user} avec succes.")
+        else:
+            fee = Fee.objects.create(
+                    amount=amount,
+                    user=user,
+                    organization=self.organization,
+                    date=date,
+                    payment=form.cleaned_data["payment"]
+                )
+            Membership.objects.create(
             organization=self.organization, user=user,
-            amount=paid, first_payment=date, fee=fee
-        )
-        messages.success(self.request, f"Vous avez ajouté {user} avec succes.")
+            amount=amount, first_payment=date, fee=fee
+            )
+            messages.success(self.request, f"Vous avez ajouté ou {user} avec succes.")
         return url
 
 
@@ -266,7 +297,7 @@ class UpdateMemberView(HasActivePermissionMixin, UpdateView):
         )
 
 
-class UserDetailView(DetailView):
+class UserDetailView(PermissionCreateUserStuffMixin, DetailView):
     model = CustomUser
     template_name = "user/user_detail.html"
 
@@ -334,6 +365,8 @@ class UserDetailView(DetailView):
             key=lambda evt: evt[0].date, reverse=True
         )
         context["future_rendezvous"].sort(key=lambda evt: evt[0].date)
+        context["stock"] = Stuff.objects.filter(member_owner=self.get_object())
+        context["add_member_stuff"] = StuffForm
         return context
 
 
@@ -371,6 +404,10 @@ class OrganizationListView(ListView):
     model = Organization
     template_name = "user/organization/organization_list.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["organization_menu"] = 'active'
+        return context
 
 @method_decorator(staff_member_required, name="dispatch")
 class OrganizationCreateView(CreateView):
@@ -384,6 +421,10 @@ class OrganizationCreateView(CreateView):
         messages.success(self.request, "L'organisation a bien été créée")
         return res
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["organization_menu"] = 'active'
+        return context
 
 class OrganizationUpdateView(HasAdminPermissionMixin, UpdateView):
     template_name = "user/organization/organization_form.html"
@@ -396,7 +437,11 @@ class OrganizationUpdateView(HasAdminPermissionMixin, UpdateView):
             self.request, "L'organisation a bien été mise à jour."
         )
         return res
-
+        
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["organization_menu"] = 'active'
+        return context
 
 class OrganizationDeleteView(HasAdminPermissionMixin, DeleteView):
     template_name = "user/organization/confirmation_delete.html"

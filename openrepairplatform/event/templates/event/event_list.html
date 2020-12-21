@@ -2,7 +2,7 @@
 {% load static i18n l10n %}
 {% load bootstrap4 app_filters assets %}
 {% include 'autocomplete_light/static.html' %}
-{% block title %}Les événements disponibles sur Reparons {% endblock %}
+{% block title %}Les événements disponibles sur {{site_title}} {% endblock %}
 
 {% block content %}
   {% include "breadcrumb.html" with current="Évènements" %}
@@ -53,12 +53,12 @@
       </div>
   </div>
 
-    <div class="col-lg">
-        <div class="infinite-container p-4 event_list_cards">
+    <div class="">
+        <div class="infinite-container event_list_cards">
           {% include "event/event_cards.html" with event_list=event_list card_size='col-md-4' %}
         </div>
     </div>
-    <div class="col-lg no-gutters position-fixed d-none" id="place_map">
+    <div class="col-lg no-gutters position-fixed d-none" id="map">
       {% include "location/place_list.html" %}
     </div>
   </section>
@@ -75,33 +75,31 @@
   </div>
 
 {% block extra_js %}
+<script>
+  $(document).ready(function(){
+    $("#map_show").click(function() {
+      if($("#map").hasClass("d-none")){  
+        $(this).html("Cacher la carte")
+        $("#map").removeClass("d-none")
+        $("#map").addClass("d-block")
+      } 
+      else {
+        $(this).html("Afficher la carte");
+        $("#map").removeClass("d-block");
+        $("#map").addClass("d-none");
+      }
+    });
+  });
+</script>
   <script src="{% static 'js/lib/jquery.waypoints.js' %}"></script>
   <script src="{% static 'js/lib/infinite.min.js' %}"></script>
-
   <script>
-      $(document).ready(function(){
-        $("#breadcrumb").sticky({topSpacing:0});
-        $("#search_tab").sticky({topSpacing:40});
-      });
+    $(document).ready(function(){
+      $("#breadcrumb").sticky({topSpacing:65});
+      $("#search_tab").sticky({topSpacing:105});
+    });
   </script>
-
 <script>
-      $(document).ready(function(){
-        $("#map_show").click(function() {
-          if($("#place_map").hasClass("d-block")){  
-            $(this).html("Afficher la carte");
-            $("#place_map").removeClass("d-block")
-          } else {
-            $(this).html("Cacher la carte");
-            $("#place_map").addClass("d-block")
-          }
-        });
-      });
-    </script>
-</script>
-
-  <script>
-
 $(document).ready(function() {
     $(".card").hover(
           function() {
@@ -125,22 +123,22 @@ var waypoint = new Waypoint({
     $(".card").hover(
           function() {
             var location_id = $(this).data("location");
-            $(this).find('.card-body').addClass("shadow");
+            $(this).find('.card-body').addClass("box-shadow");
             $(".awesome-marker[data-location='" + location_id +"' ]").addClass("awesome-marker_hover");
           }
         );
         $(".card").mouseleave(
           function() {
             var location_id = $(this).data("location");
-            $(this).find('.card-body').removeClass("shadow");
+            $(this).find('.card-body').removeClass("box-shadow");
             $(".awesome-marker[data-location='" + location_id +"' ]").removeClass("awesome-marker_hover");
           }
         );
   }
 })
-    </script>
+</script>
 
-  <script>
+<script>
     var infinite = new Waypoint.Infinite({
       element: $('.infinite-container')[0],
       onBeforePageLoad: function () {

@@ -1,0 +1,15 @@
+{% if stuff_state == "En panne" %}
+<span class="badge badge-pill badge-danger">En panne</span>
+{% elif stuff_state == "Désassemblé" %}
+<span class="badge badge-pill badge-danger">Désassemblé</span>
+{% elif stuff_state == "Evaporé" %}
+<span class="badge badge-pill badge-primary">Evaporé</span>
+{% elif stuff_state == "En réparation" %}
+<span class="badge badge-pill badge-secondary">En réparation</span>
+{% elif stuff_state == "En réparation" %}
+<span class="badge badge-pill badge-success">Réparé</span>
+{% elif stuff_state == "Partiel" %}
+<span class="badge badge-pill badge-secondary">Incomplet / fonctionnement partiel</span>
+{% else %}
+<span class="badge badge-pill badge-success">Fonctionnel</span>
+{% endif %}

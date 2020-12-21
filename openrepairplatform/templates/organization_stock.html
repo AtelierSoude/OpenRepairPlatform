@@ -1,0 +1,74 @@
+{% extends 'organization_page.html' %}
+{% load static thumbnail bootstrap4 initialavatar django_tables2 %}
+{% load querystring from django_tables2 %}
+
+{% block title %}Page de {{organization.name}}: gestion des stocks{% endblock %}
+
+{% block menu_content %}
+  <section class="container">
+
+     <!-- modals -->
+     <div class="modal fade" tabindex="-1" role="dialog" id="modal">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content"></div>
+      </div>
+    </div>
+
+    <h2 class="text-center mt-4">Stock de {{ organization }}</h2>
+    {% if is_active %}   
+    <button class="btn btn-success btn-absolute bs-modal" id="add-stuff">
+      <i class="fa fa-plus"></i><i class="fas fa-box-open"></i>
+      <span class="btn-label d-none pl-1">Ajouter un objet</span>
+    </button>
+    {% endif %}
+  </section>
+  {% if filter %}
+  <div class="card mb-4 text-center">
+    <form action="" method="get" class="form-inline justify-content-center form-xs">
+        {% bootstrap_form filter.form %}
+        <a class="btn-secondary">{% bootstrap_button 'filtrer' %}</a>
+    </form>
+  </div>
+  {% endif %}
+  <section class="box-shadow">
+    {% if is_active %}
+      <span class="float-right">Télécharger le résultat :
+        <a class="btn btn-success btn-sm" href="{% querystring '_export'='csv' %}">CSV</a>
+        <a class="btn btn-success btn-sm" href="{% querystring '_export'='ods' %}">ODS</a>
+      </span>
+    {% endif %}
+  {% render_table table %}
+  </section>
+{% endblock menu_content %}
+
+{% block extra_js %}
+{{ filter.form.media }}
+<script>
+  $(document).ready(function(){
+    $( ".btn-absolute" ).hover(
+  function() {
+    $( ".btn-label" ).addClass( "d-block" );
+    $( this ).css( "width", "200px" );
+  }, function() {
+    $( ".btn-label" ).removeClass( "d-block" );
+    $( this ).css( "width", "63px" );
+  }
+  );
+  });
+</script>
+<script type="text/javascript">
+$(document).ready(function(){
+   $.fn.modal.Constructor.prototype._enforceFocus = function() {};
+     $("#add-stuff").modalForm({
+         formURL: "{% url 'inventory:create_organization_stuff' organization.slug %}"
+     });
+ });
+ </script>
+ <script>
+  $(document).ready(function(){
+    $.fn.modal.Constructor.prototype._enforceFocus = function() {};
+    $("#h_nav").sticky({topSpacing:105});
+    $("#breadcrumb").sticky({topSpacing:65});
+  });
+</script>
+{% endblock %}

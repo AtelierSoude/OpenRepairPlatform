@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}Découvrez les organisations présentes sur Reparons{% endblock %}
+{% block title %}Découvrez les organisations présentes sur {{site_title}}{% endblock %}
 
 
 {% block content %}
@@ -7,7 +7,9 @@
 
   <div class="jumbotron jumbotron-fluid" id="jumbotron">
     <div class="container text-center">
-      <h1>Organisations</h1>
+      <h2>Organisations</h2>
+      <hr>
+      <span>Retrouvez ici les pages des organisations inscrites sur cette plateforme</span>
       {% if user.is_staff %}
       <a class="btn btn-success btn-sm" href="{% url 'user:organization_create' %}">
         <i class="fa fa-pencil-alt mr-1"></i>Créer une organisation
@@ -17,7 +19,7 @@
   </div>
 
   <section class="container">
-    <div class="row col-md-12">
+    <div class="row col-md-12 mt-5">
       <div class="card-columns m-auto pt-2">
         {% include 'user/organization/organization_card.html' with organizations=object_list %}
       </div>
@@ -29,8 +31,8 @@
 {% block extra_js %}
 <script>
   $(document).ready(function(){
-    $("#jumbotron").sticky({topSpacing:40});
-    $("#breadcrumb").sticky({topSpacing:0});
+    $("#jumbotron").sticky({topSpacing:105});
+    $("#breadcrumb").sticky({topSpacing:65});
   });
 </script>
 {% endblock %}

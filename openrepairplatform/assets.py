@@ -92,7 +92,7 @@ css_create_edit_event = Bundle(
 css_detail_organization = Bundle(
     scss_detail_organization,
     filters="cssrewrite,cssmin",
-    output="css/deatil_organization.min.css",
+    output="css/detail_organization.min.css",
 )
 
 
@@ -159,6 +159,20 @@ js_detail_organization = Bundle(
     filters="jsmin",
     output="js/user/detail_organization.min.js",
 )
+js_groups_organization = Bundle(
+    "js/lib/auto-complete.js",
+    "js/user/create_edit.js",
+    "js/lib/gov_addresses.js",
+    "js/user/autocomplete.js",
+    filters="jsmin",
+    output="js/user/groups_organization.min.js",
+)
+js_create_stuff = Bundle(
+    "js/inventory/create_stuff.js",
+)
+js_edit_owner_stuff = Bundle(
+    "js/inventory/edit_owner_stuff.js",
+)
 js_waypoints = Bundle(
     "js/lib/jquery.waypoints.js",
     filters="jsmin",
@@ -189,5 +203,8 @@ register("js_detail_event", js_detail_event)
 register("js_create_edit_event", js_create_edit_event)
 register("js_recurrent_event", js_recurrent_event)
 register("js_detail_organization", js_detail_organization)
+register("js_groups_organization", js_groups_organization)
+register("js_create_stuff", js_create_stuff)
+register("js_edit_owner_stuff", js_edit_owner_stuff)
 register("js_waypoints", js_waypoints)
 register("js_infinite", js_infinite)

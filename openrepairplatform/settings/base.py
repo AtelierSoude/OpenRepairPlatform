@@ -7,7 +7,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-SITE_NAME = "pouet"
 PROJECT_DIR = dirname(dirname(abspath(__file__)))
 BASE_DIR = dirname(PROJECT_DIR)
 

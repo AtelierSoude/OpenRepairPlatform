@@ -21,7 +21,7 @@ services:
       - ../openrepairplatform/.env
     volumes:
       - ./openrepairplatform_data/openrepairplatform_static:/srv/static
-      - ./openrepairplatform_data/ateliersoude_media:/srv/media
+      - ./openrepairplatform_data/openrepairplatform_media:/srv/media
     depends_on:
       - db
     networks:
@@ -40,8 +40,8 @@ services:
       - ../openrepairplatform/.env
     volumes:
       - ./openrepairplatform_data/openrepairplatform_static:/srv/static:ro
-      - ./openrepairplatform_data/ateliersoude_media:/srv/media:ro
-      - ./openrepairplatform_data/ateliersoude_letsencrypt:/etc/letsencrypt/:rw
+      - ./openrepairplatform_data/openrepairplatform_media:/srv/media:ro
+      - ./openrepairplatform_data/openrepairplatform_letsencrypt:/etc/letsencrypt/:rw
     networks:
       - openrepairplatform-net
 

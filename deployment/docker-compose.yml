@@ -5,7 +5,7 @@ services:
     image: postgres:11
     container_name: postgres
     env_file:
-      - ./.env
+      - ../openrepairplatform/.env
     volumes:
       - ./openrepairplatform_data/postgres_data:/var/lib/postgresql/data
     networks:
@@ -18,7 +18,7 @@ services:
     image: openrepairplatform_python
     container_name: openrepairplatform_python
     env_file:
-      - ./.env
+      - ../openrepairplatform/.env
     volumes:
       - ./openrepairplatform_data/openrepairplatform_static:/srv/static
       - ./openrepairplatform_data/ateliersoude_media:/srv/media
@@ -37,7 +37,7 @@ services:
       - 80:80
       - 443:443
     env_file:
-      - ./.env
+      - ../openrepairplatform/.env
     volumes:
       - ./openrepairplatform_data/openrepairplatform_static:/srv/static:ro
       - ./openrepairplatform_data/ateliersoude_media:/srv/media:ro
@@ -45,6 +45,6 @@ services:
     networks:
       - openrepairplatform-net
 
-networks
+networks:
   openrepairplatform-net:
 

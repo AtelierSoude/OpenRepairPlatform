@@ -18,7 +18,7 @@
           <a class="btn btn-block btn-outline-danger"> Complet</a>
         {% endif %}
       {% endif %}
-    <div class="modal" id="reservation{{ event.pk }}" tabindex="-1" role="dialog">
+    <div class="modal" id="reservation{{ event.pk|cut:" " }}" tabindex="-1" role="dialog">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -52,7 +52,7 @@
               {% endfor %}
             </div>
             <small>Pensez à vous <a href="{% url "login" %}" title="se connecter">connecter ou créer/activer votre compte</a></small>
-            <form action="{% url 'user:create_and_book' %}?event={{ event.pk }}" method="post">
+            <form action="{% url 'user:create_and_book' %}?event={{ event.pk|cut:" " }}" method="post">
                 {% csrf_token %} 
                 {% bootstrap_form form=register_form %}
             <div class="modal-footer">

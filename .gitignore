@@ -81,10 +81,7 @@ celerybeat-schedule
 *.sage.py
 
 # dotenv
-deployment/django/django.env
-openrepairplatform/.env
-deployment/postgres/postgres.env
-deployment/nginx/nginx.env
+/openrepairplatform/.env
 .env
 
 # virtualenv

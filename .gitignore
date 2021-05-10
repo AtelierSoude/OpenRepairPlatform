@@ -158,8 +158,6 @@ openrepairplatform_letsencrypt/
 postgres_data/
 cpdb.sh
 
-migrations/
-
 openrepairplatform/integration_tests/images/
 openrepairplatform/static/admin/
 openrepairplatform/static/bootstrap/

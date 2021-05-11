@@ -6,12 +6,6 @@ from openrepairplatform.user.models import (
 
 
 class CustomUserSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = CustomUser
-        fields = [
-          "first_name",
-          "last_name",
-          "street_address",
-          "email"
-        ]
+        fields = ["first_name", "last_name", "street_address", "email"]

@@ -4,11 +4,9 @@ from dal import autocomplete
 
 from django import forms
 from django.forms import ModelForm
-from dal import autocomplete 
 
 from openrepairplatform.event.models import Event, Activity, Condition
 from openrepairplatform.location.models import Place
-from openrepairplatform.user.models import CustomUser
 from openrepairplatform.user.models import Organization
 
 
@@ -29,19 +27,25 @@ class EventForm(ModelForm):
         super().__init__(*args, **kwargs)
         self.fields["organizers"] = forms.ModelMultipleChoiceField(
             queryset=(
-                self.orga.actives.all() | self.orga.admins.all() | self.orga.volunteers.all() 
+                self.orga.actives.all()
+                | self.orga.admins.all()
+                | self.orga.volunteers.all()
             ),
-            widget=autocomplete.ModelSelect2Multiple(url='/' + self.orga.slug + '/user_orga_autocomplete/'),
+            widget=autocomplete.ModelSelect2Multiple(
+                url="/" + self.orga.slug + "/user_orga_autocomplete/"
+            ),
             required=False,
         )
         self.fields["conditions"] = forms.ModelMultipleChoiceField(
             queryset=self.orga.conditions,
-            widget=autocomplete.ModelSelect2Multiple(url='/event/' + self.orga.slug + '/condition_orga_autocomplete/'),
+            widget=autocomplete.ModelSelect2Multiple(
+                url="/event/" + self.orga.slug + "/condition_orga_autocomplete/"
+            ),
             required=False,
         )
         self.fields["activity"] = forms.ModelChoiceField(
-            widget=autocomplete.ModelSelect2(url='activity_autocomplete'),
-            queryset=Activity.objects.all()
+            widget=autocomplete.ModelSelect2(url="activity_autocomplete"),
+            queryset=Activity.objects.all(),
         )
 
     class Meta:
@@ -66,7 +70,7 @@ class EventForm(ModelForm):
             "conditions",
         ]
         widgets = {
-            'location': autocomplete.ModelSelect2(url='place_autocomplete'),
+            "location": autocomplete.ModelSelect2(url="place_autocomplete"),
         }
 
 
@@ -88,9 +92,7 @@ class RecurrentEventForm(forms.ModelForm):
     starts_at = forms.TimeField(
         label="De", widget=forms.TimeInput(attrs={"type": "time"})
     )
-    ends_at = forms.TimeField(
-        label="À", widget=forms.TimeInput(attrs={"type": "time"})
-    )
+    ends_at = forms.TimeField(label="À", widget=forms.TimeInput(attrs={"type": "time"}))
     date = forms.DateField(
         initial=dt.today(),
         widget=forms.DateInput(attrs={"type": "date"}, format="%Y-%m-%d"),
@@ -119,26 +121,30 @@ class RecurrentEventForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields["organizers"] = forms.ModelMultipleChoiceField(
             queryset=(
-                self.orga.actives.all() | self.orga.admins.all() | self.orga.volunteers.all() 
+                self.orga.actives.all()
+                | self.orga.admins.all()
+                | self.orga.volunteers.all()
             ).distinct(),
-            widget=autocomplete.ModelSelect2Multiple(url='/' + self.orga.slug + '/user_orga_autocomplete/'),
+            widget=autocomplete.ModelSelect2Multiple(
+                url="/" + self.orga.slug + "/user_orga_autocomplete/"
+            ),
             required=False,
         )
         self.fields["conditions"] = forms.ModelMultipleChoiceField(
             queryset=self.orga.conditions,
-            widget=autocomplete.ModelSelect2Multiple(url='/event/' + self.orga.slug + '/condition_orga_autocomplete/'),
+            widget=autocomplete.ModelSelect2Multiple(
+                url="/event/" + self.orga.slug + "/condition_orga_autocomplete/"
+            ),
             required=False,
         )
         self.fields["activity"] = forms.ModelChoiceField(
-            widget=autocomplete.ModelSelect2(url='activity_autocomplete'),
-            queryset=Activity.objects.all()
+            widget=autocomplete.ModelSelect2(url="activity_autocomplete"),
+            queryset=Activity.objects.all(),
         )
 
     def clean_weeks(self):
         recurrent_type = self.cleaned_data["recurrent_type"]
-        error_message = (
-            "Vous devez renseigner au moins une semaine de récurrence."
-        )
+        error_message = "Vous devez renseigner au moins une semaine de récurrence."
         if recurrent_type == "MONTHLY":
             if not self.cleaned_data["weeks"]:
                 self.add_error("weeks", error_message)
@@ -156,9 +162,7 @@ class RecurrentEventForm(forms.ModelForm):
                 "location": self.cleaned_data["location"],
                 "publish_at": (
                     date
-                    - timedelta(
-                        days=int(self.cleaned_data["period_before_publish"])
-                    )
+                    - timedelta(days=int(self.cleaned_data["period_before_publish"]))
                 ),
                 "activity": self.cleaned_data["activity"],
                 "available_seats": self.cleaned_data["available_seats"],
@@ -177,9 +181,7 @@ class RecurrentEventForm(forms.ModelForm):
                 for day in self.cleaned_data["days"]
             ]
         else:
-            weekdays = [
-                getattr(rrule, day) for day in self.cleaned_data["days"]
-            ]
+            weekdays = [getattr(rrule, day) for day in self.cleaned_data["days"]]
         rule = list(
             rrule.rrule(
                 getattr(rrule, self.cleaned_data["recurrent_type"]),
@@ -221,7 +223,7 @@ class RecurrentEventForm(forms.ModelForm):
             "period_before_publish",
         ]
         widgets = {
-            'location': autocomplete.ModelSelect2(url='place_autocomplete'),
+            "location": autocomplete.ModelSelect2(url="place_autocomplete"),
         }
 
 
@@ -245,12 +247,12 @@ class EventSearchForm(forms.Form):
     starts_after = forms.DateField(
         widget=forms.DateInput(attrs={"type": "date"}, format="%Y-%m-%d"),
         required=False,
-        label="Commence après le"
+        label="Commence après le",
     )
     starts_before = forms.DateField(
         widget=forms.DateInput(attrs={"type": "date"}, format="%Y-%m-%d"),
         required=False,
-        label="Commence avant le"
+        label="Commence avant le",
     )
 
     def __init__(self, *args, **kwargs):
@@ -258,25 +260,22 @@ class EventSearchForm(forms.Form):
         future_events = Event.future_published_events()
         self.fields["activity"] = forms.ModelChoiceField(
             required=False,
-            queryset=Activity.objects.filter(
-                events__in=future_events
-            ).distinct(),
-            widget=autocomplete.ModelSelect2(url='event:future_event_activity_autocomplete'),
-            label="Activité"
+            queryset=Activity.objects.filter(events__in=future_events).distinct(),
+            widget=autocomplete.ModelSelect2(
+                url="event:future_event_activity_autocomplete"
+            ),
+            label="Activité",
         )
         self.fields["place"] = forms.ModelChoiceField(
             required=False,
-            queryset=Place.objects.filter(
-                events__in=future_events
-            ).distinct(),
-            widget=autocomplete.ModelSelect2(url='event:future_event_place_autocomplete', 
-            forward=['activity']),
+            queryset=Place.objects.filter(events__in=future_events).distinct(),
+            widget=autocomplete.ModelSelect2(
+                url="event:future_event_place_autocomplete", forward=["activity"]
+            ),
             label="Lieu",
         )
         self.fields["organization"] = forms.ModelChoiceField(
             required=False,
-            queryset=Organization.objects.filter(
-                events__in=future_events
-            ).distinct(),
+            queryset=Organization.objects.filter(events__in=future_events).distinct(),
             label="Organisateur",
         )

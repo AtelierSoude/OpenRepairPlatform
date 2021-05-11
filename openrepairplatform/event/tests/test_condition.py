@@ -21,21 +21,15 @@ def condition_data(organization_factory):
 
 def test_get_condition_delete(client, user_log, condition_factory):
     condition = condition_factory()
-    response = client.get(
-        reverse("event:condition_delete", args=[condition.pk])
-    )
+    response = client.get(reverse("event:condition_delete", args=[condition.pk]))
     assert response.status_code == 302
     client.login(email=user_log.email, password=USER_PASSWORD)
-    response = client.get(
-        reverse("event:condition_delete", args=[condition.pk])
-    )
+    response = client.get(reverse("event:condition_delete", args=[condition.pk]))
     assert response.status_code == 403
     current_user = get_user(client)
     condition.organization.admins.add(current_user)
     assert current_user in condition.organization.admins.all()
-    response = client.get(
-        reverse("event:condition_delete", args=[condition.pk])
-    )
+    response = client.get(reverse("event:condition_delete", args=[condition.pk]))
     html = response.content.decode()
     assert response.status_code == 200
     assert condition.name in html
@@ -45,21 +39,15 @@ def test_get_condition_delete(client, user_log, condition_factory):
 def test_condition_delete(client, user_log, condition_factory):
     condition = condition_factory()
     assert Condition.objects.count() == 1
-    response = client.post(
-        reverse("event:condition_delete", args=[condition.pk])
-    )
+    response = client.post(reverse("event:condition_delete", args=[condition.pk]))
     assert response.status_code == 302
     client.login(email=user_log.email, password=USER_PASSWORD)
-    response = client.post(
-        reverse("event:condition_delete", args=[condition.pk])
-    )
+    response = client.post(reverse("event:condition_delete", args=[condition.pk]))
     assert response.status_code == 403
     current_user = get_user(client)
     condition.organization.admins.add(current_user)
     assert current_user in condition.organization.admins.all()
-    response = client.post(
-        reverse("event:condition_delete", args=[condition.pk])
-    )
+    response = client.post(reverse("event:condition_delete", args=[condition.pk]))
     assert Condition.objects.count() == 0
     assert response.status_code == 302
     assert response["Location"] == reverse(
@@ -69,23 +57,17 @@ def test_condition_delete(client, user_log, condition_factory):
 
 
 def test_get_condition_create_403(client, user_log, organization):
-    response = client.get(
-        reverse("event:condition_create", args=[organization.pk])
-    )
+    response = client.get(reverse("event:condition_create", args=[organization.pk]))
     assert response.status_code == 302
     client.login(email=user_log.email, password=USER_PASSWORD)
-    response = client.get(
-        reverse("event:condition_create", args=[organization.pk])
-    )
+    response = client.get(reverse("event:condition_create", args=[organization.pk]))
     assert response.status_code == 403
     html = response.content.decode()
     assert "pas administrateur" in html
 
 
 def test_get_condition_create_403_not_in_orga(client_log, organization):
-    response = client_log.get(
-        reverse("event:condition_create", args=[organization.pk])
-    )
+    response = client_log.get(reverse("event:condition_create", args=[organization.pk]))
     html = response.content.decode()
     assert response.status_code == 403
     assert "pas administrateur" in html
@@ -94,9 +76,7 @@ def test_get_condition_create_403_not_in_orga(client_log, organization):
 def test_get_condition_create(client, user_log, organization):
     organization.admins.add(user_log)
     client.login(email=user_log.email, password=USER_PASSWORD)
-    response = client.get(
-        reverse("event:condition_create", args=[organization.pk])
-    )
+    response = client.get(reverse("event:condition_create", args=[organization.pk]))
     html = response.content.decode()
     assert response.status_code == 200
     assert "Création d'une nouvelle Condition" in html
@@ -114,14 +94,10 @@ def test_condition_create(client, user_log, condition_data, organization):
     assert response.status_code == 302
     assert len(conditions) == 1
     orga = conditions[0].organization
-    assert response["Location"] == reverse(
-        "organization_page", args=[orga.slug]
-    )
+    assert response["Location"] == reverse("organization_page", args=[orga.slug])
 
 
-def test_condition_create_invalid(
-    client, user_log, condition_data, organization
-):
+def test_condition_create_invalid(client, user_log, condition_data, organization):
     organization.admins.add(user_log)
     client.login(email=user_log.email, password=USER_PASSWORD)
     assert Condition.objects.count() == 0
@@ -146,12 +122,8 @@ def test_get_condition_update_403(client, user_log, organization, condition):
     assert "pas administrateur" in html
 
 
-def test_get_condition_update_403_not_in_orga(
-    client_log, organization, condition
-):
-    response = client_log.get(
-        reverse("event:condition_edit", args=[condition.pk])
-    )
+def test_get_condition_update_403_not_in_orga(client_log, organization, condition):
+    response = client_log.get(reverse("event:condition_edit", args=[condition.pk]))
     html = response.content.decode()
     assert response.status_code == 403
     assert "pas administrateur" in html
@@ -166,9 +138,7 @@ def test_get_condition_update(client, user_log, condition, organization):
     assert f"Mise à jour de '{condition.name}'" in html
 
 
-def test_condition_update(
-    client, user_log, condition, condition_data, organization
-):
+def test_condition_update(client, user_log, condition, condition_data, organization):
     organization.admins.add(user_log)
     client.login(email=user_log.email, password=USER_PASSWORD)
     condition_data["name"] = "cond_name2"
@@ -180,9 +150,7 @@ def test_condition_update(
     assert len(conditions) == 1
     orga = conditions[0].organization
     assert conditions[0].name == "cond_name2"
-    assert response["Location"] == reverse(
-        "organization_page", args=[orga.slug]
-    )
+    assert response["Location"] == reverse("organization_page", args=[orga.slug])
 
 
 def test_condition_no_price(condition_factory):

@@ -1,5 +1,4 @@
-from django.urls import path, re_path
-from django.conf.urls import url
+from django.urls import path
 
 from . import views
 
@@ -8,18 +7,18 @@ app_name = "event"
 
 urlpatterns = [
     path(
-        "future_event_place_autocomplete/", 
-        views.FutureEventPlaceAutocomplete.as_view(), 
+        "future_event_place_autocomplete/",
+        views.FutureEventPlaceAutocomplete.as_view(),
         name="future_event_place_autocomplete",
     ),
     path(
-        "future_event_activity_autocomplete/", 
-        views.FutureEventActivityAutocomplete.as_view(), 
+        "future_event_activity_autocomplete/",
+        views.FutureEventActivityAutocomplete.as_view(),
         name="future_event_activity_autocomplete",
     ),
     path(
         "<str:orga_slug>/condition_orga_autocomplete/",
-        views.ConditionOrgaAutocomplete.as_view(), 
+        views.ConditionOrgaAutocomplete.as_view(),
         name="condition_orga_autocomplete",
     ),
     path(
@@ -59,9 +58,7 @@ urlpatterns = [
         name="activity_detail",
     ),
     path("", views.EventListView.as_view(), name="list"),
-    path(
-        "create/<int:orga_pk>/", views.EventCreateView.as_view(), name="create"
-    ),
+    path("create/<int:orga_pk>/", views.EventCreateView.as_view(), name="create"),
     path(
         "recurrent/create/<int:orga_pk>/",
         views.RecurrentEventCreateView.as_view(),
@@ -82,12 +79,20 @@ urlpatterns = [
     ),
     path("<int:pk>/close/", views.CloseEventView.as_view(), name="close"),
     path("<int:pk>/<slug>/", views.EventView.as_view(), name="detail"),
-    path("<int:pk>/<slug>/book/<int:user_pk>/<token>", views.EventBookStuffView.as_view(), name="book_confirm"),
-    path("<int:pk>/add_stuff/<int:user_pk>", views.EventAddStuffView.as_view(), name="add_stuff_event"),
+    path(
+        "<int:pk>/<slug>/book/<int:user_pk>/<token>",
+        views.EventBookStuffView.as_view(),
+        name="book_confirm",
+    ),
+    path(
+        "<int:pk>/add_stuff/<int:user_pk>",
+        views.EventAddStuffView.as_view(),
+        name="add_stuff_event",
+    ),
     path(
         "create_stuff/<int:event_pk>/<int:registered_pk>/<token>",
         views.StuffUserEventFormView.as_view(),
-        name="create_user_event_stuff"
+        name="create_user_event_stuff",
     ),
     path(
         "cancel_reservation/<token>/",

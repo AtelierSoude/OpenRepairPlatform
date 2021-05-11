@@ -74,9 +74,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(
         _("staff status"),
         default=False,
-        help_text=_(
-            "Designates whether the user can log into this admin site."
-        ),
+        help_text=_("Designates whether the user can log into this admin site."),
     )
     is_active = models.BooleanField(
         _("active"),
@@ -116,15 +114,14 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     @property
     def full_name(self):
-        return '{0} {1}'.format(self.first_name, self.last_name)
-        
+        return "{0} {1}".format(self.first_name, self.last_name)
+
+
 class Organization(models.Model):
     name = models.CharField(
         max_length=100, default="", verbose_name=_("Organization name")
     )
-    description = CleanHTMLField(
-        verbose_name=_("Activity description"), default=""
-    )
+    description = CleanHTMLField(verbose_name=_("Activity description"), default="")
     email = models.EmailField(
         max_length=200, verbose_name=_("Organization mail address"), blank=True
     )
@@ -139,10 +136,7 @@ class Organization(models.Model):
         upload_to="organizations/",
         validators=[validate_image],
     )
-    slug = models.SlugField(
-        default="",
-        unique=True
-    )
+    slug = models.SlugField(default="", unique=True)
     visitors = models.ManyToManyField(
         CustomUser, related_name="visitor_organizations", blank=True
     )
@@ -207,18 +201,16 @@ class Fee(models.Model):
     )
     date = models.DateField(default=timezone.now)
     amount = models.PositiveIntegerField(default=0)
-    user = models.ForeignKey(
-        CustomUser, on_delete=models.CASCADE, related_name="fees"
-    )
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="fees")
     organization = models.ForeignKey(
         Organization, on_delete=models.CASCADE, related_name="fees"
     )
 
     def __str__(self):
         return f"{self.date}-{self.user}-{self.organization}-{self.amount}"
-    
+
     class Meta:
-        ordering = ['-date']
+        ordering = ["-date"]
 
 
 class Membership(models.Model):
@@ -228,9 +220,7 @@ class Membership(models.Model):
     organization = models.ForeignKey(
         Organization, on_delete=models.CASCADE, related_name="memberships"
     )
-    fee = models.OneToOneField(
-        Fee, on_delete=models.SET_NULL, null=True, blank=True
-    )
+    fee = models.OneToOneField(Fee, on_delete=models.SET_NULL, null=True, blank=True)
     first_payment = models.DateTimeField(default=timezone.now)
     amount = models.PositiveIntegerField(
         verbose_name=_("Amount paid"), default=0, blank=True

@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from openrepairplatform.user.models import (
     CustomUser,
 )

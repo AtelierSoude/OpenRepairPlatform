@@ -36,7 +36,7 @@ class CleanHTMLField(HTMLField):
             tags=ALLOWED_TAGS,
             attributes=ALLOWED_ATTRS,
             styles=ALLOWED_STYLES,
-            strip=True
+            strip=True,
         )
         if cleaned_value != value:
             raise ValidationError("Le format n'est pas autorisé.")

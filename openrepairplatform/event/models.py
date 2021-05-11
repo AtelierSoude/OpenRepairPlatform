@@ -14,6 +14,7 @@ from openrepairplatform.user.models import CustomUser, Organization, Fee
 from openrepairplatform.utils import get_future_published_events, validate_image
 from openrepairplatform.inventory.models import Stuff
 
+
 class Condition(models.Model):
     name = models.CharField(verbose_name=_("Condition Type"), max_length=100)
     description = models.CharField(
@@ -36,6 +37,7 @@ class Condition(models.Model):
             return f"{self.name} - {self.price}€"
         return self.name
 
+
 class ActivityCategory(models.Model):
     name = models.CharField(verbose_name=_("Activity type"), max_length=100)
     slug = models.SlugField(blank=True)
@@ -48,10 +50,11 @@ class ActivityCategory(models.Model):
     def __str__(self):
         return self.name
 
+
 class Activity(models.Model):
     name = models.CharField(verbose_name=_("Activity type"), max_length=100)
     category = models.ForeignKey(
-        ActivityCategory, 
+        ActivityCategory,
         related_name="category",
         on_delete=models.SET_NULL,
         blank=True,
@@ -61,9 +64,7 @@ class Activity(models.Model):
     organization = models.ForeignKey(
         Organization, on_delete=models.CASCADE, related_name="activities"
     )
-    description = CleanHTMLField(
-        verbose_name=_("Activity description"), default=""
-    )
+    description = CleanHTMLField(verbose_name=_("Activity description"), default="")
     picture = models.ImageField(
         verbose_name=_("Image"),
         upload_to="activities/",
@@ -122,23 +123,29 @@ class Event(models.Model):
         Activity, on_delete=models.SET_NULL, null=True, related_name="events"
     )
     description = CleanHTMLField(
-        verbose_name=_("Description supplémentaire de l'événément (remplace la définition par défaut de l'activité)"), blank=True
+        verbose_name=_(
+            "Description supplémentaire de l'événément "
+            "(remplace la définition par défaut de l'activité)"
+        ),
+        blank=True,
     )
-    collaborator = models.CharField(verbose_name=_("En association avec"), 
-        max_length=100,
-        blank=True
+    collaborator = models.CharField(
+        verbose_name=_("En association avec"), max_length=100, blank=True
     )
-    external = models.BooleanField(verbose_name=_("Réservation externe au site ?"), default=False)
+    external = models.BooleanField(
+        verbose_name=_("Réservation externe au site ?"), default=False
+    )
     external_url = models.URLField(
-        max_length=200, 
-        verbose_name=_("Lien vers un site externe. Pour la réservation externe (si activée) ou simplement pour info"), 
-        blank=True
+        max_length=200,
+        verbose_name=_(
+            "Lien vers un site externe. Pour la réservation externe "
+            "(si activée) ou simplement pour info"
+        ),
+        blank=True,
     )
     slug = models.SlugField(blank=True)
     date = models.DateField(verbose_name=_("Jour"), default=date.today)
-    starts_at = models.TimeField(
-        verbose_name=_("Heure de début"), default=timezone.now
-    )
+    starts_at = models.TimeField(verbose_name=_("Heure de début"), default=timezone.now)
     ends_at = models.TimeField(verbose_name=_("Heure de fin"))
     available_seats = models.PositiveIntegerField(
         verbose_name=_("Places disponibles"), default=0
@@ -166,23 +173,33 @@ class Event(models.Model):
         blank=True,
     )
     location = models.ForeignKey(
-        Place, on_delete=models.SET_NULL, null=True, related_name="events", verbose_name="Lieu"
+        Place,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="events",
+        verbose_name="Lieu",
     )
     allow_stuffs = models.BooleanField(
         verbose_name=_("Souhaitez-vous gérer des réparations ?"),
         default=False,
         blank=True,
-        help_text="Les participants pourront déclarer leurs réparations lors de la réservation"
-
+        help_text=(
+            "Les participants pourront déclarer leurs réparations "
+            "lors de la réservation"
+        ),
     )
     stuffs = models.ManyToManyField(
-        Stuff, 
+        Stuff,
         verbose_name=_("Objets attendus"),
         related_name="events",
         blank=True,
     )
-    is_free = models.BooleanField(default=False, verbose_name=_("Pas de limite de place ?"))
-    booking = models.BooleanField(default=True, verbose_name=_("Réservation interne au site ?"))
+    is_free = models.BooleanField(
+        default=False, verbose_name=_("Pas de limite de place ?")
+    )
+    booking = models.BooleanField(
+        default=True, verbose_name=_("Réservation interne au site ?")
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     history = HistoricalRecords()
@@ -190,16 +207,14 @@ class Event(models.Model):
     def save(self, *args, **kwargs):
         if self.activity:
             slug = self.activity.name
-        else: 
-            slug = 'no activity type'
+        else:
+            slug = "no activity type"
         self.slug = slugify(slug)
         return super().save(*args, kwargs)
 
     @property
     def remaining_seats(self):
-        return self.available_seats - (
-            self.registered.count() + self.presents.count()
-        )
+        return self.available_seats - (self.registered.count() + self.presents.count())
 
     def date_interval_format(self):
         date = self.date.strftime("%A %d %B")
@@ -233,8 +248,8 @@ class Event(models.Model):
     def __str__(self):
         if self.activity:
             activity_name = self.activity.name
-        else: 
-            activity_name = 'no activity type'
+        else:
+            activity_name = "no activity type"
         full_title = "%s du %s" % (
             activity_name,
             self.date.strftime("%d %B"),
@@ -266,9 +281,7 @@ class Participation(models.Model):
     amount = models.PositiveIntegerField(
         verbose_name=_("Montant payé"), default=0, blank=True
     )
-    fee = models.OneToOneField(
-        Fee, on_delete=models.SET_NULL, null=True, blank=True
-    )
+    fee = models.OneToOneField(Fee, on_delete=models.SET_NULL, null=True, blank=True)
     history = HistoricalRecords()
 
     class Meta:
@@ -276,7 +289,6 @@ class Participation(models.Model):
 
     def __str__(self):
         return " Participation " + self.user.first_name + " " + str(self.event)
-    
+
     def get_absolute_url(self):
         return reverse("event:detail", args=(self.event.pk, self.event.slug))
-

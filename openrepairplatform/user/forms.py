@@ -1,10 +1,9 @@
 from django import forms
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 from datetime import date as dt
-from captcha.fields import ReCaptchaField
-from dal import autocomplete 
+from dal import autocomplete
 
-from .models import CustomUser, Organization, Fee
+from .models import CustomUser, Organization
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -40,22 +39,26 @@ class UserUpdateForm(forms.ModelForm):
             "is_visible",
         ]
         widgets = {
-            "birth_date": forms.DateInput(
-                attrs={"type": "date"}, format="%Y-%m-%d"
-            )
+            "birth_date": forms.DateInput(attrs={"type": "date"}, format="%Y-%m-%d")
         }
+
 
 class CustomUserEmailForm(forms.ModelForm):
     class Meta:
         model = CustomUser
         fields = ["email"]
 
+
 class CustomUserSearchForm(forms.Form):
     user = forms.ModelChoiceField(
         queryset=CustomUser.objects.all(),
-        label = "Veuillez rechercher si l'utilisateur existe avant de le créer",
-        widget=autocomplete.ModelSelect2(url='user_autocomplete', attrs={'data-html': True, 'data-allow-clear': "true"})
+        label="Veuillez rechercher si l'utilisateur existe avant de le créer",
+        widget=autocomplete.ModelSelect2(
+            url="user_autocomplete",
+            attrs={"data-html": True, "data-allow-clear": "true"},
+        ),
     )
+
 
 class MoreInfoCustomUserForm(forms.ModelForm):
     amount_paid = forms.IntegerField(min_value=0, initial=0)
@@ -74,6 +77,7 @@ class MoreInfoCustomUserForm(forms.ModelForm):
         widget=forms.DateInput(attrs={"type": "date"}, format="%Y-%m-%d"),
     )
     first_fee = forms.BooleanField(required=False)
+
     class Meta:
         model = CustomUser
         fields = ["email", "first_name", "last_name", "street_address"]
@@ -95,4 +99,3 @@ class OrganizationForm(forms.ModelForm):
             "admins",
             "slug",
         ]
-        

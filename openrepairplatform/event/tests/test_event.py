@@ -17,9 +17,7 @@ def _django_date(datetime):
 
 
 @pytest.fixture
-def event_data(
-    condition_factory, activity, custom_user_factory, place, organization
-):
+def event_data(condition_factory, activity, custom_user_factory, place, organization):
     cond1 = condition_factory(organization=organization)
     cond2 = condition_factory(organization=organization)
     user1 = custom_user_factory()
@@ -35,9 +33,7 @@ def event_data(
         "activity": activity.pk,
         "starts_at": timezone.now().time().strftime("%H:%M"),
         "ends_at": (
-            (timezone.now() + datetime.timedelta(hours=4))
-            .time()
-            .strftime("%H:%M")
+            (timezone.now() + datetime.timedelta(hours=4)).time().strftime("%H:%M")
         ),
         "date": timezone.now().date().strftime("%Y-%m-%d"),
         "available_seats": 12,
@@ -72,9 +68,7 @@ def test_event_list_invalid(client, published_event_factory):
     assert event2 in response.context_data["object_list"]
 
 
-def test_event_list_filter_place(
-    client, place_factory, published_event_factory
-):
+def test_event_list_filter_place(client, place_factory, published_event_factory):
     place1 = place_factory()
     place2 = place_factory()
     event1 = published_event_factory(location=place1)
@@ -84,9 +78,7 @@ def test_event_list_filter_place(
     assert event2 not in response.context_data["object_list"]
 
 
-def test_event_list_filter_orga(
-    client, organization_factory, published_event_factory
-):
+def test_event_list_filter_orga(client, organization_factory, published_event_factory):
     orga1 = organization_factory()
     orga2 = organization_factory()
     event1 = published_event_factory(organization=orga1)
@@ -96,9 +88,7 @@ def test_event_list_filter_orga(
     assert event2 not in response.context_data["object_list"]
 
 
-def test_event_list_filter_activity(
-    client, activity_factory, published_event_factory
-):
+def test_event_list_filter_activity(client, activity_factory, published_event_factory):
     activity1 = activity_factory(name="hello")
     activity2 = activity_factory(name="world")
     event1 = published_event_factory(activity=activity1)
@@ -112,12 +102,8 @@ def test_event_list_filter_start_time(client, published_event_factory):
     now = timezone.now()
     old = now - datetime.timedelta(days=3)
     future = now + datetime.timedelta(days=3)
-    starts_before = (
-        (now + datetime.timedelta(days=1)).date().strftime("%Y-%m-%d")
-    )
-    starts_after = (
-        (now - datetime.timedelta(days=1)).date().strftime("%Y-%m-%d")
-    )
+    starts_before = (now + datetime.timedelta(days=1)).date().strftime("%Y-%m-%d")
+    starts_after = (now - datetime.timedelta(days=1)).date().strftime("%Y-%m-%d")
     event1 = published_event_factory(date=now.date())
     event2 = published_event_factory(date=old.date())
     event3 = published_event_factory(date=future.date())
@@ -136,9 +122,7 @@ def test_event_detail_context(client, event, custom_user_factory, user_log):
     event.registered.add(anonymous_user)
     response = client.get(reverse("event:detail", args=[event.pk, event.slug]))
     assert response.status_code == 200
-    assert user_log.email in {
-        user[1] for user in response.context_data["users"]
-    }
+    assert user_log.email in {user[1] for user in response.context_data["users"]}
     assert isinstance(response.context_data["event"], Event)
     assert event.pk == response.context_data["event"].pk
     assert event.activity.name in str(response.context_data["event"])
@@ -207,9 +191,7 @@ def test_event_create(client, user_log, event_data):
     client.login(email=user_log.email, password=USER_PASSWORD)
     organization.admins.add(user_log)
     assert Event.objects.count() == 0
-    response = client.post(
-        reverse("event:create", args=[organization.pk]), event_data
-    )
+    response = client.post(reverse("event:create", args=[organization.pk]), event_data)
     events = Event.objects.all()
     assert response.status_code == 302
     assert len(events) == 1
@@ -225,9 +207,7 @@ def test_event_create_invalid(client, user_log, event_data):
     assert Event.objects.count() == 0
     data = event_data
     del data["starts_at"]
-    response = client.post(
-        reverse("event:create", args=[organization.pk]), data
-    )
+    response = client.post(reverse("event:create", args=[organization.pk]), data)
     html = response.content.decode()
     assert response.status_code == 200
     assert Event.objects.count() == 0
@@ -240,7 +220,7 @@ def test_get_event_update(client, user_log, event, organization):
     response = client.get(reverse("event:edit", args=[event.pk]))
     html = response.content.decode()
     assert response.status_code == 200
-    assert f"Mise à jour de '" in html
+    assert "Mise à jour de '" in html
     assert event.activity.name in html
 
 
@@ -292,9 +272,7 @@ def test_cancel_reservation(client, event, custom_user):
     )
     resp = client.get(reverse("event:cancel_reservation", args=[token]))
     assert resp.status_code == 302
-    assert resp["Location"] == reverse(
-        "event:detail", args=[event.id, event.slug]
-    )
+    assert resp["Location"] == reverse("event:detail", args=[event.id, event.slug])
     nb_registered = Event.objects.first().registered.count()
     assert nb_registered == 0
 
@@ -310,9 +288,7 @@ def test_cancel_reservation_temp_user(client, event, custom_user):
     )
     resp = client.get(reverse("event:cancel_reservation", args=[token]))
     assert resp.status_code == 302
-    assert resp["Location"] == reverse(
-        "event:detail", args=[event.id, event.slug]
-    )
+    assert resp["Location"] == reverse("event:detail", args=[event.id, event.slug])
     assert Event.objects.first().registered.count() == 0
     assert CustomUser.objects.count() == 0
 
@@ -323,9 +299,7 @@ def test_cancel_reservation_redirect(client, event, custom_user):
         {"user_id": custom_user.id, "event_id": event.id}, salt="cancel"
     )
     query_params = "?redirect=/location/"
-    resp = client.get(
-        reverse("event:cancel_reservation", args=[token]) + query_params
-    )
+    resp = client.get(reverse("event:cancel_reservation", args=[token]) + query_params)
     assert resp.status_code == 302
     assert resp["Location"] == reverse("location:list")
 
@@ -347,15 +321,14 @@ def test_book_no_more_room_by_anonymous(client, event, custom_user):
     )
     resp = client.get(reverse("event:book", args=[token]))
     assert resp.status_code == 302
-    assert resp["Location"] == reverse(
-        "event:detail", args=[event.id, event.slug]
-    )
+    assert resp["Location"] == reverse("event:detail", args=[event.id, event.slug])
     nb_registered = Event.objects.first().registered.count()
     assert nb_registered == 0
 
 
 def test_book_no_more_room_by_active_volunteer_or_admin(
-        client, user_log_staff, event, custom_user):
+    client, user_log_staff, event, custom_user
+):
     client.login(email=user_log_staff.email, password=USER_PASSWORD)
     o = event.organization
     container = [o.actives, o.volunteers, o.admins]
@@ -373,9 +346,7 @@ def test_book_no_more_room_by_active_volunteer_or_admin(
         )
         resp = client.get(reverse("event:book", args=[token]))
         assert resp.status_code == 302
-        assert resp["Location"] == reverse(
-            "event:detail", args=[event.id, event.slug]
-        )
+        assert resp["Location"] == reverse("event:detail", args=[event.id, event.slug])
         nb_registered = Event.objects.first().registered.count()
         assert nb_registered == 1
 
@@ -388,9 +359,7 @@ def test_book(client, event, custom_user):
     )
     resp = client.get(reverse("event:book", args=[token]))
     assert resp.status_code == 302
-    assert resp["Location"] == reverse(
-        "event:detail", args=[event.id, event.slug]
-    )
+    assert resp["Location"] == reverse("event:detail", args=[event.id, event.slug])
     nb_registered = Event.objects.first().registered.count()
     assert nb_registered == 1
     resp = client.get(reverse("event:book", args=[token]))
@@ -416,14 +385,14 @@ def test_organizer_book_user_not_authorized(
     assert event.organizers.count() == 0
     resp = client.post(
         reverse("user:organizer_book", args=[event.pk]) + f"?event={event.pk}",
-        {"email": admin_user.email}
+        {"email": admin_user.email},
     )
     assert resp.status_code == 302
     assert "/accounts/login" in resp.url
     client.login(email=user.email, password=USER_PASSWORD)
     resp = client.post(
         reverse("user:organizer_book", args=[event.pk]) + f"?event={event.pk}",
-        {"email": admin_user.email}
+        {"email": admin_user.email},
     )
     assert resp.status_code == 403
     event.refresh_from_db()
@@ -434,8 +403,7 @@ def test_organizer_book_user_authorized(
     client, organization, event_factory, custom_user_factory
 ):
     logged = volunteer, active, admin = custom_user_factory.create_batch(3)
-    organizers = user1, user2, user3, nobody = \
-        custom_user_factory.create_batch(4)
+    organizers = user1, user2, user3, nobody = custom_user_factory.create_batch(4)
     organization.members.add(nobody)
     organization.volunteers.set([volunteer, user1, user2, user3])
     organization.actives.add(active)
@@ -445,20 +413,16 @@ def test_organizer_book_user_authorized(
     for allowed_user, organizer in zip(logged, organizers):
         client.login(email=allowed_user.email, password=USER_PASSWORD)
         resp = client.post(
-            reverse("user:organizer_book", args=[event.pk])
-            + f"?event={event.pk}",
-            {"email": nobody.email}
+            reverse("user:organizer_book", args=[event.pk]) + f"?event={event.pk}",
+            {"email": nobody.email},
         )
         assert resp.status_code == 302
         resp = client.post(
-            reverse("user:organizer_book", args=[event.pk])
-            + f"?event={event.pk}",
-            {"email": organizer.email}
+            reverse("user:organizer_book", args=[event.pk]) + f"?event={event.pk}",
+            {"email": organizer.email},
         )
         assert resp.status_code == 302
-        assert resp["Location"] == reverse(
-            "event:detail", args=[event.pk, event.slug]
-        )
+        assert resp["Location"] == reverse("event:detail", args=[event.pk, event.slug])
     event.refresh_from_db()
     assert event.organizers.count() == 3
 
@@ -472,19 +436,16 @@ def test_organizer_book_organizer_already_registered(
     assert event.organizers.count() == 0
     client.login(email=admin.email, password=USER_PASSWORD)
     resp = client.post(
-        reverse("user:organizer_book", args=[event.pk])
-        + f"?event={event.pk}",
-        {"email": organizer.email}
+        reverse("user:organizer_book", args=[event.pk]) + f"?event={event.pk}",
+        {"email": organizer.email},
     )
     assert resp.status_code == 302
     resp = client.post(
         reverse("user:organizer_book", args=[event.pk]) + f"?event={event.pk}",
-        {"email": organizer.email}
+        {"email": organizer.email},
     )
     assert resp.status_code == 302
-    assert resp["Location"] == reverse(
-        "event:detail", args=[event.pk, event.slug]
-    )
+    assert resp["Location"] == reverse("event:detail", args=[event.pk, event.slug])
     event.refresh_from_db()
     assert event.organizers.count() == 1
 
@@ -537,9 +498,7 @@ def test_user_absent_redirect(client, event, custom_user):
         {"user_id": custom_user.id, "event_id": event.id}, salt="absent"
     )
     query_params = "?redirect=/location/"
-    resp = client.get(
-        reverse("event:user_absent", args=[token]) + query_params
-    )
+    resp = client.get(reverse("event:user_absent", args=[token]) + query_params)
     assert resp.status_code == 302
     assert resp["Location"] == reverse("location:list")
 
@@ -589,16 +548,12 @@ def test_close_event(
     assert resp.status_code == 403
     client.login(email=active.email, password=USER_PASSWORD)
     resp = client.post(reverse("event:close", args=[event.pk]))
-    assert resp["Location"] == reverse(
-        "event:detail", args=[event.id, event.slug]
-    )
+    assert resp["Location"] == reverse("event:detail", args=[event.id, event.slug])
     organization.refresh_from_db()
     first_participation.refresh_from_db()
     membership_member.refresh_from_db()
     membership_member2.refresh_from_db()
-    visitor_membership = Membership.objects.filter(
-        user=visitor_present
-    ).first()
+    visitor_membership = Membership.objects.filter(user=visitor_present).first()
     assert first_participation.saved
     assert visitor_membership.amount == 20
     assert membership_member.amount == 15
@@ -608,9 +563,7 @@ def test_close_event(
     assert CustomUser.objects.count() == 4
 
 
-def test_add_active_event(
-    client, organization, event_factory, custom_user_factory
-):
+def test_add_active_event(client, organization, event_factory, custom_user_factory):
     user = custom_user_factory()
     active = custom_user_factory()
     organization.actives.add(active)
@@ -623,16 +576,12 @@ def test_add_active_event(
     assert resp.status_code == 403
     client.login(email=active.email, password=USER_PASSWORD)
     resp = client.post(reverse("event:add_active", args=[event.pk]))
-    assert resp["Location"] == reverse(
-        "event:detail", args=[event.id, event.slug]
-    )
+    assert resp["Location"] == reverse("event:detail", args=[event.id, event.slug])
     event.refresh_from_db()
     assert event.organizers.count() == 1
 
 
-def test_remove_active_event(
-    client, organization, event_factory, custom_user_factory
-):
+def test_remove_active_event(client, organization, event_factory, custom_user_factory):
     user = custom_user_factory()
     active = custom_user_factory()
     organization.actives.add(active)
@@ -646,8 +595,6 @@ def test_remove_active_event(
     assert resp.status_code == 403
     client.login(email=active.email, password=USER_PASSWORD)
     resp = client.post(reverse("event:remove_active", args=[event.pk]))
-    assert resp["Location"] == reverse(
-        "event:detail", args=[event.id, event.slug]
-    )
+    assert resp["Location"] == reverse("event:detail", args=[event.id, event.slug])
     event.refresh_from_db()
     assert event.organizers.count() == 0

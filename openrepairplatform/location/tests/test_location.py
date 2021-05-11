@@ -54,9 +54,7 @@ def test_location_api_list(client_log, place_factory):
 
 def test_location_detail_context(client_log, place_factory):
     place = place_factory()
-    response = client_log.get(
-        reverse("location:detail", args=[place.pk, place.slug])
-    )
+    response = client_log.get(reverse("location:detail", args=[place.pk, place.slug]))
     assert response.status_code == 200
     assert isinstance(response.context_data["place"], Place)
     assert place.pk == response.context_data["place"].pk
@@ -161,9 +159,7 @@ def test_get_location_update(client_log, place_factory):
 def test_location_update(client_log, place_factory, location_data):
     current_user = get_user(client_log)
     place = place_factory()
-    response = client_log.post(
-        reverse("location:edit", args=[place.pk]), location_data
-    )
+    response = client_log.post(reverse("location:edit", args=[place.pk]), location_data)
     assert response.status_code == 403
     place.organization.admins.add(current_user)
     assert current_user in place.organization.admins.all()

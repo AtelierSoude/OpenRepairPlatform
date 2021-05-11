@@ -42,18 +42,14 @@ def test_user_list_visible(client, custom_user):
 
 
 def test_user_detail_not_visible(client, custom_user):
-    response = client.get(
-        reverse("user:user_detail", kwargs={"pk": custom_user.pk})
-    )
+    response = client.get(reverse("user:user_detail", kwargs={"pk": custom_user.pk}))
     assert response.status_code == 404
 
 
 def test_user_detail_visible(client, custom_user):
     custom_user.is_visible = True
     custom_user.save()
-    response = client.get(
-        reverse("user:user_detail", kwargs={"pk": custom_user.pk})
-    )
+    response = client.get(reverse("user:user_detail", kwargs={"pk": custom_user.pk}))
     assert response.status_code == 200
 
 
@@ -69,9 +65,7 @@ def test_user_detail_not_visible_but_staff(client_log, custom_user):
 
 def test_user_detail_not_visible_but_same(client, custom_user):
     client.login(email=custom_user.email, password=USER_PASSWORD)
-    response = client.get(
-        reverse("user:user_detail", kwargs={"pk": custom_user.pk})
-    )
+    response = client.get(reverse("user:user_detail", kwargs={"pk": custom_user.pk}))
     assert response.status_code == 200
 
 
@@ -153,7 +147,7 @@ def test_anonymous_user_create_is_organizer(client, event, custom_user):
 
 def test_anonymous_get_user_create(
     client, event_factory, organization, custom_user_factory
-        ):
+):
     user = custom_user_factory()
     organization.admins.add(user)
     in_two_hours = timezone.now() + datetime.timedelta(hours=2)
@@ -166,7 +160,8 @@ def test_anonymous_get_user_create(
     )
     response = client.get(
         reverse(
-            "organization_page", kwargs={"orga_slug": organization.slug},
+            "organization_page",
+            kwargs={"orga_slug": organization.slug},
         )
     )
     assert response.status_code == 200
@@ -181,19 +176,13 @@ def test_user_update(client, custom_user_factory):
         "email": "test@test.fr",
         "street_address": "221 b Tester Street",
     }
-    response = client.post(
-        reverse("user:user_update", kwargs={"pk": user1.pk}), data
-    )
+    response = client.post(reverse("user:user_update", kwargs={"pk": user1.pk}), data)
     assert response.status_code == 302
     client.login(email=user2.email, password=USER_PASSWORD)
-    response = client.post(
-        reverse("user:user_update", kwargs={"pk": user1.pk}), data
-    )
+    response = client.post(reverse("user:user_update", kwargs={"pk": user1.pk}), data)
     assert response.status_code == 403
     client.login(email=user1.email, password=USER_PASSWORD)
-    response = client.post(
-        reverse("user:user_update", kwargs={"pk": user1.pk}), data
-    )
+    response = client.post(reverse("user:user_update", kwargs={"pk": user1.pk}), data)
     assert response.url == reverse("user:user_detail", kwargs={"pk": user1.pk})
     user1.refresh_from_db()
     assert user1.first_name == "Test"

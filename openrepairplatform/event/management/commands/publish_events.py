@@ -1,7 +1,4 @@
-from django.core.mail import send_mail
 from django.core.management import BaseCommand
-from django.template.loader import render_to_string
-from django.urls import reverse
 from django.utils import timezone
 
 from openrepairplatform.event.models import Event
@@ -12,11 +9,11 @@ from openrepairplatform.event.models import Event
 class Command(BaseCommand):
     help = "Publish non published events"
 
-   # def add_arguments(self, parser):
-   #     parser.add_argument(
-   #        "website_url",
-   #        help="ex: https://dev.atelier-soude.fr"
-   #     )
+    # def add_arguments(self, parser):
+    #     parser.add_argument(
+    #        "website_url",
+    #        help="ex: https://dev.atelier-soude.fr"
+    #     )
 
     def handle(self, *args, **options):
         # base_url = options["website_url"]

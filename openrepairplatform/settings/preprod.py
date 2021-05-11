@@ -1,6 +1,7 @@
 import os
 from .base import *  # noqa
 from dotenv import load_dotenv
+
 load_dotenv()
 
 SECRET_KEY = "H/hXAUnb1ZKNGpToim2cg38dxiyHM6b+zB9zozhpTzkP"
@@ -21,7 +22,7 @@ DATABASES = {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": os.getenv("POSTGRES_DB_NAME"),
         "USER": os.getenv("POSTGRES_USER"),
-        "HOST":  'db',
+        "HOST": "db",
         "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
     }
 }

@@ -8,7 +8,6 @@ from django.db.models import Count
 from django.core import signing
 from django.core.mail import send_mail
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404
 from django.template.loader import render_to_string
 from django.urls import reverse, reverse_lazy
 from django.views.generic import (
@@ -20,7 +19,7 @@ from django.views.generic import (
     RedirectView,
     FormView,
     TemplateView,
-    View
+    View,
 )
 
 from openrepairplatform import utils
@@ -33,7 +32,6 @@ from openrepairplatform.event.forms import (
 )
 from openrepairplatform.event.models import Activity, Condition, Event, Participation
 from openrepairplatform.location.models import Place
-from openrepairplatform.inventory.forms import StuffForm
 from openrepairplatform.inventory.views import StuffFormMixin
 from openrepairplatform.inventory.models import Stuff
 from openrepairplatform.user.models import CustomUser
@@ -46,7 +44,7 @@ from openrepairplatform.mixins import (
 )
 from openrepairplatform.user.mixins import PermissionOrgaContextMixin
 from openrepairplatform.user.forms import CustomUserEmailForm, MoreInfoCustomUserForm
-from openrepairplatform.user.models import CustomUser, Membership, Fee, Organization
+from openrepairplatform.user.models import Membership, Fee, Organization
 
 logger = logging.getLogger(__name__)
 
@@ -71,9 +69,7 @@ class ConditionFormView(HasAdminPermissionMixin):
         return ctx
 
 
-class ConditionCreateView(
-    RedirectQueryParamView, ConditionFormView, CreateView
-):
+class ConditionCreateView(RedirectQueryParamView, ConditionFormView, CreateView):
     success_message = "La condition a bien été créée"
 
 
@@ -99,22 +95,28 @@ class ActivityView(PermissionOrgaContextMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["activity_menu"] = 'active'
+        context["activity_menu"] = "active"
         return context
+
 
 class ActivityListView(ListView):
     model = Activity
     template_name = "event/activity/list.html"
 
     def get_queryset(self):
-        queryset = Activity.objects.all().annotate(category_count=Count('category')).order_by('-category_count')
-        queryset = queryset.order_by('category__name')
+        queryset = (
+            Activity.objects.all()
+            .annotate(category_count=Count("category"))
+            .order_by("-category_count")
+        )
+        queryset = queryset.order_by("category__name")
         return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["activity_menu"] = 'active'
+        context["activity_menu"] = "active"
         return context
+
 
 class ActivityFormView(HasAdminPermissionMixin):
     model = Activity
@@ -128,18 +130,19 @@ class ActivityFormView(HasAdminPermissionMixin):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["activity_menu"] = 'active'
+        context["activity_menu"] = "active"
         return context
+
 
 class ActivityCreateView(RedirectQueryParamView, ActivityFormView, CreateView):
     success_message = "L'activité a bien été créée"
 
+
 class ActivityEditView(RedirectQueryParamView, ActivityFormView, UpdateView):
     success_message = "L'activité a bien été mise à jour"
 
-class ActivityDeleteView(
-    HasAdminPermissionMixin, RedirectQueryParamView, DeleteView
-):
+
+class ActivityDeleteView(HasAdminPermissionMixin, RedirectQueryParamView, DeleteView):
     model = Activity
     success_url = reverse_lazy("event:activity_list")
     template_name = "event/activity/confirm_delete.html"
@@ -160,7 +163,7 @@ class EventView(PermissionOrgaContextMixin, DetailView):
             for user in CustomUser.objects.all()
         ]
         ctx["register_form"] = CustomUserEmailForm
-        ctx["event_menu"] = 'active'
+        ctx["event_menu"] = "active"
         ctx["present_form"] = MoreInfoCustomUserForm
         ctx["total_fees"] = sum(
             [fee.amount for fee in self.get_object().participations.all()]
@@ -179,7 +182,7 @@ class EventListView(ListView):
         context = super().get_context_data(**kwargs)
         context["search_form"] = EventSearchForm(self.request.GET)
         context["register_form"] = CustomUserEmailForm
-        context["event_menu"] = 'active'
+        context["event_menu"] = "active"
         context["results_number"] = self.get_queryset().count()
         return context
 
@@ -191,20 +194,15 @@ class EventListView(ListView):
         if form.cleaned_data["place"]:
             queryset = queryset.filter(location=form.cleaned_data["place"])
         if form.cleaned_data["organization"]:
-            queryset = queryset.filter(
-                organization=form.cleaned_data["organization"]
-            )
+            queryset = queryset.filter(organization=form.cleaned_data["organization"])
         if form.cleaned_data["activity"]:
             queryset = queryset.filter(activity=form.cleaned_data["activity"])
         if form.cleaned_data["starts_before"]:
-            queryset = queryset.filter(
-                date__lte=form.cleaned_data["starts_before"]
-            )
+            queryset = queryset.filter(date__lte=form.cleaned_data["starts_before"])
         if form.cleaned_data["starts_after"]:
-            queryset = queryset.filter(
-                date__gte=form.cleaned_data["starts_after"]
-            )
+            queryset = queryset.filter(date__gte=form.cleaned_data["starts_after"])
         return queryset
+
 
 class EventFormView(HasActivePermissionMixin):
     model = Event
@@ -226,8 +224,9 @@ class EventFormView(HasActivePermissionMixin):
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         ctx["orga"] = self.organization
-        ctx["event_menu"] = 'active'
+        ctx["event_menu"] = "active"
         return ctx
+
 
 class EventEditView(RedirectQueryParamView, EventFormView, UpdateView):
     success_message = "L'évènement a bien été modifié"
@@ -237,9 +236,7 @@ class EventCreateView(RedirectQueryParamView, EventFormView, CreateView):
     success_message = "L'évènement a bien été créé"
 
 
-class EventDeleteView(
-    HasAdminPermissionMixin, RedirectQueryParamView, DeleteView
-):
+class EventDeleteView(HasAdminPermissionMixin, RedirectQueryParamView, DeleteView):
     model = Event
     success_url = reverse_lazy("event:list")
 
@@ -247,23 +244,31 @@ class EventDeleteView(
         event_pk = kwargs["pk"]
         event = get_object_or_404(Event, pk=event_pk)
         users = event.organizers.all().union(
-                event.presents.all(),
-                event.registered.all()
-            )
+            event.presents.all(), event.registered.all()
+        )
         if users:
-            for user in users: 
-                msg_plain = render_to_string("event/mail/event_delete.txt", context=locals())
-                msg_html = render_to_string("event/mail/event_delete.html", context=locals())
+            for user in users:
+                msg_plain = render_to_string(
+                    "event/mail/event_delete.txt", context=locals()
+                )
+                msg_html = render_to_string(
+                    "event/mail/event_delete.html", context=locals()
+                )
                 date = event.date.strftime("%d %B")
-                subject = f"IMPORTANT : Annulation événement du {date} : {event.activity.name} à {event.location.name}"
+                subject = (
+                    f"IMPORTANT : Annulation événement du {date} : "
+                    f"{event.activity.name} à {event.location.name}"
+                )
                 send_mail(
                     subject,
                     msg_plain,
-                    f"{event.organization}" '<no-reply@atelier-soude.fr>',
+                    f"{event.organization}" "<no-reply@atelier-soude.fr>",
                     [user.email],
                     html_message=msg_html,
                 )
-        messages.success(request, "L'évènement a bien été supprimé et les participants avertis")
+        messages.success(
+            request, "L'évènement a bien été supprimé et les participants avertis"
+        )
         return super().delete(request, *args, **kwargs)
 
 
@@ -280,15 +285,13 @@ class RecurrentEventCreateView(HasActivePermissionMixin, FormView):
     def form_valid(self, form):
         res = super().form_valid(form)
         count = form.save()
-        messages.success(
-            self.request, f"Vous avez créé {count} événements récurrents"
-        )
+        messages.success(self.request, f"Vous avez créé {count} événements récurrents")
         return res
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         ctx["orga"] = self.organization
-        ctx["event_menu"] = 'active'
+        ctx["event_menu"] = "active"
         return ctx
 
 
@@ -320,7 +323,7 @@ class AbsentView(RedirectView):
         participation = event.participations.filter(user=user).first()
         fees = Fee.objects.filter(user=user, organization=event.organization)
         related_fee = participation.fee
-        if participation and participation.saved and participation.amount !=0:
+        if participation and participation.saved and participation.amount != 0:
             contribution = Membership.objects.filter(
                 user=participation.user, organization=event.organization
             ).first()
@@ -339,15 +342,15 @@ class AbsentView(RedirectView):
                         contribution.first_payment = next_fee.date
                 elif event.date > contribution.first_payment.date():
                     contribution.amount -= related_fee.amount
-                else: 
+                else:
                     pass
                 if related_fee:
                     related_fee.delete()
                 if not fees:
                     contribution.delete()
                 else:
-                    contribution.save()           
-                
+                    contribution.save()
+
         event.presents.remove(user)
         messages.success(self.request, f"{user} a été marqué comme absent !")
 
@@ -371,7 +374,7 @@ class CancelReservationView(RedirectView):
         if event.allow_stuffs:
             user_stuffs = event.stuffs.all().filter(member_owner=user)
             if user_stuffs:
-                for stuff in user_stuffs: 
+                for stuff in user_stuffs:
                     event.stuffs.remove(stuff)
         event.registered.remove(user)
         event_url = reverse("event:detail", args=[event.id, event.slug])
@@ -391,21 +394,18 @@ class CancelReservationView(RedirectView):
 
         date = event.date.strftime("%d %B")
         subject = (
-            f"Confirmation d'annulation pour le "
-            f"{date} à {event.location.name}"
+            f"Confirmation d'annulation pour le " f"{date} à {event.location.name}"
         )
 
         send_mail(
             subject,
             msg_plain,
-            f"{event.organization}" '<no-reply@atelier-soude.fr>',
+            f"{event.organization}" "<no-reply@atelier-soude.fr>",
             [user.email],
             html_message=msg_html,
         )
 
-        messages.success(
-            self.request, "Vous n'êtes plus inscrit à cet évènement"
-        )
+        messages.success(self.request, "Vous n'êtes plus inscrit à cet évènement")
 
         next_url = self.request.GET.get("redirect")
         if utils.is_valid_path(next_url):
@@ -429,29 +429,33 @@ class BookView(RedirectView):
         try:
             id_current_user = self.request.user.id
             current_user = CustomUser.objects.get(id=id_current_user)
-            if current_user in (event.organization.actives.all().union(
-                event.organization.volunteers.all(),
-                event.organization.admins.all()
-            )):
+            if current_user in (
+                event.organization.actives.all().union(
+                    event.organization.volunteers.all(), event.organization.admins.all()
+                )
+            ):
                 is_authorized = True
         except Exception:
             pass
         next_url = self.request.GET.get("redirect")
         if not utils.is_valid_path(next_url):
-            if user: 
-                user_pk = user.pk 
+            if user:
+                user_pk = user.pk
             else:
                 user_pk = id_current_user
             if is_authorized:
-                next_url = reverse("event:book_confirm", args=[event.id, event.slug, user_pk, token])
-            else: 
-                next_url = reverse("event:book_confirm", args=[event.id, event.slug, user_pk, token])
+                next_url = reverse(
+                    "event:book_confirm", args=[event.id, event.slug, user_pk, token]
+                )
+            else:
+                next_url = reverse(
+                    "event:book_confirm", args=[event.id, event.slug, user_pk, token]
+                )
 
         if event.remaining_seats <= 0 and not is_authorized:
             messages.error(
                 self.request,
-                "Désolé, il n'y a plus de place "
-                "disponibles pour cet évènement",
+                "Désolé, il n'y a plus de place " "disponibles pour cet évènement",
             )
             next_url = reverse("event:detail", args=[event.id, event.slug])
             return next_url
@@ -480,52 +484,56 @@ class BookView(RedirectView):
         msg_html = render_to_string("event/mail/book.html", context=locals())
 
         date = event.date.strftime("%d %B")
-        subject = f"Votre réservation du {date} pour {event.activity.name} à {event.location.name}"
+        subject = (
+            f"Votre réservation du {date} pour {event.activity.name}"
+            f" à {event.location.name}"
+        )
 
         send_mail(
             subject,
             msg_plain,
-            f"{event.organization}" '<no-reply@atelier-soude.fr>',
+            f"{event.organization}" "<no-reply@atelier-soude.fr>",
             [user.email],
             html_message=msg_html,
         )
 
-        messages.success(
-            self.request, f"'{user}' bien inscrit à l'évènement !"
-        )
+        messages.success(self.request, f"'{user}' bien inscrit à l'évènement !")
 
         return next_url
+
 
 class EventBookStuffView(TemplateView):
     template_name = "event/book_confirm_add_stuff.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["token"] = self.kwargs['token']
+        context["token"] = self.kwargs["token"]
         context["event"] = Event.objects.get(pk=self.kwargs["pk"])
-        context["event_menu"] = 'active'
+        context["event_menu"] = "active"
         context["registered_user"] = CustomUser.objects.get(pk=self.kwargs["user_pk"])
         return context
 
-class StuffUserEventFormView(StuffFormMixin):
 
+class StuffUserEventFormView(StuffFormMixin):
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs["visitor_user"] = CustomUser.objects.get(pk=self.kwargs["registered_pk"])
         kwargs["event"] = Event.objects.get(pk=self.kwargs["event_pk"])
         return kwargs
-    
+
     def get_success_url(self, *args, **kwargs):
         event = Event.objects.get(pk=self.kwargs["event_pk"])
         return reverse(
             "event:book_confirm",
             kwargs={
                 "pk": self.kwargs["event_pk"],
-                "slug" : event.slug,
+                "slug": event.slug,
                 "user_pk": self.kwargs["registered_pk"],
-                "token": self.kwargs["token"]
-                },
+                "token": self.kwargs["token"],
+            },
         )
+
+
 class EventAddStuffView(View):
     model = Event
     http_method_names = ["post"]
@@ -540,12 +548,13 @@ class EventAddStuffView(View):
         return super().post(request, *args, **kwargs)
 
     def get_success_url(self):
-        event =  Event.objects.get(pk=self.kwargs["pk"])
+        event = Event.objects.get(pk=self.kwargs["pk"])
         messages.success(
             self.request,
-            f"L'objet a bien été ajouté à votre réservation !",
+            "L'objet a bien été ajouté à votre réservation !",
         )
         return reverse("event:detail", args=[event.id, event.slug])
+
 
 class CloseEventView(HasActivePermissionMixin, RedirectView):
     http_method_names = ["post"]
@@ -563,16 +572,24 @@ class CloseEventView(HasActivePermissionMixin, RedirectView):
             contribution, created = Membership.objects.get_or_create(
                 user=participation.user, organization=event.organization
             )
-            if not participation.saved and participation.amount != 0 or contribution.first_payment.date() < event_date - timedelta(days=365) :
+            if (
+                not participation.saved
+                and participation.amount != 0
+                or contribution.first_payment.date() < event_date - timedelta(days=365)
+            ):
                 related_fee = Fee.objects.create(
                     amount=participation.amount,
                     user=participation.user,
                     organization=event.organization,
                     date=event_date,
-                    payment=participation.payment
+                    payment=participation.payment,
                 )
                 participation.fee = related_fee
-                if contribution.fee is None or contribution.first_payment.date() < event_date - timedelta(days=365):
+                if (
+                    contribution.fee is None
+                    or contribution.first_payment.date()
+                    < event_date - timedelta(days=365)
+                ):
                     contribution.fee = related_fee
                     contribution.first_payment = related_fee.date
                     contribution.amount = related_fee.amount
@@ -621,10 +638,13 @@ class RemoveActiveEventView(HasVolunteerPermissionMixin, RedirectView):
 
         return reverse("event:detail", args=[event.id, event.slug])
 
-#### autocomplete views for event form ####
 
-class ConditionOrgaAutocomplete(HasVolunteerPermissionMixin, autocomplete.Select2QuerySetView):
+# autocomplete views for event form
 
+
+class ConditionOrgaAutocomplete(
+    HasVolunteerPermissionMixin, autocomplete.Select2QuerySetView
+):
     def get_queryset(self, *args, **kwargs):
         orga_slug = self.kwargs.get("orga_slug")
         organization = get_object_or_404(Organization, slug=orga_slug)
@@ -639,33 +659,41 @@ class ConditionOrgaAutocomplete(HasVolunteerPermissionMixin, autocomplete.Select
 
         return qs
 
+
 class FutureEventActivityAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
         future_events = Event.future_published_events()
-        qs = Activity.objects.filter(
-                events__in=future_events
-            ).distinct().order_by("name")
+        qs = (
+            Activity.objects.filter(events__in=future_events)
+            .distinct()
+            .order_by("name")
+        )
 
         if self.q:
             qs = qs.filter(name__icontains=self.q)
 
         return qs
 
+
 class FutureEventPlaceAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
         future_events = Event.future_published_events()
-        qs = Place.objects.filter(
-                events__in=future_events
-            ).distinct().order_by("address")
+        qs = (
+            Place.objects.filter(events__in=future_events)
+            .distinct()
+            .order_by("address")
+        )
 
-        activity_pk = self.forwarded.get('activity', None)
+        activity_pk = self.forwarded.get("activity", None)
 
         if activity_pk:
             activity = Activity.objects.get(pk=activity_pk)
             future_events = future_events.filter(activity=activity)
-            qs = Place.objects.filter(
-                events__in=future_events
-            ).distinct().order_by("address")
+            qs = (
+                Place.objects.filter(events__in=future_events)
+                .distinct()
+                .order_by("address")
+            )
 
         if self.q:
             qs = qs.filter(address__icontains=self.q)

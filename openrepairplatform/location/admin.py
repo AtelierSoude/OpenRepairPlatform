@@ -13,7 +13,7 @@ class PlaceResource(resources.ModelResource):
     organization = Field(
         column_name="organization",
         attribute="organization",
-        widget=ForeignKeyWidget(Organization, "id")
+        widget=ForeignKeyWidget(Organization, "id"),
     )
 
     class Meta:

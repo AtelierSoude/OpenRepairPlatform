@@ -6,9 +6,7 @@ app_name = "user"
 urlpatterns = [
     path("", views.UserListView.as_view(), name="user_list"),
     path("<int:pk>/", views.UserDetailView.as_view(), name="user_detail"),
-    path(
-        "update/<int:pk>", views.UserUpdateView.as_view(), name="user_update"
-    ),
+    path("update/<int:pk>", views.UserUpdateView.as_view(), name="user_update"),
     path("create/", views.UserCreateView.as_view(), name="user_create"),
     path(
         "create_and_book/",
@@ -18,7 +16,7 @@ urlpatterns = [
     path(
         "organizer_book/<int:pk>/",
         views.OrganizerBookView.as_view(),
-        name="organizer_book"
+        name="organizer_book",
     ),
     path(
         "organizations/",

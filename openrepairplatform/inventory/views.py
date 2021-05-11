@@ -125,6 +125,9 @@ class StuffFormMixin(BSModalCreateView):
 
     def form_valid(self, form):
         res = super().form_valid(form)
+        messages.success(
+            self.request, "l'objet #"f"{form.instance.id} bien ajouté à l'inventaire"
+        )
         return res
 
 class StuffUserFormView(StuffFormMixin, CreateView):

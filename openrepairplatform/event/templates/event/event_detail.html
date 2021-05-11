@@ -48,8 +48,22 @@
         {% endif %}
       </p>
       <p>
+        <span>
           <i class="fa fa-calendar-alt"></i> 
           Le {{ event.date|date:"l j F Y " }} de {{ event.starts_at }} à {{ event.ends_at }}
+        </span>
+      {% if is_volunteer %}
+      {% now "Y-m-d" as today %}
+        {% if event.date|date:"Y-m-d" >= today %}
+            <span class="badge badge-secondary badge-pill">Publié dans {{ event.publish_at|timesince }}</span>
+        {% else %}
+          {% if event.published == True %}
+            <span class="badge badge-secondary badge-pill">Publié il y {{ event.publish_at|timeuntil }} </span>
+          {% else %}
+            <span class="badge badge-danger badge-pill">Non publié</span>
+          {% endif %}
+        {% endif %}
+      {% endif %}
       </p>
     <h6 class="text-muted">
       {% if event.is_free %}

@@ -117,7 +117,12 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     @property
     def full_name(self):
         return '{0} {1}'.format(self.first_name, self.last_name)
-        
+
+    def clean(self):
+        super().clean()
+        self.email = self.email.lower()
+
+
 class Organization(models.Model):
     name = models.CharField(
         max_length=100, default="", verbose_name=_("Organization name")
@@ -216,7 +221,7 @@ class Fee(models.Model):
 
     def __str__(self):
         return f"{self.date}-{self.user}-{self.organization}-{self.amount}"
-    
+
     class Meta:
         ordering = ['-date']
 

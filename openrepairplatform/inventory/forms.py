@@ -178,7 +178,7 @@ class FolderForm(BSModalModelForm):
         if stuff:
             self.stuff = stuff
         self.fields['open_date'] = forms.DateField(
-            initial=dt.today(),
+            initial=dt.today,
             widget=forms.DateInput(attrs={"type": "date"}, format="%Y-%m-%d"),
             label="date",
             required=False,
@@ -260,7 +260,7 @@ class InterventionForm(BSModalModelForm):
             self.stuff = stuff 
         super().__init__(*args, **kwargs)
         self.fields['repair_date'] = forms.DateField(
-            initial=dt.today(),
+            initial=dt.today,
             widget=forms.DateInput(attrs={"type": "date"}, format="%Y-%m-%d"),
             label="date",
         )

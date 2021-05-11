@@ -14,13 +14,13 @@ from openrepairplatform.user.models import Organization
 
 class EventForm(ModelForm):
     date = forms.DateField(
-        initial=dt.today(),
+        initial=dt.today,
         widget=forms.DateInput(attrs={"type": "date"}, format="%Y-%m-%d"),
     )
     starts_at = forms.TimeField(widget=forms.TimeInput(attrs={"type": "time"}))
     ends_at = forms.TimeField(widget=forms.TimeInput(attrs={"type": "time"}))
     publish_at = forms.DateTimeField(
-        initial=dt.today(),
+        initial=dt.today,
         widget=forms.DateTimeInput(format="%Y-%m-%d %H:%M:%S"),
     )
 
@@ -92,7 +92,7 @@ class RecurrentEventForm(forms.ModelForm):
         label="À", widget=forms.TimeInput(attrs={"type": "time"})
     )
     date = forms.DateField(
-        initial=dt.today(),
+        initial=dt.today,
         widget=forms.DateInput(attrs={"type": "date"}, format="%Y-%m-%d"),
         label="Date de début",
     )

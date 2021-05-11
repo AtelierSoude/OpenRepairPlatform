@@ -153,6 +153,12 @@ class RecurrentEventForm(forms.ModelForm):
                 "starts_at": self.cleaned_data["starts_at"],
                 "ends_at": self.cleaned_data["ends_at"],
                 "organization": self.orga,
+                "allow_stuffs": self.cleaned_data["allow_stuffs"],
+                "needed_organizers": self.cleaned_data["needed_organizers"],
+                "collaborator": self.cleaned_data["collaborator"],
+                "external": self.cleaned_data["external"],
+                "external_url": self.cleaned_data["external_url"],
+                "description": self.cleaned_data["description"],
                 "location": self.cleaned_data["location"],
                 "publish_at": (
                     date

@@ -1,3 +1,4 @@
+from datetime import date
 from django.db import models
 from treebeard.mp_tree import MP_Node
 from django.urls import reverse
@@ -221,7 +222,8 @@ class Intervention(models.Model):
         )
     repair_date = models.DateField(
         null=True, 
-        blank=True
+        blank=True,
+        default=date.today,
         )
     observation = models.ForeignKey(
         "inventory.Observation", 
@@ -270,7 +272,11 @@ class RepairFolder(models.Model):
         blank=True
         )
     ongoing = models.BooleanField(default=True)
-    open_date = models.DateField(null=True, blank=True)
+    open_date = models.DateField(
+        null=True, 
+        blank=True,
+        default=date.today,
+        )
 
     def __str__(self):
         return f"dossier {self.stuff}-{self.open_date}"

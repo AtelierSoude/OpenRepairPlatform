@@ -41,6 +41,7 @@ def event_data(condition_factory, activity, custom_user_factory, place, organiza
         "presents": [user1.pk, user2.pk],
         "organizers": [user4.pk],
         "location": place.pk,
+        "needed_organizers": 1,
     }
 
 
@@ -559,7 +560,7 @@ def test_close_event(
     assert membership_member.amount == 15
     assert membership_member2.amount == 10
     assert organization.members.count() == 3
-    assert Fee.objects.count() == 3
+    assert Fee.objects.count() == 2
     assert CustomUser.objects.count() == 4
 
 

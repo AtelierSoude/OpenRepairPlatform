@@ -169,9 +169,13 @@ js_groups_organization = Bundle(
 )
 js_create_stuff = Bundle(
     "js/inventory/create_stuff.js",
+    filters="jsmin",
+    output="js/inventory/create_stuff.min.js"
 )
 js_edit_owner_stuff = Bundle(
     "js/inventory/edit_owner_stuff.js",
+    filters="jsmin",
+    output="js/inventory/edit_owner_stuff.min.js"
 )
 js_waypoints = Bundle(
     "js/lib/jquery.waypoints.js", filters="jsmin", output="js/user/waypoints.min.js"

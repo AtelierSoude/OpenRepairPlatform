@@ -173,19 +173,32 @@ class PresentCreateUserView(HasActivePermissionMixin, RedirectView):
     form_class = MoreInfoCustomUserForm
     http_methods = ["post"]
 
-    def get_redirect_url(self, *args, **kwargs):
-        event = get_object_or_404(Event, pk=kwargs.get("pk"))
-        user = CustomUser.objects.filter(email=self.request.POST["email"]).first()
+    def get_object(self, **kwargs):
+        self.event = get_object_or_404(self.model, pk=kwargs.get("pk"))
+
+    def post(self, request, *args, **kwargs):
+        self.get_object(**kwargs)
+        user = CustomUser.objects.filter(email=self.request.POST.get("email")).first()
         if user:
             form = MoreInfoCustomUserForm(self.request.POST, instance=user)
         else:
             form = MoreInfoCustomUserForm(self.request.POST)
         user = form.save()
-        add_present(event, user, form.cleaned_data["amount_paid"])
+        add_present(
+            self.event,
+            user,
+            form.cleaned_data["amount_paid"],
+            form.cleaned_data["payment"]
+        )
+        return super().post(request, *args, **kwargs)
+
+    def get_redirect_url(self, *args, **kwargs):
         next_url = self.request.GET.get("redirect")
         if utils.is_valid_path(next_url):
             return next_url
-        return reverse("event:detail", args=[event.id, event.slug]) + "#manage"
+        return reverse(
+            "event:detail", args=[self.event.id, self.event.slug]
+        ) + "#manage"
 
 
 # in future : change or mix AddMemberToOrganization and UpdateMembre Views
@@ -260,6 +273,9 @@ class UpdateMemberView(HasActivePermissionMixin, UpdateView):
     model = CustomUser
     form_class = MoreInfoCustomUserForm
     http_methods = ["post"]
+
+    def form_invalid(self, form):
+        return HttpResponseRedirect(self.request.META.get('HTTP_REFERER', '/'))
 
     def form_valid(self, form):
         user = form.save()

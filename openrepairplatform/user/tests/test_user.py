@@ -200,6 +200,8 @@ def test_present_with_more_info(client, event, custom_user_factory):
             "first_name": "gfdsq",
             "street_address": "2, rue part-dieu",
             "amount_paid": 0,
+            "payment": "1",
+            "first_fee": True,
             "date": event.date,
         },
     )
@@ -214,6 +216,8 @@ def test_present_with_more_info(client, event, custom_user_factory):
             "first_name": "gfdsq",
             "street_address": "2, rue part-dieu",
             "amount_paid": 0,
+            "payment": "1",
+            "first_fee": True,
             "date": event.date,
         },
     )
@@ -227,6 +231,8 @@ def test_present_with_more_info(client, event, custom_user_factory):
             "first_name": "gfdsq",
             "street_address": "2, rue part-dieu",
             "amount_paid": 0,
+            "payment": "1",
+            "first_fee": True,
             "date": event.date,
         },
     )
@@ -245,6 +251,8 @@ def test_present_with_more_info_unknown_user(client, event, custom_user):
             "first_name": "gfdsq",
             "street_address": "2, rue part-dieu",
             "amount_paid": 0,
+            "payment": "1",
+            "first_fee": True,
             "date": event.date,
         },
     )
@@ -260,6 +268,8 @@ def test_present_with_more_info_unknown_user(client, event, custom_user):
             "first_name": "gfdsq",
             "street_address": "2, rue part-dieu",
             "amount_paid": 0,
+            "payment": "1",
+            "first_fee": True,
             "date": event.date,
         },
     )
@@ -288,6 +298,8 @@ def test_present_with_more_info_existing_user(client, event, custom_user):
             "first_name": "gfdsq",
             "street_address": "2, rue part-dieu",
             "amount_paid": 0,
+            "payment": "1",
+            "first_fee": True,
             "date": event.date,
         },
     )

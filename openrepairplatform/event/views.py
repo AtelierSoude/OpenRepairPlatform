@@ -560,57 +560,70 @@ class CloseEventView(HasActivePermissionMixin, RedirectView):
     http_method_names = ["post"]
     model = Event
 
-    def get_redirect_url(self, *args, **kwargs):
-        event_pk = kwargs["pk"]
-        event = get_object_or_404(Event, pk=event_pk)
-        event_date = event.date
-        nb_deleted, nb_new_members = 0, 0
-        for temp_user in event.registered.filter(first_name=""):
-            temp_user.delete()
-            nb_deleted += 1
-        for participation in event.participations.all():
-            contribution, created = Membership.objects.get_or_create(
-                user=participation.user, organization=event.organization
+    def get_object(self, **kwargs):
+        return get_object_or_404(Event, pk=kwargs["pk"])
+
+    def warn_absents(self, absents):
+        nb_absents = absents.count()
+        for absent in absents:
+            # TODO : send mail to warn
+            absent.delete()
+            nb_absents += 1
+        messages.warning(self.request, f"{nb_absents} absent·e·s ont été supprimés.")
+
+    def create_or_update_membership(self):
+        """
+        Add a new membership and init his first cotisation with his participation.
+        If membership already exist, update his cotisation with his participation.
+        If the membership have previous cotisations before the current
+        inscription period, then his cotisation is reboot with his participation.
+        """
+
+        for participation in self.event.participations.all():
+            nb_new_members = 0
+
+            # Add a new member or retrieve an existing membership.
+            member, new_member = Membership.objects.get_or_create(
+                user=participation.user, organization=self.event.organization
             )
-            if (
-                not participation.saved
-                and participation.amount != 0
-                or contribution.first_payment.date() < event_date - timedelta(days=365)
-            ):
+
+            # When a participation is saved, then she is already recorded.
+            if not participation.saved and participation.amount > 0:
                 related_fee = Fee.objects.create(
                     amount=participation.amount,
                     user=participation.user,
-                    organization=event.organization,
-                    date=event_date,
+                    organization=self.event.organization,
+                    date=self.event.date,
                     payment=participation.payment,
                 )
                 participation.fee = related_fee
                 if (
-                    contribution.fee is None
-                    or contribution.first_payment.date()
-                    < event_date - timedelta(days=365)
+                    member.fee is None
+                    or member.first_payment.date()
+                    < self.event.date - timedelta(days=365)
                 ):
-                    contribution.fee = related_fee
-                    contribution.first_payment = related_fee.date
-                    contribution.amount = related_fee.amount
-                elif event_date < contribution.first_payment.date():
-                    pass
-                elif event_date > contribution.first_payment.date():
-                    contribution.amount += related_fee.amount
+                    related_fee.member = member
+                    member.first_payment = related_fee.date
+                    member.amount = related_fee.amount
+                elif self.event.date > member.first_payment.date():
+                    member.amount += related_fee.amount
+
             participation.saved = True
             participation.save()
-            contribution.save()
-
-            if created:
+            member.save()
+            if new_member:
                 nb_new_members += 1
 
-        messages.success(
-            self.request,
-            f"{nb_deleted} visiteurs temporaires "
-            f"supprimés, {nb_new_members} nouveaux membres !",
-        )
+        messages.success(self.request, f"{nb_new_members} nouveaux membres !")
 
-        return reverse("event:detail", args=[event.id, event.slug])
+    def post(self, request, *args, **kwargs):
+        self.event = self.get_object(**kwargs)
+        self.warn_absents(self.event.registered.filter(first_name=""))
+        self.create_or_update_membership()
+        return super().post(request, *args, **kwargs)
+
+    def get_redirect_url(self, *args, **kwargs):
+        return reverse("event:detail", args=[self.event.id, self.event.slug])
 
 
 class AddActiveEventView(HasVolunteerPermissionMixin, RedirectView):

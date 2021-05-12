@@ -126,7 +126,7 @@ class StuffFormMixin(BSModalCreateView):
         return res
 
 
-class StuffUserFormView(StuffFormMixin, CreateView):
+class StuffUserFormView(StuffFormMixin):
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs["user"] = CustomUser.objects.get(pk=self.kwargs["user_pk"])
@@ -137,7 +137,7 @@ class StuffUserFormView(StuffFormMixin, CreateView):
         return user.get_absolute_url()
 
 
-class StuffOrganizationFormView(StuffFormMixin, CreateView):
+class StuffOrganizationFormView(StuffFormMixin):
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs["organization"] = Organization.objects.get(slug=self.kwargs["orga_slug"])

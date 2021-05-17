@@ -58,7 +58,9 @@ def test_location_detail_context(client_log, place_factory):
     assert response.status_code == 200
     assert isinstance(response.context_data["place"], Place)
     assert place.pk == response.context_data["place"].pk
-    assert place.name == str(response.context_data["place"])
+    assert (
+        f"{place.name}, {place.address}" == f"{response.context_data['place']}"
+    )
 
 
 def test_get_location_delete(client_log, place_factory):
@@ -153,7 +155,7 @@ def test_get_location_update(client_log, place_factory):
     response_ok = client_log.get(reverse("location:edit", args=[place.pk]))
     html = response_ok.content.decode()
     assert response_ok.status_code == 200
-    assert f"Mise à jour de '{place.name}'" in html
+    assert f"Mise à jour de '{place.name}" in html
 
 
 def test_location_update(client_log, place_factory, location_data):

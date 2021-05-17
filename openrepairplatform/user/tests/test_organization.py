@@ -459,12 +459,13 @@ def test_add_member_to_organization(custom_user_factory, client, organization):
             "last_name": "Miche",
             "street_address": "11 rue du test",
             "amount_paid": 5,
+            "payment": 1,
             "date": timezone.now().date().strftime("%Y-%m-%d"),
         },
     )
     assert response.status_code == 302
     assert response.url == reverse(
-        "organization_page",
+        "organization_members",
         kwargs={"orga_slug": organization.slug},
     )
     assert organization.members.count() == 1
@@ -488,12 +489,13 @@ def test_re_add_member_to_organization(
             "last_name": "Miche",
             "street_address": "11 rue du test",
             "amount_paid": 5,
+            "payment": 1,
             "date": timezone.now().date().strftime("%Y-%m-%d"),
         },
     )
     assert response.status_code == 302
     assert response.url == reverse(
-        "organization_page",
+        "organization_members",
         kwargs={"orga_slug": organization.slug},
     )
     assert user.first_name != "Michel"
@@ -521,6 +523,7 @@ def test_update_member_to_organization(
             "last_name": "Miche",
             "street_address": "11 rue du test",
             "amount_paid": 5,
+            "payment": 1,
             "date": timezone.now().date().strftime("%Y-%m-%d"),
         },
     )
@@ -550,10 +553,11 @@ def test_update_member_to_organization(
             "last_name": "Miche",
             "street_address": "11 rue du test",
             "amount_paid": 5,
+            "payment": 1,
             "date": timezone.now().date().strftime("%Y-%m-%d"),
         },
     )
     membership.refresh_from_db()
     assert response.status_code == 302
-    assert membership.current_contribution == 5
-    assert membership.amount == 5
+    assert membership.current_contribution == 10
+    assert membership.amount == 10

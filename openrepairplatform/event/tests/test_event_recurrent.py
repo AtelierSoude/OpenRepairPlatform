@@ -45,6 +45,7 @@ def event_recurrent_data(
             (fix_date + datetime.timedelta(days=90)).date().strftime("%Y-%m-%d")
         ),
         "period_before_publish": 2,
+        "needed_organizers": 1,
     }
 
 

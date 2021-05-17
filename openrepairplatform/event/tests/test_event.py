@@ -347,7 +347,15 @@ def test_book_no_more_room_by_active_volunteer_or_admin(
         )
         resp = client.get(reverse("event:book", args=[token]))
         assert resp.status_code == 302
-        assert resp["Location"] == reverse("event:detail", args=[event.id, event.slug])
+        assert resp["Location"] == reverse(
+            "event:book_confirm",
+            kwargs={
+                "pk": event.pk,
+                "slug": event.slug,
+                "user_pk": custom_user.pk,
+                "token": token,
+            }
+        )
         nb_registered = Event.objects.first().registered.count()
         assert nb_registered == 1
 
@@ -360,7 +368,15 @@ def test_book(client, event, custom_user):
     )
     resp = client.get(reverse("event:book", args=[token]))
     assert resp.status_code == 302
-    assert resp["Location"] == reverse("event:detail", args=[event.id, event.slug])
+    assert resp["Location"] == reverse(
+        "event:book_confirm",
+        kwargs={
+            "pk": event.pk,
+            "slug": event.slug,
+            "user_pk": custom_user.pk,
+            "token": token,
+        }
+    )
     nb_registered = Event.objects.first().registered.count()
     assert nb_registered == 1
     resp = client.get(reverse("event:book", args=[token]))
@@ -476,11 +492,14 @@ def test_user_absent(client, event, custom_user):
 
 
 def test_user_absent_remove_contribution(
-    client, event, custom_user, participation_factory, membership_factory
+    client, event, custom_user, participation_factory, membership_factory, fee_factory
 ):
-    participation_factory(event=event, user=custom_user, amount=10, saved=True)
-    membership = membership_factory(
-        organization=event.organization, user=custom_user, amount=10
+    fee = fee_factory(
+        user=custom_user, organization=event.organization, payment=1, amount=10
+    )
+    participation_factory(event=event, user=custom_user, amount=10, saved=True, fee=fee)
+    membership_factory(
+        organization=event.organization, user=custom_user, amount=10, fee=fee
     )
     nb_presents = Event.objects.first().presents.count()
     assert nb_presents == 1
@@ -490,11 +509,19 @@ def test_user_absent_remove_contribution(
     _ = client.get(reverse("event:user_absent", args=[token]))
     nb_presents = Event.objects.first().presents.count()
     assert nb_presents == 0
-    membership.refresh_from_db()
-    assert membership.amount == 0
+    assert Membership.objects.count() == 0
 
 
-def test_user_absent_redirect(client, event, custom_user):
+def test_user_absent_redirect(
+    client, event, custom_user, participation_factory, membership_factory, fee_factory
+):
+    fee = fee_factory(
+        user=custom_user, organization=event.organization, payment=1, amount=10
+    )
+    participation_factory(event=event, user=custom_user, amount=10, saved=True, fee=fee)
+    membership_factory(
+        organization=event.organization, user=custom_user, amount=10, fee=fee
+    )
     token = signing.dumps(
         {"user_id": custom_user.id, "event_id": event.id}, salt="absent"
     )

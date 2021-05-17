@@ -8,7 +8,6 @@ from bootstrap_modal_forms.generic import (
 from django.template.loader import render_to_string
 from django.http import JsonResponse
 from django.views.generic import (
-    CreateView,
     UpdateView,
     DetailView,
 )

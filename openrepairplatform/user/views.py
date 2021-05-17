@@ -302,9 +302,7 @@ class UpdateMemberView(HasActivePermissionMixin, UpdateView):
                 membership.fee = fee
                 for fee in up_date_fees:
                     membership.amount += fee.amount
-            elif date < membership.first_payment.date():
-                pass
-            elif date > membership.first_payment.date():
+            else:
                 membership.amount += amount
         membership.save()
         return super().form_valid(form)

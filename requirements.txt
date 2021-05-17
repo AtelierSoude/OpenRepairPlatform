@@ -34,11 +34,11 @@ diff-match-patch==20200713
     # via django-import-export
 django-assets==2.0
     # via openrepairplatform (setup.py)
-django-autocomplete-light==3.8.2
+django-autocomplete-light==3.5.1
     # via openrepairplatform (setup.py)
 django-better-admin-arrayfield==1.4.2
     # via openrepairplatform (setup.py)
-django-bootstrap-modal-forms==2.2.0
+django-bootstrap-modal-forms==2.0.1
     # via openrepairplatform (setup.py)
 django-bootstrap-static==4.2.1
     # via openrepairplatform (setup.py)

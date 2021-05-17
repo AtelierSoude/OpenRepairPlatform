@@ -74,5 +74,5 @@ tablib
 python-dotenv
 django-extensions
 django-treebeard
-django-bootstrap-modal-forms
+django-bootstrap-modal-forms==2.1.0
 django-better-admin-arrayfield

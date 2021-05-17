@@ -55,12 +55,12 @@
       {% if is_volunteer %}
       {% now "Y-m-d" as today %}
         {% if event.date|date:"Y-m-d" >= today %}
-            <span class="badge badge-secondary badge-pill">Publié dans {{ event.publish_at|timesince }}</span>
+            <span class="badge badge-secondary badge-pill">Publié dans {{ event.publish_at|timeuntil }}</span>
         {% else %}
           {% if event.published == True %}
-            <span class="badge badge-secondary badge-pill">Publié il y {{ event.publish_at|timeuntil }} </span>
+            <span class="badge badge-secondary badge-pill">Publié il y a {{ event.publish_at|timesince }} </span>
           {% else %}
-            <span class="badge badge-danger badge-pill">Non publié</span>
+            <span class="badge badge- badge-pill">Non publié</span>
           {% endif %}
         {% endif %}
       {% endif %}

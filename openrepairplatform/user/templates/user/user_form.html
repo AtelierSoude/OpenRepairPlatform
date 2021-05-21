@@ -9,12 +9,11 @@
 {% endblock %}
 
 {% block content %}
-  {% url "user:user_list" as user_list_url %}
   {% if object %}
     {% url "user:user_detail" object.pk as user_detail_url %}
     {% include "breadcrumb.html" with current="Mise à jour" second_parent_url=user_detail_url second_parent_text="Communauté" first_parent_url=user_detail_url first_parent_text=object %}
   {% else %}
-    {% include "breadcrumb.html" with current="Création" first_parent_url=user_list_url first_parent_text="Communauté" %}
+    {% include "breadcrumb.html" with current="Création" first_parent_text="Communauté" %}
   {% endif %}
 <div class="container-fluid bg-white">
   <div class="row justify-content-md-center">

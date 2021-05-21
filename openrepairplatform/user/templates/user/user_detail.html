@@ -19,8 +19,7 @@
     </div>
   {% endif %}
 
-  {% url "user:user_list" as user_list_url %}
-  {% include "breadcrumb.html" with current=object first_parent_url=user_list_url first_parent_text="Communauté" %}
+  {% include "breadcrumb.html" with current=object first_parent_url=user_detail_url first_parent_text="Communauté" %}
 
   <div class="jumbotron jumbotron-fluid no-padding-jumbotron" id="jumbotron">
     <div class="container text-center d-flex justify-content-center align-items-center flex-md-column">

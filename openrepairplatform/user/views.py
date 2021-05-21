@@ -369,20 +369,6 @@ class UserDetailView(PermissionCreateUserStuffMixin, DetailView):
         context["add_member_stuff"] = StuffForm
         return context
 
-
-class UserListView(ListView):
-    model = CustomUser
-    context_object_name = "users"
-    template_name = "user/user_list.html"
-    paginate_by = 9
-    queryset = (
-        CustomUser
-        .objects
-        .filter(is_superuser=False, is_visible=True)
-        .order_by("last_name")
-    )
-
-
 class OrganizationEventsListView(HasVolunteerPermissionMixin, ListView):
     model = Event
     paginate_by = EVENTS_PER_PAGE

@@ -26,21 +26,6 @@ def test_command_superuser_without_mail():
     with pytest.raises(CommandError):
         call_command("createsuperuser", email="", interactive=False)
 
-
-def test_user_list_not_visible(client, custom_user):
-    response = client.get(reverse("user:user_list"))
-    assert response.status_code == 200
-    assert response.context_data["object_list"].count() == 0
-
-
-def test_user_list_visible(client, custom_user):
-    custom_user.is_visible = True
-    custom_user.save()
-    response = client.get(reverse("user:user_list"))
-    assert response.status_code == 200
-    assert response.context_data["object_list"].count() == 1
-
-
 def test_user_detail_not_visible(client, custom_user):
     response = client.get(
         reverse("user:user_detail", kwargs={"pk": custom_user.pk})

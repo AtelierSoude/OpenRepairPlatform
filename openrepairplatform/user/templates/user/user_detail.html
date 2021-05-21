@@ -2,15 +2,7 @@
 {% load assets app_filters thumbnail initialavatar bootstrap4 %}
 {% block title %}Profil de {{object}} sur {{site_title}}{% endblock %}
 
-{% block extra_css %}
-  {% assets "css_detail_user" %}
-    <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet"/>
-  {% endassets %}
-{% endblock %}
-
 {% block content %}
-
-
 <!-- modals -->
 <div class="modal fade" tabindex="-1" role="dialog" id="modal">
   <div class="modal-dialog" role="document">

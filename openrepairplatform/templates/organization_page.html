@@ -4,12 +4,6 @@
 
 {% load assets app_filters thumbnail %}
 
-{% block extra_css %}
-  {% assets "css_detail_organization" %}
-    <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet"/>
-  {% endassets %}
-{% endblock %}
-
 {% block content %}
 <div class="container-fluid">
     {% url "user:organization_list" as organization_list_url %}

@@ -2,12 +2,6 @@
 {% load assets l10n app_filters %}
 {% load initialavatar %}
 
-{% block extra_css %}
-  {% assets "css_detail_user" %}
-    <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet"/>
-  {% endassets %}
-{% endblock %}
-
 {% for user in users %}
 
   <div class="card mx-2 p-2">
@@ -52,41 +46,6 @@
       {% include "event/modal_more_info.html" with anonymous_user=user form=present_form|initial:user %}
       {% endif %}
     {% endif %}
-  <!--
-    <ul class="list-group">
-      {% if user.member_organizations.all %}
-        <li class="list-group-item">
-          <small> 
-          <i>
-            Membre de 
-            {{ user.member_organizations.all|join:", " }}
-          </i>
-          </small>
-        </li>
-      {% endif %}
-      {% if user.active_organizations.all %}
-        <li class="list-group-item">
-          <small> 
-          <i>
-            Volontaire à
-            {{ user.active_organizations.all|join:", " }}
-            {% if user.active_organizations.all and user.volunteer_organizations.all %}, {% endif %}
-            {{ user.volunteer_organizations.all|join:", " }}
-          </i>
-          </small>
-        </li>
-      {% endif %}
-      {% if user.admin_organizations.all %}
-        <li class="list-group-item">
-          <small> 
-          <i>
-            Administrateur de
-            {{ user.admin_organizations.all|join:", " }}
-          </i>
-          </small>
-        </li>
-      {% endif %}
-      -->
       {% if admin_remove_controls == True %}
         {% if is_admin %}
           <form action="{% url 'user:remove_from_admins' organization.pk user.pk %}" class="d-inline">

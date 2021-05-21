@@ -8,12 +8,6 @@
 {% endif %}
 {% endblock %}
 
-{% block extra_css %}
-  {% assets "css_autocomplete" %}
-    <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet"/>
-  {% endassets %}
-{% endblock %}
-
 {% block content %}
   {% url "user:user_list" as user_list_url %}
   {% if object %}

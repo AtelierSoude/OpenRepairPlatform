@@ -3,12 +3,6 @@
 {% load querystring from django_tables2 %}
 {% load django_tables2 %}
 
-{% block extra_css %}
-  {% assets "css_detail_organization" %}
-    <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet"/>
-  {% endassets %}
-{% endblock %}
-
 {% block menu_content %}
 <section class="container">
   <div class="text-center m-auto">

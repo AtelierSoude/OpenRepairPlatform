@@ -8,12 +8,13 @@ scss_custom_bootstrap = Bundle(
     output="css/custom_bootstrap.css",
 )
 scss_openrepairplatform = Bundle(
-    "scss/openrepairplatform.scss", filters="scss", output="css/openrepairplatform.css"
+    "scss/openrepairplatform.scss", 
+    filters="scss", 
+    output="css/openrepairplatform.css",
 )
 scss_places = Bundle(
     "scss/lib/leaflet.scss",
     "scss/places/leaflet_custom.scss",
-    "scss/places/custom.scss",
     filters="scss",
     output="css/leaflet_custom.css",
 )
@@ -23,31 +24,15 @@ scss_detail_place = Bundle(
     filters="scss",
     output="css/detail_place.css",
 )
-scss_auto_complete = Bundle(
-    "scss/lib/auto-complete.scss",
-    filters="scss",
-    output="css/auto-complete.css",
-)
 scss_detail_event = Bundle(
-    "scss/lib/auto-complete.scss",
     "scss/lib/leaflet.scss",
     filters="scss",
     output="css/detail_event.css",
-)
-scss_detail_user = Bundle(
-    "scss/user/detail.scss",
-    filters="scss",
-    output="css/detail_user.css",
 )
 scss_create_edit_event = Bundle(
     "scss/lib/flatpickr.scss",
     filters="scss",
     output="css/create_edit_event.css",
-)
-scss_detail_organization = Bundle(
-    "scss/lib/auto-complete.scss",
-    filters="scss",
-    output="css/detail_organization.css",
 )
 
 # CSS minify
@@ -62,39 +47,24 @@ css_openrepairplatform = Bundle(
     output="css/openrepairplatform.min.css",
 )
 css_places = Bundle(
-    scss_places, filters="cssrewrite,cssmin", output="css/places.min.css"
+    scss_places, filters="cssrewrite,cssmin", 
+    output="css/places.min.css",
 )
 css_detail_place = Bundle(
     scss_detail_place,
     filters="cssrewrite,cssmin",
     output="css/detail_place.min.css",
 )
-css_auto_complete = Bundle(
-    scss_auto_complete,
-    filters="cssrewrite,cssmin",
-    output="css/auto-complete.min.css",
-)
 css_detail_event = Bundle(
     scss_detail_event,
     filters="cssrewrite,cssmin",
     output="css/detail_event.min.css",
-)
-css_detail_user = Bundle(
-    scss_detail_user,
-    filters="cssrewrite,cssmin",
-    output="css/detail_user.min.css",
 )
 css_create_edit_event = Bundle(
     scss_create_edit_event,
     filters="cssrewrite,cssmin",
     output="css/create_edit_event.min.css",
 )
-css_detail_organization = Bundle(
-    scss_detail_organization,
-    filters="cssrewrite,cssmin",
-    output="css/detail_organization.min.css",
-)
-
 
 # JS minify
 js_base = Bundle(
@@ -187,12 +157,9 @@ js_infinite = Bundle(
 register("css_custom_bootstrap", css_custom_bootstrap)
 register("css_openrepairplatform", css_openrepairplatform)
 register("css_places", css_places)
-register("css_autocomplete", css_auto_complete)
 register("css_detail_place", css_detail_place)
 register("css_detail_event", css_detail_event)
-register("css_detail_user", css_detail_user)
 register("css_create_edit_event", css_create_edit_event)
-register("css_detail_organization", css_detail_organization)
 
 register("js_base", js_base)
 register("js_places", js_places)

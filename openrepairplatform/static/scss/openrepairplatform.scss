@@ -44,7 +44,6 @@ h5{
 }
 
 /* tables */ 
-
 thead {
   background-color: rgb(249, 249, 249);
   a{
@@ -74,6 +73,7 @@ tbody {
     table-layout:fixed;
 }
 }
+
 .small-column{
   width:70px;
 }  
@@ -134,9 +134,42 @@ td {
 
 .select2-container--default .select2-results__option--highlighted[aria-selected] {
   background-color: $primary !important;
-
 }
 
+/* Custom auto-complete */
+.autocomplete-suggestions {
+  text-align: left; 
+  cursor: default; 
+  border: 1px solid #ccc; 
+  border-top: 0; 
+  background: #fff; 
+  box-shadow: -1px 1px 3px rgba(0,0,0,.1);
+  position: absolute; 
+  display: none; 
+  z-index: 9999; 
+  max-height: 254px; 
+  overflow: hidden; 
+  overflow-y: auto; 
+  box-sizing: border-box;
+}
+
+.autocomplete-suggestion { 
+  position: relative; 
+  padding: 0 .6em; 
+  line-height: 23px; 
+  white-space: nowrap; 
+  overflow: hidden; 
+  text-overflow: ellipsis; 
+  font-size: 1.02em; 
+  color: #333; 
+  b {
+    font-weight: normal; 
+    color: $success; 
+  }
+  .selected { 
+    background: #f0f0f0; 
+  }
+}
 
 /* pagination fix */ 
 .pagination {
@@ -160,7 +193,6 @@ td {
 }
 
 /* Menu */
-
 .main-container {
   padding-top: 65px;
 }
@@ -258,7 +290,6 @@ td {
 }
 
 /* jumbotron */ 
-
 .no-padding-jumbotron {
   padding: 1rem 0rem 0rem 0rem;
   margin-bottom: 0px;

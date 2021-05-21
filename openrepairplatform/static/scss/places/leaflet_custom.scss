@@ -3,7 +3,9 @@ Author: L. Voogdt
 License: MIT
 Version: 1.0
 */
-
+#place_map {
+  height: calc(100vh - 6.5em);
+}
 /* Marker setup */
 .awesome-marker {
   background: url('/static/img/markers/markers-soft.png') no-repeat 0 0;

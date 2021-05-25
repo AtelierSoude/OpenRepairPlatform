@@ -5,7 +5,7 @@ from dal import autocomplete
 from django import forms
 from django.forms import ModelForm
 
-from openrepairplatform.event.models import Event, Activity, Condition
+from openrepairplatform.event.models import Event, Activity, Condition, Participation
 from openrepairplatform.location.models import Place
 from openrepairplatform.user.models import Organization
 
@@ -279,3 +279,9 @@ class EventSearchForm(forms.Form):
             queryset=Organization.objects.filter(events__in=future_events).distinct(),
             label="Organisateur",
         )
+
+
+class ParticipationForm(ModelForm):
+    class Meta:
+        model = Participation
+        fields = ["amount", "payment"]

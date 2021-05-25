@@ -1,6 +1,7 @@
 from django.urls import path
 
 from . import views
+from openrepairplatform.mixins import CreateMembershipMixin, UpdateMembershipMixin
 
 app_name = "event"
 
@@ -66,7 +67,7 @@ urlpatterns = [
     ),
     path("<int:pk>/edit/", views.EventEditView.as_view(), name="edit"),
     path("<int:pk>/delete/", views.EventDeleteView.as_view(), name="delete"),
-    path("<int:pk>/close/", views.CloseEventView.as_view(), name="close"),
+    # path("<int:pk>/close/", views.CloseEventView.as_view(), name="close"),
     path(
         "<int:pk>/add_active/",
         views.AddActiveEventView.as_view(),
@@ -77,7 +78,7 @@ urlpatterns = [
         views.RemoveActiveEventView.as_view(),
         name="remove_active",
     ),
-    path("<int:pk>/close/", views.CloseEventView.as_view(), name="close"),
+    # path("<int:pk>/close/", views.CloseEventView.as_view(), name="close"),
     path("<int:pk>/<slug>/", views.EventView.as_view(), name="detail"),
     path(
         "<int:pk>/<slug>/book/<int:user_pk>/<token>",
@@ -101,4 +102,30 @@ urlpatterns = [
     ),
     path("book/<token>/", views.BookView.as_view(), name="book"),
     path("absent/<token>/", views.AbsentView.as_view(), name="user_absent"),
+    path("present/<token>/", views.PresentView.as_view(), name="user_present"),
+    path(
+        "add-to-member/<int:pk>/<int:event_pk>",
+        CreateMembershipMixin.as_view(),
+        name="add_member",
+    ),
+    path(
+        "update-member/<int:orga_pk>/<int:pk>/<int:event_pk>",
+        UpdateMembershipMixin.as_view(),
+        name="update_member",
+    ),
+    path(
+        "add-participation/<int:user_pk>/<int:event_pk>",
+        views.ParticipationCreateView.as_view(),
+        name="add_participation",
+    ),
+    path(
+        "update-participation/<int:pk>/<int:user_pk>/<int:event_pk>",
+        views.ParticipationUpdateView.as_view(),
+        name="update_participation",
+    ),
+    path(
+        "delete-participation/<int:pk>",
+        views.ParticipationDeleteView.as_view(),
+        name="delete_participation",
+    ),
 ]

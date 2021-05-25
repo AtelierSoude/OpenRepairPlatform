@@ -73,10 +73,10 @@ class MoreInfoCustomUserForm(forms.ModelForm):
         label="Type de paiement",
     )
     date = forms.DateField(
-        initial=dt.today(),
-        widget=forms.DateInput(attrs={"type": "date"}, format="%Y-%m-%d"),
+        initial=dt.today().strftime("%Y-%m-%d"),
+        widget=forms.HiddenInput(),
     )
-    first_fee = forms.BooleanField(required=False)
+    first_fee = forms.BooleanField(widget=forms.HiddenInput(), required=False)
 
     class Meta:
         model = CustomUser

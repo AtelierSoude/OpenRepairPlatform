@@ -32,8 +32,9 @@ class Place(models.Model):
         validators=[validate_image],
         verbose_name=_("Image"),
     )
-    is_visible = models.NullBooleanField(
+    is_visible = models.BooleanField(
         _("Lieu principal"),
+        null=True,
         default=False,
         help_text=_(
             "Est-ce que ce lieu est un lieu de votre organisation ? "

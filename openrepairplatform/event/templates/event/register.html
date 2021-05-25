@@ -5,13 +5,13 @@
     <a class="btn btn-outline-warning">Événement sans réservation</a>
   {% else %}
       {% if admin_text %}
-      <button class="btn btn-success rounded-circle" data-toggle="modal" data-target="#reservation{{ event.pk }}">
+      <button class="btn btn-success rounded-circle" data-toggle="modal" data-target="#reservation{{ event.pk | slugify }}">
         <i class="fa fa-plus"></i>
       </button>
         {{ admin_text }}
       {% else %}
         {% if event.remaining_seats > 0 %}
-          <button class="btn btn-success btn-block booking_form" data-toggle="modal" data-target="#reservation{{ event.pk }}">  
+          <button class="btn btn-success btn-block booking_form" data-toggle="modal" data-target="#reservation{{ event.pk | slugify }}">
             Je participe !
           </button>
         {% else %}
@@ -33,14 +33,14 @@
             </h5>
             <ul class="pl-1">
               <li class="text-left">
-                <small>un mail de confirmation contenant un lien d'annulation vous sera envoyé. 
+                <small>un mail de confirmation contenant un lien d'annulation vous sera envoyé.
                   <span class="text-danger">(même si vous le recevez pas, votre inscription est prise en compte !)</span></small>
               </li>
               {% for condition in event.conditions.all %}
               <li class="text-left">
                 {% if condition.price > 0 %}
                   <span class="badge badge-pill badge-secondary">
-                    {{ condition.price }}€</span> 
+                    {{ condition.price }}€</span>
                   {% else %}
                   {% endif %}
                 <small>{{ condition.description | safe }}</small>
@@ -53,7 +53,7 @@
             </div>
             <small>Pensez à vous <a href="{% url "login" %}" title="se connecter">connecter ou créer/activer votre compte</a></small>
             <form action="{% url 'user:create_and_book' %}?event={{ event.pk|cut:" " }}" method="post">
-                {% csrf_token %} 
+                {% csrf_token %}
                 {% bootstrap_form form=register_form %}
             <div class="modal-footer">
               <input type="submit" value="Réserver" class="btn btn-primary"/>

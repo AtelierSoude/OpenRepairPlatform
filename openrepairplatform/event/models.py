@@ -143,6 +143,7 @@ class Event(models.Model):
         ),
         blank=True,
     )
+    members_only = models.BooleanField(default=True, blank=True)
     slug = models.SlugField(blank=True)
     date = models.DateField(verbose_name=_("Jour"), default=date.today)
     starts_at = models.TimeField(verbose_name=_("Heure de début"), default=timezone.now)
@@ -277,11 +278,9 @@ class Participation(models.Model):
     event = models.ForeignKey(
         Event, on_delete=models.CASCADE, related_name="participations"
     )
-    saved = models.BooleanField(default=False)
     amount = models.PositiveIntegerField(
         verbose_name=_("Montant payé"), default=0, blank=True
     )
-    fee = models.OneToOneField(Fee, on_delete=models.SET_NULL, null=True, blank=True)
     history = HistoricalRecords()
 
     class Meta:

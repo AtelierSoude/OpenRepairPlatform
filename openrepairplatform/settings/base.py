@@ -112,6 +112,8 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": (AUTH_PASSWORD_VALIDATION + "NumericPasswordValidator")},
 ]
 
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 

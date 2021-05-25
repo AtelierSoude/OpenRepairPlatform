@@ -38,6 +38,16 @@ def filter_orga(queryset, organization):
 
 
 @register.simple_tag
+def filter_user(queryset, user):
+    return queryset.filter(user=user).first()
+
+
+@register.simple_tag
+def related_user(queryset, user):
+    return queryset.filter(user=user)
+
+
+@register.simple_tag
 def query_transform(request, **kwargs):
     updated = request.GET.copy()
     for k, v in kwargs.items():
@@ -48,3 +58,8 @@ def query_transform(request, **kwargs):
 @register.simple_tag
 def organization_fees(organization, user):
     return Fee.objects.filter(organization=organization, user=user)
+
+
+@register.simple_tag
+def sum_conditions(conditions):
+    return sum(condition.price for condition in conditions)

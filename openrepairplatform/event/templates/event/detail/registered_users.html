@@ -1,0 +1,66 @@
+{% load app_filters %}
+
+    <section class="d-flex flex-wrap justify-content-between">
+    {% for user in users %}
+      {% filter_orga queryset=user.memberships organization=event.organization as membership %}
+      {% filter_user queryset=event.participations user=user as participation %}
+      {% related_user queryset=event.fees user=user as fees %}
+      {% sum_conditions conditions=event.conditions.all as condition_prices %}
+
+      {% tokenize user=user event=event action='present' as tok_event %}
+
+      <div class="card mb-2" style="width: 49%">
+        <div class="card-body">
+          <h5 class="card-title">{{ user.email }}</h5>
+          <h6 class="card-subtitle mb-2 text-muted">{{ user.last_name }} {{ user.first_name }}</h6>
+          {% if event.conditions.all %}
+            <p>
+              {% if participation %}
+                <button class="btn btn-primary" data-toggle="modal" data-target="#participation-{{ user.pk }}">
+                  <b>Mettre à jour la participation : {{ participation.amount }} / {{ condition_prices }}€</b>
+                </button>
+                {% include "event/participation_form.html" with user=user event=event form=participation_form|initial:participation %}
+              {% else %}
+                <button class="btn btn-success" data-toggle="modal" data-target="#participation-{{ user.pk }}">
+                  <b>Ajouter une participation : {{ condition_prices }}€</b>
+                </button>
+                {% include "event/participation_form.html" with user=user event=event form=participation_form %}
+              {% endif %}
+            </p>
+          {% endif %}
+          <span class="card-link">
+            {% include "event/modal_more_info.html" with user=user membership=membership form=present_form|initial:user %}
+          </span>
+          <span class="card-link">
+            {% if event_control == True and event.has_started and is_active %}
+              {% if user in event.presents.all %}
+                <a class="btn btn-success btn-sm" href="{% url 'event:user_absent' tok_event %}">Présent</a>
+              {% else %}
+                <a class="btn btn-danger btn-sm" href="{% url 'event:user_present' tok_event %}">Absent</a>
+              {% endif %}
+            {% else %}
+              {% if user in event.presents.all %}
+                <a class="btn btn-success btn-sm">Présent</a>
+              {% else %}
+                <a class="btn btn-danger btn-sm">Absent</a>
+              {% endif %}
+            {% endif %}
+          </span>
+          {% if fees %}
+            <hr/>
+            <p><b>Cotisation :</b></p>
+            {% for fee in fees %}
+              <span class="badge badge-pill badge-primary">
+                {{ fee.amount }}€
+                <form class="d-inline" action="{% url 'user:fee_delete' fee.pk %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-primary btn-sm">x</a>
+                </form>
+              </span>
+            {% endfor %}
+          {% endif %}
+        </div>
+      </div>
+
+    {% endfor %}
+    </section>

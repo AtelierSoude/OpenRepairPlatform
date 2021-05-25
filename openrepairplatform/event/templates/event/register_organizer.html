@@ -1,9 +1,9 @@
 {% load app_filters bootstrap4 %}
 
-<button class="btn btn-success rounded-circle" data-toggle="modal" data-target="#add_organizer{{ event_to_organize.pk }}">
+<button class="btn btn-success rounded-circle" data-toggle="modal" data-target="#add_organizer{{ event_to_organize.pk | slugify }}">
     <i class="fa fa-plus"></i>
 </button>
-<div class="modal" id="add_organizer{{ event_to_organize.pk }}" tabindex="-1" role="dialog">
+<div class="modal" id="add_organizer{{ event_to_organize.pk | slugify }}" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
     <div class="modal-content">
         <div class="modal-header">

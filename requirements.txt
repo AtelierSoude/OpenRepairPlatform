@@ -38,7 +38,7 @@ django-autocomplete-light==3.5.1
     # via openrepairplatform (setup.py)
 django-better-admin-arrayfield==1.4.2
     # via openrepairplatform (setup.py)
-django-bootstrap-modal-forms==2.0.1
+django-bootstrap-modal-forms==2.0.0
     # via openrepairplatform (setup.py)
 django-bootstrap-static==4.2.1
     # via openrepairplatform (setup.py)

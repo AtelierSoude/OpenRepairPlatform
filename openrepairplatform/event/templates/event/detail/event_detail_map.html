@@ -1,0 +1,16 @@
+
+<!-- Cartography -->
+<div class="row">
+  <section class="col-md-12  bg-white">
+    <div style="min-height: 220px" id="event_map"></div>
+    <p class="text-center mt-2">
+      <i class="fa fa-map-marker"></i>
+      {% if event.location %}
+        <a href="{% url 'location:detail' event.location.id event.location.slug %}">
+          {{ event.location.name }}
+        </a>,
+        {{ event.location.address }}
+      {% endif %}
+    </p>
+  </section>
+</div>

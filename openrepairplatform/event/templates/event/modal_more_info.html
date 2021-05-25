@@ -1,23 +1,22 @@
 {% load bootstrap4 app_filters %}
 
-<button class="btn btn-success btn-sm" data-toggle="modal" data-target="#more-info-{{ anonymous_user.pk }}">
-  <i class="fa fa-plus"></i>
-  {% if admin_text %}
-    {{ admin_text }}
+<button class="btn btn-success btn-sm" data-toggle="modal" data-target="#more-info-{{ user.pk }}">
+  {% if membership %}
+  <b>{{ membership.amount }}€ / {{ event.organization.advised_fee }}€</b>
   {% else %}
-  <i class="fa fa-check"></i>
+    <b>Adhérer</b>
   {% endif %}
+  <i class="fa fa-plus"></i>
+  <i class="fa fa-user"></i>
 </button>
-<div class="modal" id="more-info-{{ anonymous_user.pk }}" tabindex="-1" role="dialog">
+
+
+<div class="modal" id="more-info-{{ user.pk }}" tabindex="-1" role="dialog">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">
-          {% if anonymous_user %}
-            Compléter les info de {{ anonymous_user }}
-          {% else %}
-            Marquer quelqu'un en "présent" pour l'évènement
-          {% endif %}
+          Marquer quelqu'un en "présent" pour l'évènement
         </h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -37,25 +36,26 @@
             <li>{{ event.organization.fee_description }}</li>
           {% endif %}
         </ul>
-        {% if anonymous_user and anonymous_user.first_name %}
+
+        {% if user.first_name %}
           <span class="h4">
             {% filter_orga queryset=user.memberships organization=event.organization as membership %}
             {% if membership %}
-              {{ anonymous_user }} a payé <span class="badge badge-pill badge-primary">{{ membership.current_contribution }}€</span> depuis le {{ membership.first_payment|date:"d F Y" }}
+              {{ user }} a payé
+              <span class="badge badge-pill badge-primary">
+                {{ membership.current_contribution }}€
+              </span>
+              depuis le {{ membership.first_payment|date:"d F Y" }}
             {% else %}
-              {{ anonymous_user }} n'a pas encore contribué pour <span class="badge badge-pill badge-primary">{{ event.organization }}</span>
+              {{ user }} n'a pas encore contribué pour
+              <span class="badge badge-pill badge-primary">{{ event.organization }}</span>
             {% endif %}
           </span>
         {% endif %}
-        <form
-            {% if anonymous_user %}
-              action="{% url 'user:present_with_more_info' event.pk anonymous_user.pk %}"
-            {% else %}
-              action="{% url 'user:present_create_user' event.pk %}"
-            {% endif %}
+
+        <form action="{% if membership %}{% url 'event:update_member' event.organization.pk membership.user.pk event.pk %}{% else %}{% url 'event:add_member' event.organization.pk event.pk %}{% endif %}"
               method="post"
-              class="text-left"
-        >
+              class="text-left">
           <div class="modal-body">
             {% csrf_token %}
             {% bootstrap_form form=form %}
@@ -64,14 +64,8 @@
             <input type="submit" value="Enregistrer" class="btn btn-primary">
           </div>
         </form>
+
       </div>
     </div>
   </div>
 </div>
-
-<!-- this is a very ugly trick to hidde the date input - change this as soon as it possible -->
-<style>
- #id_date, label[for=id_date], #id_first_fee, label[for=id_first_fee]{
-  display: none !important;
- }
-</style>

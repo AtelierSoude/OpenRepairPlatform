@@ -8,7 +8,7 @@ from django.core.management import call_command
 from django.urls import reverse, resolve
 from django.utils import timezone
 
-from openrepairplatform.event.views import _load_token
+from openrepairplatform.mixins import _load_token
 from openrepairplatform.user.factories import USER_PASSWORD
 from openrepairplatform.user.models import CustomUser
 

@@ -22,7 +22,7 @@
 
   {% if request.user.pk == object.pk and not object.first_name or not object.last_name or not object.street_address %}
     <div class="alert alert-warning" role="alert">
-      Pour devenir membre d'une organisation, vous devez renseigner votre Nom, Prénom 
+      Pour devenir membre d'une organisation, vous devez renseigner votre Nom, Prénom
       et Adresse postale.
     </div>
   {% endif %}
@@ -44,13 +44,13 @@
             {% endif %}
           {% endif %}
        </div>
-      </div> 
+      </div>
       <h2 class="header_detail_page_title">{{ object }}</h2>
       {% if object.pk == request.user.pk %}
       <a class="btn ml-2 btn-success btn rounded-circle" href="{% url "user:user_update" object.pk %}">
           <i class="fa fa-pencil-alt"></i>
       </a>
-      {% endif %}   
+      {% endif %}
     </div>
 
     <div class="text-center d-flex justify-content-center align-items-center flex-md-column" id="v-pills-tab" role="tablist" aria-orientation="horizontal">
@@ -74,7 +74,7 @@
   <div class="container">
     <div class="row no-gutters">
     <section class="h-100 col-md-12 p-4">
-      <div class="tab-content" id="v-pills-tabContent">    
+      <div class="tab-content" id="v-pills-tabContent">
         <div class="tab-pane fade show active" id="v-pills-info" role="tabpanel" aria-labelledby="v-pills-info-tab">
           <div class="text-center user-title">
             {% for organization in object.visitor_organizations.all %}
@@ -90,7 +90,7 @@
                 <a href="{% url 'organization_page' organization.slug %}">
                     {{ organization.name }}
                 </a>
-              </small> 
+              </small>
               {% endfor %}
               {% for organization in object.volunteer_organizations.all %}
               <small class="badge badge-light">
@@ -98,7 +98,7 @@
                   <a href="{% url 'organization_page' organization.slug %}">
                       {{ organization.name }}
                   </a>
-              </small> 
+              </small>
               {% endfor %}
               {% for organization in object.active_organizations.all %}
               <small class="badge badge-light">
@@ -106,15 +106,15 @@
                   <a href="{% url 'organization_page' organization.slug %}">
                       {{ organization.name }}
                   </a>
-              </small> 
+              </small>
               {% endfor %}
               {% for organization in object.admin_organizations.all %}
               <small class="badge badge-light">
-                  Administrateur de 
+                  Administrateur de
                   <a href="{% url 'organization_page' organization.slug %}">
                       {{ organization.name }}
                   </a>
-              </small> 
+              </small>
             {% endfor %}
             {% if not object.get_organizations %}
               <small>Ce profil n'est rattaché à aucune organisation</small>
@@ -231,14 +231,14 @@
                             </td>
                           </tr>
                         {% empty %}
-                        Pas d'évènements 
+                        Pas d'évènements
                         {% endfor %}
                       </tbody>
                   </table>
                 </div>
               </div>
-            {% endif %}   
-            {% if passed_rendezvous %}             
+            {% endif %}
+            {% if passed_rendezvous %}
               <div class="card p-2 mt-5">
                 <h4 class="mt-4 text-left">Passés</h4>
                   <div class="table-responsive">
@@ -281,7 +281,7 @@
                             </td>
                           </tr>
                       {% empty %}
-                        Pas d'évènements 
+                        Pas d'évènements
                       {% endfor %}
                   </table>
                 </div>
@@ -298,7 +298,7 @@
               <h5 class="pb-2">{{ membership.organization }}
             {% if membership.organization in user.admin_organizations.all or user.volunteer_organizations.all or user.active_organizations.all or object == user %}
               <small>depuis le {{ membership.first_payment|date:"d F Y" }}</small>
-              {% if membership.current_contribution == 0 %} 
+              {% if membership.current_contribution == 0 %}
                 <small class="text-danger">Pas à jour</small>
               {% elif membership.current_contribution >= membership.organization.advised_fee %}
                 <small class="text-success">A jour </small>
@@ -325,13 +325,15 @@
                     </td>
                     <td class="text-right">
                       <b>{{ fee.amount }}€</b><br>
-                      <small>{{ fee.get_payment_display }}</small>   
+                      <small>{{ fee.get_payment_display }}</small>
                    </td>
                     <td>
                     {% if membership.organization in user.admin_organizations.all or user.volunteer_organizations.all or user.active_organizations.all %}
-                    <a class="btn btn-danger btn-sm" href="{% url 'user:fee_delete' fee.id %}">
+                    <form action="{% url 'user:free_delete' fee.pk %}" method="post">
+                      <button type="submit" class="btn btn-danger btn-sm">
                         <i class="fa fa-trash-alt"></i>
-                      </a>
+                      </button>
+                    </form>
                     {% endif %}
                     </td>
                   </tr>
@@ -378,7 +380,7 @@
                             {{ stuff.place.name }}
                         </a>
                       {% else %}
-                        Chez l'utilisateur 
+                        Chez l'utilisateur
                       {% endif %}
                     </td>
                     <td>
@@ -396,7 +398,7 @@
             </table>
           </div>
         </div>
-      </div>  
+      </div>
     </div>
     </div>
     </section>

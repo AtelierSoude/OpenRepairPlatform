@@ -16,10 +16,10 @@
       {% if event_control == True %}
         {% filter_orga queryset=user.memberships organization=event.organization as membership %}
         {% if membership %}
-          {% if membership.current_contribution == 0 %} 
+          {% if membership.current_contribution == 0 %}
             <span class="badge badge-pill badge-primary text-danger float-left" >0€</span>
           {% elif membership.current_contribution >= event.organization.advised_fee %}
-            <spann class="badge badge-pill badge-primary text-success float-left">{{ membership.current_contribution }}€</span>
+            <span class="badge badge-pill badge-primary text-success float-left">{{ membership.current_contribution }}€</span>
           {% else %}
             <span class="badge badge-pill badge-primary text-warning float-left" >{{ membership.current_contribution }}€</span>
           {% endif %}
@@ -49,16 +49,16 @@
     </a>
     {% if event_control == True %}
       {% if event.has_started and is_active %}
-      {% include "event/modal_more_info.html" with anonymous_user=user form=present_form|initial:user %}
+      {% include "event/modal_more_info.html" with user=user form=present_form|initial:user %}
       {% endif %}
     {% endif %}
   <!--
     <ul class="list-group">
       {% if user.member_organizations.all %}
         <li class="list-group-item">
-          <small> 
+          <small>
           <i>
-            Membre de 
+            Membre de
             {{ user.member_organizations.all|join:", " }}
           </i>
           </small>
@@ -66,7 +66,7 @@
       {% endif %}
       {% if user.active_organizations.all %}
         <li class="list-group-item">
-          <small> 
+          <small>
           <i>
             Volontaire à
             {{ user.active_organizations.all|join:", " }}
@@ -78,7 +78,7 @@
       {% endif %}
       {% if user.admin_organizations.all %}
         <li class="list-group-item">
-          <small> 
+          <small>
           <i>
             Administrateur de
             {{ user.admin_organizations.all|join:", " }}
@@ -118,5 +118,5 @@
   </div>
 
 {% empty %}
-  <div class="col-lg">Pas encore d'utilisateur</div>  
+  <div class="col-lg">Pas encore d'utilisateur</div>
 {% endfor %}

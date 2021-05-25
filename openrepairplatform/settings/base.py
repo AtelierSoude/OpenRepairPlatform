@@ -157,4 +157,4 @@ MESSAGE_TAGS = {messages.ERROR: "danger"}
 AVATAR_COLORS = ((254, 229, 110), (8, 51, 66), (43, 230, 171),)
 
 # Django tables2
-DJANGO_TABLES2_TEMPLATE = "django_tables2/bootstrap5.html"
+DJANGO_TABLES2_TEMPLATE = "django_tables2/bootstrap4.html"

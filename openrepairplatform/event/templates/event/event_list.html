@@ -1,26 +1,23 @@
 {% extends 'base.html' %}
 {% load static i18n l10n %}
-{% load bootstrap4 app_filters assets %}
+{% load bootstrap5 app_filters assets %}
 {% include 'autocomplete_light/static.html' %}
 {% block title %}Les événements disponibles sur {{site_title}} {% endblock %}
 
 {% block content %}
-  {% include "breadcrumb.html" with current="Évènements" %}
-
-  <section class="container-fluid" id="search_tab">
+  {% include "breadcrumb.html" with current="Événements" %}
+  <section class="container-fluid shadow-sm" id="search_tab">
       <div class="col-lg bg-white">
-        <div id="search" class="collapse.show">
+        <div id="search" class="collapse">
             <form method="GET" class="form-row" action="{% url 'event:list' %}">
-                <div class="input-group search-bar">
-                    {% bootstrap_field search_form.activity show_label=False field_class='form-control' addon_before='Quoi' %}
-                    {% bootstrap_field search_form.place show_label=False field_class='form-control' addon_before='<span class="fa fa-map-marker"></span>&nbsp;Où' %}
-                <!-- Dos it make sense to filter by dates here ? 
-                    {% bootstrap_field search_form.starts_before show_label=False field_class='form-control' addon_before='<span class="fa fa-calendar"></span> du' %}
-                    {% bootstrap_field search_form.starts_after show_label=False field_class='form-control' addon_before='au' %} 
-                --> 
-                <button type="submit" class="btn btn-secondary">
-                <span class=""><i class="fa fa-search"></i>Rechercher</span>
-                </button>
+                <div class="input-group search-bar d-flex">
+                    {% bootstrap_field search_form.activity form_group_class="col-md-5" %}
+                    {% bootstrap_field search_form.place form_group_class="col-md-5" %}
+                    <div class="col-md-2 p-3 mt-3">
+                      <button type="submit" class="btn btn-secondary w-100">
+                        <span class=""><i class="fa fa-search"></i>Rechercher</span>
+                      </button>
+                    </div>
                 </div>
             </form>
         </div>
@@ -32,18 +29,16 @@
             {% endif %}
           </div>
       <a class="text-center d-block" 
-        data-toggle="collapse" href="#search" role="button" aria-expanded="true" aria-controls="search">
-       Afficher/cacher
+        data-toggle="collapse" href="#search" role="button" aria-expanded="false" aria-controls="search">
+       Filtrer les résultats
        <span class="btn btn-secondary">
           <i class="fa fa-search"></i>
        </span>
       </a>
     </div>
   </section>
-
   <section class="container">
-
-
+  <!-- alerts 
   <div class="container-fluid">
       <div class="alert alert-danger alert-dismissible fade show mb-0" role="alert">
         INFOS : suite aux nouvelles mesures sanitaires, les événéments affichés sont fortement succeptibles d'être annulés
@@ -51,106 +46,47 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-  </div>
-
-    <div class="">
-        <div class="infinite-container event_list_cards">
-          {% include "event/event_cards.html" with event_list=event_list card_size='col-md-4' %}
+  </div>-->
+    <div class="row">
+        <div class="infinite-container event_list_cards col-md-8 mt-4">
+          {% include "event/event_cards.html" with event_list=event_list card_size='col-md-12' %}
+        </div>
+        <div class="col-md-4 no-gutters" id="map">
+          {% include "location/place_list.html" %}
         </div>
     </div>
-    <div class="col-lg no-gutters position-fixed d-none" id="map">
-      {% include "location/place_list.html" %}
-    </div>
   </section>
-
   <div class="loading d-none"></div>
-
-  
   {% if page_obj.has_next %}
     <a class="infinite-more-link" href="?page={{ page_obj.next_page_number }}">Affichage en cours...</a>
   {% endif %}
-
-  <div class="d-block d-md-block d-lg-block position-fixed bg-white text-center" style="bottom: 0px; width:100%">
-    <a class="btn btn-success" id="map_show">Afficher la carte</a>
+  <div class="position-fixed bg-white text-center d-block d-md-none d-lg-none d-xl-none" style="bottom: 0px; width:100%">
+    <a class="btn btn-success" id="map_show" onclick="display_map()">Afficher la carte</a>
   </div>
 
 {% block extra_js %}
-<script>
-  $(document).ready(function(){
-    $("#map_show").click(function() {
-      if($("#map").hasClass("d-none")){  
-        $(this).html("Cacher la carte")
-        $("#map").removeClass("d-none")
-        $("#map").addClass("d-block")
-      } 
-      else {
-        $(this).html("Afficher la carte");
-        $("#map").removeClass("d-block");
-        $("#map").addClass("d-none");
-      }
-    });
-  });
-</script>
-  <script src="{% static 'js/lib/jquery.waypoints.js' %}"></script>
-  <script src="{% static 'js/lib/infinite.min.js' %}"></script>
   <script>
+    function display_map(){
+          if($("#map_show").html() == "Afficher la carte" ){
+            $("#map_show").html("Cacher la carte")
+            $("#map").css("visibility",'visible')
+          }
+          else {
+            $("#map_show").html("Afficher la carte")
+            $("#map").css("visibility",'hidden')
+          }
+      };
     $(document).ready(function(){
       $("#breadcrumb").sticky({topSpacing:65});
-      $("#search_tab").sticky({topSpacing:105});
+      $("#search_tab").sticky({topSpacing:100});
     });
   </script>
-<script>
-$(document).ready(function() {
-    $(".card").hover(
-          function() {
-            var location_id = $(this).data("location");
-            $(this).find('.card-body').addClass("shadow");
-            $(".awesome-marker[data-location='" + location_id +"' ]").addClass("awesome-marker_hover");
-          }
-        );
-        $(".card").mouseleave(
-          function() {
-            var location_id = $(this).data("location");
-            $(this).find('.card-body').removeClass("shadow");
-            $(".awesome-marker[data-location='" + location_id +"' ]").removeClass("awesome-marker_hover");
-          }
-        );
-  });
+  {% assets "js_event_list" %}
+    <script src="{{ ASSET_URL }}"></script>
+  {% endassets %}
 
-var waypoint = new Waypoint({
-  element: $('.card')[0],
-  handler: function(shadows) {
-    $(".card").hover(
-          function() {
-            var location_id = $(this).data("location");
-            $(this).find('.card-body').addClass("box-shadow");
-            $(".awesome-marker[data-location='" + location_id +"' ]").addClass("awesome-marker_hover");
-          }
-        );
-        $(".card").mouseleave(
-          function() {
-            var location_id = $(this).data("location");
-            $(this).find('.card-body').removeClass("box-shadow");
-            $(".awesome-marker[data-location='" + location_id +"' ]").removeClass("awesome-marker_hover");
-          }
-        );
-  }
-})
-</script>
+  {{ search_form.media }}
 
-<script>
-    var infinite = new Waypoint.Infinite({
-      element: $('.infinite-container')[0],
-      onBeforePageLoad: function () {
-        $('.loading').show();
-      },
-      onAfterPageLoad: function ($items) {
-        $('.loading').hide();
-      }
-    });
-  </script>
 {% endblock %}
-
-{{ search_form.media }}
 
 {% endblock %}

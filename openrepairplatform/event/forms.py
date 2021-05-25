@@ -22,6 +22,7 @@ class EventForm(ModelForm):
     publish_at = forms.DateTimeField(
         initial=dt.today,
         widget=forms.DateTimeInput(format="%Y-%m-%d %H:%M:%S"),
+        help_text="Modifier la date de publication que si nécessaire (par défaut la date du jour)"
     )
 
     def __init__(self, *args, **kwargs):

@@ -40,7 +40,7 @@ h5{
 }
 
 .bg-grey { 
-  background-color: #fff !important;
+  background-color: #fdfdfd !important;
 }
 
 /* tables */ 
@@ -118,7 +118,7 @@ td {
   display: block !important ;
 }
 .select2-container{
-  min-width: 200px !important;
+  width: 100% !important;
 }
 .search-bar{
   .form-group{
@@ -331,7 +331,12 @@ td {
   left:0px;
 }
 
-
+#map{
+  position: fixed;
+  right: 0px;
+  top: 150px;
+  bottom: 0px;
+}
 
 .gravatar{
   border-radius: 50%;
@@ -350,9 +355,11 @@ td {
 }
 
 .event_img {
- /* object-fit: none; 
-  object-position: center; */
   width: 100%;
+}
+
+.event a:hover {
+  text-decoration: none !important;
 }
 
 /* breadcrumb (chemin navigation) */
@@ -462,9 +469,7 @@ position: relative;
      padding-top: 10px !important;
      line-height: 75px;
    }
-   #side_nav .badge{
-     margin-top: 37px !important;
-   } 
+
   #v-pills-tab{
     width:100%;
     padding: 0px !important;
@@ -479,6 +484,7 @@ position: relative;
   .event_list_cards{
     column-count: 1;
    }
+
   #event_about {
     padding:25px !important;
     padding-bottom: 0px !important;
@@ -486,7 +492,9 @@ position: relative;
   #event_map {
     z-index: 1;
   }
-
+  #map {
+    visibility: hidden;
+  }
   .header_detail_page, #h_nav, #breadcrumb, #jumbotron, #search_tab, #event_title, .booking_form, .jumbotron {
      z-index: 2 !important;
    }
@@ -494,13 +502,6 @@ position: relative;
      z-index: 3 !important;
      display: relative;
    }
-}
-
-@media screen and (max-width: 576px) {
-  .container{
-  /*  margin: 0px !important;
-    padding: 0px !important; */
-  }
 }
 
 // Menu hack for mobile slide left up // 

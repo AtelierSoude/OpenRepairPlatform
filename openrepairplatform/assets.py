@@ -29,11 +29,6 @@ scss_detail_event = Bundle(
     filters="scss",
     output="css/detail_event.css",
 )
-scss_create_edit_event = Bundle(
-    "scss/lib/flatpickr.scss",
-    filters="scss",
-    output="css/create_edit_event.css",
-)
 
 # CSS minify
 css_custom_bootstrap = Bundle(
@@ -59,11 +54,6 @@ css_detail_event = Bundle(
     scss_detail_event,
     filters="cssrewrite,cssmin",
     output="css/detail_event.min.css",
-)
-css_create_edit_event = Bundle(
-    scss_create_edit_event,
-    filters="cssrewrite,cssmin",
-    output="css/create_edit_event.min.css",
 )
 
 # JS minify
@@ -110,11 +100,12 @@ js_detail_event = Bundle(
     filters="jsmin",
     output="js/events/detail_event.min.js",
 )
-js_create_edit_event = Bundle(
-    "js/lib/flatpickr.js",
-    "js/events/create_edit_event.js",
+js_event_list = Bundle(
+    "js/lib/jquery.waypoints.js",
+    "js/lib/infinite.min.js",
+    "js/events/event_list.js",
     filters="jsmin",
-    output="js/events/create_edit_event.min.js",
+    output="js/events/event_list.min.js",
 )
 js_recurrent_event = Bundle(
     "js/events/recurrent_event.js",
@@ -159,7 +150,6 @@ register("css_openrepairplatform", css_openrepairplatform)
 register("css_places", css_places)
 register("css_detail_place", css_detail_place)
 register("css_detail_event", css_detail_event)
-register("css_create_edit_event", css_create_edit_event)
 
 register("js_base", js_base)
 register("js_places", js_places)
@@ -167,7 +157,7 @@ register("js_create_edit_place", js_create_edit_place)
 register("js_create_edit_user", js_create_edit_user)
 register("js_detail_place", js_detail_place)
 register("js_detail_event", js_detail_event)
-register("js_create_edit_event", js_create_edit_event)
+register("js_event_list", js_event_list)
 register("js_recurrent_event", js_recurrent_event)
 register("js_detail_organization", js_detail_organization)
 register("js_groups_organization", js_groups_organization)

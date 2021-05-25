@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static i18n l10n %}
-{% load bootstrap4 app_filters %}
+{% load bootstrap5 app_filters %}
 
 {% block title %}Bienvenue sur l'application {{site_title}}{% endblock %}
 
@@ -10,18 +10,16 @@
         <h3 class="text-white pt-5">Prenez rendez-vous en ligne pour tout réparer !</h3>
         <section class="container">
             <div class="col-lg bg-secondary">
-                <div id="search">
+                <div id="search" class="">
                     <form method="GET" class="form-row" action="{% url 'event:list' %}">
-                        <div class="input-group search-bar">
-                            {% bootstrap_field search_form.activity show_label=False field_class='form-control' addon_before='Quoi' %}
-                            {% bootstrap_field search_form.place show_label=False field_class='form-control' addon_before='<span class="fa fa-map-marker"></span>&nbsp;Où' %}
-                        <!-- Dos it make sense to filter by dates here ? 
-                            {% bootstrap_field search_form.starts_before show_label=False field_class='form-control' addon_before='<span class="fa fa-calendar"></span> du' %}
-                            {% bootstrap_field search_form.starts_after show_label=False field_class='form-control' addon_before='au' %} 
-                        --> 
-                        <button type="submit" class="btn btn-primary">
-                        <span class=""><i class="fa fa-search"></i></span>
-                        </button>
+                        <div class="input-group search-bar d-flex">
+                            {% bootstrap_field search_form.activity form_group_class="col-md-5" %}
+                            {% bootstrap_field search_form.place form_group_class="col-md-5" %}
+                            <div class="col-md-2 p-3 mt-3">
+                              <button type="submit" class="btn btn-success w-100">
+                                <span class=""><i class="fa fa-search"></i>Rechercher</span>
+                              </button>
+                            </div>
                         </div>
                     </form>
                 </div>

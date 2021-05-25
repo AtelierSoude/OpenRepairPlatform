@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load bootstrap4 assets static %}
+{% load bootstrap5 assets static %}
 {% block title %}
 {% if object %}
   Mise à jour du profil de {{user}}
@@ -10,7 +10,6 @@
 
 {% block content %}
   {% if object %}
-    {% url "user:user_detail" object.pk as user_detail_url %}
     {% include "breadcrumb.html" with current="Mise à jour" second_parent_url=user_detail_url second_parent_text="Communauté" first_parent_url=user_detail_url first_parent_text=object %}
   {% else %}
     {% include "breadcrumb.html" with current="Création" first_parent_text="Communauté" %}

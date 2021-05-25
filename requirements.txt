@@ -18,7 +18,7 @@ defusedxml==0.5.0         # via cairosvg
 diff-cover==2.0.0
 django-assets==0.12
 django-bootstrap-static
-django-bootstrap4
+django-bootstrap-v5
 django-import-export
 django-initial-avatars==0.9.1
 django-simple-history==2.7.0
@@ -66,7 +66,6 @@ webassets==0.12.1         # via django-assets
 webencodings      # via bleach, html5lib, tinycss2
 django-gravatar2
 django-autocomplete-light==3.5
-django-recaptcha
 django-tables2
 django-tables2-column-shifter
 django-filter

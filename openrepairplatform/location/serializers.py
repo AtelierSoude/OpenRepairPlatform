@@ -10,7 +10,7 @@ class PlaceSerializer(serializers.ModelSerializer):
 
     def get_future_events(self, place):
         if place.future_published_events():
-            return True
+            return place.future_published_events().count()
 
     def get_orga_url(self, place):
         if place.organization:

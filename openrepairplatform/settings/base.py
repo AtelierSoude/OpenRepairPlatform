@@ -1,7 +1,7 @@
 from os.path import dirname, abspath, join
 import os
 
-from bootstrap4 import forms
+from bootstrap5 import forms
 from django.contrib import messages
 from dotenv import load_dotenv
 
@@ -39,13 +39,12 @@ INSTALLED_APPS = [
     "bootstrap",
     "fontawesome",
     "django_assets",
-    "bootstrap4",
+    "bootstrap5",
     "sorl.thumbnail",
     "import_export",
     "initial_avatars",
     "django_gravatar",
     'django_extensions',
-    "captcha",
     "django_tables2",
     'django_tables2_column_shifter',
     'django_filters',
@@ -148,7 +147,7 @@ AUTHENTICATION_BACKENDS = ("django.contrib.auth.backends.ModelBackend",)
 ASSETS_MODULES = ["openrepairplatform.assets"]
 ASSETS_ROOT = STATICFILES_DIRS[0]
 
-# Add class to field wrapper in django-bootstrap4
+# Add class to field wrapper in django-bootstrap5
 forms.FORM_GROUP_CLASS += " p-2"
 
 # django messages settings
@@ -157,11 +156,5 @@ MESSAGE_TAGS = {messages.ERROR: "danger"}
 # Avatar Innitials Settings
 AVATAR_COLORS = ((254, 229, 110), (8, 51, 66), (43, 230, 171),)
 
-# Captcha 
-RECAPTCHA_PUBLIC_KEY = '6Lfe2dIUAAAAAPY7q6Q-W1PDsFWpgn4jiv-9fa1N'
-RECAPTCHA_PRIVATE_KEY = '6Lfe2dIUAAAAADoVIbd8p2YAk7QdH65FS8aC6KX6'
-RECAPTCHA_PROXY = {'http': 'http://dev.atelier-soude.fr', 'https': 'https://dev.atelier-soude.fr'}
-RECAPTCHA_DOMAIN = 'www.recaptcha.net'
-
 # Django tables2
-DJANGO_TABLES2_TEMPLATE = "django_tables2/bootstrap4.html"
+DJANGO_TABLES2_TEMPLATE = "django_tables2/bootstrap5.html"

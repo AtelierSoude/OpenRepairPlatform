@@ -94,7 +94,7 @@ class CreateMembershipMixin(HasActivePermissionMixin, RedirectView):
         form = MoreInfoCustomUserForm(request.POST, instance=user)
         user = form.save()
         amount = form.cleaned_data["amount_paid"]
-        membership = Membership.objects.create(
+        membership, exist = Membership.objects.get_or_create(
             organization=self.organization,
             user=user,
         )

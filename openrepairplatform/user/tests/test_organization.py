@@ -84,6 +84,7 @@ def test_organization_create(client_log, custom_user):
                 <u style="text-decoration-line: underline;"> sdfsdf </u>
             """,
             "picture": upload_image,
+            "membership_system": "date_year",
         },
     )
     assert response.status_code == 302
@@ -103,6 +104,7 @@ def test_organization_create(client_log, custom_user):
                 <u style="text-decoration-line: underline;"> sdfsdf </u>
             """,
             "picture": upload_image,
+            "membership_system": "date_year",
         },
     )
     assert Organization.objects.count() == 1
@@ -119,7 +121,7 @@ def test_organization_update(client_log, organization):
     organization.admins.add(user)
     response = client_log.post(
         reverse("user:organization_update", kwargs={"pk": organization.pk}),
-        {"name": "Test Orga", "description": "Test"},
+        {"name": "Test Orga", "description": "Test", "membership_system": "date_year"},
     )
     assert response.status_code == 302
     organization.refresh_from_db()
@@ -462,6 +464,9 @@ def test_add_member_to_organization(custom_user_factory, client, organization):
             "payment": 1,
             "date": timezone.now().date().strftime("%Y-%m-%d"),
         },
+        HTTP_REFERER=reverse(
+            "organization_members", kwargs={"orga_slug": organization.slug}
+        )
     )
     assert response.status_code == 302
     assert response.url == reverse(
@@ -492,6 +497,9 @@ def test_re_add_member_to_organization(
             "payment": 1,
             "date": timezone.now().date().strftime("%Y-%m-%d"),
         },
+        HTTP_REFERER=reverse(
+            "organization_members", kwargs={"orga_slug": organization.slug}
+        )
     )
     assert response.status_code == 302
     assert response.url == reverse(
@@ -526,6 +534,9 @@ def test_update_member_to_organization(
             "payment": 1,
             "date": timezone.now().date().strftime("%Y-%m-%d"),
         },
+        HTTP_REFERER=reverse(
+            "organization_members", kwargs={"orga_slug": organization.slug}
+        )
     )
     membership.refresh_from_db()
     assert response.status_code == 302
@@ -535,7 +546,7 @@ def test_update_member_to_organization(
     )
     user.refresh_from_db()
     assert user.first_name == "Michel"
-    assert membership.amount == 6
+    assert membership.amount == 5
     assert organization.members.count() == 1
     assert Fee.objects.count() == 1
 
@@ -556,6 +567,9 @@ def test_update_member_to_organization(
             "payment": 1,
             "date": timezone.now().date().strftime("%Y-%m-%d"),
         },
+        HTTP_REFERER=reverse(
+            "organization_members", kwargs={"orga_slug": organization.slug}
+        )
     )
     membership.refresh_from_db()
     assert response.status_code == 302

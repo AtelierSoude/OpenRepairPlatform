@@ -7,7 +7,7 @@ from django.utils import timezone
 
 from openrepairplatform.event.models import Event
 from openrepairplatform.user.factories import USER_PASSWORD
-from openrepairplatform.user.models import CustomUser, Membership, Fee
+from openrepairplatform.user.models import CustomUser, Membership
 
 pytestmark = pytest.mark.django_db
 
@@ -354,7 +354,7 @@ def test_book_no_more_room_by_active_volunteer_or_admin(
                 "slug": event.slug,
                 "user_pk": custom_user.pk,
                 "token": token,
-            }
+            },
         )
         nb_registered = Event.objects.first().registered.count()
         assert nb_registered == 1
@@ -375,7 +375,7 @@ def test_book(client, event, custom_user):
             "slug": event.slug,
             "user_pk": custom_user.pk,
             "token": token,
-        }
+        },
     )
     nb_registered = Event.objects.first().registered.count()
     assert nb_registered == 1
@@ -467,11 +467,11 @@ def test_organizer_book_organizer_already_registered(
     assert event.organizers.count() == 1
 
 
-def test_user_absent_wrong_token(client):
-    token = signing.dumps({"user_id": 1, "event_id": 2}, salt="unknown")
-    resp = client.get(reverse("event:user_absent", args=[token]))
+def test_user_absent_wrong_token(client, event):
+    token = signing.dumps({"user_id": 1, "event_id": event.pk}, salt="unknown")
+    resp = client.get(reverse("event:user_absent", args=[token]), HTTP_REFERER="/")
     assert resp.status_code == 302
-    assert resp["Location"] == reverse("event:list")
+    assert resp["Location"] == "/"
 
 
 def test_user_absent(client, event, custom_user):
@@ -484,22 +484,25 @@ def test_user_absent(client, event, custom_user):
     resp = client.get(reverse("event:user_absent", args=[token]))
     assert resp.status_code == 302
     assert (
-        resp["Location"]
-        == reverse("event:detail", args=[event.id, event.slug]) + "#manage"
+        resp["Location"] == reverse("event:detail", args=[event.id, event.slug])
     )
-    nb_presents = Event.objects.first().presents.count()
+    nb_presents = event.presents.count()
     assert nb_presents == 0
 
 
 def test_user_absent_remove_contribution(
     client, event, custom_user, participation_factory, membership_factory, fee_factory
 ):
-    fee = fee_factory(
-        user=custom_user, organization=event.organization, payment=1, amount=10
+    participation_factory(event=event, user=custom_user, amount=10)
+    membership = membership_factory(
+        organization=event.organization, user=custom_user, amount=10
     )
-    participation_factory(event=event, user=custom_user, amount=10, saved=True, fee=fee)
-    membership_factory(
-        organization=event.organization, user=custom_user, amount=10, fee=fee
+    fee_factory(
+        user=custom_user,
+        organization=event.organization,
+        payment=1,
+        amount=10,
+        membership=membership,
     )
     nb_presents = Event.objects.first().presents.count()
     assert nb_presents == 1
@@ -507,88 +510,28 @@ def test_user_absent_remove_contribution(
         {"user_id": custom_user.id, "event_id": event.id}, salt="absent"
     )
     _ = client.get(reverse("event:user_absent", args=[token]))
-    nb_presents = Event.objects.first().presents.count()
+    nb_presents = event.presents.count()
     assert nb_presents == 0
-    assert Membership.objects.count() == 0
+    # if an user is absent he can be a member
+    assert Membership.objects.count() == 1
 
 
 def test_user_absent_redirect(
     client, event, custom_user, participation_factory, membership_factory, fee_factory
 ):
-    fee = fee_factory(
-        user=custom_user, organization=event.organization, payment=1, amount=10
-    )
-    participation_factory(event=event, user=custom_user, amount=10, saved=True, fee=fee)
-    membership_factory(
-        organization=event.organization, user=custom_user, amount=10, fee=fee
-    )
+    event.registered.add(custom_user)
+    event.presents.add(custom_user)
     token = signing.dumps(
         {"user_id": custom_user.id, "event_id": event.id}, salt="absent"
     )
-    query_params = "?redirect=/location/"
-    resp = client.get(reverse("event:user_absent", args=[token]) + query_params)
+    resp = client.get(reverse("event:user_absent", args=[token]))
     assert resp.status_code == 302
-    assert resp["Location"] == reverse("location:list")
-
-
-def test_close_event(
-    client,
-    organization,
-    event_factory,
-    custom_user_factory,
-    participation_factory,
-    membership_factory,
-):
-    active = custom_user_factory()
-    organization.actives.add(active)
-    event = event_factory(organization=organization)
-    member = custom_user_factory()
-    member2 = custom_user_factory()
-    visitor_present = custom_user_factory()
-    visitor_absent = custom_user_factory()
-    visitor_present.first_name = ""
-    visitor_absent.first_name = ""
-    visitor_present.save()
-    visitor_absent.save()
-    event.registered.add(visitor_absent)
-    first_participation = participation_factory(
-        event=event, user=visitor_present, amount=20
+    assert resp["Location"] == reverse(
+        "event:detail", kwargs={"pk": event.pk, "slug": event.slug}
     )
-    participation_factory(event=event, user=member, amount=10, saved=True)
-    participation_factory(event=event, user=member2, amount=10)
-    membership_member = membership_factory(
-        user=member, organization=event.organization, amount=15
-    )
-    membership_member2 = membership_factory(
-        user=member2,
-        organization=event.organization,
-        amount=50,
-        first_payment=timezone.now() - datetime.timedelta(days=400),
-    )
-    assert organization.members.count() == 2
-    assert CustomUser.objects.count() == 5
-    assert Fee.objects.count() == 0
-
-    resp = client.post(reverse("event:close", args=[event.pk]))
-    assert resp.status_code == 302
-    client.login(email=member.email, password=USER_PASSWORD)
-    resp = client.post(reverse("event:close", args=[event.pk]))
-    assert resp.status_code == 403
-    client.login(email=active.email, password=USER_PASSWORD)
-    resp = client.post(reverse("event:close", args=[event.pk]))
-    assert resp["Location"] == reverse("event:detail", args=[event.id, event.slug])
-    organization.refresh_from_db()
-    first_participation.refresh_from_db()
-    membership_member.refresh_from_db()
-    membership_member2.refresh_from_db()
-    visitor_membership = Membership.objects.filter(user=visitor_present).first()
-    assert first_participation.saved
-    assert visitor_membership.amount == 20
-    assert membership_member.amount == 15
-    assert membership_member2.amount == 10
-    assert organization.members.count() == 3
-    assert Fee.objects.count() == 2
-    assert CustomUser.objects.count() == 4
+    event.refresh_from_db()
+    custom_user not in event.presents.all()
+    custom_user in event.registered.all()
 
 
 def test_add_active_event(client, organization, event_factory, custom_user_factory):
@@ -626,3 +569,33 @@ def test_remove_active_event(client, organization, event_factory, custom_user_fa
     assert resp["Location"] == reverse("event:detail", args=[event.id, event.slug])
     event.refresh_from_db()
     assert event.organizers.count() == 0
+
+
+def test_user_present_wrong_token(client, event, custom_user):
+    event.registered.add(custom_user)
+    nb_presents = event.presents.count()
+    assert nb_presents == 0
+    token = signing.dumps(
+        {"user_id": custom_user.id, "event_id": event.id}, salt="unknow"
+    )
+    resp = client.get(reverse("event:user_present", args=[token]), HTTP_REFERER="/")
+    assert resp.status_code == 302
+    assert resp["Location"] == "/"
+    nb_presents = event.presents.count()
+    assert nb_presents == 0
+
+
+def test_user_present(client, event, custom_user):
+    event.registered.add(custom_user)
+    nb_presents = event.presents.count()
+    assert nb_presents == 0
+    token = signing.dumps(
+        {"user_id": custom_user.id, "event_id": event.id}, salt="present"
+    )
+    resp = client.get(reverse("event:user_present", args=[token]))
+    assert resp.status_code == 302
+    assert (
+        resp["Location"] == reverse("event:detail", args=[event.id, event.slug])
+    )
+    nb_presents = event.presents.count()
+    assert nb_presents == 1

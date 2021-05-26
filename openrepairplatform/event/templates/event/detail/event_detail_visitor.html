@@ -124,7 +124,7 @@
           <div class="col-md-6 border">
             <div class="row">
 
-              {% if event.activity.picture.url %}
+              {% if event.activity.picture and event.activity.picture.url %}
                 <img class="img-responsive col-md-6 h-100 p-0"
                      src="{{ event.activity.picture.url }}"
                      alt="activity illustration">

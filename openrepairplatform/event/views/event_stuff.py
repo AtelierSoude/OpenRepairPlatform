@@ -61,4 +61,3 @@ class EventAddStuffView(View):
             "L'objet a bien été ajouté à votre réservation !",
         )
         return reverse("event:detail", args=[event.id, event.slug])
-

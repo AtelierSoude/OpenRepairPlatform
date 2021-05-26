@@ -10,7 +10,7 @@ from simple_history.models import HistoricalRecords
 from openrepairplatform.fields import CleanHTMLField
 
 from openrepairplatform.location.models import Place
-from openrepairplatform.user.models import CustomUser, Organization, Fee
+from openrepairplatform.user.models import CustomUser, Organization
 from openrepairplatform.utils import get_future_published_events, validate_image
 from openrepairplatform.inventory.models import Stuff
 

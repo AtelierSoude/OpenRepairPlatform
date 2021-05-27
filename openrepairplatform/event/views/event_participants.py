@@ -1,15 +1,14 @@
 import logging
+from django.conf import settings
 from django.contrib import messages
-from django.core.mail import send_mail
 from django.http import HttpResponseRedirect
-from django.template.loader import render_to_string
 from django.urls import reverse
 from django.views.generic import RedirectView
 from django.shortcuts import get_object_or_404
 
 from openrepairplatform import utils
+from openrepairplatform.mail import event_send_mail
 from openrepairplatform.event.models import Event
-from openrepairplatform.event.templatetags.app_filters import tokenize
 from openrepairplatform.mixins import HasVolunteerPermissionMixin, _load_token
 
 
@@ -24,6 +23,23 @@ class BookView(RedirectView):
         return self.request.user in event.organization.actives.all().union(
             event.organization.volunteers.all(),
             event.organization.admins.all(),
+        )
+
+    def send_mail(self, event, user):
+        date = event.date.strftime("%d %B")
+        subject = (
+            f"Votre réservation du {date} pour {event.activity.name}"
+            f" à {event.location.name}"
+        )
+        event_send_mail(
+            event,
+            user,
+            subject,
+            "event/mail/book.txt",
+            "event/mail/book.html",
+            f"{event.organization} <{settings.DEFAULT_FROM_EMAIL}>",
+            [user.email],
+            request=self.request,
         )
 
     def get_redirect_url(self, *args, **kwargs):
@@ -72,32 +88,7 @@ class BookView(RedirectView):
 
         event.registered.add(user)
 
-        conditions = event.conditions.all()
-        unbook_token = tokenize(user, event, "cancel")
-        cancel_url = reverse("event:cancel_reservation", args=[unbook_token])
-        cancel_url = self.request.build_absolute_uri(cancel_url)
-        register_url = reverse("password_reset")
-        register_url = self.request.build_absolute_uri(register_url)
-
-        event_url = reverse("event:detail", args=[event.id, event.slug])
-        event_url = self.request.build_absolute_uri(event_url)
-
-        msg_plain = render_to_string("event/mail/book.txt", context=locals())
-        msg_html = render_to_string("event/mail/book.html", context=locals())
-
-        date = event.date.strftime("%d %B")
-        subject = (
-            f"Votre réservation du {date} pour {event.activity.name}"
-            f" à {event.location.name}"
-        )
-
-        send_mail(
-            subject,
-            msg_plain,
-            f"{event.organization}" "<no-reply@atelier-soude.fr>",
-            [user.email],
-            html_message=msg_html,
-        )
+        self.send_mail(event, user)
 
         messages.success(self.request, f"'{user}' bien inscrit à l'évènement !")
 
@@ -131,6 +122,23 @@ class RemoveActiveEventView(HasVolunteerPermissionMixin, RedirectView):
 
 
 class CancelReservationView(RedirectView):
+
+    def send_mail(self, event, user):
+        date = event.date.strftime("%d %B")
+        subject = (
+            f"Confirmation d'annulation pour le " f"{date} à {event.location.name}"
+        )
+        event_send_mail(
+            event,
+            user,
+            subject,
+            "event/mail/unbook.txt",
+            "event/mail/unbook.html",
+            f"{event.organization} <{settings.DEFAULT_FROM_EMAIL}>",
+            [user.email],
+            request=self.request,
+        )
+
     def get_redirect_url(self, *args, **kwargs):
         token = kwargs["token"]
         try:
@@ -146,35 +154,16 @@ class CancelReservationView(RedirectView):
             if user_stuffs:
                 for stuff in user_stuffs:
                     event.stuffs.remove(stuff)
+
         event.registered.remove(user)
         event.presents.remove(user)
-        event_url = reverse("event:detail", args=[event.id, event.slug])
-        event_url = self.request.build_absolute_uri(event_url)
 
         if user.first_name == "":
             # This is a temporary user created only for this event, we can
             # delete it
             user.delete()
-        else:
-            book_token = tokenize(user, event, "book")
-            book_url = reverse("event:book", args=[book_token])
-            book_url = self.request.build_absolute_uri(book_url)
 
-        msg_plain = render_to_string("event/mail/unbook.txt", context=locals())
-        msg_html = render_to_string("event/mail/unbook.html", context=locals())
-
-        date = event.date.strftime("%d %B")
-        subject = (
-            f"Confirmation d'annulation pour le " f"{date} à {event.location.name}"
-        )
-
-        send_mail(
-            subject,
-            msg_plain,
-            f"{event.organization}" "<no-reply@atelier-soude.fr>",
-            [user.email],
-            html_message=msg_html,
-        )
+        self.send_mail(event, user)
 
         messages.success(
             self.request,

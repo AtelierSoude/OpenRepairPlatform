@@ -1,7 +1,7 @@
 import datetime
 import pytest
 from django.contrib.auth import get_user
-from django.core import signing
+from django.core import signing, mail
 from django.urls import reverse
 from django.utils import timezone
 
@@ -155,10 +155,12 @@ def test_event_delete(client, user_log, event):
     current_user = get_user(client)
     event.organization.admins.add(current_user)
     assert current_user in event.organization.admins.all()
+    event.registered.add(current_user)
     response = client.post(reverse("event:delete", args=[event.pk]))
     assert Event.objects.count() == 0
     assert response.status_code == 302
     assert response["Location"] == reverse("event:list")
+    assert len(mail.outbox) == 1
 
 
 def test_get_event_create(client, user_log, organization):

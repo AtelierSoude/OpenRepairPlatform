@@ -142,6 +142,7 @@ FILE_UPLOAD_HANDLERS = [
 # Email Settings
 EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
 EMAIL_FILE_PATH = join(BASE_DIR, "tmp", "messages")
+DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL")
 
 
 AUTHENTICATION_BACKENDS = ("django.contrib.auth.backends.ModelBackend",)

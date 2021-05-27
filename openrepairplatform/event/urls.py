@@ -128,4 +128,9 @@ urlpatterns = [
         views.ParticipationDeleteView.as_view(),
         name="delete_participation",
     ),
+    path(
+        "ical-events/<int:pk>/",
+        views.EventByOrganizationICSView.as_view(),
+        name="ical_events",
+    ),
 ]

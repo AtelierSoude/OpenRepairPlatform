@@ -53,6 +53,8 @@ from .event_stuff import (
     EventAddStuffView,
 )
 
+from .event_ical import EventByOrganizationICSView
+
 
 __all__ = [
     ConditionOrgaAutocomplete,
@@ -92,4 +94,6 @@ __all__ = [
     EventBookStuffView,
     StuffUserEventFormView,
     EventAddStuffView,
+
+    EventByOrganizationICSView,
 ]

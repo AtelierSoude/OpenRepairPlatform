@@ -483,9 +483,7 @@ def test_user_absent(client, event, custom_user):
     )
     resp = client.get(reverse("event:user_absent", args=[token]))
     assert resp.status_code == 302
-    assert (
-        resp["Location"] == reverse("event:detail", args=[event.id, event.slug])
-    )
+    assert resp["Location"] == reverse("event:detail", args=[event.id, event.slug])
     nb_presents = event.presents.count()
     assert nb_presents == 0
 
@@ -594,8 +592,36 @@ def test_user_present(client, event, custom_user):
     )
     resp = client.get(reverse("event:user_present", args=[token]))
     assert resp.status_code == 302
-    assert (
-        resp["Location"] == reverse("event:detail", args=[event.id, event.slug])
-    )
+    assert resp["Location"] == reverse("event:detail", args=[event.id, event.slug])
     nb_presents = event.presents.count()
     assert nb_presents == 1
+
+
+def test_events_ics_by_organization(
+    client, organization, activity, published_event_factory
+):
+    now = timezone.now()
+    old = now - datetime.timedelta(days=3)
+    future = now + datetime.timedelta(days=3)
+
+    event1 = published_event_factory(
+        date=now.date(), organization=organization, activity=activity
+    )
+    event2 = published_event_factory(
+        date=old.date(), organization=organization, activity=activity
+    )
+    event3 = published_event_factory(
+        date=future.date(), organization=organization, activity=activity
+    )
+
+    response = client.get(reverse("event:ical_events", args=[organization.pk]))
+
+    assert response.status_code == 200
+    ics = response.content.decode()
+
+    assert f"SUMMARY:{str(event1)}" in ics
+    assert f"SUMMARY:{str(event3)}" in ics
+    assert f"SUMMARY:{str(event2)}" not in ics
+
+    assert f"{event1.location.name}" in ics
+    assert f"{event2.location.name}" in ics

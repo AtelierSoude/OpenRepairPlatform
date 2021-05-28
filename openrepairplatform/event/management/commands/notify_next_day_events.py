@@ -1,14 +1,12 @@
 import datetime
 
-from django.core.mail import send_mail
+from django.conf import settings
 from django.core.management import BaseCommand
-from django.template.loader import render_to_string
-from django.urls import reverse
 from django.utils import timezone
 
 from openrepairplatform.event.models import Event
 
-from openrepairplatform.event.templatetags.app_filters import tokenize
+from openrepairplatform.mail import event_send_mail
 
 
 # Run every day at a given time
@@ -33,24 +31,13 @@ class Command(BaseCommand):
         )
         for event in events_next_day:
             for user in event.registered.all():
-                unbook_token = tokenize(user, event, "cancel")
-                cancel_url = base_url + reverse(
-                    "event:cancel_reservation", args=[unbook_token]
-                )
-                event_url = base_url + reverse(
-                    "event:detail", args=[event.id, event.slug]
-                )
-                msg_plain = render_to_string(
-                    "event/mail/event_incoming.txt", context=locals()
-                )
-                msg_html = render_to_string(
-                    "event/mail/event_incoming.html", context=locals()
-                )
-
-                send_mail(
+                event_send_mail(
+                    event,
+                    user,
                     f"C'est demain - {event.activity.name}",
-                    msg_plain,
-                    f"{event.organization}" "<no-reply@atelier-soude.fr>",
+                    "event/mail/event_incoming.txt",
+                    "event/mail/event_incoming.html",
+                    f"{event.organization} <{settings.DEFAULT_FROM_EMAIL}>",
                     [user.email],
-                    html_message=msg_html,
+                    base_url=base_url,
                 )

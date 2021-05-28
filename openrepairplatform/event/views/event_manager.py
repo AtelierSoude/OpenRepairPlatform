@@ -1,8 +1,7 @@
-from django.core.mail import send_mail
+from django.conf import settings
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
-from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.views.generic import (
     CreateView,
@@ -20,6 +19,7 @@ from openrepairplatform.event.forms import (
     RecurrentEventForm,
     ParticipationForm,
 )
+from openrepairplatform.mail import event_send_mail
 from openrepairplatform.mixins import (
     RedirectQueryParamView,
     HasAdminPermissionMixin,
@@ -146,6 +146,23 @@ class EventDeleteView(HasAdminPermissionMixin, RedirectQueryParamView, DeleteVie
     model = Event
     success_url = reverse_lazy("event:list")
 
+    def send_mail(self, event, user):
+        date = event.date.strftime("%d %B")
+        subject = (
+            f"IMPORTANT : Annulation événement du {date} : "
+            f"{event.activity.name} à {event.location.name}"
+        )
+        event_send_mail(
+            event,
+            user,
+            subject,
+            "event/mail/event_delete.txt",
+            "event/mail/event_delete.html",
+            f"{event.organization} <{settings.DEFAULT_FROM_EMAIL}>",
+            [user.email],
+            request=self.request,
+        )
+
     def delete(self, request, *args, **kwargs):
         event_pk = kwargs["pk"]
         event = get_object_or_404(Event, pk=event_pk)
@@ -154,24 +171,8 @@ class EventDeleteView(HasAdminPermissionMixin, RedirectQueryParamView, DeleteVie
         )
         if users:
             for user in users:
-                msg_plain = render_to_string(
-                    "event/mail/event_delete.txt", context=locals()
-                )
-                msg_html = render_to_string(
-                    "event/mail/event_delete.html", context=locals()
-                )
-                date = event.date.strftime("%d %B")
-                subject = (
-                    f"IMPORTANT : Annulation événement du {date} : "
-                    f"{event.activity.name} à {event.location.name}"
-                )
-                send_mail(
-                    subject,
-                    msg_plain,
-                    f"{event.organization}" "<no-reply@atelier-soude.fr>",
-                    [user.email],
-                    html_message=msg_html,
-                )
+                self.send_mail(event, user)
+
         messages.success(
             request, "L'évènement a bien été supprimé et les participants avertis"
         )

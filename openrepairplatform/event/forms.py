@@ -20,7 +20,10 @@ class EventForm(ModelForm):
     publish_at = forms.DateTimeField(
         initial=dt.today,
         widget=forms.DateTimeInput(format="%Y-%m-%d %H:%M:%S"),
-        help_text="Modifier la date de publication que si nécessaire (par défaut la date du jour)"
+        help_text=(
+            "Modifier la date de publication que si nécessaire "
+            "(par défaut la date du jour)"
+        )
     )
 
     def __init__(self, *args, **kwargs):
@@ -292,3 +295,27 @@ class ParticipationForm(ModelForm):
     class Meta:
         model = Participation
         fields = ["amount", "payment"]
+
+
+class InvitationForm(forms.Form):
+    email_participant = forms.EmailField(
+        label="Inviter un participant",
+        widget=forms.EmailInput(
+            attrs={"placeholder": "Email", "class": "d-none form-control"}
+        ),
+        required=False
+    )
+    email_animator = forms.EmailField(
+        label="Inviter un animateur",
+        widget=forms.EmailInput(
+            attrs={"placeholder": "Email", "class": "d-none form-control"}
+        ),
+        required=False
+    )
+
+    def is_valid(self):
+        res = super().is_valid()
+        data = self.cleaned_data
+        if not data["email_participant"] and not data["email_animator"]:
+            return False
+        return res

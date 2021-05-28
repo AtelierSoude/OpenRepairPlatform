@@ -121,6 +121,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         super().clean()
         self.email = self.email.lower()
 
+
 class Organization(models.Model):
 
     MEMBERSHIP_SYSTEMS = [

@@ -46,6 +46,7 @@ from .event_participants import (
     CancelReservationView,
     PresentView,
     AbsentView,
+    InvitationFormView,
 )
 
 from .event_stuff import (
@@ -92,6 +93,7 @@ __all__ = [
     CancelReservationView,
     PresentView,
     AbsentView,
+    InvitationFormView,
 
     EventBookStuffView,
     StuffUserEventFormView,

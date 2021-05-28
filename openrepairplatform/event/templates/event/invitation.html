@@ -1,0 +1,38 @@
+{% load app_filters bootstrap5 %}
+
+<section class="mb-2">
+  <h5>Invitation</h5>
+  {% tokenize user=request.user event=event action='invitation' as token %}
+  <form id="invitation-form" action="{% url 'event:invitation' token %}" method="post" class="d-inline">
+    {% csrf_token %}
+    {% for field in invitation_form %}
+      {{ field }}
+    {% endfor %}
+    <button class="d-none btn btn-block btn-success" type="submit">Envoyer l'invitation</button>
+    {% for field in invitation_form %}
+      <button class="btn btn-block btn-primary" type="button" onclick="InvitationToggleInput('{{ field.name }}')">
+        {{ field.label }}
+      </button>
+    {% endfor %}
+  </form>
+</section>
+<hr/>
+
+<script>
+  function InvitationToggleInput (fieldName) {
+    let form = document.querySelector('#invitation-form')
+    let currentInput = form.querySelector(`input[name='${fieldName}']`)
+    let allInputs = form.querySelectorAll("input[type='email']")
+    let buttonSubmit = form.querySelector("button[type='submit']")
+
+    allInputs.forEach((input) => {
+      input.classList.add("d-none")
+      input.removeAttribute("required")
+      input.value = ""
+    })
+    buttonSubmit.classList.remove("d-none")
+    currentInput.classList.remove("d-none")
+    currentInput.focus()
+    currentInput.setAttribute("required", "")
+  }
+</script>

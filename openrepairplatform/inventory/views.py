@@ -1,4 +1,5 @@
 from dal import autocomplete
+from django.contrib import messages
 from django.urls import reverse
 
 from bootstrap_modal_forms.generic import (

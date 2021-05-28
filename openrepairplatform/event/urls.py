@@ -138,4 +138,9 @@ urlpatterns = [
         views.EventByOrganizationICSView.as_view(),
         name="ical_events",
     ),
+    path(
+        "invitation/<token>/",
+        views.InvitationFormView.as_view(),
+        name="invitation",
+    ),
 ]

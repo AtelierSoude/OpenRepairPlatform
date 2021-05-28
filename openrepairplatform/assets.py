@@ -8,8 +8,8 @@ scss_custom_bootstrap = Bundle(
     output="css/custom_bootstrap.css",
 )
 scss_openrepairplatform = Bundle(
-    "scss/openrepairplatform.scss", 
-    filters="scss", 
+    "scss/openrepairplatform.scss",
+    filters="scss",
     output="css/openrepairplatform.css",
 )
 scss_places = Bundle(
@@ -42,7 +42,8 @@ css_openrepairplatform = Bundle(
     output="css/openrepairplatform.min.css",
 )
 css_places = Bundle(
-    scss_places, filters="cssrewrite,cssmin", 
+    scss_places,
+    filters="cssrewrite,cssmin",
     output="css/places.min.css",
 )
 css_detail_place = Bundle(
@@ -131,12 +132,12 @@ js_groups_organization = Bundle(
 js_create_stuff = Bundle(
     "js/inventory/create_stuff.js",
     filters="jsmin",
-    output="js/inventory/create_stuff.min.js"
+    output="js/inventory/create_stuff.min.js",
 )
 js_edit_owner_stuff = Bundle(
     "js/inventory/edit_owner_stuff.js",
     filters="jsmin",
-    output="js/inventory/edit_owner_stuff.min.js"
+    output="js/inventory/edit_owner_stuff.min.js",
 )
 js_waypoints = Bundle(
     "js/lib/jquery.waypoints.js", filters="jsmin", output="js/user/waypoints.min.js"

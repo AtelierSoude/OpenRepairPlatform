@@ -349,14 +349,15 @@ def test_book_no_more_room_by_active_volunteer_or_admin(
         )
         resp = client.get(reverse("event:book", args=[token]))
         assert resp.status_code == 302
-        assert resp["Location"] == reverse(
-            "event:book_confirm",
+        url = reverse(
+            "event:detail",
             kwargs={
                 "pk": event.pk,
                 "slug": event.slug,
-                "user_pk": custom_user.pk,
-                "token": token,
             },
+        )
+        assert (
+            resp["Location"] == f"{url}?success_booking=True&user_pk={custom_user.pk}"
         )
         nb_registered = Event.objects.first().registered.count()
         assert nb_registered == 1
@@ -370,15 +371,14 @@ def test_book(client, event, custom_user):
     )
     resp = client.get(reverse("event:book", args=[token]))
     assert resp.status_code == 302
-    assert resp["Location"] == reverse(
-        "event:book_confirm",
+    url = reverse(
+        "event:detail",
         kwargs={
             "pk": event.pk,
             "slug": event.slug,
-            "user_pk": custom_user.pk,
-            "token": token,
         },
     )
+    assert resp["Location"] == f"{url}?success_booking=True&user_pk={custom_user.pk}"
     nb_registered = Event.objects.first().registered.count()
     assert nb_registered == 1
     resp = client.get(reverse("event:book", args=[token]))
@@ -629,9 +629,7 @@ def test_events_ics_by_organization(
     assert f"{event2.location.name}" in ics
 
 
-def test_event_ics(
-    client, organization, activity, published_event_factory
-):
+def test_event_ics(client, organization, activity, published_event_factory):
     now = timezone.now()
     event = published_event_factory(
         date=now.date(), organization=organization, activity=activity
@@ -642,3 +640,37 @@ def test_event_ics(
     ics = response.content.decode()
     assert f"SUMMARY:{str(event)}" in ics
     assert f"{event.location.name}" in ics
+
+
+def test_send_invitation_event(
+    client, organization, event_factory, custom_user
+):
+    volunteer = custom_user
+    organization.volunteers.add(volunteer)
+    event = event_factory(organization=organization)
+    token = signing.dumps(
+        {"user_id": volunteer.pk, "event_id": event.pk}, salt="invitation"
+    )
+    resp = client.post(
+        reverse("event:invitation", args=[token]),
+        {"email_participant": "test@test.fr", "email_animator": ""},
+    )
+    assert resp.status_code == 302
+    assert len(mail.outbox) == 1
+
+
+def test_send_invitation_event_error(
+    client, organization, event_factory, custom_user
+):
+    volunteer = custom_user
+    organization.volunteers.add(volunteer)
+    event = event_factory(organization=organization)
+    token = signing.dumps(
+        {"user_id": volunteer.pk, "event_id": event.pk}, salt="invitation"
+    )
+    resp = client.post(
+        reverse("event:invitation", args=[token]),
+        {"email_participant": "", "email_animator": ""},
+    )
+    assert resp.status_code == 302
+    assert len(mail.outbox) == 0

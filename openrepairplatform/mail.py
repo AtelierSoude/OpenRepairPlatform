@@ -15,6 +15,7 @@ def event_send_mail(
     to_email: list,
     request=False,
     base_url=False,
+    role=False,
 ):
 
     """ Generic method to send mail """

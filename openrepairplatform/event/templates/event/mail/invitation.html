@@ -1,0 +1,11 @@
+Bonjour, <br>
+
+<p>
+  {{ user.first_name }} {{ user.last_name}} t'invite à participer à l'évènement "{{ event }}" en tant {% if role == "participant" %}que participant{% else %}qu'animateur{% endif %}.
+</p>
+
+<p>
+  Tu peux dès à présent voir les détails de l'évènement : {{ event_url }}
+</p>
+
+{% include 'event/mail/footer.html' %}

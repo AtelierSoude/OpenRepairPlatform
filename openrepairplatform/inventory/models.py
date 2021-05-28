@@ -102,7 +102,7 @@ class Stuff(models.Model):
         help_text=(
             "D'où vient-il, a t'il des caractéristiques spéciales... "
             "bref, tout ce qui peut le décrire",
-        )
+        ),
     )
     is_visible = models.BooleanField(
         _("Objet visible"),
@@ -214,16 +214,16 @@ class Intervention(models.Model):
         blank=True,
     )
     event = models.ForeignKey(
-        "event.Event", 
-        on_delete=models.SET_NULL, 
-        null=True, 
+        "event.Event",
+        on_delete=models.SET_NULL,
+        null=True,
         blank=True,
-        )
+    )
     repair_date = models.DateField(
-        null=True, 
+        null=True,
         blank=True,
         default=date.today,
-        )
+    )
     observation = models.ForeignKey(
         "inventory.Observation",
         on_delete=models.SET_NULL,
@@ -273,10 +273,10 @@ class RepairFolder(models.Model):
     )
     ongoing = models.BooleanField(default=True)
     open_date = models.DateField(
-        null=True, 
+        null=True,
         blank=True,
         default=date.today,
-        )
+    )
 
     def __str__(self):
         return f"dossier {self.stuff}-{self.open_date}"

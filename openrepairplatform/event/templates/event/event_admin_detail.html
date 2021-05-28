@@ -80,6 +80,7 @@
           </a>
         {% endif %}
         {% if is_volunteer and user not in event.registered.all %}
+          {% include "event/invitation.html" %}
           <form
               {% if user in event.organizers.all %}
                 action="{% url 'event:remove_active' event.pk %}"

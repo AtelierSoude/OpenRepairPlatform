@@ -26,6 +26,7 @@ def test_command_superuser_without_mail():
     with pytest.raises(CommandError):
         call_command("createsuperuser", email="", interactive=False)
 
+
 def test_user_detail_not_visible(client, custom_user):
     response = client.get(reverse("user:user_detail", kwargs={"pk": custom_user.pk}))
     assert response.status_code == 404

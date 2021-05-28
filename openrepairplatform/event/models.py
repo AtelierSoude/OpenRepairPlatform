@@ -116,12 +116,11 @@ class Event(models.Model):
         blank=True,
     )
     published = models.BooleanField(
-        verbose_name=_("Published"), 
+        verbose_name=_("Published"),
         default=False,
     )
     publish_at = models.DateTimeField(
-        verbose_name=_("Publication date and time"), 
-        default=timezone.now
+        verbose_name=_("Publication date and time"), default=timezone.now
     )
     activity = models.ForeignKey(
         Activity, on_delete=models.SET_NULL, null=True, related_name="events"

@@ -27,7 +27,7 @@
 
 <!-- Jumbotron -->
 <div class="jumbotron jumbotron-fluid no-padding-jumbotron"
-style="background-image:url('{{event.activity.picture.url}}');background-size:cover; min-height: 200px;background-position: center;">
+     style="background-image:url('{% if event.activity.picture and event.activity.picture.url %}{{event.activity.picture.url}}{% endif %}');background-size:cover; min-height: 200px;background-position: center;">
   <div class="container text-center d-flex justify-content-center align-items-center flex-md-column">
     <div class="header_detail_page_picture">
     </div>

@@ -1,6 +1,7 @@
 import logging
 from django.conf import settings
 from django.contrib import messages
+from django.core.exceptions import PermissionDenied
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views.generic import RedirectView
@@ -8,6 +9,7 @@ from django.shortcuts import get_object_or_404
 
 from openrepairplatform import utils
 from openrepairplatform.mail import event_send_mail
+from openrepairplatform.event.forms import InvitationForm
 from openrepairplatform.event.models import Event
 from openrepairplatform.mixins import HasVolunteerPermissionMixin, _load_token
 
@@ -16,7 +18,6 @@ logger = logging.getLogger(__name__)
 
 
 class BookView(RedirectView):
-
     def is_authorized(self, event):
         if self.request.user.is_anonymous:
             return False
@@ -62,14 +63,10 @@ class BookView(RedirectView):
             else:
                 user_pk = self.request.user.pk
             if is_authorized:
-                next_url = reverse(
-                    "event:detail", args=[event.id, event.slug]
-                )
+                next_url = reverse("event:detail", args=[event.id, event.slug])
                 next_url = f"{next_url}?success_booking=True&user_pk={user_pk}"
             else:
-                next_url = reverse(
-                    "event:detail", args=[event.id, event.slug]
-                )
+                next_url = reverse("event:detail", args=[event.id, event.slug])
                 next_url = f"{next_url}?success_booking=True&user_pk={user_pk}"
 
         if event.remaining_seats <= 0 and not is_authorized:
@@ -124,7 +121,6 @@ class RemoveActiveEventView(HasVolunteerPermissionMixin, RedirectView):
 
 
 class CancelReservationView(RedirectView):
-
     def send_mail(self, event, user):
         date = event.date.strftime("%d %B")
         subject = (
@@ -167,10 +163,7 @@ class CancelReservationView(RedirectView):
 
         self.send_mail(event, user)
 
-        messages.success(
-            self.request,
-            f"{user} n'est plus inscrit·e à cet événement."
-        )
+        messages.success(self.request, f"{user} n'est plus inscrit·e à cet événement.")
 
         next_url = self.request.GET.get("redirect")
         if utils.is_valid_path(next_url):
@@ -210,3 +203,56 @@ class AbsentView(RedirectView):
         return reverse(
             "event:detail", kwargs={"pk": self.event.pk, "slug": self.event.slug}
         )
+
+
+class InvitationFormView(RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        return self.request.META.get("HTTP_REFERER", "/")
+
+    def check_token(self, token):
+        try:
+            event, user = _load_token(token, "invitation")
+        except Exception:
+            logger.exception(f"Error loading token {token}.")
+            raise PermissionDenied("Une erreur est survenue lors de votre requête")
+        return event, user
+
+    def send_mail(self, event, user, email, role):
+        date = event.date.strftime("%d %B")
+        subject = (
+            f"Invitation à l'événement du {date} : "
+            f"{event.activity.name} à {event.location.name}"
+        )
+        event_send_mail(
+            event,
+            user,
+            subject,
+            "event/mail/invitation.txt",
+            "event/mail/invitation.html",
+            f"{event.organization} <{settings.DEFAULT_FROM_EMAIL}>",
+            [email],
+            request=self.request,
+            role=role,
+        )
+
+    def post(self, request, *args, **kwargs):
+        form = InvitationForm(data=self.request.POST)
+        if form.is_valid():
+            event, user = self.check_token(kwargs["token"])
+            email = False
+            role = False
+            if form.cleaned_data["email_participant"]:
+                role = "participant"
+                email = form.cleaned_data["email_participant"]
+            if form.cleaned_data["email_animator"]:
+                role = "animator"
+                email = form.cleaned_data["email_animator"]
+
+            self.send_mail(event, user, email, role)
+            messages.success(request, "Votre invitation a bien été envoyée.")
+        else:
+            messages.error(
+                request,
+                "Vous devez renseigner le champ mail pour envoyer une invitation.",
+            )
+        return super().post(request, *args, **kwargs)

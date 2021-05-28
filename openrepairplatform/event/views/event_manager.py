@@ -18,6 +18,7 @@ from openrepairplatform.event.forms import (
     EventSearchForm,
     RecurrentEventForm,
     ParticipationForm,
+    InvitationForm,
 )
 from openrepairplatform.mail import event_send_mail
 from openrepairplatform.mixins import (
@@ -71,6 +72,11 @@ class EventView(EventViewMixin):
 
 class EventAdminView(HasVolunteerPermissionMixin, EventViewMixin):
     template_name = "event/event_admin_detail.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["invitation_form"] = InvitationForm
+        return context
 
 
 class EventListView(ListView):

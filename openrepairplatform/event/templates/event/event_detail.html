@@ -29,18 +29,18 @@
 
 
 <!-- Jumbotron -->
-<div class="jumbotron jumbotron-fluid no-padding-jumbotron" 
+<div class="jumbotron jumbotron-fluid no-padding-jumbotron"
 style="background-image:url('{{event.activity.picture.url}}');background-size:cover; min-height: 200px;background-position: center;">
   <div class="container text-center d-flex justify-content-center align-items-center flex-md-column">
     <div class="header_detail_page_picture">
-    </div> 
+    </div>
   </div>
 </div>
-{% if is_volunteer %}
-  {% include "event/detail/event_detail_admin.html" %}
-{% else %}
-  {% include "event/detail/event_detail_visitor.html" %}
-{% endif %}
+
+{% block admin %}{% endblock %}
+
+{% include "event/detail/event_detail_visitor.html" %}
+
 {% endblock %}
 
 {% block extra_js %}

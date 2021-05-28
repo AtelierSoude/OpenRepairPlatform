@@ -15,29 +15,32 @@ from django.views.generic import (
 
 from openrepairplatform.event.models import Event
 from openrepairplatform.event.forms import (
-        EventForm,
-        EventSearchForm,
-        RecurrentEventForm,
-        ParticipationForm,
+    EventForm,
+    EventSearchForm,
+    RecurrentEventForm,
+    ParticipationForm,
 )
 from openrepairplatform.mixins import (
     RedirectQueryParamView,
     HasAdminPermissionMixin,
     HasActivePermissionMixin,
+    HasVolunteerPermissionMixin,
 )
 from openrepairplatform.user.forms import CustomUserEmailForm, MoreInfoCustomUserForm
 from openrepairplatform.user.mixins import PermissionOrgaContextMixin
 from openrepairplatform.user.models import CustomUser
 
 
-class EventView(PermissionOrgaContextMixin, DetailView):
+class EventViewMixin(PermissionOrgaContextMixin, DetailView):
     model = Event
     template_name = "event/event_detail.html"
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         if not self.request.user.is_anonymous:
-            ctx["user_is_member"] = self.request.user.memberships.filter(organization=self.object.organization).first
+            ctx["user_is_member"] = self.request.user.memberships.filter(
+                organization=self.object.organization
+            ).first
         ctx["users"] = [
             (f"{user.email} ({user.first_name} {user.last_name})", user.email)
             for user in CustomUser.objects.all()
@@ -47,18 +50,27 @@ class EventView(PermissionOrgaContextMixin, DetailView):
         ctx["event_menu"] = "active"
         ctx["present_form"] = MoreInfoCustomUserForm
         ctx["total_fees"] = sum([fee.amount for fee in self.get_object().fees.all()])
-        ctx["total_participations"] = sum([
-            participation.amount
-            for participation in self.get_object().participations.all()
-        ])
-        ## Display success booking informations and inventory 
+        ctx["total_participations"] = sum(
+            [
+                participation.amount
+                for participation in self.get_object().participations.all()
+            ]
+        )
+        # Display success booking informations and inventory
         if self.request.GET.get("success_booking"):
             user_pk = self.request.GET.get("user_pk")
             user = get_object_or_404(CustomUser, pk=user_pk)
-            if user: 
+            if user:
                 ctx["user_success_booking"] = user
-               # ctx["user_inventory"] = user.user_stuffs.all()
         return ctx
+
+
+class EventView(EventViewMixin):
+    template_name = "event/event_detail.html"
+
+
+class EventAdminView(HasVolunteerPermissionMixin, EventViewMixin):
+    template_name = "event/event_admin_detail.html"
 
 
 class EventListView(ListView):

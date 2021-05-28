@@ -1,6 +1,10 @@
+{% extends 'event/event_detail.html' %}
+
 {% load assets l10n app_filters static %}
 {% load thumbnail %}
 {% load initialavatar %}
+
+{% block admin %}
 <div class="d-flex">
   <div class="col-md-7">
     <div class="container pl-4 pr-4 pt-2" id="event_about">
@@ -129,7 +133,7 @@
 
 <div class="col-md-12">
   <section class="col-md-12 bg-white">
-    <div class="container pl-4 pr-4 pt-2 bg-white">     
+    <div class="container pl-4 pr-4 pt-2 bg-white">
       <div class="tab-pane fade show p-2 h-100" id="v-pills-repair" role="tabpanel" aria-labelledby="v-pills-repair-tab">
         <h5>Réparations en cours</h5>
         <hr>
@@ -159,3 +163,4 @@
     </div>
   </section>
 </div>
+{% endblock %}

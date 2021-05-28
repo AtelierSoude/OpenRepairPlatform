@@ -78,8 +78,8 @@ urlpatterns = [
         views.RemoveActiveEventView.as_view(),
         name="remove_active",
     ),
-    # path("<int:pk>/close/", views.CloseEventView.as_view(), name="close"),
     path("<int:pk>/<slug>/", views.EventView.as_view(), name="detail"),
+    path("<int:pk>/<slug>/admin", views.EventAdminView.as_view(), name="detail_admin"),
     path(
         "<int:pk>/<slug>/book/<int:user_pk>/<token>",
         views.EventBookStuffView.as_view(),

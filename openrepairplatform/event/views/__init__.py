@@ -29,6 +29,7 @@ from .event_conditions import (
 # Views to manage events
 from .event_manager import (
     EventView,
+    EventAdminView,
     EventListView,
     EventFormView,
     EventEditView,
@@ -75,6 +76,7 @@ __all__ = [
     ParticipationDeleteView,
 
     EventView,
+    EventAdminView,
     EventListView,
     EventFormView,
     EventEditView,

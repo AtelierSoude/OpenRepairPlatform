@@ -625,3 +625,18 @@ def test_events_ics_by_organization(
 
     assert f"{event1.location.name}" in ics
     assert f"{event2.location.name}" in ics
+
+
+def test_event_ics(
+    client, organization, activity, published_event_factory
+):
+    now = timezone.now()
+    event = published_event_factory(
+        date=now.date(), organization=organization, activity=activity
+    )
+    response = client.get(reverse("event:ical_event", args=[event.pk]))
+
+    assert response.status_code == 200
+    ics = response.content.decode()
+    assert f"SUMMARY:{str(event)}" in ics
+    assert f"{event.location.name}" in ics

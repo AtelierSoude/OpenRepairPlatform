@@ -53,7 +53,7 @@ from .event_stuff import (
     EventAddStuffView,
 )
 
-from .event_ical import EventByOrganizationICSView
+from .event_ical import EventByOrganizationICSView, EventICSView
 
 
 __all__ = [
@@ -96,4 +96,5 @@ __all__ = [
     EventAddStuffView,
 
     EventByOrganizationICSView,
+    EventICSView,
 ]

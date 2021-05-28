@@ -188,13 +188,8 @@ class FolderForm(BSModalModelForm):
         super().__init__(*args, **kwargs)
         if stuff:
             self.stuff = stuff
-<<<<<<< HEAD
         self.fields['open_date'] = forms.DateField(
             initial=dt.today,
-=======
-        self.fields["open_date"] = forms.DateField(
-            initial=dt.today(),
->>>>>>> origin/update_app_dependencies
             widget=forms.DateInput(attrs={"type": "date"}, format="%Y-%m-%d"),
             label="date",
             required=False,

@@ -4,6 +4,8 @@
 #
 #    pip-compile
 #
+arrow==0.14.7
+    # via ics
 asgiref==3.3.4
     # via django
 beautifulsoup4==4.9.3
@@ -34,7 +36,7 @@ diff-match-patch==20200713
     # via django-import-export
 django-assets==2.0
     # via openrepairplatform (setup.py)
-django-autocomplete-light==3.5.1
+django-autocomplete-light==3.5.0
     # via openrepairplatform (setup.py)
 django-better-admin-arrayfield==1.4.2
     # via openrepairplatform (setup.py)
@@ -90,8 +92,12 @@ djangorestframework==3.12.4
     # via openrepairplatform (setup.py)
 et-xmlfile==1.1.0
     # via openpyxl
+html2text==2020.1.16
+    # via openrepairplatform (setup.py)
 html5lib==1.1
     # via weasyprint
+ics==0.7
+    # via openrepairplatform (setup.py)
 jsmin==2.2.2
     # via openrepairplatform (setup.py)
 lxml==4.6.3
@@ -117,6 +123,10 @@ pyparsing==2.4.7
     # via packaging
 pyphen==0.10.0
     # via weasyprint
+python-dateutil==2.8.1
+    # via
+    #   arrow
+    #   ics
 python-dotenv==0.17.1
     # via openrepairplatform (setup.py)
 pytz==2021.1
@@ -130,6 +140,8 @@ six==1.16.0
     #   bleach
     #   django-autocomplete-light
     #   html5lib
+    #   ics
+    #   python-dateutil
 sorl-thumbnail==12.7.0
     # via openrepairplatform (setup.py)
 soupsieve==2.2.1
@@ -142,6 +154,8 @@ tablib[html,ods,xls,xlsx,yaml]==3.0.0
     # via
     #   django-import-export
     #   openrepairplatform (setup.py)
+tatsu==5.6.1
+    # via ics
 tinycss2==1.1.0
     # via
     #   cairosvg

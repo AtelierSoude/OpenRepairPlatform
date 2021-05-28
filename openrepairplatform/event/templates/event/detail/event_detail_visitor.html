@@ -92,7 +92,7 @@
                   {{ event.activity.description | safe | truncatewords_html:30 }}
                   </small>
                 </div>
-              {% if event.activity.picture.url %}
+              {% if event.activity.picture and event.activity.picture.url %}
                 <div class="col-md-6">
                   <img class="img-fluid p-0"
                     src="{{ event.activity.picture.url }}"

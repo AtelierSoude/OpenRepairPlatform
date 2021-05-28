@@ -10,7 +10,7 @@
     <h2 class="text-center mt-4">Membres adhérents de {{organization}}</h2>
     <div class="col-lg">
       <div class="mb-4 text-center">
-        <button class="btn btn-success btn-absolute" data-toggle="modal" data-target="#more-info-{{ anonymous_user.pk }}">
+        <button onclick="autocompleteUserInfo()" class="btn btn-success btn-absolute" data-toggle="modal" data-target="#more-info-{{ anonymous_user.pk }}">
           <i class="fa fa-plus"></i><i class="fas fa-user"></i>
           <span class="btn-label d-none pl-1">Ajouter un membre</span>
         </button>
@@ -36,7 +36,7 @@
 {% endblock menu_content %}
 
 {% block extra_js %}
-
+<script src="{% static 'js/user/user_exist_api_autocomplete.js' %}"></script>
 <script>
   $(document).ready(function(){
     $( ".btn-absolute" ).hover(

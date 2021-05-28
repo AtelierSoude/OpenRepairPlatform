@@ -19,6 +19,86 @@ def condition_data(organization_factory):
     }
 
 
+def test_add_participation(
+    client, user_log, condition, condition_data, organization, published_event_factory
+):
+    organization.admins.add(user_log)
+    client.login(email=user_log.email, password=USER_PASSWORD)
+    event = published_event_factory()
+    event.conditions.add(condition)
+    user_pk = user_log.pk
+    event_pk = event.pk
+    url = reverse(
+        "event:add_participation",
+        kwargs={"user_pk": user_pk, "event_pk": event_pk}
+    )
+    response = client.post(url, {"amount": 12, "payment": 1}, HTTP_REFERER="/")
+    assert response.status_code == 302
+    event.refresh_from_db()
+    assert event.participations.count() == 1
+
+
+def test_update_participation(
+    client,
+    user_log,
+    condition,
+    condition_data,
+    organization,
+    event,
+    participation_factory,
+):
+    organization.admins.add(user_log)
+    client.login(email=user_log.email, password=USER_PASSWORD)
+    event.conditions.add(condition)
+    participation = participation_factory(
+        user=user_log, event=event, amount=10, payment=1
+    )
+    response = client.post(
+        reverse(
+            "event:update_participation",
+            kwargs={
+                "pk": participation.pk,
+            },
+        ),
+        {
+            "amount": 12,
+            "payment": 1,
+        },
+        HTTP_REFERER="/"
+    )
+    assert response.status_code == 302
+    participation.refresh_from_db()
+    assert participation.amount == 12
+
+
+def test_delete_participation(
+    client,
+    user_log,
+    condition,
+    condition_data,
+    organization,
+    event,
+    participation_factory,
+):
+    organization.admins.add(user_log)
+    client.login(email=user_log.email, password=USER_PASSWORD)
+    event.conditions.add(condition)
+    participation = participation_factory(
+        user=user_log, event=event, amount=10, payment=1
+    )
+    response = client.post(
+        reverse(
+            "event:delete_participation",
+            kwargs={
+                "pk": participation.pk,
+            },
+        ), {}, HTTP_REFERER="/"
+    )
+    assert response.status_code == 302
+    event.refresh_from_db()
+    assert event.participations.count() == 0
+
+
 def test_get_condition_delete(client, user_log, condition_factory):
     condition = condition_factory()
     response = client.get(reverse("event:condition_delete", args=[condition.pk]))

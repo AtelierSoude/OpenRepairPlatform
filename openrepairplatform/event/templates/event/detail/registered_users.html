@@ -5,7 +5,10 @@
       {% filter_user queryset=event.participations user=user as participation %}
       {% related_user queryset=event.fees user=user as fees %}
       {% sum_conditions conditions=event.conditions.all as condition_prices %}
-      {% tokenize user=user event=event action='present' as tok_event %}
+
+      {% tokenize user=user event=event action='present' as tok_event_present %}
+      {% tokenize user=user event=event action='absent' as tok_event_absent %}
+      {% tokenize user=user event=event action='cancel' as tok_event_cancel %}
       <div class="card 
       {% if user in event.presents.all %}
       border-success
@@ -34,10 +37,11 @@
           <div class="ml-auto">
             {% if event_control == True and event.has_started and is_active %}
               {% if user in event.presents.all %}
-                <a class="btn btn-danger" href="{% url 'event:user_absent' tok_event %}">Absent</a>
+                <a class="btn btn-danger" href="{% url 'event:user_absent' tok_event_absent %}">Présent</a>
               {% else %}
-                <a class="btn btn-success" href="{% url 'event:user_present' tok_event %}">Présent</a>
+                <a class="btn btn-success" href="{% url 'event:user_present' tok_event_present %}">Absent</a>
               {% endif %}
+              <a class="btn btn-danger btn-sm" href="{% url 'event:cancel_reservation' tok_event_cancel %}">Annuler</a>
             {% else %}
               {% if user in event.presents.all %}
                 <a class="btn btn-light text-muted">Absent</a>

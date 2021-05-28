@@ -1,6 +1,7 @@
 import logging
 from django.contrib import messages
 from django.core.mail import send_mail
+from django.http import HttpResponseRedirect
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.views.generic import RedirectView
@@ -10,16 +11,23 @@ from openrepairplatform import utils
 from openrepairplatform.event.models import Event
 from openrepairplatform.event.templatetags.app_filters import tokenize
 from openrepairplatform.mixins import HasVolunteerPermissionMixin, _load_token
-from openrepairplatform.user.models import CustomUser
 
 
 logger = logging.getLogger(__name__)
 
 
 class BookView(RedirectView):
+
+    def is_authorized(self, event):
+        if self.request.user.is_anonymous:
+            return False
+        return self.request.user in event.organization.actives.all().union(
+            event.organization.volunteers.all(),
+            event.organization.admins.all(),
+        )
+
     def get_redirect_url(self, *args, **kwargs):
         token = kwargs["token"]
-        is_authorized = False
         try:
             event, user = _load_token(token, "book")
         except Exception:
@@ -29,23 +37,14 @@ class BookView(RedirectView):
             )
             return reverse("event:list")
 
-        try:
-            id_current_user = self.request.user.id
-            current_user = CustomUser.objects.get(id=id_current_user)
-            if current_user in (
-                event.organization.actives.all().union(
-                    event.organization.volunteers.all(), event.organization.admins.all()
-                )
-            ):
-                is_authorized = True
-        except Exception:
-            pass
+        is_authorized = self.is_authorized(event)
+
         next_url = self.request.GET.get("redirect")
         if not utils.is_valid_path(next_url):
             if user:
                 user_pk = user.pk
             else:
-                user_pk = id_current_user
+                user_pk = self.request.user.pk
             if is_authorized:
                 next_url = reverse(
                     "event:detail", args=[event.id, event.slug]
@@ -150,6 +149,7 @@ class CancelReservationView(RedirectView):
                 for stuff in user_stuffs:
                     event.stuffs.remove(stuff)
         event.registered.remove(user)
+        event.presents.remove(user)
         event_url = reverse("event:detail", args=[event.id, event.slug])
         event_url = self.request.build_absolute_uri(event_url)
 
@@ -178,7 +178,10 @@ class CancelReservationView(RedirectView):
             html_message=msg_html,
         )
 
-        messages.success(self.request, "Vous n'êtes plus inscrit à cet évènement")
+        messages.success(
+            self.request,
+            f"{user} n'est plus inscrit·e à cet événement."
+        )
 
         next_url = self.request.GET.get("redirect")
         if utils.is_valid_path(next_url):
@@ -188,7 +191,11 @@ class CancelReservationView(RedirectView):
 
 class PresentView(RedirectView):
     def get(self, request, *args, **kwargs):
-        self.event, self.user = _load_token(kwargs["token"], "present")
+        try:
+            self.event, self.user = _load_token(kwargs["token"], "present")
+        except Exception:
+            messages.error(request, "Le lien est pas autorisé.")
+            return HttpResponseRedirect(request.META["HTTP_REFERER"])
         res = super().get(request, *args, **kwargs)
         self.event.presents.add(self.user)
         return res
@@ -201,7 +208,11 @@ class PresentView(RedirectView):
 
 class AbsentView(RedirectView):
     def get(self, request, *args, **kwargs):
-        self.event, self.user = _load_token(kwargs["token"], "present")
+        try:
+            self.event, self.user = _load_token(kwargs["token"], "absent")
+        except Exception:
+            messages.error(request, "Le lien est pas autorisé.")
+            return HttpResponseRedirect(request.META["HTTP_REFERER"])
         res = super().get(request, *args, **kwargs)
         self.event.presents.remove(self.user)
         return res

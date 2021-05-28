@@ -1,0 +1,235 @@
+{% load assets l10n app_filters static %}
+{% load thumbnail %}
+{% load initialavatar %}
+<div class="d-flex">
+  <div class="col-md-7">
+    <div class="container pl-4 pr-4 pt-2" id="event_about">
+      <h5 class="text-danger">
+        <i class="fa fa-calendar-alt"></i> {{ event.date|date:"l j F Y " }} de {{ event.starts_at }} à {{ event.ends_at }}
+      </h5>
+      <h3 class="">
+        {% if event.activity.category %} {{event.activity.category}} - {% endif %} {{ event.activity }}
+      </h3>
+      <p class="lead mb-1">
+        Organisé par
+        {% if event.organization.picture %}
+          {% thumbnail event.organization.picture "30x30" crop="left" format="PNG" as im %}
+            <img class="img-fluid rounded-circle square-2" src="{{ im.url }}" alt="organization img">
+          {% endthumbnail %}
+        {% endif %}
+        <a href="{% url 'organization_page' event.organization.slug %}">
+          {{ event.organization.name }}
+        </a>
+        {% if event.collaborator %}
+          <small>en partenariat avec {{ event.collaborator }}</small>
+        {% endif %}
+      </p>
+      {% if members_only %}
+        <p>Réservé aux membres de l'association</p>
+      {% endif %}
+      {% if membership_url %}
+        <p><a href="{{ membership_url }}" title="Paiement d'adhésion en ligne" target="_blank">Adhérer en ligne</a></p>
+      {% endif %}
+      <h6 class="text-muted">
+        {% if event.is_free %}
+          <span class="badge badge-secondary badge-pill">Sans limite de place</span>
+        {% else %}
+          {% if event.remaining_seats <= 0 %}
+            <span class="badge badge-warning badge-pill">Complet</span>
+          {% else %}
+            <span class="badge badge-secondary badge-pill">{{ event.remaining_seats }}</span> places disponibles
+          {% endif %}
+        {% endif %}
+        {% if event.booking == False and event.external == False %}
+          <span class="badge badge-secondary badge-pill">Sans réservation</span>
+        {% elif event.external == True %}
+          <span class="badge badge-secondary badge-pill">Réservation externe</span>
+        {% endif %}
+        {% if request.user in event.registered.all or request.user in event.presents.all %}
+          <span class="badge badge-success badge-pill">Inscrit</span>
+        {% endif %}
+        {% if request.user in event.organizers.all %}
+          <span class="badge badge-success badge-pill">Animateur</span>
+        {% endif %}
+      </h6>
+      {% if event.allow_stuffs %}
+        <h6 class="text-muted"><i class="fas fa-tools"></i> Cet événement gère les réparations</h6>
+      {% endif %}
+    </div>
+    <div>
+      <div class="card mb-2">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <h5><i class="fa fa-map-marker"></i> Adresse</h5>
+              {% if event.location %}
+              <a href="{% url 'location:detail' event.location.id event.location.slug %}">
+                {{ event.location.name }}
+              </a><br>
+              {{ event.location.address }}
+              {% endif %}
+            </div>
+            <div class="col-md-6">
+              <div style="min-height: 150px" id="event_map"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card mb-2">
+        <div class="card-body">
+          <h5><i class="fa fa-map-marker"></i> A propos</h5>
+            {% if event.external_url and event.external == False %}
+            <a href="{{event.external_url}}" target="_blank" class="">Plus d'informations sur l'évènement</a>
+            {% endif %}
+            {% if event.description %}
+                {{event.description | safe }}
+            {% else %}
+              {% if event.activity %}
+              <div class="row">
+                <div class="col-md-6">
+                  <b>{{event.activity.name}}</b>
+                  <small class="">
+                  {{ event.activity.description | safe | truncatewords_html:30 }}
+                  </small>
+                </div>
+              {% if event.activity.picture and event.activity.picture.url %}
+                <div class="col-md-6">
+                  <img class="img-fluid p-0"
+                    src="{{ event.activity.picture.url }}"
+                    alt="activity illustration">
+                  <a href="{% url 'event:activity_detail' event.activity.pk event.activity.slug %}" class="btn btn-primary btn-sm col-md-12 float-right">
+                    <i class="fa fa-eye"></i>
+                  </a>
+                </div>
+              {% endif %}
+              {% else %}
+                Type d'activité supprimé
+              {% endif %}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+      <div class="card mb-2">
+        <div class="card-body">
+          <h5><i class="fas fa-info-circle"></i> Informations utiles</h5>
+          <div class="row">
+            <div class="col-md-6">
+              <b>Conditions de participation:</b>
+              <ul class="p-2">
+              {% for condition in event.conditions.all %}
+                <li class="">
+                  {% if condition.price > 0 %}
+                    <span class="badge badge-pill badge-secondary">
+                      {{ condition.price }}€</span>
+                    {% else %}
+                    {% endif %}
+                  <span>{{ condition.description | safe }}</span>
+                </li>
+                {% empty %}
+                <li><span>La participation est libre / pas de condition d'accès</span></li>
+              {% endfor %}
+            </ul>
+            </div>
+            <div class="col-md-6" id="membership-infos">
+              <b>Adhérer à {{event.organization.name}}</b>
+              <p>
+                {% if user_is_member %}
+                Vous êtes membre de {{event.organization}}<br>
+                <small>status</small>
+                  {% if user_is_member.current_contribution == 0 %} 
+                      <small class="text-danger" >Pas à jour</small>
+                      <span class="badge badge-pill badge-danger" >{{user_is_member.current_contribution}}€</span>
+                  {% elif user_is_member.current_contribution >= organization.advised_fee %}
+                      <small class="text-success" >A jour </small>
+                      <span class="badge badge-pill badge-success" >{{user_is_member.current_contribution}}€</span>
+                  {% else %}
+                      <small class="text-warning" >Incomplet </small>
+                      <span class="badge badge-pill badge-warning" >{{user_is_member.current_contribution}}€</span>
+                  {% endif %}
+                {% endif %}
+              </p>
+              <p>{{ event.organization.get_membership_system_display }} Elle
+                {% if event.organization.advised_fee == event.organization.min_fee %}
+                est de {{event.organization.min_fee}}€
+                {% else %}
+                va de {{event.organization.min_fee}}€ à {{event.organization.advised_fee}}€ 
+                {% endif %}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col d-none d-md-block d-lg-block d-xl-block m-4">
+    <div id="event-book">
+      <div class="event-book card p-0 w-100 bg-white shadow" style="position: relative; top:-50px">
+        <div class="card-header bg-primary text-center">
+          <h4 class="text-white"><i class="fas fa-calendar-day"></i> Réserver</h4>
+        </div>
+        {% if user_success_booking %}
+          <div class="card-body bg-success text-center">
+            {% include "event/book_confirm_add_stuff.html" %}
+          </div>
+        {% else %}
+          <div class="card-body">
+            <b>Avant de réserver, prenez connaissance de ces informations : </b>
+            <ul class="list-unstyled">
+              {% if event.members_only %}
+              <li class="align-middle mt-1">
+                <i class="far fa-check-circle fa-1x text-success"></i> 
+                <span>Vous devez adhérer à <a href="#membership-infos">{{event.organization}}</a></span>
+              </li>
+              {% endif %}
+              <li class="align-middle mt-1">
+                <i class="far fa-check-circle fa-1x text-success"></i> 
+                <span>Un mail de confirmation contenant un lien d'annulation vous serez envoyé</span>
+              </li>
+              <li class="align-middle mt-1">
+                <i class="far fa-check-circle fa-1x text-success"></i> 
+                <span>Réserver vous engage à participer</span>
+              </li>
+            </ul>
+            <div class="">
+              <b>Adhérer à {{event.organization.name}}</b>
+              <p>
+                {% if user_is_member %}
+                Vous êtes membre de {{event.organization}}<br>
+                <small>status</small>
+                  {% if user_is_member.current_contribution == 0 %} 
+                      <small class="text-danger" >Pas à jour</small>
+                      <span class="badge badge-pill badge-danger" >{{user_is_member.current_contribution}}€</span>
+                  {% elif user_is_member.current_contribution >= organization.advised_fee %}
+                      <small class="text-success" >A jour </small>
+                      <span class="badge badge-pill badge-success" >{{user_is_member.current_contribution}}€</span>
+                  {% else %}
+                      <small class="text-warning" >Incomplet </small>
+                      <span class="badge badge-pill badge-warning" >{{user_is_member.current_contribution}}€</span>
+                  {% endif %}
+                {% endif %}
+              </p>
+              <p>{{ event.organization.get_membership_system_display }} Elle
+                {% if event.organization.advised_fee == event.organization.min_fee %}
+                est de {{event.organization.min_fee}}€
+                {% else %}
+                va de {{event.organization.min_fee}}€ à {{event.organization.advised_fee}}€ 
+                {% endif %}
+              </p>
+            </div>
+            {% if event.external == True %}
+              <a class="btn btn-block btn-success" target="_blank" href="{{event.external_url}}"> Réservation externe</a>
+            {% elif event.booking == True %}
+              {% include "event/register.html" with event=event %}
+            {% endif %}
+            {% if event.organization.membership_url %}
+              <a class="btn btn-block btn-success" target="_blank" href="{{event.organization.membership_url}}">
+                Réservation externe
+              </a>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+

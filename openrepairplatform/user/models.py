@@ -1,5 +1,7 @@
 import logging
 
+import datetime
+from datetime import date
 from dateutil.relativedelta import relativedelta
 from django.contrib.auth.models import (
     AbstractBaseUser,
@@ -15,7 +17,6 @@ from simple_history.models import HistoricalRecords
 from openrepairplatform.fields import CleanHTMLField
 
 from openrepairplatform.utils import validate_image
-
 
 logger = logging.getLogger(__name__)
 
@@ -74,9 +75,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(
         _("staff status"),
         default=False,
-        help_text=_(
-            "Designates whether the user can log into this admin site."
-        ),
+        help_text=_("Designates whether the user can log into this admin site."),
     )
     is_active = models.BooleanField(
         _("active"),
@@ -122,14 +121,31 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         super().clean()
         self.email = self.email.lower()
 
-
 class Organization(models.Model):
+
+    MEMBERSHIP_SYSTEMS = [
+        (
+            "date_year",
+            "L'adhésion dure un an à partir de la date de la première contribution.",
+        ),
+        (
+            "date_month",
+            "L'adhésion dure un mois à partir de la date de la première contribution.",
+        ),
+        (
+            "year",
+            (
+                "L'adhésion est pour l'année en cours et se renouvelle "
+                "à chaque début d'année."
+            ),
+        ),
+        ("month", "L'adhésion est mensuelle, elle se renouvelle chaque début de mois."),
+    ]
+
     name = models.CharField(
         max_length=100, default="", verbose_name=_("Organization name")
     )
-    description = CleanHTMLField(
-        verbose_name=_("Activity description"), default=""
-    )
+    description = CleanHTMLField(verbose_name=_("Activity description"), default="")
     email = models.EmailField(
         max_length=200, verbose_name=_("Organization mail address"), blank=True
     )
@@ -144,10 +160,7 @@ class Organization(models.Model):
         upload_to="organizations/",
         validators=[validate_image],
     )
-    slug = models.SlugField(
-        default="",
-        unique=True
-    )
+    slug = models.SlugField(default="", unique=True)
     visitors = models.ManyToManyField(
         CustomUser, related_name="visitor_organizations", blank=True
     )
@@ -176,6 +189,12 @@ class Organization(models.Model):
         verbose_name=_("Explain how the contribution system works"),
         default="",
         blank=True,
+    )
+    membership_system = models.CharField(
+        choices=MEMBERSHIP_SYSTEMS, default="date_year", max_length=10
+    )
+    membership_url = models.URLField(
+        max_length=255, verbose_name="Lien d'adhésion en ligne", default="", blank=True
     )
     history = HistoricalRecords()
 
@@ -210,44 +229,140 @@ class Fee(models.Model):
     payment = models.CharField(
         max_length=1, choices=PAYMENTS, blank=True, default=PAYMENT_CASH
     )
+    event = models.ForeignKey(
+        "event.Event", null=True, on_delete=models.SET_NULL, related_name="fees"
+    )
     date = models.DateField(default=timezone.now)
     amount = models.PositiveIntegerField(default=0)
-    user = models.ForeignKey(
-        CustomUser, on_delete=models.CASCADE, related_name="fees"
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="fees")
+    membership = models.ForeignKey(
+        "user.Membership",
+        on_delete=models.SET_NULL,
+        related_name="fees",
+        null=True,
+        blank=True,
+        verbose_name="Liée à une adhésion",
     )
     organization = models.ForeignKey(
         Organization, on_delete=models.CASCADE, related_name="fees"
     )
 
+    def computed_membership_payment(self, membership):
+        """
+        When a fee is create, check if a membership is linked
+        Update the membership first payment if the fee date is
+        after the membership date limit.
+        Computed the membership amount.
+        """
+
+        if membership:
+            membership.update_first_payment()
+            membership.computed_amount()
+            membership.save()
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self.computed_membership_payment(self.membership)
+
+    def delete(self, *args, **kwargs):
+        membership = self.membership
+        super().delete(*args, **kwargs)
+        self.computed_membership_payment(membership)
+
     def __str__(self):
         return f"{self.date}-{self.user}-{self.organization}-{self.amount}"
 
     class Meta:
-        ordering = ['-date']
+        ordering = ["-date"]
+
+
+class MembershipManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(disabled=False)
+
+
+class DisabledMembershipManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(disabled=True)
 
 
 class Membership(models.Model):
+
+    objects = MembershipManager()
+    disableds = DisabledMembershipManager()
+
     user = models.ForeignKey(
         CustomUser, on_delete=models.CASCADE, related_name="memberships"
     )
     organization = models.ForeignKey(
         Organization, on_delete=models.CASCADE, related_name="memberships"
     )
-    fee = models.OneToOneField(
-        Fee, on_delete=models.SET_NULL, null=True, blank=True
-    )
-    first_payment = models.DateTimeField(default=timezone.now)
+    first_payment = models.DateField(default=date.today)
     amount = models.PositiveIntegerField(
         verbose_name=_("Amount paid"), default=0, blank=True
     )
     history = HistoricalRecords()
+    disabled = models.BooleanField(default=False, blank=True)
 
     def __str__(self):
         return f"{self.user}-{self.organization}"
 
+    def update_first_payment(self):
+        """
+        If a new fee linked to current membership is add after the date limit
+        Then is a new cycle of membership, so the first_payment field is
+        updated with this fee date. If there is'nt fees, first_payment is today.
+        """
+        last_fee = self.fees.last()
+        if last_fee:
+            if last_fee.date > self.date_limit:
+                self.first_payment = last_fee.date
+        else:
+            self.first_payment = date.today()
+
+    def computed_amount(self):
+        """
+        The current amount is the sum of fees between the first payment date
+        And the date limit.
+        """
+
+        fees = self.fees.filter(
+            date__gte=self.first_payment, date__lte=self.date_limit
+        )
+        self.amount = sum(fee.amount for fee in fees)
+
+    @property
+    def date_limit(self):
+        """
+        Determines date limit according to the membership system.
+        """
+        membership_system = self.organization.membership_system
+        start_date = self.first_payment
+        if membership_system == "date_year":
+            # Date limit is exactly one year after first payment.
+            return start_date + relativedelta(years=1)
+        if membership_system == "date_month":
+            # Date limit is exactly one month after first payment.
+            return start_date + relativedelta(months=1)
+        if membership_system == "year":
+            # Date limit is the first day of the year after the first payment.
+            return datetime.date(day=1, month=1, year=(start_date.year + 1))
+        if membership_system == "month":
+            # Date limit is the first day of the month after the first payment.
+            return datetime.date(
+                day=1, month=(start_date.month + 1), year=start_date.year
+            )
+
+    @property
+    def has_expired(self):
+        """
+        Check if the current day if after date limit.
+        """
+        return timezone.now().date() > self.date_limit
+
     @property
     def current_contribution(self):
-        if self.first_payment < timezone.now() - relativedelta(years=1):
+        if self.has_expired:
             self.amount = 0
             self.save()
         return self.amount

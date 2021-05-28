@@ -12,55 +12,56 @@ from openrepairplatform.location.models import Place
 
 
 class ActivityCategoryResource(resources.ModelResource):
-
     class Meta:
         model = ActivityCategory
+
 
 class ActivityResource(resources.ModelResource):
     organization = Field(
         column_name="organization",
         attribute="organization",
-        widget=ForeignKeyWidget(Organization, "id")
+        widget=ForeignKeyWidget(Organization, "id"),
     )
 
     class Meta:
         model = Activity
 
+
 class EventResource(resources.ModelResource):
     activity = Field(
         column_name="activity",
         attribute="activity",
-        widget=ForeignKeyWidget(Activity, "id")
+        widget=ForeignKeyWidget(Activity, "id"),
     )
     organization = Field(
         column_name="organization",
         attribute="organization",
-        widget=ForeignKeyWidget(Organization, "id")
+        widget=ForeignKeyWidget(Organization, "id"),
     )
     registered = Field(
         column_name="registered",
         attribute="registered",
-        widget=ManyToManyWidget(CustomUser)
+        widget=ManyToManyWidget(CustomUser),
     )
     presents = Field(
         column_name="presents",
         attribute="presents",
-        widget=ManyToManyWidget(CustomUser)
+        widget=ManyToManyWidget(CustomUser),
     )
     organizers = Field(
         column_name="organizers",
         attribute="organizers",
-        widget=ManyToManyWidget(CustomUser)
+        widget=ManyToManyWidget(CustomUser),
     )
     location = Field(
         column_name="location",
         attribute="location",
-        widget=ForeignKeyWidget(Place, "id")
+        widget=ForeignKeyWidget(Place, "id"),
     )
     conditions = Field(
         column_name="conditions",
         attribute="conditions",
-        widget=ManyToManyWidget(Condition)
+        widget=ManyToManyWidget(Condition),
     )
 
     class Meta:
@@ -69,14 +70,10 @@ class EventResource(resources.ModelResource):
 
 class ParticipationResource(resources.ModelResource):
     user = Field(
-        column_name="user",
-        attribute="user",
-        widget=ForeignKeyWidget(CustomUser, "id")
+        column_name="user", attribute="user", widget=ForeignKeyWidget(CustomUser, "id")
     )
     event = Field(
-        column_name="event",
-        attribute="event",
-        widget=ForeignKeyWidget(Event, "id")
+        column_name="event", attribute="event", widget=ForeignKeyWidget(Event, "id")
     )
 
     class Meta:

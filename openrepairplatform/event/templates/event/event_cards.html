@@ -1,6 +1,7 @@
 {% load thumbnail %}
 {% load initialavatar %}
 
+<<<<<<< HEAD
 {% for event in event_list %}
   <div class="bg-white infinite-item mb-4 d-flex flex-wrap bordered 
   {% if request.user in event.registered.all or request.user in event.presents.all or request.user in event.organizers.all %}
@@ -24,6 +25,23 @@
       {% if event.is_free %}
         <span class="text-success">Pas de limite de places</span>
       {% elif event.remaining_seats <= 0 %}
+=======
+  {% for event in event_list %}
+  <div class="card infinite-item mb-4 {{card_size}} float-left" style="border:0" data-location="{{event.location.pk|escape}}">
+    <div class="card-header bg-primary">
+      <span class="text-secondary">
+        <i class="far fa-calendar-alt"></i>
+        {{ event.date|date:"l j F Y " }} <br>
+        <span class="text-white">
+          <i class="far fa-clock"></i>
+          {{ event.starts_at }} à {{ event.ends_at }}
+        </span>
+      </span>
+      <div class="position-absolute" style="top: 10px; right:20px">
+        {% if event.is_free %}
+        <span class="text-success">Sans limite</span>
+        {% elif event.remaining_seats <= 0 %}
+>>>>>>> origin/update_app_dependencies
         <span class="text-danger">Complet</span>
       {% else %}
         <span
@@ -36,10 +54,33 @@
             text-warning
           {% endif %}
           ">
+<<<<<<< HEAD
         <i class="fas fa-users"></i>    
         {{event.remaining_seats}}/{{ event.available_seats}}
+=======
+        <i class="fas fa-users"></i>
+          {{ event.remaining_seats}}
+        </span>
+        {% endif %}
+      </div>
+    </div>
+
+    <a class="
+    {% if minimal != True %}
+    card-img-crop
+    {% endif %}"
+    href="{% url 'event:detail' event.pk event.slug %}">
+        <span class="text-muted position-absolute" style="top:50px; right:15px">
+          {% if request.user in event.registered.all or request.user in event.presents.all %}
+            <span class="badge badge-success badge-pill">Participant</span>
+            {% endif %}
+            {% if request.user in event.organizers.all %}
+            <span class="badge badge-success badge-pill">Animateur</span>
+            {% endif %}
+>>>>>>> origin/update_app_dependencies
         </span>
       {% endif %}
+<<<<<<< HEAD
       <!-- booking button for volunteers 
       {% if request.user in event.organization.volunteers.all or event.organization.actives.all or event.organization.admins.all %}
       <form
@@ -65,6 +106,15 @@
     </div>      
     <div class="{% if minimal != True %}col-8{% else %}col-7{% endif %}"> 
       <a href="{{event.get_absolute_url}}">
+=======
+    </a>
+      <div class="card-body bordered p-0 d-flex flex-column bg-white">
+        <a class="
+        {% if minimal != True %}
+        card-body-crop
+        {% endif %}"
+        href="{% url 'event:detail' event.pk event.slug %}">
+>>>>>>> origin/update_app_dependencies
         <div class="p-2">
           <span>
             <h5 class="text-primary">
@@ -103,6 +153,7 @@
                     {% get_initial_avatar orga 25 'circle' %}
                   {% endif %}
                 {% endif %}
+<<<<<<< HEAD
               </div>
                 {% endfor %}
               <small class="align-middle
@@ -121,6 +172,15 @@
               </small>
             </div>
           {% endif %}
+=======
+              {% endif %}">
+              {% if event.needed_organizers != 0 %}
+                {{ event.organizers.all.count }}/{{ event.needed_organizers }} animateurs
+              {% endif %}
+            </small>
+          </div>
+
+>>>>>>> origin/update_app_dependencies
           {% if minimal != True %}
           <hr>
           <small class="text-muted">

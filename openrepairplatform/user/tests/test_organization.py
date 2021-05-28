@@ -31,34 +31,24 @@ def test_organization_page(client, organization, user_log):
     assert response.status_code == 200
 
 
-def test_organization_members_view(
-    client, organization, user_log, custom_user_factory
-):
+def test_organization_members_view(client, organization, user_log, custom_user_factory):
     members = custom_user_factory.create_batch(10)
     organization.members.set(members)
     organization.admins.add(user_log)
     client.login(email=user_log.email, password=USER_PASSWORD)
     response = client.get(
-        reverse(
-            "organization_members",
-            kwargs={"orga_slug": organization.slug}
-        )
+        reverse("organization_members", kwargs={"orga_slug": organization.slug})
     )
     assert response.status_code == 200
     assert set(list(members)) == set(list(organization.members.all()))
 
 
-def test_organization_events_view(
-    client, organization, user_log, event_factory
-):
+def test_organization_events_view(client, organization, user_log, event_factory):
     organization.admins.add(user_log)
     events = event_factory.create_batch(10, organization=organization)
     client.login(email=user_log.email, password=USER_PASSWORD)
     response = client.get(
-        reverse(
-            "organization_events",
-            kwargs={"orga_slug": organization.slug}
-        )
+        reverse("organization_events", kwargs={"orga_slug": organization.slug})
     )
     assert response.status_code == 200
     assert set(list(response.context_data["events"])) == set(list(events))
@@ -67,16 +57,11 @@ def test_organization_events_view(
     assert response.context_data["today"]
 
 
-def test_organization_details_view(
-    client, organization, user_log, place_factory
-):
+def test_organization_details_view(client, organization, user_log, place_factory):
     organization.actives.add(user_log)
     client.login(email=user_log.email, password=USER_PASSWORD)
     response = client.get(
-        reverse(
-            "organization_details",
-            kwargs={"orga_slug": organization.slug}
-        )
+        reverse("organization_details", kwargs={"orga_slug": organization.slug})
     )
     assert response.status_code == 200
 
@@ -93,13 +78,13 @@ def test_organization_create(client_log, custom_user):
         reverse("user:organization_create"),
         {
             "name": "Test",
-            "description":
-            """
+            "description": """
                 <h1> Test </h1>
                 <strong> gras </strong>
                 <u style="text-decoration-line: underline;"> sdfsdf </u>
             """,
-            "picture": upload_image
+            "picture": upload_image,
+            "membership_system": "date_year",
         },
     )
     assert response.status_code == 302
@@ -113,13 +98,13 @@ def test_organization_create(client_log, custom_user):
         reverse("user:organization_create"),
         {
             "name": "Test",
-            "description":
-            """
+            "description": """
                 <h1> Test </h1>
                 <strong> gras </strong>
                 <u style="text-decoration-line: underline;"> sdfsdf </u>
             """,
-            "picture": upload_image
+            "picture": upload_image,
+            "membership_system": "date_year",
         },
     )
     assert Organization.objects.count() == 1
@@ -136,12 +121,13 @@ def test_organization_update(client_log, organization):
     organization.admins.add(user)
     response = client_log.post(
         reverse("user:organization_update", kwargs={"pk": organization.pk}),
-        {"name": "Test Orga", "description": "Test"},
+        {"name": "Test Orga", "description": "Test", "membership_system": "date_year"},
     )
     assert response.status_code == 302
     organization.refresh_from_db()
     assert response.url == reverse(
-        "organization_page", kwargs={"orga_slug": organization.slug},
+        "organization_page",
+        kwargs={"orga_slug": organization.slug},
     )
     assert organization.name == "Test Orga"
 
@@ -183,14 +169,13 @@ def test_add_admin_to_organization(custom_user_factory, client, organization):
     )
     assert response.status_code == 302
     assert response.url == reverse(
-        "organization_page", kwargs={"orga_slug": organization.slug},
+        "organization_page",
+        kwargs={"orga_slug": organization.slug},
     )
     assert organization.admins.count() == 2
 
 
-def test_add_admin_to_organization_wrong_user(
-    custom_user, client, organization
-):
+def test_add_admin_to_organization_wrong_user(custom_user, client, organization):
     organization.admins.add(custom_user)
     assert client.login(email=custom_user.email, password=USER_PASSWORD)
     assert organization.admins.count() == 1
@@ -205,9 +190,7 @@ def test_add_admin_to_organization_wrong_user(
 def test_add_active_to_organization_forbidden(client, user_log, organization):
     client.login(email=user_log.email, password=USER_PASSWORD)
     response = client.post(
-        reverse(
-            "user:organization_add_active", kwargs={"pk": organization.pk}
-        ),
+        reverse("user:organization_add_active", kwargs={"pk": organization.pk}),
         {"email": user_log.email},
     )
     assert response.status_code == 403
@@ -220,14 +203,13 @@ def test_add_active_to_organization(custom_user_factory, client, organization):
     assert client.login(email=admin.email, password=USER_PASSWORD)
     assert organization.actives.count() == 0
     response = client.post(
-        reverse(
-            "user:organization_add_active", kwargs={"pk": organization.pk}
-        ),
+        reverse("user:organization_add_active", kwargs={"pk": organization.pk}),
         {"email": user.email},
     )
     assert response.status_code == 302
     assert response.url == reverse(
-        "organization_page", kwargs={"orga_slug": organization.slug},
+        "organization_page",
+        kwargs={"orga_slug": organization.slug},
     )
     actives = organization.actives.all()
     assert len(actives) == 1
@@ -244,14 +226,13 @@ def test_add_admin_to_actives_of_organization(
     assert client.login(email=admin.email, password=USER_PASSWORD)
     assert organization.actives.count() == 0
     response = client.post(
-        reverse(
-            "user:organization_add_active", kwargs={"pk": organization.pk}
-        ),
+        reverse("user:organization_add_active", kwargs={"pk": organization.pk}),
         {"email": user.email},
     )
     assert response.status_code == 302
     assert response.url == reverse(
-        "organization_page", kwargs={"orga_slug": organization.slug},
+        "organization_page",
+        kwargs={"orga_slug": organization.slug},
     )
     assert organization.actives.count() == 0
 
@@ -272,15 +253,14 @@ def test_add_active_to_admins_of_organization(
     )
     assert response.status_code == 302
     assert response.url == reverse(
-        "organization_page", kwargs={"orga_slug": organization.slug},
+        "organization_page",
+        kwargs={"orga_slug": organization.slug},
     )
     assert organization.actives.count() == 0
     assert organization.admins.count() == 2
 
 
-def test_remove_active_from_organization_forbidden(
-    client, user_log, organization
-):
+def test_remove_active_from_organization_forbidden(client, user_log, organization):
     client.login(email=user_log.email, password=USER_PASSWORD)
     response = client.post(
         reverse(
@@ -294,9 +274,7 @@ def test_remove_active_from_organization_forbidden(
     assert response.status_code == 403
 
 
-def test_remove_active_from_organization(
-    custom_user_factory, client, organization
-):
+def test_remove_active_from_organization(custom_user_factory, client, organization):
     user = custom_user_factory()
     admin = custom_user_factory()
     organization.actives.add(user)
@@ -311,14 +289,13 @@ def test_remove_active_from_organization(
     )
     assert response.status_code == 302
     assert response.url == reverse(
-        "organization_page", kwargs={"orga_slug": organization.slug},
+        "organization_page",
+        kwargs={"orga_slug": organization.slug},
     )
     assert organization.actives.count() == 0
 
 
-def test_remove_admin_from_organization(
-    custom_user_factory, client, organization
-):
+def test_remove_admin_from_organization(custom_user_factory, client, organization):
     user = custom_user_factory()
     admin = custom_user_factory()
     organization.admins.add(admin)
@@ -333,41 +310,35 @@ def test_remove_admin_from_organization(
     )
     assert response.status_code == 302
     assert response.url == reverse(
-        "organization_page", kwargs={"orga_slug": organization.slug},
+        "organization_page",
+        kwargs={"orga_slug": organization.slug},
     )
     assert organization.admins.count() == 1
 
 
-def test_add_volunteer_to_organization_forbidden(
-    client, user_log, organization
-):
+def test_add_volunteer_to_organization_forbidden(client, user_log, organization):
     client.login(email=user_log.email, password=USER_PASSWORD)
     response = client.post(
-        reverse(
-            "user:organization_add_volunteer", kwargs={"pk": organization.pk}
-        ),
+        reverse("user:organization_add_volunteer", kwargs={"pk": organization.pk}),
         {"email": user_log.email},
     )
     assert response.status_code == 403
 
 
-def test_add_volunteer_to_organization(
-    custom_user_factory, client, organization
-):
+def test_add_volunteer_to_organization(custom_user_factory, client, organization):
     user = custom_user_factory()
     admin = custom_user_factory()
     organization.admins.add(admin)
     assert client.login(email=admin.email, password=USER_PASSWORD)
     assert organization.actives.count() == 0
     response = client.post(
-        reverse(
-            "user:organization_add_volunteer", kwargs={"pk": organization.pk}
-        ),
+        reverse("user:organization_add_volunteer", kwargs={"pk": organization.pk}),
         {"email": user.email},
     )
     assert response.status_code == 302
     assert response.url == reverse(
-        "organization_page", kwargs={"orga_slug": organization.slug},
+        "organization_page",
+        kwargs={"orga_slug": organization.slug},
     )
     volunteers = organization.volunteers.all()
     assert len(volunteers) == 1
@@ -384,14 +355,13 @@ def test_add_admin_to_volunteers_of_organization(
     assert client.login(email=admin.email, password=USER_PASSWORD)
     assert organization.actives.count() == 0
     response = client.post(
-        reverse(
-            "user:organization_add_volunteer", kwargs={"pk": organization.pk}
-        ),
+        reverse("user:organization_add_volunteer", kwargs={"pk": organization.pk}),
         {"email": user.email},
     )
     assert response.status_code == 302
     assert response.url == reverse(
-        "organization_page", kwargs={"orga_slug": organization.slug},
+        "organization_page",
+        kwargs={"orga_slug": organization.slug},
     )
     assert organization.volunteers.count() == 0
 
@@ -412,15 +382,14 @@ def test_add_volunteer_to_admins_of_organization(
     )
     assert response.status_code == 302
     assert response.url == reverse(
-        "organization_page", kwargs={"orga_slug": organization.slug},
+        "organization_page",
+        kwargs={"orga_slug": organization.slug},
     )
     assert organization.volunteers.count() == 0
     assert organization.admins.count() == 2
 
 
-def test_remove_volunteer_from_organization_forbidden(
-    client, user_log, organization
-):
+def test_remove_volunteer_from_organization_forbidden(client, user_log, organization):
     client.login(email=user_log.email, password=USER_PASSWORD)
     response = client.post(
         reverse(
@@ -434,9 +403,7 @@ def test_remove_volunteer_from_organization_forbidden(
     assert response.status_code == 403
 
 
-def test_remove_volunteer_from_organization(
-    custom_user_factory, client, organization
-):
+def test_remove_volunteer_from_organization(custom_user_factory, client, organization):
     user = custom_user_factory()
     admin = custom_user_factory()
     organization.volunteers.add(user)
@@ -451,7 +418,8 @@ def test_remove_volunteer_from_organization(
     )
     assert response.status_code == 302
     assert response.url == reverse(
-        "organization_page", kwargs={"orga_slug": organization.slug},
+        "organization_page",
+        kwargs={"orga_slug": organization.slug},
     )
     assert organization.volunteers.count() == 0
 
@@ -486,21 +454,24 @@ def test_add_member_to_organization(custom_user_factory, client, organization):
     assert organization.admins.count() == 1
     assert Fee.objects.count() == 0
     response = client.post(
-        reverse(
-            "user:organization_add_member", kwargs={"pk": organization.pk}
-        ),
+        reverse("user:organization_add_member", kwargs={"pk": organization.pk}),
         {
             "email": user.email,
             "first_name": "Michel",
             "last_name": "Miche",
             "street_address": "11 rue du test",
             "amount_paid": 5,
+            "payment": 1,
             "date": timezone.now().date().strftime("%Y-%m-%d"),
         },
+        HTTP_REFERER=reverse(
+            "organization_members", kwargs={"orga_slug": organization.slug}
+        )
     )
     assert response.status_code == 302
     assert response.url == reverse(
-        "organization_page", kwargs={"orga_slug": organization.slug},
+        "organization_members",
+        kwargs={"orga_slug": organization.slug},
     )
     assert organization.members.count() == 1
     assert Fee.objects.count() == 1
@@ -516,21 +487,24 @@ def test_re_add_member_to_organization(
     assert client.login(email=admin.email, password=USER_PASSWORD)
     assert organization.admins.count() == 1
     response = client.post(
-        reverse(
-            "user:organization_add_member", kwargs={"pk": organization.pk}
-        ),
+        reverse("user:organization_add_member", kwargs={"pk": organization.pk}),
         {
             "email": user.email,
             "first_name": "Michel",
             "last_name": "Miche",
             "street_address": "11 rue du test",
             "amount_paid": 5,
+            "payment": 1,
             "date": timezone.now().date().strftime("%Y-%m-%d"),
         },
+        HTTP_REFERER=reverse(
+            "organization_members", kwargs={"orga_slug": organization.slug}
+        )
     )
     assert response.status_code == 302
     assert response.url == reverse(
-        "organization_page", kwargs={"orga_slug": organization.slug},
+        "organization_members",
+        kwargs={"orga_slug": organization.slug},
     )
     assert user.first_name != "Michel"
     assert organization.members.count() == 1
@@ -542,11 +516,7 @@ def test_update_member_to_organization(
     admin = custom_user_factory()
     organization.admins.add(admin)
     user = custom_user_factory()
-    membership = membership_factory(
-        user=user,
-        organization=organization,
-        amount=1
-    )
+    membership = membership_factory(user=user, organization=organization, amount=1)
     assert client.login(email=admin.email, password=USER_PASSWORD)
     assert organization.admins.count() == 1
     assert Fee.objects.count() == 0
@@ -561,17 +531,22 @@ def test_update_member_to_organization(
             "last_name": "Miche",
             "street_address": "11 rue du test",
             "amount_paid": 5,
+            "payment": 1,
             "date": timezone.now().date().strftime("%Y-%m-%d"),
         },
+        HTTP_REFERER=reverse(
+            "organization_members", kwargs={"orga_slug": organization.slug}
+        )
     )
     membership.refresh_from_db()
     assert response.status_code == 302
     assert response.url == reverse(
-        "organization_members", kwargs={"orga_slug": organization.slug},
+        "organization_members",
+        kwargs={"orga_slug": organization.slug},
     )
     user.refresh_from_db()
     assert user.first_name == "Michel"
-    assert membership.amount == 6
+    assert membership.amount == 5
     assert organization.members.count() == 1
     assert Fee.objects.count() == 1
 
@@ -589,10 +564,14 @@ def test_update_member_to_organization(
             "last_name": "Miche",
             "street_address": "11 rue du test",
             "amount_paid": 5,
+            "payment": 1,
             "date": timezone.now().date().strftime("%Y-%m-%d"),
         },
+        HTTP_REFERER=reverse(
+            "organization_members", kwargs={"orga_slug": organization.slug}
+        )
     )
     membership.refresh_from_db()
     assert response.status_code == 302
-    assert membership.current_contribution == 5
-    assert membership.amount == 5
+    assert membership.current_contribution == 10
+    assert membership.amount == 10

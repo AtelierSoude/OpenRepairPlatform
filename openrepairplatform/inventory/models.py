@@ -10,6 +10,7 @@ from openrepairplatform.user.models import Organization
 from openrepairplatform.utils import validate_image
 from django.utils.translation import ugettext_lazy as _
 
+
 class Brand(models.Model):
     name = models.CharField(max_length=100)
     picture = models.ImageField(
@@ -24,13 +25,15 @@ class Brand(models.Model):
     def __str__(self):
         return self.name
 
+
 class Category(MP_Node):
     name = models.CharField(max_length=350)
 
-    node_order_by = ['name']
-    
+    node_order_by = ["name"]
+
     def __str__(self):
         return self.name
+
 
 class Stuff(models.Model):
     BROKEN = "B"
@@ -55,28 +58,28 @@ class Stuff(models.Model):
         null=True,
         blank=True,
         verbose_name=_("Type d'appareil"),
-        on_delete=models.SET_NULL
+        on_delete=models.SET_NULL,
     )
     member_owner = models.ForeignKey(
         "user.CustomUser",
         related_name="user_stuffs",
         null=True,
         blank=True,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
     )
     organization_owner = models.ForeignKey(
         "user.Organization",
         related_name="organization_stuffs",
         null=True,
         blank=True,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
     )
     subpart = models.ForeignKey(
         "inventory.Stuff",
         related_name="subparts",
         null=True,
         blank=True,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
     )
     place = models.ForeignKey(
         "location.Place",
@@ -84,27 +87,29 @@ class Stuff(models.Model):
         blank=True,
         verbose_name=_("Localisation"),
         help_text="Où se trouve l'objet ?",
-        on_delete=models.SET_NULL
+        on_delete=models.SET_NULL,
     )
     added_date = models.DateField(
         auto_now_add=True,
     )
     state = models.CharField(
-        max_length=1,
-        choices=STATES,
-        default=BROKEN,
-        verbose_name=_("Etat")
+        max_length=1, choices=STATES, default=BROKEN, verbose_name=_("Etat")
     )
     information = CleanHTMLField(
         null=True,
         blank=True,
         verbose_name=_("Information optionnelles sur cet objet"),
-        help_text="D'où vient-il, a t'il des caractéristiques spéciales... bref, tout ce qui peut le décrire",
+        help_text=(
+            "D'où vient-il, a t'il des caractéristiques spéciales... "
+            "bref, tout ce qui peut le décrire",
+        )
     )
     is_visible = models.BooleanField(
         _("Objet visible"),
         default=False,
-        help_text=_("Cet objet est-il visible du public ? (par exemple, s'il est mis en vente)"),
+        help_text=_(
+            "Cet objet est-il visible du public ? (par exemple, s'il est mis en vente)"
+        ),
     )
     history = HistoricalRecords()
 
@@ -122,44 +127,35 @@ class Stuff(models.Model):
         self.save()
 
     def get_absolute_url(self):
-        return reverse(
-            "inventory:stuff_view", kwargs={'stuff_pk': self.pk}
-        )
-    
+        return reverse("inventory:stuff_view", kwargs={"stuff_pk": self.pk})
+
     def __str__(self):
         return f"{self.device} - #{self.id}"
 
 
 class Device(models.Model):
     category = models.ForeignKey(
-        "inventory.Category", 
-        on_delete=models.SET_NULL,  
-        blank=True,
-        null=True,
-    )
-    brand = models.ForeignKey(
-        "inventory.Brand",  
+        "inventory.Category",
         on_delete=models.SET_NULL,
         blank=True,
         null=True,
     )
-    model = models.CharField(
-        max_length=100, 
+    brand = models.ForeignKey(
+        "inventory.Brand",
+        on_delete=models.SET_NULL,
+        blank=True,
         null=True,
-        blank=True
     )
-    description = CleanHTMLField(
-        null=True,
-        blank=True
-    )
+    model = models.CharField(max_length=100, null=True, blank=True)
+    description = CleanHTMLField(null=True, blank=True)
     picture = models.ImageField(
-        upload_to="devices/", 
-        blank=True, 
+        upload_to="devices/",
+        blank=True,
         null=True,
         validators=[validate_image],
         verbose_name=_("Image"),
     )
-    links = ArrayField(models.URLField(),blank=True, null=True)
+    links = ArrayField(models.URLField(), blank=True, null=True)
     slug = models.SlugField(
         default="",
         unique=True,
@@ -168,7 +164,9 @@ class Device(models.Model):
     history = HistoricalRecords()
 
     def save(self, *args, **kwargs):
-        self.slug = '-'.join((slugify(self.category), slugify(self.brand), slugify(self.model)))
+        self.slug = "-".join(
+            (slugify(self.category), slugify(self.brand), slugify(self.model))
+        )
         return super().save(*args, **kwargs)
 
     def get_absolute_url(self):
@@ -180,14 +178,14 @@ class Device(models.Model):
 
 class Observation(models.Model):
     name = models.CharField(max_length=250, default="")
-    
+
     def __str__(self):
         return self.name
-    
+
 
 class Reasoning(models.Model):
     name = models.CharField(max_length=250, default="")
-    verbose_name=_("raisonnement")
+    verbose_name = _("raisonnement")
 
     def __str__(self):
         return self.name
@@ -195,30 +193,31 @@ class Reasoning(models.Model):
 
 class Action(models.Model):
     name = models.CharField(max_length=250, default="")
-    
+
     def __str__(self):
         return self.name
 
 
 class Status(models.Model):
     name = models.CharField(max_length=250, default="")
-    
+
     def __str__(self):
         return self.name
 
 
 class Intervention(models.Model):
     folder = models.ForeignKey(
-        "inventory.RepairFolder", 
-        related_name="interventions", 
-        on_delete=models.SET_NULL, null=True,
-        blank=True
-        )
+        "inventory.RepairFolder",
+        related_name="interventions",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
     event = models.ForeignKey(
         "event.Event", 
         on_delete=models.SET_NULL, 
         null=True, 
-        blank=True
+        blank=True,
         )
     repair_date = models.DateField(
         null=True, 
@@ -226,32 +225,32 @@ class Intervention(models.Model):
         default=date.today,
         )
     observation = models.ForeignKey(
-        "inventory.Observation", 
-        on_delete=models.SET_NULL, 
-        null=True, 
-        blank=True,
-        help_text="Quel est (ou était) le problème ?"
-        )
-    reasoning = models.ForeignKey(
-        "inventory.Reasoning", 
+        "inventory.Observation",
         on_delete=models.SET_NULL,
-        null=True, 
+        null=True,
         blank=True,
-        help_text="Quel en est (ou serait) la cause ?"
+        help_text="Quel est (ou était) le problème ?",
+    )
+    reasoning = models.ForeignKey(
+        "inventory.Reasoning",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        help_text="Quel en est (ou serait) la cause ?",
     )
     action = models.ForeignKey(
-        "inventory.Action", 
-        on_delete=models.SET_NULL, 
-        null=True, 
+        "inventory.Action",
+        on_delete=models.SET_NULL,
+        null=True,
         blank=True,
-        help_text="Qu'avez-vous fait ?"
+        help_text="Qu'avez-vous fait ?",
     )
     status = models.ForeignKey(
-        "inventory.Status", 
-        on_delete=models.SET_NULL, 
-        null=True, 
+        "inventory.Status",
+        on_delete=models.SET_NULL,
+        null=True,
         blank=True,
-        help_text="Quel est le résultat de l'action ?"
+        help_text="Quel est le résultat de l'action ?",
     )
 
     @property
@@ -259,18 +258,19 @@ class Intervention(models.Model):
         if self.event:
             return self.event.date
         return self.repair_date
-    
+
     def __str__(self):
         return f"actions réalisées sur {self.folder} le {self.repair_date}"
 
+
 class RepairFolder(models.Model):
     stuff = models.ForeignKey(
-        "inventory.Stuff", 
-        related_name="folders", 
-        on_delete=models.SET_NULL, 
-        null=True, 
-        blank=True
-        )
+        "inventory.Stuff",
+        related_name="folders",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
     ongoing = models.BooleanField(default=True)
     open_date = models.DateField(
         null=True, 
@@ -280,4 +280,3 @@ class RepairFolder(models.Model):
 
     def __str__(self):
         return f"dossier {self.stuff}-{self.open_date}"
- 

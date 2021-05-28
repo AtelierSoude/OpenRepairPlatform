@@ -15,9 +15,7 @@ faker = Factory.create()
 
 class ConditionFactory(DjangoModelFactory):
     name = factory.Sequence(lambda n: f"Name {faker.word()} #{n}")
-    description = factory.Sequence(
-        lambda n: f"descr: {faker.text()[:50]} #{n}"
-    )
+    description = factory.Sequence(lambda n: f"descr: {faker.text()[:50]} #{n}")
     organization = factory.SubFactory(OrganizationFactory)
     price = random.randrange(100, 1000) / 100
 
@@ -43,9 +41,7 @@ class EventFactory(DjangoModelFactory):
     starts_at = faker.time(pattern="%H:%M", end_datetime=None)
     ends_at = faker.time(pattern="%H:%M", end_datetime=None)
     published = False
-    publish_at = faker.date_time_between_dates(
-        datetime_start=None, datetime_end=None
-    )
+    publish_at = faker.date_time_between_dates(datetime_start=None, datetime_end=None)
 
     class Meta:
         model = Event

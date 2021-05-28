@@ -1,33 +1,24 @@
-
-/// trick to make select2 works inna modal 
-$(document).ready(function(){
-$.fn.modal.Constructor.prototype._enforceFocus = function() {};
-});
-
-$(document).ready(function(){
-/// festch api regardless to the selected user using autocomplete 
-elem = document.querySelector("#id_user");
-if (elem) {
-    elem.onchange=function() {  
-    if($(".selected-user").length){ 
-        user_pk = $(".selected-user").attr('id');
-        fetch("/api/user/"+user_pk)
-        .then(response => {
-            return response.json();
-        })
-        .then(data => {
-            $("#id_email").val(data.email).val();
-            $("#id_first_name").val(data.first_name).val();
-            $("#id_last_name").val(data.last_name).val();
-            $("#id_street_address").val(data.street_address).val();
-        })
+function autocompleteUserInfo() {
+    elem = document.querySelector("#id_user")
+    if (elem) {
+        elem.onchange=function() {
+          user = document.querySelector(".selected-user")
+          if(user) {
+            user_pk = user.getAttribute('id')
+            fetch(`/api/user/${user_pk}`).then(response => { return response.json() }).then(data => {
+              document.querySelector("#id_email").value = data.email
+              document.querySelector("#id_first_name").value = data.first_name
+              document.querySelector("#id_last_name").value = data.last_name
+              document.querySelector("#id_street_address").value = data.street_address
+            })
+          }
+          else {
+              document.querySelector("#id_email").value = ''
+              document.querySelector("#id_first_name").value = ''
+              document.querySelector("#id_last_name").value = ''
+              document.querySelector("#id_street_address").value = ''
+          }
+        }
     }
-    else { 
-        $("#id_email").val('');
-        $("#id_first_name").val('');
-        $("#id_last_name").val('');
-        $("#id_street_address").val('');
-    };
-    };
-};
-});
+}
+

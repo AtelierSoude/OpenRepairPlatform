@@ -27,7 +27,6 @@ def initial_stuff(form, stuff):
             "member_owner": stuff.member_owner,
             "place": stuff.place,
             "device": stuff.device,
-
         }
     )
     return form
@@ -36,6 +35,16 @@ def initial_stuff(form, stuff):
 @register.simple_tag
 def filter_orga(queryset, organization):
     return queryset.filter(organization=organization).first()
+
+
+@register.simple_tag
+def filter_user(queryset, user):
+    return queryset.filter(user=user).first()
+
+
+@register.simple_tag
+def related_user(queryset, user):
+    return queryset.filter(user=user)
 
 
 @register.simple_tag
@@ -49,3 +58,8 @@ def query_transform(request, **kwargs):
 @register.simple_tag
 def organization_fees(organization, user):
     return Fee.objects.filter(organization=organization, user=user)
+
+
+@register.simple_tag
+def sum_conditions(conditions):
+    return sum(condition.price for condition in conditions)

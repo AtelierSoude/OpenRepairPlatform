@@ -17,7 +17,7 @@ urlpatterns = [
     path("event/", include("openrepairplatform.event.urls", namespace="event")),
     path(
         "inventory/",
-        include("openrepairplatform.inventory.urls", namespace="inventory")
+        include("openrepairplatform.inventory.urls", namespace="inventory"),
     ),
     path(
         "location/",
@@ -84,7 +84,7 @@ urlpatterns = [
     path(
         "<str:orga_slug>/stock/",
         OrganizationStockView.as_view(),
-        name="organization_stock"
+        name="organization_stock",
     ),
     path(
         "<str:orga_slug>/accounting/",

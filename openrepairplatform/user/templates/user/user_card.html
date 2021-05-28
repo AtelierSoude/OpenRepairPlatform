@@ -10,10 +10,10 @@
       {% if event_control == True %}
         {% filter_orga queryset=user.memberships organization=event.organization as membership %}
         {% if membership %}
-          {% if membership.current_contribution == 0 %} 
+          {% if membership.current_contribution == 0 %}
             <span class="badge badge-pill badge-primary text-danger float-left" >0€</span>
           {% elif membership.current_contribution >= event.organization.advised_fee %}
-            <spann class="badge badge-pill badge-primary text-success float-left">{{ membership.current_contribution }}€</span>
+            <span class="badge badge-pill badge-primary text-success float-left">{{ membership.current_contribution }}€</span>
           {% else %}
             <span class="badge badge-pill badge-primary text-warning float-left" >{{ membership.current_contribution }}€</span>
           {% endif %}
@@ -43,9 +43,10 @@
     </a>
     {% if event_control == True %}
       {% if event.has_started and is_active %}
-      {% include "event/modal_more_info.html" with anonymous_user=user form=present_form|initial:user %}
+      {% include "event/modal_more_info.html" with user=user form=present_form|initial:user %}
       {% endif %}
     {% endif %}
+    
       {% if admin_remove_controls == True %}
         {% if is_admin %}
           <form action="{% url 'user:remove_from_admins' organization.pk user.pk %}" class="d-inline">
@@ -77,5 +78,5 @@
   </div>
 
 {% empty %}
-  <div class="col-lg">Pas encore d'utilisateur</div>  
+  <div class="col-lg">Pas encore d'utilisateur</div>
 {% endfor %}

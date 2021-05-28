@@ -19,28 +19,26 @@ class Place(models.Model):
         blank=True,
         related_name="places",
     )
-    description = CleanHTMLField(
-        default="", verbose_name=_("Place description")
-    )
+    description = CleanHTMLField(default="", verbose_name=_("Place description"))
     category = models.CharField(max_length=100, default="Other")
     slug = models.SlugField(default="", blank=True)
-    address = models.CharField(
-        max_length=255, verbose_name=_("street address")
-    )
+    address = models.CharField(max_length=255, verbose_name=_("street address"))
     longitude = models.FloatField()
     latitude = models.FloatField()
     picture = models.ImageField(
-        upload_to="places/", 
-        blank=True, 
+        upload_to="places/",
+        blank=True,
         null=True,
         validators=[validate_image],
         verbose_name=_("Image"),
     )
-    is_visible = models.NullBooleanField(
+    is_visible = models.BooleanField(
         _("Lieu principal"),
-        default=False, 
+        null=True,
+        default=False,
         help_text=_(
-            "Est-ce que ce lieu est un lieu de votre organisation ? Si vous cochez oui, il sera visible sur votre page"
+            "Est-ce que ce lieu est un lieu de votre organisation ? "
+            "Si vous cochez oui, il sera visible sur votre page"
         ),
     )
     created_at = models.DateTimeField(auto_now_add=True)

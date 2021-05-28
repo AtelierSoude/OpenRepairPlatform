@@ -12,361 +12,32 @@
 
 {% block content %}
 
-   <!-- modals -->
-   <div class="modal fade" tabindex="-1" role="dialog" id="modal">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content"></div>
-    </div>
+<!-- Modals -->
+<div class="modal fade" tabindex="-1" role="dialog" id="modal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content"></div>
   </div>
-
-<div class="row">
-  <section class="{% if is_volunteer %} col-md-5 {% else %}col-md-6{% endif %}  bg-white">
-      {% url "event:list" as event_list_url %}
-  {% include "breadcrumb.html" with current=event first_parent_url=event_list_url first_parent_text="Évènements" %}
-
-    <div class="container pl-4 pr-4 pt-2 bg-white" id="event_about">
-      <h3 class="bg-white" id="event_title">{% if event.activity.category %} {{event.activity.category}} - {% endif %} {{ event.activity }} du {{ event.date }}      
-        <div class="lead float-right ml-2">
-        {% if is_active %}
-          <a href="{% url 'event:edit' event.pk %}" class="btn btn-secondary rounded-circle"><i class="fa fa-pencil-alt"></i></a>
-        {% endif %}
-        {% if is_admin %}
-          <a href="{% url 'event:delete' event.pk %}" class="btn btn-danger rounded-circle"><i class="fa fa-trash"></i></a>
-        {% endif %}
-        </div>
-      </h3>
-      <p class="lead">
-         Organisé par
-        <a href="{% url 'organization_page' event.organization.slug %}">
-          {{ event.organization.name }}
-        </a>
-        {% if event.collaborator %}
-        <small>en partenariat avec {{ event.collaborator }}</small> 
-        {% endif %}
-      </p>
-      <p>
-        <span>
-          <i class="fa fa-calendar-alt"></i> 
-          Le {{ event.date|date:"l j F Y " }} de {{ event.starts_at }} à {{ event.ends_at }}
-        </span>
-      {% if is_volunteer %}
-      {% now "Y-m-d" as today %}
-        {% if event.date|date:"Y-m-d" >= today %}
-            <span class="badge badge-secondary badge-pill">Publié dans {{ event.publish_at|timeuntil }}</span>
-        {% else %}
-          {% if event.published == True %}
-            <span class="badge badge-secondary badge-pill">Publié il y a {{ event.publish_at|timesince }} </span>
-          {% else %}
-            <span class="badge badge- badge-pill">Non publié</span>
-          {% endif %}
-        {% endif %}
-      {% endif %}
-      </p>
-    <h6 class="text-muted">
-      {% if event.is_free %}
-        <span class="badge badge-secondary badge-pill">Sans limite de place</span>
-      {% else %}
-        {% if event.remaining_seats <= 0 %}
-          <span class="badge badge-warning badge-pill">Complet</span>
-        {% else %}
-          <span class="badge badge-secondary badge-pill">{{ event.remaining_seats }}
-            </span> places disponibles
-        {% endif %}
-      {% endif %}
-      {% if event.booking == False and event.external == False %}
-        <span class="badge badge-secondary badge-pill">Sans réservation</span>
-      {% elif event.external == True %}
-        <span class="badge badge-secondary badge-pill">Réservation externe</span>
-      {% endif %}
-      {% if request.user in event.registered.all or request.user in event.presents.all %}
-        <span class="badge badge-success badge-pill">Inscrit</span>
-      {% endif %}
-      {% if request.user in event.organizers.all %}
-      <span class="badge badge-success badge-pill">Animateur</span>
-      {% endif %}
-    </h6>
-    {% if event.allow_stuffs %}
-      <h6 class="text-muted"><i class="fas fa-tools"></i> Cet événement gère les réparations</h6>
-    {% endif %}
-    {% if event.external == True %}
-      <a class="btn btn-block btn-success" target="_blank" href="{{event.external_url}}"> Réservation externe</a>
-    {% elif event.booking == True %}
-      {% include "event/register.html" with event=event %}
-    {% endif %}
-    {% if is_volunteer and user not in event.registered.all %}
-      <form
-          {% if user in event.organizers.all %}
-          action="{% url 'event:remove_active' event.pk %}"
-          {% else %}
-          action="{% url 'event:add_active' event.pk %}"
-          {% endif %}
-          method="post"
-          class="d-inline">
-        {% csrf_token %}
-        {% if user in event.organizers.all %}
-        <button class="btn btn-secondary btn-block" type="submit">
-          je n'anime plus
-        </button>
-        {% else %}
-        <button class="btn btn-primary btn-block" type="submit">
-          J'anime
-        </button>
-        {% endif %}
-      </form>
-    {% endif %}
-      <hr>
-    </div>
-
-    <div class="col-lg-12">
-      
-      {% if event.description %}
-        <div class="pl-2 pr-2">
-          {{event.description | safe }}
-        <hr>
-        </div>
-      {% endif %}
-      {% if event.external_url and event.external == False %}
-        <a href="{{event.external_url}}" target="_blank" class="pl-2 pr-2">Plus d'informations sur l'évènement</a>
-      {% endif %}
-      <div class="row p-4">
-        <ul class="col-md-6">
-            <b>Informations utiles:</b>
-          {% for condition in event.conditions.all %}
-            <li class="">
-              {% if condition.price > 0 %}
-                <span class="badge badge-pill badge-secondary">
-                  {{ condition.price }}€</span> 
-                {% else %}
-                {% endif %}
-              <small>{{ condition.description | safe }}</small>
-            </li>
-            {% empty %}
-            <li><small>La participation est libre / pas de condition d'accès</small></li>
-          {% endfor %}
-        </ul>
-        {% if event.booking == True %}
-          <div class="col-md-6 border">
-            <div class="row">
-            {% if event.activity.picture %}
-              <img class="img-responsive col-md-6 h-100 p-0" src="{{ event.activity.picture.url }}" alt="activity illustration">
-            {% endif %}
-
-            {% if event.activity %}                
-            <div class="col-md-6">
-              <b>{{event.activity.name}}</b>
-              <small class="">
-              {{ event.activity.description | safe | truncatewords_html:7 }}
-              </small>
-            </div>
-            <a href="{% url 'event:activity_detail' event.activity.pk event.activity.slug %}" class="btn btn-primary btn-sm col-md-12 float-right">
-                <i class="fa fa-eye"></i>
-            </a>
-            {% else %}
-              Type d'activité supprimé
-            {% endif %}
-          </div>
-        </div>
-        {% endif %}
-      </div>
-    </div>
-  <hr>
-    <div class="col-lg">
-      <p class="text-center">
-        <i class="fa fa-map-marker"></i>
-        {% if event.location %}
-          <a href="{% url 'location:detail' event.location.id event.location.slug %}">
-            {{ event.location.name }}</a>,
-          {{ event.location.address }}
-        {% else %}
-            Le lieu a été supprimé
-        {% endif %}
-      </p>
-      {% if event.location %}
-        <div style="height:100%; min-height: 200px" id="event_map"></div>
-      {% endif %}
-    </div>
-
-</section>
-
-<section class="{% if is_volunteer %} col-md-7 {% else %}col-md-6{% endif %} no-gutters">
-  {% if event.booking == False or event.external == True %}
-    {% if is_volunteer %}
-    {% if event.booking == False and event.external == False %}
-      <h3 class="text-center text-success pt-4">Evenement sans réservations</h3>
-    {% endif %}
-    {% if event.external == True %}
-      <h3 class="text-center text-success pt-4">Réservations externe</h3>
-    {% endif %}
-    {% else %}
-      {% if event.activity %}
-        {% if event.activity.picture %}
-          <div class="col-lg h-25 overflow-hidden m-4 mb-0" style="padding-right: 60px !important">
-            <img class="img-fluid position-relative" style="top:-100px" src="{{ event.activity.picture.url }}" alt="activity illustration">
-          </div>
-        {% endif %}
-        <div class="col-lg pb-0 pl-4 pr-4 pt-0">
-          <h5> L'événement </h5>
-          <div>
-            {{ event.activity.description | safe | truncatewords_html:50 }}
-            <a href="{% url 'event:activity_detail' event.activity.pk event.activity.slug %}">
-              En savoir plus ...
-            </a>
-          </div>
-        </div>
-        {% else %}
-          Type d'activité supprimé
-      {% endif %}
-    {% endif %}
-  {% endif %}
-
-  <div class="col-lg p-2">
-    {% if event.booking == True and event.external == False %}
-      {% if is_active %}
-        <h5 class="mt-4">Total perçus: {{ total_fees }}€</h5>
-          <form action="{% url 'event:close' event.pk %}" method="post" class="d-inline">
-            {% csrf_token %}
-            <button class="btn btn-primary btn-sm type="submit" onclick="return confirm('Êtes-vous sûrs de vouloir clôturer l\'évènement?')">
-              <i class="fa fa-calendar-check"></i>
-              Clôturer
-            </button>
-          </form>
-        {% endif %} 
-    {% endif %}
-    <div class="text-center d-flex justify-content-center align-items-center flex-md-column" id="v-pills-tab" role="tablist" aria-orientation="horizontal">
-      <nav class="nav nav-pills justify-content-center w-100" id="h_nav">
-        <a class="nav-link active" id="v-pills-reservation-tab" data-toggle="pill" href="#v-pills-reservation" role="tab" aria-controls="v-pills-reservation" aria-selected="false">Participants</a>
-          {% if is_volunteer %}
-            <a class="nav-link" id="v-pills-repair-tab" data-toggle="pill" href="#v-pills-repair" role="tab" aria-controls="v-pills-repair" aria-selected="false">Réparations</a>
-          {% endif %}
-      </nav>
-    </div>
-    <div class="tab-content" id="v-pills-tabContent">    
-      <div class="tab-pane fade show active p-2 h-100" id="v-pills-reservation" role="tabpanel" aria-labelledby="v-pills-reservation-tab">
-        <h5 class="mt-4
-          {% if event.needed_organizers != 0 %}
-            {% if event.needed_organizers > event.organizers.all.count %}
-              text-danger
-            {% elif event.needed_organizers <= event.event.organizers.all.count %}
-              text-success
-            {% else %}
-              text-warning
-            {% endif %}
-          {% endif %}">
-          {{ event.organizers.all.count }}
-          {% if event.needed_organizers != 0 %}
-            /{{ event.needed_organizers }}
-          {% endif %}
-          Animateur·trice·s
-          {% if is_volunteer %}
-            {% include "event/register_organizer.html" with event_to_organize=event %}
-          {% endif %}
-        </h5>
-        <hr>
-        <div class="card-columns">
-          {% include "user/user_card.html" with users=event.organizers.all %}
-        </div>
-      {% if event.booking == True %}
-        <h5> {{ event.registered.all.count|add:event.presents.all.count }} Participant·e·s
-          {% if is_volunteer %}
-            {% include "event/register.html" with event=event admin_text=" " %}
-          {% endif %}
-        </h5>
-        <hr>
-        {% if is_volunteer %}
-          <div class="card-columns">
-            {% include "user/user_card.html" with users=event.registered.all event_control=True %}
-          </div>
-
-          <div class="card-columns">
-            {% for participation in event.participations.all %}
-                <div class="card border border-success mx-2" style="border-width:2px !important">
-                  <div class="card-body text-center p-2">
-                    <a href="{% url "user:user_detail" participation.user.pk %}" class="card-link"> 
-                      <div class="row">
-                          {% filter_orga queryset=participation.user.memberships organization=event.organization as membership %}
-                          {% if membership %}
-                            {% if membership.current_contribution == 0 %} 
-                              <span class="badge badge-pill badge-primary text-danger float-left" >{{ membership.current_contribution }}€</span>
-                            {% elif membership.current_contribution >= event.organization.advised_fee %}
-                              <span class="badge badge-pill badge-primary text-success float-left">{{ membership.current_contribution }}€</span>
-                            {% else %}
-                              <span class="badge badge-pill badge-primary text-warning float-left" >{{ membership.current_contribution }}€</span>
-                            {% endif %}
-                          {% else %}
-                          <span class="badge badge-pill badge-primary text-danger float-left" >0€</span>
-                          {% endif %}
-                          {% if participation.amount > 0 %}
-                            <span class="badge badge-pill badge-success float-left">
-                            + {{ participation.amount }}€
-                            </span>
-                            <small class="pl-1 text-success">{{ participation.fee.get_payment_display }}</small>   
-                          {% endif %}
-                        </div>
-                      <div class="row text-center" id="square-{{ participation.user.pk }}">
-                          <div class="col-12 mb-1">
-                            {% if participation.user.avatar_img %}
-                              {% thumbnail participation.user.avatar_img "50x50" crop="center" format="PNG" as im %}
-                                <img src="{{ im.url }}" class="m-2 rounded-circle"/>
-                              {% endthumbnail %}
-                            {% else %}
-                              {% if participation.user.first_name %}
-                                {% get_initial_avatar participation.user 50 'circle' %}
-                              {% endif %}
-                            {% endif %}
-                          </div>
-                          <div class="col-12">
-                            <h5 class="mx-auto col-12">
-                                {{ participation.user.first_name|capfirst }} {{ participation.user.last_name|capfirst}}
-                            </h5>
-                          </div>
-                      </div>
-                  </a>
-                    {% if is_active %}
-                      {% tokenize user=participation.user event=event action='absent' as tok %}
-                      <a href="{% url 'event:user_absent' tok %}" class="btn btn-danger btn-sm">
-                        <i class="fa fa-minus"></i>
-                      </a>
-                    {% endif %}
-                  </div>
-                </div>
-            {% endfor %}
-          </div>
-        {% else %}
-          <p>Pour voir les participations vous devez être membre actif de l'organisation </p>
-        {% endif %}
-      {% endif %}
-      </div>
-      {% if is_volunteer %}
-        <div class="tab-pane fade show p-2 h-100" id="v-pills-repair" role="tabpanel" aria-labelledby="v-pills-repair-tab">
-          <h5>Réparations en cours</h5>
-          <hr>
-            {% for stuff in event.stuffs.all %}
-            <div class="card col-md-12 mb-2 p-3">
-                <h6><a href="{{stuff.get_absolute_url}}"> {{ stuff }}</a>
-                  {% if stuff.owner %}
-                    appartenant à <a href="{{stuff.owner.get_absolute.url}}">
-                        {{ stuff.owner }}
-                    </a>
-                  {% endif %}
-                  <div class="float-right">{% include "inventory/stuff_state_display.html" with stuff_state=stuff.get_state_display %}</div>
-                </h6>
-                {% if stuff.folders.all %} 
-                  {{stuff.folders.all.count}} dossiers en cours 
-                {% else %}
-                Pas de dossiers pour l'instant. 
-                {% endif %}
-              </div>
-            {% empty %}
-            <div>
-                Pas de réparation en cours
-            <div>
-            {% endfor %}
-        </div>
-      {% endif %}
-    </div>
-  </div>
-</section>
 </div>
+
+
+<!-- Breadcrumb -->
+{% url "event:list" as event_list_url %}
+{% include "breadcrumb.html" with current=event first_parent_url=event_list_url first_parent_text="Évènements" %}
+
+
+<!-- Jumbotron -->
+<div class="jumbotron jumbotron-fluid no-padding-jumbotron"
+style="background-image:url('{{event.activity.picture.url}}');background-size:cover; min-height: 200px;background-position: center;">
+  <div class="container text-center d-flex justify-content-center align-items-center flex-md-column">
+    <div class="header_detail_page_picture">
+    </div>
+  </div>
+</div>
+
+{% block admin %}{% endblock %}
+
+{% include "event/detail/event_detail_visitor.html" %}
+
 {% endblock %}
 
 {% block extra_js %}
@@ -394,6 +65,7 @@
     $(document).ready(function(){
       $("#event_title").sticky({topSpacing:65});
       $(".booking_form").sticky({topSpacing:105});
+      $("#event-book").sticky({topSpacing:155});
     });
   </script>
 

@@ -1,0 +1,166 @@
+{% extends 'event/event_detail.html' %}
+
+{% load assets l10n app_filters static %}
+{% load thumbnail %}
+{% load initialavatar %}
+
+{% block admin %}
+<div class="d-flex">
+  <div class="col-md-7">
+    <div class="container pl-4 pr-4 pt-2" id="event_about">
+      <h5 class="text-danger">
+        <i class="fa fa-calendar-alt"></i> {{ event.date|date:"l j F Y " }} de {{ event.starts_at }} à {{ event.ends_at }}
+      </h5>
+      <h3 class="">
+        {% if event.activity.category %} {{event.activity.category}} - {% endif %} {{ event.activity }}
+      </h3>
+      <div class="lead float-right ml-2">
+        {% if is_active %}
+          <a href="{% url 'event:edit' event.pk %}" class="btn btn-secondary rounded-circle"><i class="fa fa-pencil-alt"></i></a>
+        {% endif %}
+        {% if is_admin %}
+          <a href="{% url 'event:delete' event.pk %}" class="btn btn-danger rounded-circle"><i class="fa fa-trash"></i></a>
+        {% endif %}
+      </div>
+      <p class="lead mb-1">
+        Organisé par
+        {% if event.organization.picture %}
+          {% thumbnail event.organization.picture "30x30" crop="left" format="PNG" as im %}
+            <img class="img-fluid rounded-circle square-2" src="{{ im.url }}" alt="organization img">
+          {% endthumbnail %}
+        {% endif %}
+        <a href="{% url 'organization_page' event.organization.slug %}">
+          {{ event.organization.name }}
+        </a>
+        {% if event.collaborator %}
+          <small>en partenariat avec {{ event.collaborator }}</small>
+        {% endif %}
+      </p>
+      {% if members_only %}
+        <p>Réservé aux membres de l'association</p>
+      {% endif %}
+      {% if membership_url %}
+        <p><a href="{{ membership_url }}" title="Paiement d'adhésion en ligne" target="_blank">Adhérer en ligne</a></p>
+      {% endif %}
+      <h6 class="text-muted">
+        {% if event.is_free %}
+          <span class="badge badge-secondary badge-pill">Sans limite de place</span>
+        {% else %}
+          {% if event.remaining_seats <= 0 %}
+            <span class="badge badge-warning badge-pill">Complet</span>
+          {% else %}
+            <span class="badge badge-secondary badge-pill">{{ event.remaining_seats }}</span> places disponibles
+          {% endif %}
+        {% endif %}
+        {% if event.booking == False and event.external == False %}
+          <span class="badge badge-secondary badge-pill">Sans réservation</span>
+        {% elif event.external == True %}
+          <span class="badge badge-secondary badge-pill">Réservation externe</span>
+        {% endif %}
+        {% if request.user in event.registered.all or request.user in event.presents.all %}
+          <span class="badge badge-success badge-pill">Inscrit</span>
+        {% endif %}
+        {% if request.user in event.organizers.all %}
+          <span class="badge badge-success badge-pill">Animateur</span>
+        {% endif %}
+      </h6>
+      {% if event.allow_stuffs %}
+        <h6 class="text-muted"><i class="fas fa-tools"></i> Cet événement gère les réparations</h6>
+      {% endif %}
+    </div>
+    <h5>{{ event.registered.all.count|add:event.presents.all.count }} Participant·e·s</h5>
+    {% include "event/detail/registered_users.html" with users=event.registered.all event_control=True %}
+  </div>
+  <div class="col">
+    <section class="">
+      <div class="container pl-4 pr-4 pt-2 bg-white" id="event_about">
+        {% if event.organization.membership_url %}
+          <a class="btn btn-block btn-success" target="_blank" href="{{event.organization.membership_url}}">
+            Réservation externe
+          </a>
+        {% endif %}
+        {% if is_volunteer and user not in event.registered.all %}
+          <form
+              {% if user in event.organizers.all %}
+                action="{% url 'event:remove_active' event.pk %}"
+              {% else %}
+                action="{% url 'event:add_active' event.pk %}"
+              {% endif %}
+              method="post"
+              class="d-inline">
+            {% csrf_token %}
+            {% if user in event.organizers.all %}
+              <button class="btn btn-secondary btn-block" type="submit">
+                je n'anime plus
+              </button>
+            {% else %}
+              <button class="btn btn-primary btn-block" type="submit">
+                J'anime
+              </button>
+            {% endif %}
+          </form>
+        {% endif %}
+      </div>
+    </section>
+    <div class="">
+      {% if event.booking == True and event.external == False %}
+        {% if is_active %}
+          <h3>Total perçus: <b>{{ total_fees }}€</b></h3>
+        {% endif %}
+      {% endif %}
+      <h5 class="mt-4
+        {% if event.needed_organizers != 0 %}
+          {% if event.needed_organizers > event.organizers.all.count %}
+            text-danger
+          {% elif event.needed_organizers <= event.event.organizers.all.count %}
+            text-success
+          {% else %}
+            text-warning
+          {% endif %}
+        {% endif %}">
+        {{ event.organizers.all.count }}
+        {% if event.needed_organizers != 0 %}
+          /{{ event.needed_organizers }}
+        {% endif %}
+        Animateur·trice·s {% include "event/register_organizer.html" with event_to_organize=event %}
+      </h5>
+      <div class="">
+        {% include "user/user_card.html" with users=event.organizers.all %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="col-md-12">
+  <section class="col-md-12 bg-white">
+    <div class="container pl-4 pr-4 pt-2 bg-white">
+      <div class="tab-pane fade show p-2 h-100" id="v-pills-repair" role="tabpanel" aria-labelledby="v-pills-repair-tab">
+        <h5>Réparations en cours</h5>
+        <hr>
+        {% for stuff in event.stuffs.all %}
+        <div class="card col-md-12 mb-2 p-3">
+          <h6>
+            <a href="{{stuff.get_absolute_url}}">{{ stuff }}</a>
+            {% if stuff.owner %}
+              appartenant à <a href="{{stuff.owner.get_absolute.url}}">{{ stuff.owner }}</a>
+            {% endif %}
+            <div class="float-right">
+              {% include "inventory/stuff_state_display.html" with stuff_state=stuff.get_state_display %}
+            </div>
+          </h6>
+          {% if stuff.folders.all %}
+            {{stuff.folders.all.count}} dossiers en cours
+          {% else %}
+          Pas de dossiers pour l'instant.
+          {% endif %}
+        </div>
+        {% empty %}
+          <div>
+              Pas de réparation en cours
+          <div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+</div>
+{% endblock %}

@@ -6,16 +6,29 @@ from treebeard.forms import movenodeform_factory
 from import_export.admin import ImportExportActionModelAdmin
 from django_better_admin_arrayfield.admin.mixins import DynamicArrayMixin
 
-from .models import Stuff, Device, Brand, Category, Observation, Action, Reasoning, Intervention, RepairFolder, Status
+from .models import (
+    Stuff,
+    Device,
+    Brand,
+    Category,
+    Observation,
+    Action,
+    Reasoning,
+    Intervention,
+    RepairFolder,
+    Status,
+)
 
 
 class DeviceAdmin(DynamicArrayMixin, SimpleHistoryAdmin):
     class Meta:
         model = Device
 
+
 class CategoryResource(resources.ModelResource):
     class Meta:
         model = Category
+
 
 class CategoryAdmin(ImportExportActionModelAdmin, TreeAdmin):
     form = movenodeform_factory(Category)
@@ -31,6 +44,3 @@ admin.site.register(Reasoning, SimpleHistoryAdmin)
 admin.site.register(Intervention, SimpleHistoryAdmin)
 admin.site.register(RepairFolder, SimpleHistoryAdmin)
 admin.site.register(Status, SimpleHistoryAdmin)
-
-
-

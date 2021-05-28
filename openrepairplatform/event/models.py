@@ -181,11 +181,11 @@ class Event(models.Model):
         verbose_name="Lieu",
     )
     allow_stuffs = models.BooleanField(
-        verbose_name=_("Souhaitez-vous gérer des réparations ?"),
+        verbose_name=_("Souhaitez-vous gérer des réparations électroniques ?"),
         default=False,
         blank=True,
         help_text=(
-            "Les participants pourront déclarer leurs réparations "
+            "Les participants pourront déclarer leurs objets électroniques à réparer "
             "lors de la réservation"
         ),
     )

@@ -4,64 +4,27 @@
   {% if event.booking == False %}
     <a class="btn btn-outline-warning">Événement sans réservation</a>
   {% else %}
-      {% if admin_text %}
-      <button class="btn btn-success rounded-circle" data-toggle="modal" data-target="#reservation{{ event.pk | slugify }}">
-        <i class="fa fa-plus"></i>
-      </button>
-        {{ admin_text }}
+    {% if admin_text %}
+    <button class="btn btn-success rounded-circle" data-toggle="modal" data-target="#reservation{{ event.pk | slugify }}">
+      <i class="fa fa-plus"></i>
+    </button>
+      {{ admin_text }}
+    {% else %}
+      {% if event.remaining_seats > 0 %}
+        <button class="btn btn-success btn-block booking_form" data-toggle="modal" data-target="#reservation{{ event.pk | slugify }}">
+          Je participe !
+        </button>
       {% else %}
-        {% if event.remaining_seats > 0 %}
-          <button class="btn btn-success btn-block booking_form" data-toggle="modal" data-target="#reservation{{ event.pk | slugify }}">
-            Je participe !
-          </button>
-        {% else %}
-          <a class="btn btn-block btn-outline-danger"> Complet</a>
-        {% endif %}
+        <a class="btn btn-block btn-outline-danger"> Complet</a>
       {% endif %}
-    <div class="modal" id="reservation{{ event.pk|cut:" " }}" tabindex="-1" role="dialog">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Réserver</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-            <div class="modal-body">
-            <h5 class="text-left">
-              Avant de réserver, prenez connaissance des informations suivante:
-            </h5>
-            <ul class="pl-1">
-              <li class="text-left">
-                <small>un mail de confirmation contenant un lien d'annulation vous sera envoyé.
-                  <span class="text-danger">(même si vous le recevez pas, votre inscription est prise en compte !)</span></small>
-              </li>
-              {% for condition in event.conditions.all %}
-              <li class="text-left">
-                {% if condition.price > 0 %}
-                  <span class="badge badge-pill badge-secondary">
-                    {{ condition.price }}€</span>
-                  {% else %}
-                  {% endif %}
-                <small>{{ condition.description | safe }}</small>
-              </li>
-              {% empty %}
-              <li class="text-left pb-3"><small>La participation est libre / pas de condition d'accès</small>
-              </li>
-            </ul>
-              {% endfor %}
-            </div>
-            <small>Pensez à vous <a href="{% url "login" %}" title="se connecter">connecter ou créer/activer votre compte</a></small>
-            <form action="{% url 'user:create_and_book' %}?event={{ event.pk|cut:" " }}" method="post">
-                {% csrf_token %}
-                {% bootstrap_form form=register_form %}
-            <div class="modal-footer">
-              <input type="submit" value="Réserver" class="btn btn-primary"/>
-            </div>
-          </form>
+    {% endif %}
+      <form action="{% url 'user:create_and_book' %}?event={{ event.pk|cut:" " }}" method="post">
+          {% csrf_token %}
+          {% bootstrap_form form=register_form %}
+        <div class="modal-footer">
+          <input type="submit" value="Participer" class="btn btn btn-success btn-block"/>
         </div>
-      </div>
-    </div>
+      </form>
   {% endif %}
 {% else %}
   {% if event.booking == False %}

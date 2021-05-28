@@ -1,122 +1,63 @@
-{% extends 'base.html' %}
 {% load assets app_filters thumbnail initialavatar bootstrap4 static %}
-{% block title %} réservation {{event}} {% endblock %}
-
-{% block content %}   
-{% url "event:list" as event_list_url %}
-{% include "breadcrumb.html" with current="votre réservation" second_parent_url=event_list_url second_parent_text="Évènements" first_parent_url=event.get_absolute_url first_parent_text=event %}
 
 <div class="modal fade" tabindex="-1" role="dialog" id="modal">
   <div class="modal-dialog" role="document">
     <div class="modal-content"></div>
   </div>
 </div>
-
-<div class="container">
-  <div class="d-flex justify-content-center">
-    <div class="m-2 mt-5 text-center">
-      <div class="pt-2">
-      <h5 class="text-success"><i class="mt-2 far fa-hand-peace fa-3x"></i> Réservation confirmée !</h5>
-      <span class="mt-2 d-block mb-3"><i class="text-danger">Noubliez-pas : réserver une place vous engage à participer.</i></span>
-      <div class="card shadow text-left" style="max-width: 350px; margin:auto">
-        <div class="card-header bg-primary"> 
-          <span class="text-secondary">
-            <i class="far fa-calendar-alt"></i>    
-            {{ event.date|date:"l j F Y " }} <br>
-            <span class="text-white">
-              <i class="far fa-clock"></i>  
-              {{ event.starts_at }} à {{ event.ends_at }}
-            </span>
-          </span>
-        </div>
-        <div class="p-2">
-          <h6 class="text-muted mb-0">Participant.e</h6>
-          {% if registered_user.avatar_img %}
-            {% thumbnail registered_user.avatar_img "25x25" crop="center" format="PNG" as im %}
-              <img src="{{ im.url }}" class="m-2 rounded-circle"/>
-            {% endthumbnail %}
-          {% else %}
-            {% if registered_user.first_name %}
-              {% get_initial_avatar registered_user 25 'circle' %}
-            {% endif %}
-          {% endif %}
-          <b>{{registered_user}}</b>
-        </div>
-        <hr>
-          <div class="card-body p-0 d-flex flex-column">
-          <div class="p-2">
-            <div style="min-height: 48px;">
-              <h6 class="text-muted mb-0">{{ event.activity.category.name }}</h6>
-              <h6 class="mb-0">{{ event.activity.name|truncatechars:40 }}</h6>
-            </div>
-            <hr>
-            <h6 class="text-muted mb-0">Adresse</h6>
-            <small>
-              <i class="fa fa-map-marker-alt"></i>
-              {{ event.location }}
-            </small>
-            <hr>
-            {% if event.description %}
-            <small>
-              {{ event.description | safe | truncatewords_html:40 }}
-            </small>
-            {% endif %}
-            <h6 class="text-muted mb-0">Conditions</h6>
-            <ul class="pl-3">
-            {% for condition in event.conditions.all %}
-                <li class="text-left">
-                  {% if condition.price > 0 %}
-                    <small class="badge badge-pill badge-secondary">
-                      {{ condition.price }}€</small> 
-                    {% endif %}
-                  <small>{{ condition.description | safe }}</small>
-                </li>
-                {% empty %}
-                <li class="text-left pb-3"><small>La participation est libre / pas de condition d'accès</small>
-                </li>
-            {% endfor %}
-            </ul>
-          </div> 
-          <a class="btn btn-default w-100" href="{% url 'event:detail' event.pk event.slug %}">Retour à l'événement</a> 
-        </div>
-      </div>
-    </div>
+<div class="pt-2">
+  <div class="">
+    <h5 class="text-white">
+      <i class="mt-2 far fa-hand-peace fa-3x"></i> Réservation confirmée !
+    </h5>
   </div>
+  <span class="mt-2 d-block mb-3">
+    <i class="text-danger">Noubliez-pas : réserver une place vous engage à participer.</i>
+  </span>
+  <h5> 
+  {% if user_success_booking.avatar_img %}
+    {% thumbnail user_success_booking.avatar_img "50x50" crop="center" format="PNG" as im %}
+      <img src="{{ im.url }}" class="m-2 rounded-circle"/>
+    {% endthumbnail %}
+  {% else %}
+    {% if user_success_booking.first_name %}
+      {% get_initial_avatar user_success_booking 50 'circle' %}
+    {% endif %}
+  {% endif %}
+  {{user_success_booking}}
+  </h5>
   {% if event.allow_stuffs %}
-    <div class="m-2 mt-5 mb-5 text-center">
+    <div class="mt-5 mb-5 text-center">
       <h5 class="m-4">Dites-nous quel objet vous apportez !</h5>
       <span> Sélectionner un objet dans votre inventaire ci-dessous, ou 
-        <a class="bs-modal" href="#" data-form-url="{% url 'event:create_user_event_stuff' event.pk registered_user.pk token %}">
+        <a class="bs-modal text-white" href="#" data-form-url="{% url 'event:create_user_event_stuff' event.pk user_success_booking.pk %}">
           créez-en un nouveau 
         </a> puis selectionnez-le 
       </span>
-        {% if registered_user.user_stuffs %}
-          <div class="d-flex justify-content-center">
-            <div class="p-4 pt-4">
-              <form method="POST" action="{% url 'event:add_stuff_event' event.pk registered_user.pk %}">
+        {% if user_success_booking.user_stuffs %}
+          <div class="">
+            <div class="mt-4 shadow-sm">
+              <form method="POST" action="{% url 'event:add_stuff_event' event.pk user_success_booking.pk %}">
                 {% csrf_token %}
-              <div class="table-responsive shadow bordered">
-                <table class="table table-hover text-left" if="stuffs-table">
+              <div class="table-responsive bordered">
+                <table class="table mb-0 text-left" if="stuffs-table">
                   <thead>
                     <tr>
                       <th colspan="2">Mon inventaire</th>
-                      <td>Sélectionner</td>
+                      <th>Sélectionner</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
                     <td colspan="3" class="text-center">
-                      <a class="bs-modal" href="#" data-form-url="{% url 'event:create_user_event_stuff' event.pk registered_user.pk token %}">
+                      <a class="bs-modal" href="#" data-form-url="{% url 'event:create_user_event_stuff' event.pk user_success_booking.pk %}">
                         créer un autre objet
                       </a>
                     </td>
                     </tr>
-                      {% for stuff in registered_user.user_stuffs.all %}
+                      {% for stuff in user_success_booking.user_stuffs.all %}
                       <tr>
-                        <td scope="row">{{ stuff }}</td>
-                        <td>
-                          {% include "inventory/stuff_state_display.html" with stuff_state=stuff.get_state_display %}
-                        </td>
+                        <td scope="row" colspan="2">{{ stuff }}</td>
                         <td class="text-right">
                           <input class="form-check-input" type="radio" name="selectedstuff" value="{{stuff.pk}}">
                         </td>
@@ -131,7 +72,7 @@
                   </tbody>
                 </table>
               </div>
-              <button type="submit" id="submit" class="btn btn-success w-100 p-3">Valider mon choix</button>
+              <button type="submit" id="submit" class="btn btn-primary w-100 p-3">Valider mon choix</button>
               </form>
             </div>
           </div>
@@ -139,8 +80,6 @@
         </div>
       {% endif %}
   </div>
-{% endblock %}
-
 {% block extra_js %}
   <script type="text/javascript">
     $(document).ready(function(){
@@ -151,11 +90,6 @@
     });
     });
   </script>
-  <script>
-    $(document).ready(function(){
-      $("#breadcrumb").sticky({topSpacing:0});
-    });
-</script>
 {% endblock %}
 
 

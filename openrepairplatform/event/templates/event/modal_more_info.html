@@ -1,16 +1,4 @@
 {% load bootstrap4 app_filters %}
-
-<button class="btn btn-success btn-sm" data-toggle="modal" data-target="#more-info-{{ user.pk }}">
-  {% if membership %}
-  <b>{{ membership.amount }}€ / {{ event.organization.advised_fee }}€</b>
-  {% else %}
-    <b>Adhérer</b>
-  {% endif %}
-  <i class="fa fa-plus"></i>
-  <i class="fa fa-user"></i>
-</button>
-
-
 <div class="modal" id="more-info-{{ user.pk }}" tabindex="-1" role="dialog">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -64,7 +52,6 @@
             <input type="submit" value="Enregistrer" class="btn btn-primary">
           </div>
         </form>
-
       </div>
     </div>
   </div>

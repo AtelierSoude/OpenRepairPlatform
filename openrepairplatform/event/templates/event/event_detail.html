@@ -28,18 +28,19 @@
 {% include "breadcrumb.html" with current=event first_parent_url=event_list_url first_parent_text="Évènements" %}
 
 
-<!-- Map -->
-{% block map %}{% endblock %}
-
-{% block header_info %}{% endblock %}
-
+<!-- Jumbotron -->
+<div class="jumbotron jumbotron-fluid no-padding-jumbotron" 
+style="background-image:url('{{event.activity.picture.url}}');background-size:cover; min-height: 200px;background-position: center;">
+  <div class="container text-center d-flex justify-content-center align-items-center flex-md-column">
+    <div class="header_detail_page_picture">
+    </div> 
+  </div>
+</div>
 {% if is_volunteer %}
   {% include "event/detail/event_detail_admin.html" %}
 {% else %}
   {% include "event/detail/event_detail_visitor.html" %}
 {% endif %}
-
-
 {% endblock %}
 
 {% block extra_js %}
@@ -67,6 +68,7 @@
     $(document).ready(function(){
       $("#event_title").sticky({topSpacing:65});
       $(".booking_form").sticky({topSpacing:105});
+      $("#event-book").sticky({topSpacing:155});
     });
   </script>
 

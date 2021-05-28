@@ -91,7 +91,7 @@ urlpatterns = [
         name="add_stuff_event",
     ),
     path(
-        "create_stuff/<int:event_pk>/<int:registered_pk>/<token>",
+        "create_stuff/<int:event_pk>/<int:registered_pk>",
         views.StuffUserEventFormView.as_view(),
         name="create_user_event_stuff",
     ),

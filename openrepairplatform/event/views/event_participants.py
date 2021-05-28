@@ -48,12 +48,14 @@ class BookView(RedirectView):
                 user_pk = id_current_user
             if is_authorized:
                 next_url = reverse(
-                    "event:book_confirm", args=[event.id, event.slug, user_pk, token]
+                    "event:detail", args=[event.id, event.slug]
                 )
+                next_url = f"{next_url}?success_booking=True&user_pk={user_pk}"
             else:
                 next_url = reverse(
-                    "event:book_confirm", args=[event.id, event.slug, user_pk, token]
+                    "event:detail", args=[event.id, event.slug]
                 )
+                next_url = f"{next_url}?success_booking=True&user_pk={user_pk}"
 
         if event.remaining_seats <= 0 and not is_authorized:
             messages.error(

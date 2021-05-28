@@ -1,66 +1,135 @@
-{% load app_filters %}
-
-    <section class="d-flex flex-wrap justify-content-between">
+{% load app_filters thumbnail initialavatar %}
+    <section class="d-flex flex-column">
     {% for user in users %}
       {% filter_orga queryset=user.memberships organization=event.organization as membership %}
       {% filter_user queryset=event.participations user=user as participation %}
       {% related_user queryset=event.fees user=user as fees %}
       {% sum_conditions conditions=event.conditions.all as condition_prices %}
-
       {% tokenize user=user event=event action='present' as tok_event %}
-
-      <div class="card mb-2" style="width: 49%">
-        <div class="card-body">
-          <h5 class="card-title">{{ user.email }}</h5>
-          <h6 class="card-subtitle mb-2 text-muted">{{ user.last_name }} {{ user.first_name }}</h6>
-          {% if event.conditions.all %}
-            <p>
-              {% if participation %}
-                <button class="btn btn-primary" data-toggle="modal" data-target="#participation-{{ user.pk }}">
-                  <b>Mettre à jour la participation : {{ participation.amount }} / {{ condition_prices }}€</b>
-                </button>
-                {% include "event/participation_form.html" with user=user event=event form=participation_form|initial:participation %}
+      <div class="card 
+      {% if user in event.presents.all %}
+      border-success
+      {% endif %}
+      shadow-sm mb-2">
+        <div class="card-header d-flex">
+          <div class="d-inline pr-2 float-left">
+          {% if user.avatar_img %}
+              {% thumbnail user.avatar_img "50x50" crop="center" format="PNG" as im %}
+                <img src="{{ im.url }}" class="m-2 rounded-circle"/>
+              {% endthumbnail %}
               {% else %}
-                <button class="btn btn-success" data-toggle="modal" data-target="#participation-{{ user.pk }}">
-                  <b>Ajouter une participation : {{ condition_prices }}€</b>
-                </button>
-                {% include "event/participation_form.html" with user=user event=event form=participation_form %}
+              {% if user.first_name %}
+                {% get_initial_avatar user 50 'circle' %}
               {% endif %}
-            </p>
-          {% endif %}
-          <span class="card-link">
-            {% include "event/modal_more_info.html" with user=user membership=membership form=present_form|initial:user %}
-          </span>
-          <span class="card-link">
+            {% endif %}
+          </div>
+          <div class="d-inline">
+            <h4 class="card-title">
+              {{user}}
+            </h4>
+            {% if user.first_name or user.last_name %}
+            {% endif %}
+            <h6 class="card-subtitle mb-2 text-muted">{{ user.email }}</h6>
+          </div>
+          <div class="ml-auto">
             {% if event_control == True and event.has_started and is_active %}
               {% if user in event.presents.all %}
-                <a class="btn btn-success btn-sm" href="{% url 'event:user_absent' tok_event %}">Présent</a>
+                <a class="btn btn-danger" href="{% url 'event:user_absent' tok_event %}">Absent</a>
               {% else %}
-                <a class="btn btn-danger btn-sm" href="{% url 'event:user_present' tok_event %}">Absent</a>
+                <a class="btn btn-success" href="{% url 'event:user_present' tok_event %}">Présent</a>
               {% endif %}
             {% else %}
               {% if user in event.presents.all %}
-                <a class="btn btn-success btn-sm">Présent</a>
+                <a class="btn btn-light text-muted">Absent</a>
               {% else %}
-                <a class="btn btn-danger btn-sm">Absent</a>
+                <a class="btn btn-light text-muted">Présent</a>
               {% endif %}
             {% endif %}
-          </span>
-          {% if fees %}
-            <hr/>
-            <p><b>Cotisation :</b></p>
-            {% for fee in fees %}
-              <span class="badge badge-pill badge-primary">
-                {{ fee.amount }}€
-                <form class="d-inline" action="{% url 'user:fee_delete' fee.pk %}" method="post">
-                  {% csrf_token %}
-                  <button type="submit" class="btn btn-primary btn-sm">x</a>
-                </form>
-              </span>
-            {% endfor %}
-          {% endif %}
+          </div>
+        </div>       
+        <div class="card-body d-flex flex-column">
+        <div class="d-flex">
+            <div class="col-md-6">
+              <p>
+                <b>Etat de l'adhésion : </b> 
+                {% if membership %}
+                  {% if membership.current_contribution == 0 %} 
+                  <span class="text-danger" >Pas de cotisation</span>
+                  <span class="badge badge-pill badge-danger" >0€</span>
+                  {% elif membership.current_contribution >= event.organization.advised_fee %}
+                  <span class="text-success" >A jour </span>
+                  <span class="badge badge-pill badge-success" >{{membership.current_contribution}}€/{{event.organization.advised_fee}}€</span>
+                  {% else %}
+                  <span class="text-warning" >Incomplet</span>
+                  <span class="badge badge-pill badge-warning" >{{membership.current_contribution}}€</span>
+                  {% endif %}
+                  <br>
+                  <span>
+                    {% if membership.has_expired %}
+                      Adhésion expirée
+                    {% else %}
+                      Membre jusqu'au {{membership.date_limit}}
+                    {% endif %}
+                  </span>
+                {% else %}
+                    Non membre
+                {% endif %}
+              </p>      
+              {% include "event/modal_more_info.html" with user=user membership=membership form=present_form|initial:user %}
+              {% if membership %}
+                <p>
+                  <b>Cotisations : </b>                
+                  <button class="btn btn-light btn-sm" data-toggle="modal" data-target="#more-info-{{ user.pk }}">
+                    </b><i class="fa fa-plus"></i> ajouter</b>
+                  </button>
+                </p>
+                {% if fees %}
+                <div class=""> 
+                  {% for fee in fees %}
+                  <span class="badge badge-pill badge-light pr-2">
+                    {{ fee.amount }}€
+                    {{ fee.get_payment_display }}
+                    <form class="d-inline" action="{% url 'user:fee_delete' fee.pk %}" method="post">
+                      {% csrf_token %}
+                      <button type="submit" class="btn text-danger btn-sm">x</button>
+                    </form>
+                  </span>
+                  {% endfor %}
+                </div>
+              {% endif %}
+              {% else %}
+                <button class="btn btn-light btn-sm" data-toggle="modal" data-target="#more-info-{{ user.pk }}">
+                  <b>ajouter membre <i class="fa fa-plus"></i><i class="fa fa-user"></i></b>
+                </button>
+              {% endif %}
+            </div>
+            {% if event.conditions.all %}
+              <div class="col-md-6">
+                <p><b>Participation : </b>
+                  {% if participation.amount == 0 or not participation.amount %} 
+                  <span class="text-danger">0€</span>
+                  {% elif participation.amount >= condition_prices %}
+                  <span class="text-success">{{participation.amount}}€</span>
+                  {% else %}
+                  <span class="text-warning">{{participation.amount}}€</span>
+                  {% endif %}
+                  / {{condition_prices }}€
+                </p>
+                {% if participation %}
+                  <button class="btn btn-primary" data-toggle="modal" data-target="#participation-{{ user.pk }}">
+                    <b>Mettre à jour la participation</b>
+                  </button>
+                  {% include "event/participation_form.html" with user=user event=event form=participation_form|initial:participation %}
+                {% else %}
+                  <button class="btn btn-light btn-sm" data-toggle="modal" data-target="#participation-{{ user.pk }}">
+                    <b>Ajouter une participation</b>
+                  </button>
+                  {% include "event/participation_form.html" with user=user event=event form=participation_form %}
+                {% endif %}
+              </div>
+            {% endif %}
+          </div>
         </div>
       </div>
-
     {% endfor %}
     </section>

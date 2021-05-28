@@ -26,6 +26,7 @@ class CleanHTMLField(HTMLField):
         ALLOWED_ATTRS = [
             "style",
             "href",
+            "class",
         ]
         ALLOWED_STYLES = [
             "text-decoration",

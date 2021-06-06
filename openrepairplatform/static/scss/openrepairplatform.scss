@@ -1,10 +1,10 @@
-/* éléments généraux */
+
 @import url('https://fonts.googleapis.com/css?family=Inconsolata&display=swap');
-@import 'variables.scss';
+@use 'variables.scss';
 
 .container-fluid{
-  padding: 0;
-  margin: 0;
+  padding: 0px;
+  margin: 0px;
 }
 .content-page {
   min-height: 500px;
@@ -155,7 +155,7 @@ td {
 
 .autocomplete-suggestion { 
   position: relative; 
-  padding: 0 .6em; 
+  padding: 0.6em; 
   line-height: 23px; 
   white-space: nowrap; 
   overflow: hidden; 
@@ -208,7 +208,6 @@ td {
 }
 
 .header_detail_page, #h_nav, #breadcrumb, #jumbotron, #search_tab, #event_title, #event_about, .jumbotron {
- /* z-index: 2 !important; */
   position: relative;
 }
 
@@ -270,8 +269,8 @@ td {
   justify-content: center;
   box-shadow: 0 0 4px rgba(0,0,0,0.14),0 4px 8px rgba(0,0,0,0.28);
   transition: right 0.5s, bottom 0.5s, border-radius 0.5s, text-indent 0.2s, visibility 1s, width 0.2s ease, height 0.5s ease 0.4s, color 0.5s, background-color 2s, transform 0.5s;
-  padding: 0;
-  margin: 0;
+  padding: 0px;
+  margin: 0px;
   width: 63px;
   height: 63px;
   border-radius: 40px;
@@ -372,8 +371,8 @@ position: relative;
 
 .breadcrumb{
   font-size: .8em;
-  margin-bottom: 0 !important;
-  border-width: 0;
+  margin-bottom: 0px !important;
+  border-width: 0px;
   background-color: white !important;
   z-index: 2;
 }
@@ -448,27 +447,27 @@ position: relative;
     position: initial !important;
   }
   .header_detail_page{
-    /* height: 200px; */
-     z-index: 2;
-   }
-   #side_nav{
-     width:100%;
-   }
-   .header_detail_page_picture{
-     padding-top: 10px !important;
-     img{
-       width: 75px;
-       height: auto;
-       margin: 0px !important;
-     }
-   }
-   .user-title{
-     text-align: left !important;
-   }
-   .header_detail_page_title{
-     padding-top: 10px !important;
-     line-height: 75px;
-   }
+    z-index: 2;
+  }
+  #side_nav{
+    width:100%;
+  }
+
+  .header_detail_page_picture{
+    padding-top: 10px !important;
+    img{
+      width: 75px;
+      height: auto;
+      margin: 0px !important;
+    }
+  }
+  .user-title{
+    text-align: left !important;
+  }
+  .header_detail_page_title{
+    padding-top: 10px !important;
+    line-height: 75px;
+  }
 
   #v-pills-tab{
     width:100%;
@@ -483,7 +482,7 @@ position: relative;
   }
   .event_list_cards{
     column-count: 1;
-   }
+  }
 
   #event_about {
     padding:25px !important;
@@ -496,12 +495,12 @@ position: relative;
     visibility: hidden;
   }
   .header_detail_page, #h_nav, #breadcrumb, #jumbotron, #search_tab, #event_title, .booking_form, .jumbotron {
-     z-index: 2 !important;
-   }
-   .modal.show .modal-dialog {
-     z-index: 3 !important;
-     display: relative;
-   }
+    z-index: 2 !important;
+  }
+  .modal.show .modal-dialog {
+    z-index: 3 !important;
+    display: relative;
+  }
 }
 
 // Menu hack for mobile slide left up // 
@@ -514,35 +513,35 @@ position: relative;
   }
 
   .vertical-nav {
-      position: fixed;
-      top: 65px;
-      left: 0;
-      width: 75px;
-      height: 100%;
-      overflow-y: auto;
-      padding-top: 30px;
+    position: fixed;
+    top: 65px;
+    left: 0;
+    width: 75px;
+    height: 100%;
+    overflow-y: auto;
+    padding-top: 30px;
   }
 }
 
 @media (max-width: 992px) {
 
   .navbar-collapse {
-      position: fixed;
-      top: 65px;
-      left:-400px;
-      height: 800px;
-      transition: all 0.3s ease;
-      display: block;
+    position: fixed;
+    top: 65px;
+    left:-400px;
+    height: 800px;
+    transition: all 0.3s ease;
+    display: block;
   }
   .navbar-collapse.collapsing {
-      height: auto !important;
-      margin-right: 50%;
-      transition: all 0.3s ease;
-      display: block;
+    height: auto !important;
+    margin-right: 50%;
+    transition: all 0.3s ease;
+    display: block;
   }
   .navbar-collapse.show {
-      right:20%;
-      left:0px;
+    right:20%;
+    left:0px;
   }
 }
 

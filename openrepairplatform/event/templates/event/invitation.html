@@ -1,22 +1,27 @@
 {% load app_filters bootstrap5 %}
 
-<section class="mb-2">
-  <h5>Invitation</h5>
-  {% tokenize user=request.user event=event action='invitation' as token %}
-  <form id="invitation-form" action="{% url 'event:invitation' token %}" method="post" class="d-inline">
-    {% csrf_token %}
+<div class="btn-group" role="group">    
+  <button id="btnInvit" type="button" class="m-2 btn btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <i class="far fa-envelope"></i> Inviter
+  </button>
+  <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
     {% for field in invitation_form %}
-      {{ field }}
-    {% endfor %}
-    <button class="d-none btn btn-block btn-success" type="submit">Envoyer l'invitation</button>
-    {% for field in invitation_form %}
-      <button class="btn btn-block btn-primary" type="button" onclick="InvitationToggleInput('{{ field.name }}')">
+      <button class="dropdown-item" type="button" onclick="InvitationToggleInput('{{ field.name }}')">
         {{ field.label }}
       </button>
     {% endfor %}
+  </div>
+  {% tokenize user=request.user event=event action='invitation' as token %}
+  <form id="invitation-form" action="{% url 'event:invitation' token %}" method="post" class="btn-group m-2">
+    {% csrf_token %}
+    <div class="btn-group">
+      {% for field in invitation_form %}
+        {{ field }}
+      {% endfor %}
+      <button class="d-none btn btn-block btn-success input-group-prepend" type="submit">Envoyer l'invitation</button>
+    </div>
   </form>
-</section>
-<hr/>
+</div>
 
 <script>
   function InvitationToggleInput (fieldName) {

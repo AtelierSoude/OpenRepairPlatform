@@ -5,7 +5,7 @@
 {% block content %}
   {% include "breadcrumb.html" with current="Organisations" %}
 
-  <div class="jumbotron jumbotron-fluid" id="jumbotron">
+  <div class="jumbotron jumbotron-fluid parallax" id="jumbotron">
     <div class="container text-center">
       <h2>Organisations</h2>
       <hr>
@@ -31,7 +31,6 @@
 {% block extra_js %}
 <script>
   $(document).ready(function(){
-    $("#jumbotron").sticky({topSpacing:105});
     $("#breadcrumb").sticky({topSpacing:65});
   });
 </script>

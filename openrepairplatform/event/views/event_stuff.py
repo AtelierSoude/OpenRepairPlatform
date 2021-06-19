@@ -14,7 +14,6 @@ class EventBookStuffView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["token"] = self.kwargs["token"]
         context["event"] = Event.objects.get(pk=self.kwargs["pk"])
         context["event_menu"] = "active"
         context["registered_user"] = CustomUser.objects.get(pk=self.kwargs["user_pk"])
@@ -30,15 +29,32 @@ class StuffUserEventFormView(StuffFormMixin):
 
     def get_success_url(self, *args, **kwargs):
         event = Event.objects.get(pk=self.kwargs["event_pk"])
-        return reverse(
-            "event:book_confirm",
-            kwargs={
-                "pk": self.kwargs["event_pk"],
-                "slug": event.slug,
-                "user_pk": self.kwargs["registered_pk"],
-                "token": self.kwargs["token"],
-            },
-        )
+        registered_pk = self.kwargs["registered_pk"]
+        next_url = reverse("event:detail", args=[event.id, event.slug])
+        next_url = f"{next_url}?success_booking=True&user_pk={registered_pk}"
+        return next_url
+
+
+class StuffUserOrgaEventFormView(StuffFormMixin):
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["visitor_user"] = CustomUser.objects.get(pk=self.kwargs["registered_pk"])
+        kwargs["event"] = Event.objects.get(pk=self.kwargs["event_pk"])
+        return kwargs
+
+    def form_valid(self, form):
+        res = super().form_valid(form)
+        stuff = form.instance
+        event = Event.objects.get(pk=self.kwargs["event_pk"])
+        if stuff:
+            event.stuffs.add(stuff)
+            event.save()
+        return res
+
+    def get_success_url(self, *args, **kwargs):
+        event = Event.objects.get(pk=self.kwargs["event_pk"])
+        registered_pk = self.kwargs["registered_pk"]
+        return reverse("event:detail_admin", args=[event.id, event.slug])
 
 
 class EventAddStuffView(View):

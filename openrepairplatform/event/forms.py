@@ -57,6 +57,7 @@ class EventForm(ModelForm):
         fields = [
             "activity",
             "is_free",
+            "members_only",
             "available_seats",
             "booking",
             "allow_stuffs",
@@ -213,6 +214,7 @@ class RecurrentEventForm(forms.ModelForm):
             "activity",
             "is_free",
             "available_seats",
+            "members_only",
             "booking",
             "allow_stuffs",
             "collaborator",

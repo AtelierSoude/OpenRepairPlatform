@@ -5,26 +5,23 @@
     <a class="btn btn-outline-warning">Événement sans réservation</a>
   {% else %}
     {% if admin_text %}
-    <button class="btn btn-success rounded-circle" data-toggle="modal" data-target="#reservation{{ event.pk | slugify }}">
+    <button class="btn btn-success rounded-circle">
       <i class="fa fa-plus"></i>
     </button>
       {{ admin_text }}
     {% else %}
       {% if event.remaining_seats > 0 %}
-        <button class="btn btn-success btn-block booking_form" data-toggle="modal" data-target="#reservation{{ event.pk | slugify }}">
-          Je participe !
-        </button>
+        <form action="{% url 'user:create_and_book' %}?event={{ event.pk | slugify }}" method="post">
+            {% csrf_token %}
+            {% bootstrap_form form=register_form %}
+          <div class="modal-footer">
+            <input type="submit" value="Participer" class="btn btn btn-success btn-block"/>
+          </div>
+        </form>
       {% else %}
         <a class="btn btn-block btn-outline-danger"> Complet</a>
       {% endif %}
     {% endif %}
-      <form action="{% url 'user:create_and_book' %}?event={{ event.pk|cut:" " }}" method="post">
-          {% csrf_token %}
-          {% bootstrap_form form=register_form %}
-        <div class="modal-footer">
-          <input type="submit" value="Participer" class="btn btn btn-success btn-block"/>
-        </div>
-      </form>
   {% endif %}
 {% else %}
   {% if event.booking == False %}
@@ -32,7 +29,8 @@
   {% elif event.booking == True and event.remaining_seats > 0 or event.is_free %}
     {% if request.user in event.registered.all %}
       {% tokenize user=request.user event=event action='cancel' as tok %}
-      <a href="{% url 'event:cancel_reservation' tok %}" class="btn btn-block btn-secondary">Je ne participe plus</a>
+      <h4 class="text-center">Vous participez à cet événement</h4>
+      <a href="{% url 'event:cancel_reservation' tok %}" class="btn btn-block btn-danger">Je ne participe plus</a>
     {% elif request.user not in event.presents.all and request.user not in event.organizers.all %}
       {% tokenize user=request.user event=event action='book' as tok %}
       <a href="{% url 'event:book' tok %}" class="btn btn-block btn-success">Je participe !</a>

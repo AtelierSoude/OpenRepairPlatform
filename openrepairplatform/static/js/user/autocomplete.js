@@ -1,8 +1,12 @@
 let inputEmailSelector = 'input[name="email"]';
+let inputEmailAnimatorSelector = 'input[name="email_animator"]';
+let inputEmailParticipantSelector = 'input[name="email_participant"]';
 let inputMainFieldSelector = 'input[name="main_field"]';
 var inputs = [
     ...document.querySelectorAll(inputEmailSelector),
-    ...document.querySelectorAll(inputMainFieldSelector)
+    ...document.querySelectorAll(inputMainFieldSelector),
+    ...document.querySelectorAll(inputEmailAnimatorSelector),
+    ...document.querySelectorAll(inputEmailParticipantSelector)
 ]
 var choices;
 

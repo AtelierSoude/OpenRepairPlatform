@@ -26,17 +26,38 @@
 
 
 <!-- Jumbotron -->
-<div class="jumbotron jumbotron-fluid no-padding-jumbotron"
+<div class="jumbotron jumbotron-fluid no-padding-jumbotron parallax d-flex align-items-end"
      style="background-image:url('{% if event.activity.picture and event.activity.picture.url %}{{event.activity.picture.url}}{% endif %}');background-size:cover; min-height: 200px;background-position: center;">
-  <div class="container text-center d-flex justify-content-center align-items-center flex-md-column">
-    <div class="header_detail_page_picture">
+    <div class="m-4 d-flex">
+    {% url 'event:detail_admin' slug=event.slug pk=event.pk as the_url %}
+     {% if is_active %}
+      {% if request.get_full_path == the_url %}
+        <a href="{{event.get_absolute_url}}" class="btn btn-large btn-light m-2">Ne plus administrer</a>
+        {% include "event/invitation.html" %}
+      {% else %}
+        <a href="admin" class="btn btn-large btn-light m-2">
+          <i class="fas fa-cog"></i>   Administrer
+        </a>
+      {% endif %}
+    {% endif %}
+    {% if request.get_full_path != the_url %}
+      <a class="btn btn-light m-2" href="{% url 'event:ical_event' event.pk %}">
+        <i class="far fa-calendar-plus"></i> ajouter à mon agenda
+      </a>
+    {% endif %}
     </div>
-  </div>
 </div>
 
-{% block admin %}{% endblock %}
-
-{% include "event/detail/event_detail_visitor.html" %}
+{% if is_active %}
+  {% url 'event:detail_admin' slug=event.slug pk=event.pk as the_url %}
+  {% if request.get_full_path == the_url %}
+    {% block admin %}{% endblock %}
+  {% else %}
+    {% include "event/detail/event_detail_visitor.html" %}
+  {% endif %}
+{% else %}
+  {% include "event/detail/event_detail_visitor.html" %}
+{% endif %}
 
 {% endblock %}
 
@@ -51,25 +72,32 @@
    });
  });
  </script>
+<script>
+  if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
 
-  {% if is_active %}
-    {{ users|json_script:"emails-data" }}
-  {% endif %}
+    $("#event-book").unstick()
+    $(".event-book").addClass("event-book-mobile")
+    {% if user_success_booking %}
+      $(".event-book").addClass("event-book-mobile-show")
+      $("#book_show").html("Réservation confirmée")
+    {% endif %}
 
-  <script>
-      const longitude = {{event.location.longitude|unlocalize}};
-      const latitude = {{event.location.latitude|unlocalize}};
+    function display_book(){
+      if($(".event-book").hasClass("event-book-mobile-show")){
+        $(".event-book").removeClass("event-book-mobile-show")
+      }
+      else {
+        $(".event-book").addClass("event-book-mobile-show")
+      }
+    };
+  }
   </script>
-
 <script>
     $(document).ready(function(){
-      $("#event_title").sticky({topSpacing:65});
       $(".booking_form").sticky({topSpacing:105});
       $("#event-book").sticky({topSpacing:155});
+      $("#breadcrumb").sticky({topSpacing:65});
     });
-  </script>
+</script>
 
-  {% assets "js_detail_event" %}
-    <script src="{{ ASSET_URL }}"></script>
-  {% endassets %}
 {% endblock %}

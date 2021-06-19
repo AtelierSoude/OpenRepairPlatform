@@ -76,6 +76,10 @@ class EventAdminView(HasVolunteerPermissionMixin, EventViewMixin):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["invitation_form"] = InvitationForm
+        context["emails"] = [
+            (f"{user.email} ({user.first_name} {user.last_name})", user.email)
+            for user in CustomUser.objects.all()
+        ]
         return context
 
 
@@ -142,7 +146,6 @@ class EventFormView(HasActivePermissionMixin):
 
 class EventEditView(RedirectQueryParamView, EventFormView, UpdateView):
     success_message = "L'évènement a bien été modifié"
-
 
 class EventCreateView(RedirectQueryParamView, EventFormView, CreateView):
     success_message = "L'évènement a bien été créé"

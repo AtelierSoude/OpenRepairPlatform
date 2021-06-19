@@ -22,8 +22,8 @@
         {% endif %}
       {% endif %}
       </div>
-      <div class="row text-center" id="square-{{ user.pk }}">
-        <div class="col-12 mb-1">
+      <div class="row" id="square-{{ user.pk }}">
+        <div class="col-2 mb-1">
           {% if user.avatar_img %}
             {% thumbnail user.avatar_img "50x50" crop="center" format="PNG" as im %}
               <img src="{{ im.url }}" class="m-2 rounded-circle"/>
@@ -34,47 +34,45 @@
             {% endif %}
           {% endif %}
         </div>
-        <div class="col-12">
-          <h5 class="mx-auto col-12">
+        <div class="col-8 text-left">
+          <h5 style="line-height: 45px !important;">
               {{ user}}
           </h5>
         </div>
-      </div>
-    </a>
-    {% if event_control == True %}
-      {% if event.has_started and is_active %}
-      {% include "event/modal_more_info.html" with user=user form=present_form|initial:user %}
-      {% endif %}
-    {% endif %}
-    
-      {% if admin_remove_controls == True %}
-        {% if is_admin %}
-          <form action="{% url 'user:remove_from_admins' organization.pk user.pk %}" class="d-inline">
+        {% if event_control == True %}
+          {% if event.has_started and is_active %}
+            {% include "event/modal_more_info.html" with user=user form=present_form|initial:user %}
+          {% endif %}
+        {% endif %}
+      
+        {% if admin_remove_controls == True %}
+          {% if is_admin %}
+            <form action="{% url 'user:remove_from_admins' organization.pk user.pk %}" class="col-2">
+              {% csrf_token %}
+              <button type="submit" class="btn badge badge-pill badge-danger float-right" onclick="return confirm('Êtes-vous sûr ?')">&times;</button>
+            </form>
+          {% endif %}
+        {% endif %}
+  
+        {% if active_remove_controls == True %}
+         {% if is_admin %}
+          <form action="{% url 'user:remove_from_actives' organization.pk user.pk %}" class="col-2">
             {% csrf_token %}
             <button type="submit" class="btn badge badge-pill badge-danger float-right" onclick="return confirm('Êtes-vous sûr ?')">&times;</button>
           </form>
+         {% endif %}
         {% endif %}
-      {% endif %}
-
-      {% if active_remove_controls == True %}
-       {% if is_admin %}
-        <form action="{% url 'user:remove_from_actives' organization.pk user.pk %}" class="d-inline">
-          {% csrf_token %}
-          <button type="submit" class="btn badge badge-pill badge-danger float-right" onclick="return confirm('Êtes-vous sûr ?')">&times;</button>
-        </form>
-       {% endif %}
-      {% endif %}
-
-      {% if volunteer_remove_controls == True %}
-        {% if is_admin %}
-        <form action="{% url 'user:remove_from_volunteers' organization.pk user.pk %}" class="d-inline">
-          {% csrf_token %}
-          <button type="submit" class="btn badge badge-pill badge-danger float-right" onclick="return confirm('Êtes-vous sûr ?')">&times;</button>
-        </form>
+  
+        {% if volunteer_remove_controls == True %}
+          {% if is_admin %}
+          <form action="{% url 'user:remove_from_volunteers' organization.pk user.pk %}" class="col-2">
+            {% csrf_token %}
+            <button type="submit" class="btn badge badge-pill badge-danger float-right" onclick="return confirm('Êtes-vous sûr ?')">&times;</button>
+          </form>
+          {% endif %}
         {% endif %}
-      {% endif %}
-
-    </ul>
+      </div>
+    </a>
   </div>
 
 {% empty %}

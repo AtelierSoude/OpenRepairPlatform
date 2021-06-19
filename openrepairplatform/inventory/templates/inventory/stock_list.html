@@ -6,7 +6,7 @@
 {% block content %}
   {% include "breadcrumb.html" with current="Stock / inventaire" %}
 
-  <div class="jumbotron jumbotron-fluid " id="jumbotron">
+  <div class="jumbotron jumbotron-fluid parallax" id="jumbotron">
     <div class="container text-center">
       <h2>Stock / inventaire</h2>
       <hr>
@@ -76,7 +76,6 @@
 {% block extra_js %}
 <script>
   $(document).ready(function(){
-    $("#jumbotron").sticky({topSpacing:105});
     $("#breadcrumb").sticky({topSpacing:65});
   });
 </script>

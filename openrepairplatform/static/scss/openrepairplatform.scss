@@ -1,6 +1,6 @@
 
 @import url('https://fonts.googleapis.com/css?family=Inconsolata&display=swap');
-@use 'variables.scss';
+@import 'variables.scss';
 
 .container-fluid{
   padding: 0px;
@@ -41,6 +41,10 @@ h5{
 
 .bg-grey { 
   background-color: #fdfdfd !important;
+}
+
+.shadow-xxl {
+  box-shadow: 0 1rem 20rem rgba(0,0,0,0.350) !important;
 }
 
 /* tables */ 
@@ -110,6 +114,22 @@ td {
 }
 
 /* forms */ 
+
+.form-select {
+  display: block;
+  width: 100%;
+  height: calc(1.5em+.75rem+2px);
+  padding: .375rem .75rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #495057;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: 0;
+  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
 
 .select2-container .select2-selection--single{
   height:40px !important;
@@ -219,7 +239,7 @@ td {
 }
 
 .navbar .fa, .avatar a, .dropdown-toggle  {
-  color: white;
+ /* color: white; */
 }
 .navbar ul li a:hover, .navbar .fa:hover, .avatar a:hover, .dropdown-toggle:hover{
   color: gray;
@@ -258,9 +278,12 @@ td {
 }
 
 /* buttons */ 
+.btn {
+  border-radius: 5px;
+}
 
 .btn-default {
-  background-color: #eaeaea;
+  background-color: #dddddd;
 }
 .btn-absolute {
   font-size: 1.2rem;
@@ -369,6 +392,14 @@ position: relative;
 
 }
 
+.parallax {
+  min-height: 200px; 
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
 .breadcrumb{
   font-size: .8em;
   margin-bottom: 0px !important;
@@ -376,8 +407,6 @@ position: relative;
   background-color: white !important;
   z-index: 2;
 }
-
-/* leaflet reset style */
 
 #place_map {
   right:0px; 
@@ -396,6 +425,25 @@ position: relative;
 }
 
 /* Modals */
+
+
+.event-book-mobile {
+  position: fixed !important;
+  top: calc(100% - 50px) !important;
+  left: 0px;
+  z-index: 4;
+  transition: all;
+  transition-duration: 0.5s;
+}
+
+.event-book-mobile-show {
+  top: 0px !important;
+  bottom: 0px;
+}
+
+.modal-body {
+  padding: 0px;
+}
 
 .modal-content {
   border-radius: 0;
@@ -426,10 +474,31 @@ position: relative;
   position: fixed !important;
   top: 100px;
   z-index: 10000;
+  font-size: 1.2rem;
+  padding: 10px;
   box-shadow: 0px 10px 100px black;
-  right: 20px;
-  left: 20px;
+  right: -1000px;
+  transition: all;
+  transition-duration: 0.5s;
 }
+
+.alert-success {
+  color: $primary;
+  background-color: $success;
+  border:0px;
+}
+
+.alert-danger {
+  color: white;
+  background-color: #ff2241 !important;
+  border:0px;
+}
+
+.alert-dismissible .close{
+  position: static !important;
+  float: none;
+}
+
 @media screen and (max-width: 1024px) {
   h3{
       font-size:1rem;
@@ -485,8 +554,7 @@ position: relative;
   }
 
   #event_about {
-    padding:25px !important;
-    padding-bottom: 0px !important;
+    padding-bottom: 10px !important;
   }
   #event_map {
     z-index: 1;

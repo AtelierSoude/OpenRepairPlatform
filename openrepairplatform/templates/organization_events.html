@@ -5,9 +5,13 @@
 {% block title %}Page de {{organization.name}}: gestion des évènements{% endblock %}
 
 {% block menu_content %}
-  <section class="container">
+  <section class="container text-center">
     <h2 class="text-center mt-4">Evénements de {{ organization }}</h2>
     {% if is_active %}
+    <input type="text" value="{{ request.META.HTTP_HOST }}{% url 'event:ical_events' organization.pk %}" class="d-none" id="myInput">
+    <button onclick="myFunction()" class="btn btn-light mb-2">
+      <i class="far fa-calendar-plus"></i> Copier l'url Ical
+    </button>
       <button class="btn-absolute btn btn-success" id="more-button">
         <i class="fa fa-plus"></i><i class="fa fa-calendar-alt"></i>  
         <a class="d-none btn-event pl-1" href="{% url 'event:create' organization.id %}">
@@ -42,6 +46,16 @@
 
 {% block extra_js %}
 {{filter.form.media}}
+
+<script>
+  function myFunction() {
+    var copyText = document.getElementById("myInput");
+    copyText.select();
+    copyText.setSelectionRange(0, 99999);
+    document.execCommand("copy");
+  }
+</script>
+
 <script>
   $(document).ready(function(){
     $("#h_nav").sticky({topSpacing:125});

@@ -53,6 +53,7 @@ from .event_stuff import (
     EventBookStuffView,
     StuffUserEventFormView,
     EventAddStuffView,
+    StuffUserOrgaEventFormView,
 )
 
 from .event_ical import EventByOrganizationICSView, EventICSView

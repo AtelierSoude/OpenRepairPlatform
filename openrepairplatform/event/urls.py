@@ -79,9 +79,9 @@ urlpatterns = [
         name="remove_active",
     ),
     path("<int:pk>/<slug>/", views.EventView.as_view(), name="detail"),
-    path("<int:pk>/<slug>/admin", views.EventAdminView.as_view(), name="detail_admin"),
+    path("<int:pk>/<slug>/admin/", views.EventAdminView.as_view(), name="detail_admin"),
     path(
-        "<int:pk>/<slug>/book/<int:user_pk>/<token>",
+        "<int:pk>/<slug>/book/<int:user_pk>",
         views.EventBookStuffView.as_view(),
         name="book_confirm",
     ),
@@ -94,6 +94,11 @@ urlpatterns = [
         "create_stuff/<int:event_pk>/<int:registered_pk>",
         views.StuffUserEventFormView.as_view(),
         name="create_user_event_stuff",
+    ),
+    path(
+        "create_stuff_orga/<int:event_pk>/<int:registered_pk>",
+        views.StuffUserOrgaEventFormView.as_view(),
+        name="create_user_event_stuff_orga",
     ),
     path(
         "cancel_reservation/<token>/",

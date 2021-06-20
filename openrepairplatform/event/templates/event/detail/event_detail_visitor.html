@@ -245,13 +245,25 @@
       shadow-xxl
       {% endif %}" style="position: relative; top:-50px">
           {% if request.user in event.registered.all or request.user in event.organizers.all %}
+            {% if user_success_booking %}
+            <div class="card-header bg-success text-center">
+            {% else %}
             <div class="card-header bg-danger text-center">
+            {% endif %}
           {% else %}
             <div class="card-header bg-primary text-center">
           {% endif %}
           <h4 class="text-white"  id="book_show" onclick="display_book()"><i class="fas fa-calendar-day"></i>
             {% if request.user in event.registered.all %}
-              Annuler ma réservation
+              {% if user_success_booking %}
+                {% if event.allow_stuffs %}
+                  Ajouter un appareil 
+                {% else %}
+                  Réservation confirmée
+                {% endif %}
+              {% else %}
+                Annuler ma réservation
+              {% endif %}
             {% elif request.user in event.organizers.all %}
               Je n'anime plus
             {% else %}
@@ -265,6 +277,13 @@
           </div>
         {% else %}
           <div class="card-body">
+            {% if request.user in event.registered.all %}
+            <b>Ah mince... vous ne pouvez pas venir finalement ? </b>
+            <p>Pas de soucis mais pensez à éviter d'annuler au dernier moment... cela a comme conséquence d'avoir bloqué une place 
+              que quelqu'un d'autre aurait pu prendre. 
+            </p>
+            <p>{{event.organization}} est une association. Soutenez-la en adhérant, même si vous ne venez pas :</p>
+            {% else %}
             <b>Avant de réserver, prenez connaissance de ces informations : </b>
             <ul class="list-unstyled">
               {% if event.conditions %}
@@ -294,7 +313,8 @@
               </li>
               {% endif %}
             </ul>
-            {% if event.members_only %}
+            {% endif %}
+            {% if event.members_only or request.user in event.registered.all %}
               <div class="">
                 <b>Adhérer à {{event.organization.name}}</b>
                 <p>

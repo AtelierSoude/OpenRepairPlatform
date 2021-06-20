@@ -5,22 +5,19 @@
 {% load initialavatar %}
 
 {% block admin %}
-<div class="d-flex">
-  <div class="col-md-9 pb-4">
+<div class="d-md-flex p-4">
     <div class="pr-4 pt-2" id="event_about">
       <h5 class="text-danger">
         <i class="fa fa-calendar-alt"></i> {{ event.date|date:"l j F Y " }} de {{ event.starts_at }} à {{ event.ends_at }}
       </h5>
       <h3 class="">
         {% if event.activity.category %} {{event.activity.category}} - {% endif %} {{ event.activity }}
-        <div class="lead float-right ml-2">
           {% if is_active %}
-            <a href="{% url 'event:edit' event.pk %}" class="btn btn-secondary rounded-circle"><i class="fa fa-pencil-alt"></i></a>
+            <a href="{% url 'event:edit' event.pk %}" class="mr-1 btn btn-secondary rounded-circle"><i class="fa fa-pencil-alt"></i></a>
           {% endif %}
           {% if is_admin %}
             <a href="{% url 'event:delete' event.pk %}" class="btn btn-danger rounded-circle"><i class="fa fa-trash"></i></a>
           {% endif %}
-        </div>
       </h3>
       <p class="lead mb-1">
         {% if event.collaborator %}
@@ -62,55 +59,57 @@
         <h3>Total perçus: <b>{{ total_fees }}€</b></h3>
       {% endif %}
     </div>
-    <div class="card mb-2 mt-4">
-      <div class="card-body">
-        <h5 class="mb-2 
-        {% if event.needed_organizers != 0 %}
-          {% if event.needed_organizers > event.organizers.all.count %}
-            text-danger
-          {% elif event.needed_organizers <= event.event.organizers.all.count %}
-            text-success
-          {% else %}
-            text-warning
+      <div class="card col-md mb-2">
+        <div class="card-body p-2">
+          <h5 class="mb-2 
+          {% if event.needed_organizers != 0 %}
+            {% if event.needed_organizers > event.organizers.all.count %}
+              text-danger
+            {% elif event.needed_organizers <= event.event.organizers.all.count %}
+              text-success
+            {% else %}
+              text-warning
+            {% endif %}
+          {% endif %}">
+          <i class="fa fa-user"></i>  
+          {{ event.organizers.all.count }}
+          {% if event.needed_organizers != 0 %}
+            /{{ event.needed_organizers }}
           {% endif %}
-        {% endif %}">
-        <i class="fa fa-user"></i>  
-        {{ event.organizers.all.count }}
-        {% if event.needed_organizers != 0 %}
-          /{{ event.needed_organizers }}
-        {% endif %}
-        Animateur·trice·s
-        </h5>
-        <div class="">
-          {% for user in event.organizers.all %}
-            <div class="badge m-1 badge-pill badge-light">
-              <a class="card-link h6" href="{{ user.get_absolute_url }}" id="square-{{ user.pk }}">
-                {% if user.avatar_img %}
-                  {% thumbnail user.avatar_img "35x35" crop="center" format="PNG" as im %}
-                    <img src="{{ im.url }}" class="rounded-circle"/>
-                  {% endthumbnail %}
-                {% else %}
-                  {% if user.first_name %}
-                    {% get_initial_avatar user 35 'circle' %}
+          Animateur·trice·s {% include "event/register_organizer.html" with event_to_organize=event %}
+          </h5> 
+          <div class="">
+            {% for user in event.organizers.all %}
+              <div class="badge m-1 badge-pill badge-light">
+                <a class="card-link h6" href="{{ user.get_absolute_url }}" id="square-{{ user.pk }}">
+                  {% if user.avatar_img %}
+                    {% thumbnail user.avatar_img "35x35" crop="center" format="PNG" as im %}
+                      <img src="{{ im.url }}" class="rounded-circle"/>
+                    {% endthumbnail %}
+                  {% else %}
+                    {% if user.first_name %}
+                      {% get_initial_avatar user 35 'circle' %}
+                    {% endif %}
                   {% endif %}
-                {% endif %}
-                {{ user}}
-              </a>
-            </div>
-          {% endfor %}
+                  {{ user}}
+                </a>
+              </div>
+            {% endfor %}
+          </div>
         </div>
       </div>
     </div>
-    <div class="card mb-4 mt-2">
-      <div class="card-body">
-        <h5 class="mb-2">
-          <i class="fa fa-user"></i>  
-          {{ event.registered.all.count }} Participant·e·s 
-        </h5>
+    <div class="d-flex p-4">
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="mb-2">
+            <i class="fa fa-user"></i>  
+            {{ event.registered.all.count }} Participant·e·s {% include "event/register_participants.html" with event_to_organize=event %}
+          </h5>
+        </div>
+      {% include "event/detail/registered_users.html" with users=event.registered.all event_control=True %}
       </div>
-    {% include "event/detail/registered_users.html" with users=event.registered.all event_control=True %}
     </div>
-  </div>
   <!---
   <div class="col-md-6">
     <div class="container pl-4 pr-4 pt-2 bg-white">
@@ -141,7 +140,7 @@
         {% endfor %}
       </div>
     </div>
-  </div> -->
+  </div> 
   <div class="col" id="book">
     <div id="event-book">
       <div class="event-book card p-0 w-100 bg-white shadow" style="position: relative; top:-50px">
@@ -153,7 +152,7 @@
         <a class="m-2 btn btn-large btn-success">Une réparation</a>
       </div>
     </div>
-  </div>
+  </div>-->
 </div>
 
 {% assets "js_groups_organization" %}

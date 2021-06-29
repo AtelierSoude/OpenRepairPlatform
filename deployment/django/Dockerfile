@@ -1,4 +1,4 @@
-FROM debian:buster
+FROM python:3.9-slim-buster
 
 RUN apt update && apt upgrade -y && apt install -y --force-yes python3-pip libpq-dev locales locales-all cron make ruby ruby-dev
 RUN gem install sass

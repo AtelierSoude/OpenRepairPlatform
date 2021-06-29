@@ -7,36 +7,27 @@
 </div>
 <div class="pt-2">
   <div class="">
-    <h5 class="text-white">
+    <h5 class="text-success">
       <i class="mt-2 far fa-hand-peace fa-3x"></i> Réservation confirmée !
     </h5>
   </div>
-  <span class="mt-2 d-block mb-3">
+  <span class="mt-2 d-block mb-2">
     <i class="text-danger">Noubliez-pas : réserver une place vous engage à participer.</i>
   </span>
-  <h5> 
-  {% if user_success_booking.avatar_img %}
-    {% thumbnail user_success_booking.avatar_img "50x50" crop="center" format="PNG" as im %}
-      <img src="{{ im.url }}" class="m-2 rounded-circle"/>
-    {% endthumbnail %}
-  {% else %}
-    {% if user_success_booking.first_name %}
-      {% get_initial_avatar user_success_booking 50 'circle' %}
-    {% endif %}
-  {% endif %}
-  {{user_success_booking}}
-  </h5>
+  <a class="btn btn-light" href="{% url 'event:ical_event' event.pk %}">
+    <i class="far fa-calendar-plus"></i> ajouter à mon agenda
+  </a>
   {% if event.allow_stuffs %}
-    <div class="mt-5 mb-5 text-center">
-      <h5 class="m-4">Dites-nous quel objet vous apportez !</h5>
-      <span> Sélectionner un objet dans votre inventaire ci-dessous, ou 
-        <a class="bs-modal text-white" href="#" data-form-url="{% url 'event:create_user_event_stuff' event.pk user_success_booking.pk %}">
+    <div class="mt-2 mb-2 text-center">
+      <span class="m-2"><b>Optionnel</b> Dites-nous quel objet vous apportez.</span><br>
+      <small> Sélectionner un objet dans votre inventaire ci-dessous, ou 
+        <a class="bs-modal" href="#" data-form-url="{% url 'event:create_user_event_stuff' event.pk user_success_booking.pk %}">
           créez-en un nouveau 
         </a> puis selectionnez-le 
-      </span>
+      </small>
         {% if user_success_booking.user_stuffs %}
-          <div class="">
-            <div class="mt-4 shadow-sm">
+          <div class="mb-4">
+            <div class="mt-2 shadow-sm">
               <form method="POST" action="{% url 'event:add_stuff_event' event.pk user_success_booking.pk %}">
                 {% csrf_token %}
               <div class="table-responsive bordered">
@@ -59,7 +50,7 @@
                       <tr>
                         <td scope="row" colspan="2">{{ stuff }}</td>
                         <td class="text-right">
-                          <input class="form-check-input" type="radio" name="selectedstuff" value="{{stuff.pk}}">
+                          <input class="form-check-input position-static" type="radio" name="selectedstuff" value="{{stuff.pk}}">
                         </td>
                       </tr>
                       {% empty %}
@@ -72,23 +63,64 @@
                   </tbody>
                 </table>
               </div>
-              <button type="submit" id="submit" class="btn btn-primary w-100 p-3">Valider mon choix</button>
+              <button type="submit" disabled=true id="submitStuff" class="btn mt-2 btn-light w-100 p-1">Valider mon choix</button>
               </form>
             </div>
           </div>
           {% endif %}
         </div>
       {% endif %}
+      {% if event.allow_stuffs %}
+      <a class="d-block btn mt-2 btn-light w-100 p-3" href="{{ event.get_absolute_url }}">Passer l'étape</a>
+      {% else %}
+      <a class="d-block btn mt-4 btn-light w-100 p-3" id="close" href="{{ event.get_absolute_url }}">Fermer</a>
+      Retour automatique dans <span class="c" id="10"></span>
+      {% endif %}
   </div>
 {% block extra_js %}
   <script type="text/javascript">
     $(document).ready(function(){
+    $radio = $("input:radio[name='selectedstuff']")
+    $radio.change(function(){
+    if ($radio.is(':checked')) {
+      $("#submitStuff").removeAttr("disabled");
+    }
+    })
     $(".bs-modal").each(function () {
       $(this).modalForm({
           formURL: $(this).data('form-url')
       });
     });
-    });
+    window.onload = function() {
+    {% if not event.allow_stuffs %}
+    setTimeout(function() {
+    document.getElementById('close').click();
+    }, 7000);
+    {% endif %}
+    };
+    {% if not event.allow_stuffs %}
+    function c(){3000
+    var n=$('.c').attr('id');
+    var c=n;
+    $('.c').text(c);
+    setInterval(function(){
+        c--;
+        if(c>=0){
+            $('.c').text(c);
+        }
+        if(c==0){
+            $('.c').text(n);
+        }
+    },1000);
+    }
+    // Start
+    c();
+    // Loop
+    setInterval(function(){
+        c();
+    },5000);
+    {% endif %}
+  });
   </script>
 {% endblock %}
 

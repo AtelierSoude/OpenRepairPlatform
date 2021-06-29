@@ -4,7 +4,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">
-          Marquer quelqu'un en "présent" pour l'évènement
+          Ajouter/modifier membre
         </h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -12,44 +12,48 @@
       </div>
       <div class="modal-body text-center">
         <br>
-        <ul class="text-left">
-          <b>Note(s) :</b>
-          <li>
-            La contribution minimale pour cette organisation est de
-            <span class="badge badge-pill badge-secondary">{{ event.organization.min_fee }}€</span>
-            et la contribution totale conseillée est de
-            <span class="badge badge-pill badge-success">{{ event.organization.advised_fee }}€</span>
-          </li>
-          {% if event.organization.fee_description %}
-            <li>{{ event.organization.fee_description }}</li>
-          {% endif %}
-        </ul>
-
-        {% if user.first_name %}
-          <span class="h4">
+          <b>
             {% filter_orga queryset=user.memberships organization=event.organization as membership %}
-            {% if membership %}
-              {{ user }} a payé
-              <span class="badge badge-pill badge-primary">
-                {{ membership.current_contribution }}€
-              </span>
-              depuis le {{ membership.first_payment|date:"d F Y" }}
-            {% else %}
+              {% if membership %}
+              <p>
+                statut 
+                  {% if membership.current_contribution == 0 %} 
+                      <span class="text-danger" >Pas à jour</span>
+                      <span class="badge badge-pill badge-danger" >{{membership.current_contribution}}€</span>
+                  {% elif membership.current_contribution >= organization.advised_fee %}
+                      <span class="text-success" >A jour </span>
+                      <span class="badge badge-pill badge-success" >{{membership.current_contribution}}€</span>
+                  {% else %}
+                      <span class="text-warning" >Incomplet </span>
+                      <span class="badge badge-pill badge-warning" >{{membership.current_contribution}}€</span>
+                  {% endif %}
+              </p>
+              {% else %}
               {{ user }} n'a pas encore contribué pour
-              <span class="badge badge-pill badge-primary">{{ event.organization }}</span>
+                  <span class="badge badge-pill badge-primary">{{ event.organization }}</span>
+              {% endif %}
+          <p>{{ event.organization.get_membership_system_display }} Elle
+            {% if event.organization.advised_fee == event.organization.min_fee %}
+            est de {{event.organization.min_fee}}€
+            {% else %}
+            va de {{event.organization.min_fee}}€ à {{event.organization.advised_fee}}€ 
             {% endif %}
-          </span>
-        {% endif %}
+          </p>
+        </b>
 
         <form action="{% if membership %}{% url 'event:update_member' event.organization.pk membership.user.pk event.pk %}{% else %}{% url 'event:add_member' event.organization.pk event.pk %}{% endif %}"
               method="post"
               class="text-left">
           <div class="modal-body">
             {% csrf_token %}
-            {% bootstrap_form form=form %}
+              <div class="row m-2">
+                {% for field in form %}
+                  {% bootstrap_field field form_group_class="col-md-6 p-2"%}
+                {% endfor %}
+              </div>
           </div>
           <div class="modal-footer">
-            <input type="submit" value="Enregistrer" class="btn btn-primary">
+            <input type="submit" value="Enregistrer" class="btn btn-success btn-block">
           </div>
         </form>
       </div>

@@ -1,18 +1,18 @@
 {% load app_filters bootstrap5 %}
 
-<button class="btn btn-success btn-large m-2" data-toggle="modal" data-target="#add_organizer{{ event_to_organize.pk | slugify }}">
+<button class="btn btn-success btn-large m-2" data-toggle="modal" data-target="#add_participant{{ event_to_organize.pk | slugify }}">
     <i class="fa fa-plus"></i>
 </button>
-<div class="modal" id="add_organizer{{ event_to_organize.pk | slugify }}" tabindex="-1" role="dialog">
+<div class="modal" id="add_participant{{ event_to_organize.pk | slugify }}" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
     <div class="modal-content">
         <div class="modal-header">
-        <h5 class="modal-title">Ajouter un animateur</h5>
+        <h5 class="modal-title">Ajouter un participant</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
         </div>
-        <form action="{% url 'user:organizer_book' event_to_organize.pk %}?event={{ event_to_organize.pk | slugify }}" method="post">
+        <form action="{% url 'user:create_and_book' %}?event={{ event_to_organize.pk | slugify }}" method="post">
             <div class="modal-body">
                 {% csrf_token %}
                 {% bootstrap_form form=register_form %}

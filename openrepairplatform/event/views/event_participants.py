@@ -184,7 +184,7 @@ class PresentView(RedirectView):
 
     def get_redirect_url(self, *args, **kwargs):
         return reverse(
-            "event:detail", kwargs={"pk": self.event.pk, "slug": self.event.slug}
+            "event:detail_admin", kwargs={"pk": self.event.pk, "slug": self.event.slug}
         )
 
 
@@ -201,7 +201,7 @@ class AbsentView(RedirectView):
 
     def get_redirect_url(self, *args, **kwargs):
         return reverse(
-            "event:detail", kwargs={"pk": self.event.pk, "slug": self.event.slug}
+            "event:detail_admin", kwargs={"pk": self.event.pk, "slug": self.event.slug}
         )
 
 

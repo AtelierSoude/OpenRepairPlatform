@@ -1,10 +1,10 @@
-/* éléments généraux */
+
 @import url('https://fonts.googleapis.com/css?family=Inconsolata&display=swap');
 @import 'variables.scss';
 
 .container-fluid{
-  padding: 0;
-  margin: 0;
+  padding: 0px;
+  margin: 0px;
 }
 .content-page {
   min-height: 500px;
@@ -41,6 +41,10 @@ h5{
 
 .bg-grey { 
   background-color: #fdfdfd !important;
+}
+
+.shadow-xxl {
+  box-shadow: 0 1rem 20rem rgba(0,0,0,0.350) !important;
 }
 
 /* tables */ 
@@ -111,6 +115,22 @@ td {
 
 /* forms */ 
 
+.form-select {
+  display: block;
+  width: 100%;
+  height: calc(1.5em+.75rem+2px);
+  padding: .375rem .75rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #495057;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: 0;
+  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
 .select2-container .select2-selection--single{
   height:40px !important;
 }
@@ -155,7 +175,7 @@ td {
 
 .autocomplete-suggestion { 
   position: relative; 
-  padding: 0 .6em; 
+  padding: 0.6em; 
   line-height: 23px; 
   white-space: nowrap; 
   overflow: hidden; 
@@ -208,7 +228,6 @@ td {
 }
 
 .header_detail_page, #h_nav, #breadcrumb, #jumbotron, #search_tab, #event_title, #event_about, .jumbotron {
- /* z-index: 2 !important; */
   position: relative;
 }
 
@@ -220,7 +239,7 @@ td {
 }
 
 .navbar .fa, .avatar a, .dropdown-toggle  {
-  color: white;
+ /* color: white; */
 }
 .navbar ul li a:hover, .navbar .fa:hover, .avatar a:hover, .dropdown-toggle:hover{
   color: gray;
@@ -259,9 +278,12 @@ td {
 }
 
 /* buttons */ 
+.btn {
+  border-radius: 5px;
+}
 
 .btn-default {
-  background-color: #eaeaea;
+  background-color: #dddddd;
 }
 .btn-absolute {
   font-size: 1.2rem;
@@ -270,8 +292,8 @@ td {
   justify-content: center;
   box-shadow: 0 0 4px rgba(0,0,0,0.14),0 4px 8px rgba(0,0,0,0.28);
   transition: right 0.5s, bottom 0.5s, border-radius 0.5s, text-indent 0.2s, visibility 1s, width 0.2s ease, height 0.5s ease 0.4s, color 0.5s, background-color 2s, transform 0.5s;
-  padding: 0;
-  margin: 0;
+  padding: 0px;
+  margin: 0px;
   width: 63px;
   height: 63px;
   border-radius: 40px;
@@ -370,15 +392,21 @@ position: relative;
 
 }
 
+.parallax {
+  min-height: 200px; 
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
 .breadcrumb{
   font-size: .8em;
-  margin-bottom: 0 !important;
-  border-width: 0;
+  margin-bottom: 0px !important;
+  border-width: 0px;
   background-color: white !important;
   z-index: 2;
 }
-
-/* leaflet reset style */
 
 #place_map {
   right:0px; 
@@ -397,6 +425,26 @@ position: relative;
 }
 
 /* Modals */
+
+
+.event-book-mobile {
+  position: fixed !important;
+  top: calc(100% - 50px) !important;
+  left: 0px;
+  z-index: 4;
+  transition: all;
+  transition-duration: 0.5s;
+  overflow-y: scroll;
+}
+
+.event-book-mobile-show {
+  top: 0px !important;
+  bottom: 0px;
+}
+
+.modal-body {
+  padding: 0px;
+}
 
 .modal-content {
   border-radius: 0;
@@ -427,10 +475,31 @@ position: relative;
   position: fixed !important;
   top: 100px;
   z-index: 10000;
+  font-size: 1rem;
+  padding: 10px;
   box-shadow: 0px 10px 100px black;
-  right: 20px;
-  left: 20px;
+  right: -1000px;
+  transition: all;
+  transition-duration: 0.5s;
 }
+
+.alert-success {
+  color: $primary;
+  background-color: $success;
+  border:0px;
+}
+
+.alert-danger {
+  color: white;
+  background-color: #ff2241 !important;
+  border:0px;
+}
+
+.alert-dismissible .close{
+  position: static !important;
+  float: none;
+}
+
 @media screen and (max-width: 1024px) {
   h3{
       font-size:1rem;
@@ -448,27 +517,27 @@ position: relative;
     position: initial !important;
   }
   .header_detail_page{
-    /* height: 200px; */
-     z-index: 2;
-   }
-   #side_nav{
-     width:100%;
-   }
-   .header_detail_page_picture{
-     padding-top: 10px !important;
-     img{
-       width: 75px;
-       height: auto;
-       margin: 0px !important;
-     }
-   }
-   .user-title{
-     text-align: left !important;
-   }
-   .header_detail_page_title{
-     padding-top: 10px !important;
-     line-height: 75px;
-   }
+    z-index: 2;
+  }
+  #side_nav{
+    width:100%;
+  }
+
+  .header_detail_page_picture{
+    padding-top: 10px !important;
+    img{
+      width: 75px;
+      height: auto;
+      margin: 0px !important;
+    }
+  }
+  .user-title{
+    text-align: left !important;
+  }
+  .header_detail_page_title{
+    padding-top: 10px !important;
+    line-height: 75px;
+  }
 
   #v-pills-tab{
     width:100%;
@@ -483,11 +552,10 @@ position: relative;
   }
   .event_list_cards{
     column-count: 1;
-   }
+  }
 
   #event_about {
-    padding:25px !important;
-    padding-bottom: 0px !important;
+    padding-bottom: 10px !important;
   }
   #event_map {
     z-index: 1;
@@ -496,12 +564,12 @@ position: relative;
     visibility: hidden;
   }
   .header_detail_page, #h_nav, #breadcrumb, #jumbotron, #search_tab, #event_title, .booking_form, .jumbotron {
-     z-index: 2 !important;
-   }
-   .modal.show .modal-dialog {
-     z-index: 3 !important;
-     display: relative;
-   }
+    z-index: 2 !important;
+  }
+  .modal.show .modal-dialog {
+    z-index: 3 !important;
+    display: relative;
+  }
 }
 
 // Menu hack for mobile slide left up // 
@@ -514,35 +582,35 @@ position: relative;
   }
 
   .vertical-nav {
-      position: fixed;
-      top: 65px;
-      left: 0;
-      width: 75px;
-      height: 100%;
-      overflow-y: auto;
-      padding-top: 30px;
+    position: fixed;
+    top: 65px;
+    left: 0;
+    width: 75px;
+    height: 100%;
+    overflow-y: auto;
+    padding-top: 30px;
   }
 }
 
 @media (max-width: 992px) {
 
   .navbar-collapse {
-      position: fixed;
-      top: 65px;
-      left:-400px;
-      height: 800px;
-      transition: all 0.3s ease;
-      display: block;
+    position: fixed;
+    top: 65px;
+    left:-400px;
+    height: 800px;
+    transition: all 0.3s ease;
+    display: block;
   }
   .navbar-collapse.collapsing {
-      height: auto !important;
-      margin-right: 50%;
-      transition: all 0.3s ease;
-      display: block;
+    height: auto !important;
+    margin-right: 50%;
+    transition: all 0.3s ease;
+    display: block;
   }
   .navbar-collapse.show {
-      right:20%;
-      left:0px;
+    right:20%;
+    left:0px;
   }
 }
 

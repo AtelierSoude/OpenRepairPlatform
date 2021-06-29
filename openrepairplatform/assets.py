@@ -60,8 +60,9 @@ css_detail_event = Bundle(
 # JS minify
 js_base = Bundle(
     "js/lib/sticky_polyfill.js",
+    "js/lib/auto-dissmiss-alerts.js",
     filters="jsmin",
-    output="js/sticky_polyfill.min.js",
+    output="js/base.min.js",
 )
 js_places = Bundle(
     "js/lib/leaflet.js",
@@ -94,10 +95,6 @@ js_detail_place = Bundle(
 js_detail_event = Bundle(
     "js/lib/leaflet.js",
     "js/events/detail_event.js",
-    "js/lib/auto-complete.js",
-    "js/user/create_edit.js",
-    "js/lib/gov_addresses.js",
-    "js/user/autocomplete.js",
     filters="jsmin",
     output="js/events/detail_event.min.js",
 )

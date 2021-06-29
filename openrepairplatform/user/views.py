@@ -128,7 +128,7 @@ class OrganizerBookView(HasVolunteerPermissionMixin, RedirectView):
                 )
             event.organizers.add(new_organizer)
             event.save()
-            return redirect(event.get_absolute_url())
+            return redirect(event.get_absolute_url() + "admin/")
         messages.error(self.request, "Impossible de rajouter cette personne")
         return redirect(event.get_absolute_url())
 

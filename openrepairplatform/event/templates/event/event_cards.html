@@ -6,7 +6,7 @@
   {% if request.user in event.registered.all or request.user in event.presents.all or request.user in event.organizers.all %}
   border-success {% endif %}
   event shadow-sm p-2" data-location="{{event.location.pk|escape}}">
-    <div class="col text-muted text-center">
+    <div class="col-2 text-muted text-center">
       {% if event.organization.picture %}
         {% thumbnail event.organization.picture "100x100" crop="left" format="PNG" as img %}
           <img class="img-fluid rounded-circle float-left" src="{{ img.url }}" alt="organization img">
@@ -40,30 +40,8 @@
         {{event.remaining_seats}}/{{ event.available_seats}}
         </span>
       {% endif %}
-      <!-- booking button for volunteers 
-      {% if request.user in event.organization.volunteers.all or event.organization.actives.all or event.organization.admins.all %}
-      <form
-          {% if user in event.organizers.all %}
-          action="{% url 'event:remove_active' event.pk %}"
-          {% else %}
-          action="{% url 'event:add_active' event.pk %}"
-          {% endif %}
-          method="post"
-          class="">
-        {% csrf_token %}
-        {% if user in event.organizers.all %}
-        <button class="btn btn-danger" type="submit">
-          <small>je n'anime plus</small>
-        </button>
-        {% else %}
-          <button class="btn btn-success" type="submit">
-            J'anime
-          </button>
-        {% endif %}
-        </form>
-      {% endif %}-->
     </div>      
-    <div class="{% if minimal != True %}col-8{% else %}col-7{% endif %}"> 
+    <div class="{% if minimal != True %}col-md-8 col-xl-8 col-10{% else %}col-7{% endif %}"> 
       <a href="{{event.get_absolute_url}}">
         <div class="p-2">
           <span>
@@ -136,7 +114,7 @@
       </div>
       </a>
     </div>
-    <div class="col text-center d-flex align-items-end flex-column">
+    <div class="col-12 col-md-2 col-xl-2 text-center d-flex align-items-end flex-column">
       <a href="{{event.get_absolute_url}}" class="btn btn-secondary w-100 m-2 mt-auto">
         Voir
       </a>

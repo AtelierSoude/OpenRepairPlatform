@@ -7,4 +7,4 @@ INSTALLED_APPS += ["debug_toolbar"]  # noqa
 
 MIDDLEWARE.insert(0, "debug_toolbar.middleware.DebugToolbarMiddleware")  # noqa
 
-INTERNAL_IPS = ["127.0.0.1","192.168.1.14"]
+INTERNAL_IPS = ["127.0.0.1"]

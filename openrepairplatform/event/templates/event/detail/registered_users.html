@@ -9,10 +9,7 @@
       {% tokenize user=user event=event action='absent' as tok_event_absent %}
       {% tokenize user=user event=event action='cancel' as tok_event_cancel %}
       <div class="col-md-4 mb-4">
-      <div class="p-0 shadow-sm
-      {% if user in event.presents.all %}
-      {% endif %}
-      user">
+      <div class="p-0 shadow-sm user">
         <div class="card-header d-flex">
           <div class="d-inline pr-2 float-left">
           {% if user.avatar_img %}
@@ -36,15 +33,15 @@
           <div class="ml-auto">
             <a class="btn btn-sm btn-danger" href="{% url 'event:cancel_reservation' tok_event_cancel %}"><i class="fa fa-trash"></i></a>
           </div>
-        </div>       
+        </div>
         <div class="card-body d-flex flex-column">
         <div class="row mb-4">
             <div class="col-6 mb-2">
               <p>
-                <b>Etat de l'adhésion</b> 
+                <b>Etat de l'adhésion</b>
                 <br>
                 {% if membership %}
-                  {% if membership.current_contribution == 0 %} 
+                  {% if membership.current_contribution == 0 %}
                   <span class="text-danger" >Pas de cotisation</span>
                   <span class="badge badge-pill badge-danger" >0€</span>
                   {% elif membership.current_contribution >= event.organization.advised_fee %}
@@ -57,12 +54,12 @@
                 {% else %}
                     Non membre
                 {% endif %}
-              </p>      
+              </p>
               {% include "event/modal_more_info.html" with user=user membership=membership form=present_form|initial:user %}
             </div>
             <div class="col-6 mb-2">
                 {% if membership %}
-                  <b>Cotisations</b>   
+                  <b>Cotisations</b>
                   <button class="btn btn-light btn-sm" data-toggle="modal" data-target="#more-info-{{ user.pk }}">
                     <i class="fa fa-plus"></i> ajouter
                   </button><br>
@@ -86,9 +83,9 @@
             </div>
             {% if event.conditions.all %}
               <div class="col-6 mb-2">
-                <p><b>Participation</b>                 
+                <p><b>Participation</b>
                   <br>
-                  {% if participation.amount == 0 or not participation.amount %} 
+                  {% if participation.amount == 0 or not participation.amount %}
                   <span class="text-danger">0€</span>
                   {% elif participation.amount >= condition_prices %}
                   <span class="text-success">{{participation.amount}}€</span>
@@ -112,14 +109,14 @@
             {% endif %}
           {% if event.allow_stuffs %}
             <div class="col-6 mb-2">
-              <p><b>Objets en réparation</b><br> 
+              <p><b>Objets en réparation</b><br>
                 <button class="btn btn-light btn-sm bs-modal"  href="#" data-form-url="{% url 'event:create_user_event_stuff_orga' event.pk user.pk %}">
-                  <i class="fas fa-tools"></i> ajouter 
+                  <i class="fas fa-tools"></i> ajouter
                 </button>
               {% for stuff in user.user_stuffs.all %}
                 {% if stuff in event.stuffs.all %}<br>
                   <a href="{{stuff.get_absolute_url}}">{{ stuff }}
-                  </a>         
+                  </a>
                   {% include "inventory/stuff_state_display.html" with stuff_state=stuff.get_state_display %}
                 {% endif %}
               {% endfor %}

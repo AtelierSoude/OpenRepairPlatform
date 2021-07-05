@@ -106,7 +106,24 @@ class OrganizationEventsView(
         orga_slug = self.kwargs.get("orga_slug")
         organization = get_object_or_404(Organization, slug=orga_slug)
         self.object = organization
-        return organization.events.order_by("-date")
+        return organization.events.order_by("-date").select_related(
+            "organization",
+            "activity",
+            "activity__category",
+            "activity__organization",
+            "location",
+            "location__organization",
+        ).prefetch_related(
+            "conditions",
+            "registered",
+            "presents",
+            "organizers",
+            "stuffs",
+            "organization__members",
+            "organization__volunteers",
+            "organization__actives",
+            "organization__admins",
+        )
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -174,7 +191,16 @@ class OrganizationMembersView(
 
     def get_queryset(self):
         self.object = self.organization
-        queryset = self.organization.members.all().order_by("last_name")
+        queryset = (
+            self.organization.members.all()
+                .order_by("last_name")
+                .prefetch_related(
+                    "member_organizations",
+                    "volunteer_organizations",
+                    "active_organizations",
+                    "admin_organizations"
+                )
+            )
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -183,10 +209,6 @@ class OrganizationMembersView(
         context["organization_menu"] = "active"
         context["organization"] = self.organization
         context["search_form"] = CustomUserSearchForm
-        context["emails"] = [
-            (f"{user.email} ({user.first_name} {user.last_name})", user.email)
-            for user in CustomUser.objects.all()
-        ]
         context["add_member_form"] = MoreInfoCustomUserForm
         context["future_event"] = (
             Event.future_published_events()

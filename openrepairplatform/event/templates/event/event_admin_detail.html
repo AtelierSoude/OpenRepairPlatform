@@ -61,7 +61,7 @@
     </div>
       <div class="card col-md mb-2">
         <div class="card-body p-2">
-          <h5 class="mb-2 
+          <h5 class="mb-2
           {% if event.needed_organizers != 0 %}
             {% if event.needed_organizers > event.organizers.all.count %}
               text-danger
@@ -71,13 +71,13 @@
               text-warning
             {% endif %}
           {% endif %}">
-          <i class="fa fa-user"></i>  
+          <i class="fa fa-user"></i>
           {{ event.organizers.all.count }}
           {% if event.needed_organizers != 0 %}
             /{{ event.needed_organizers }}
           {% endif %}
           Animateur·trice·s {% include "event/register_organizer.html" with event_to_organize=event %}
-          </h5> 
+          </h5>
           <div class="">
             {% for user in event.organizers.all %}
               <div class="badge m-1 badge-pill badge-light">
@@ -103,56 +103,58 @@
       <div class="card mb-4">
         <div class="card-body">
           <h5 class="mb-2">
-            <i class="fa fa-user"></i>  
+            <i class="fa fa-user"></i>
             {{ event.registered.all.count }} Participant·e·s {% include "event/register_participants.html" with event_to_organize=event %}
           </h5>
         </div>
       {% include "event/detail/registered_users.html" with users=event.registered.all event_control=True %}
       </div>
     </div>
-  <!---
-  <div class="col-md-6">
-    <div class="container pl-4 pr-4 pt-2 bg-white">
-      <div class="tab-pane fade show p-2 h-100" id="v-pills-repair" role="tabpanel" aria-labelledby="v-pills-repair-tab">
-        <h5>Réparations en cours</h5>
-        <hr>
-        {% for stuff in event.stuffs.all %}
-        <div class="card col-md-12 mb-2 p-3">
-          <h6>
-            <a href="{{stuff.get_absolute_url}}">{{ stuff }}</a>
-            {% if stuff.owner %}
-              appartenant à <a href="{{stuff.owner.get_absolute.url}}">{{ stuff.owner }}</a>
-            {% endif %}
-            <div class="float-right">
-              {% include "inventory/stuff_state_display.html" with stuff_state=stuff.get_state_display %}
-            </div>
-          </h6>
-          {% if stuff.folders.all %}
-            {{stuff.folders.all.count}} dossiers en cours
-          {% else %}
-          Pas de dossiers pour l'instant.
-          {% endif %}
-        </div>
-        {% empty %}
-          <div>
-              Pas de réparation en cours
-          <div>
-        {% endfor %}
-      </div>
-    </div>
-  </div> 
-  <div class="col" id="book">
-    <div id="event-book">
-      <div class="event-book card p-0 w-100 bg-white shadow" style="position: relative; top:-50px">
-        <div class="card-header bg-primary text-center">
-          <h4 class="text-white" id="book_show" onclick="display_book()"><i class="fas fa-plus"></i> Ajouter </h4>
-        </div>
-        {% include "event/register_organizer.html" with event_to_organize=event %}
-        {% include "event/register_participants.html" with event_to_organize=event %}
-        <a class="m-2 btn btn-large btn-success">Une réparation</a>
-      </div>
-    </div>
-  </div>-->
+
+
+  {# <div class="col-md-6"> #}
+  {#   <div class="container pl-4 pr-4 pt-2 bg-white"> #}
+  {#     <div class="tab-pane fade show p-2 h-100" id="v-pills-repair" role="tabpanel" aria-labelledby="v-pills-repair-tab"> #}
+  {#       <h5>Réparations en cours</h5> #}
+  {#       <hr> #}
+  {#       {% for stuff in event.stuffs.all %} #}
+  {#       <div class="card col-md-12 mb-2 p-3"> #}
+  {#         <h6> #}
+  {#           <a href="{{stuff.get_absolute_url}}">{{ stuff }}</a> #}
+  {#           {% if stuff.owner %} #}
+  {#             appartenant à <a href="{{stuff.owner.get_absolute.url}}">{{ stuff.owner }}</a> #}
+  {#           {% endif %} #}
+  {#           <div class="float-right"> #}
+  {#             {% include "inventory/stuff_state_display.html" with stuff_state=stuff.get_state_display %} #}
+  {#           </div> #}
+  {#         </h6> #}
+  {#         {% if stuff.folders.all %} #}
+  {#           {{stuff.folders.all.count}} dossiers en cours #}
+  {#         {% else %} #}
+  {#         Pas de dossiers pour l'instant. #}
+  {#         {% endif %} #}
+  {#       </div> #}
+  {#       {% empty %} #}
+  {#         <div> #}
+  {#             Pas de réparation en cours #}
+  {#         <div> #}
+  {#       {% endfor %} #}
+  {#     </div> #}
+  {#   </div> #}
+  {# </div> #}
+  {# <div class="col" id="book"> #}
+  {#   <div id="event-book"> #}
+  {#     <div class="event-book card p-0 w-100 bg-white shadow" style="position: relative; top:-50px"> #}
+  {#       <div class="card-header bg-primary text-center"> #}
+  {#         <h4 class="text-white" id="book_show" onclick="display_book()"><i class="fas fa-plus"></i> Ajouter </h4> #}
+  {#       </div> #}
+  {#       {% include "event/register_organizer.html" with event_to_organize=event %} #}
+  {#       {% include "event/register_participants.html" with event_to_organize=event %} #}
+  {#       <a class="m-2 btn btn-large btn-success">Une réparation</a> #}
+  {#     </div> #}
+  {#   </div> #}
+  {# </div> #}
+
 </div>
 
 {% assets "js_groups_organization" %}

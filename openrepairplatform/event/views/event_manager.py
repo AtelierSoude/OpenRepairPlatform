@@ -41,10 +41,18 @@ class EventViewMixin(PermissionOrgaContextMixin, DetailView):
         if not self.request.user.is_anonymous:
             ctx["user_is_member"] = self.request.user.memberships.filter(
                 organization=self.object.organization
-            ).first
+            ).first()
         ctx["users"] = [
-            (f"{user.email} ({user.first_name} {user.last_name})", user.email)
-            for user in CustomUser.objects.all()
+            (
+                (
+                    f"{user.get('email', '-')} ({user.get('first_name', '-')} "
+                    f"{user.get('last_name', '-')})",
+                    user.get("email"),
+                )
+                for user in CustomUser.objects.values(
+                    "email", "first_name", "last_name"
+                )
+            )
         ]
         ctx["register_form"] = CustomUserEmailForm
         ctx["participation_form"] = ParticipationForm
@@ -99,10 +107,27 @@ class EventListView(ListView):
         return context
 
     def get_queryset(self):
-        queryset = Event.future_published_events()
+        # queryset = Event.future_published_events()
+        queryset = Event.objects.order_by("-date")[:20]
         form = EventSearchForm(self.request.GET)
         if not form.is_valid():
-            return queryset
+            return queryset.select_related(
+                "organization",
+                "activity",
+                "activity__category",
+                "activity__organization",
+                "location",
+            ).prefetch_related(
+                "conditions",
+                "registered",
+                "presents",
+                "organizers",
+                "stuffs",
+                "organization__members",
+                "organization__volunteers",
+                "organization__actives",
+                "organization__admins",
+            )
         if form.cleaned_data["place"]:
             queryset = queryset.filter(location=form.cleaned_data["place"])
         if form.cleaned_data["organization"]:
@@ -114,9 +139,22 @@ class EventListView(ListView):
         if form.cleaned_data["starts_after"]:
             queryset = queryset.filter(date__gte=form.cleaned_data["starts_after"])
         return queryset.select_related(
-            "organization", "activity", "location"
+            "organization",
+            "activity",
+            "activity__category",
+            "activity__organization",
+            "location",
+            "location__organization",
         ).prefetch_related(
-            "conditions", "registered", "presents", "organizers", "stuffs"
+            "conditions",
+            "registered",
+            "presents",
+            "organizers",
+            "stuffs",
+            "organization__members",
+            "organization__volunteers",
+            "organization__actives",
+            "organization__admins",
         )
 
 
@@ -146,6 +184,7 @@ class EventFormView(HasActivePermissionMixin):
 
 class EventEditView(RedirectQueryParamView, EventFormView, UpdateView):
     success_message = "L'évènement a bien été modifié"
+
 
 class EventCreateView(RedirectQueryParamView, EventFormView, CreateView):
     success_message = "L'évènement a bien été créé"

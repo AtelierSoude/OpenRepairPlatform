@@ -9,49 +9,51 @@
     <h2 class="text-center pt-2">Groupes</h2>
   </div>
 </section>
-<section class="container">
-      <h4>{{ organization.admins.all.count }} administrateurs</h4>
-      {% if is_admin %}
-      <form class="col-lg p-0" action="{% url 'user:organization_add_admin' organization.pk %}" method="post">
-        {% csrf_token %}
-        {% bootstrap_form add_admin_form %}
-          <button type="submit" class="btn btn-success rounded-circle position-absolute" style="top:38px; right:-2px">
-            <i class="fa fa-plus"></i>
-          </button>
-      </form>
-      {% endif %}
-      <div class="card-columns">
-        {% include "user/user_card.html" with users=organization.admins.all admin_remove_controls=True %}
+{% with admins=organization.admins.all actives=organization.actives.all volunteers=organization.volunteers.all %}
+  <section class="container">
+        <h4>{{ admins.count }} administrateurs</h4>
+        {% if is_admin %}
+        <form class="col-lg p-0" action="{% url 'user:organization_add_admin' organization.pk %}" method="post">
+          {% csrf_token %}
+          {% bootstrap_form add_admin_form %}
+            <button type="submit" class="btn btn-success rounded-circle position-absolute" style="top:38px; right:-2px">
+              <i class="fa fa-plus"></i>
+            </button>
+        </form>
+        {% endif %}
+        <div class="card-columns">
+          {% include "user/user_card.html" with users=admins admin_remove_controls=True %}
+        </div>
+    
+        <h4>{{ actives.count }} actifs</h4>
+        {% if is_active %}
+        <form class="col-lg p-0" action="{% url 'user:organization_add_active' organization.pk %}" method="post">
+          {% csrf_token %}
+          {% bootstrap_form add_active_form %}
+            <button type="submit" class="btn btn-success rounded-circle position-absolute" style="top:38px; right:-2px">
+              <i class="fa fa-plus"></i>
+            </button>
+        </form>
+        {% endif %}
+        <div class="card-columns">
+        {% include "user/user_card.html" with users=actives active_remove_controls=True %}
       </div>
-  
-      <h4>{{ organization.actives.all.count }} actifs</h4>
+    
+      <h4>{{ volunteers.count }} volontaires</h4>
       {% if is_active %}
-      <form class="col-lg p-0" action="{% url 'user:organization_add_active' organization.pk %}" method="post">
-        {% csrf_token %}
-        {% bootstrap_form add_active_form %}
+        <form class="col-lg p-0" action="{% url 'user:organization_add_volunteer' organization.pk %}" method="post">
+          {% csrf_token %}
+          {% bootstrap_form add_volunteer_form %}
           <button type="submit" class="btn btn-success rounded-circle position-absolute" style="top:38px; right:-2px">
             <i class="fa fa-plus"></i>
           </button>
-      </form>
+        </form>
       {% endif %}
       <div class="card-columns">
-      {% include "user/user_card.html" with users=organization.actives.all active_remove_controls=True %}
-    </div>
-  
-    <h4>{{ organization.volunteers.all.count }} volontaires</h4>
-    {% if is_active %}
-      <form class="col-lg p-0" action="{% url 'user:organization_add_volunteer' organization.pk %}" method="post">
-        {% csrf_token %}
-        {% bootstrap_form add_volunteer_form %}
-        <button type="submit" class="btn btn-success rounded-circle position-absolute" style="top:38px; right:-2px">
-          <i class="fa fa-plus"></i>
-        </button>
-      </form>
-    {% endif %}
-    <div class="card-columns">
-      {% include "user/user_card.html" with users=organization.volunteers.all volunteer_remove_controls=True %}
-    </div>
-</section>
+        {% include "user/user_card.html" with users=volunteers volunteer_remove_controls=True %}
+      </div>
+  </section>
+{% endwith %}
 {% endblock menu_content %}
 
 <style>

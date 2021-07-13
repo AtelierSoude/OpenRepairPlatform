@@ -21,7 +21,7 @@
     {% for membership in memberships %}
       {% if membership.organization == organization %}
         {% if membership.current_contribution == 0 %}
-            <small class="text-danger" >Pas à jour</small>
+            <small class="text-danger" >Pas à jour </small>
             <span class="badge badge-pill badge-danger" >{{membership.current_contribution}}€</span>
         {% elif membership.current_contribution >= organization.advised_fee %}
             <small class="text-success" >A jour </small>
@@ -33,6 +33,7 @@
       {% endif %}
     {% endfor %}
   </small>
+
 {% elif column == "member_update" %}
     {% for membership in memberships %}
         {% if membership.organization == organization %}
@@ -57,36 +58,36 @@
     </div>
 
 {% elif column == "needed_organizers" %}
-  {% with organizers=record.organizers.all %}
-  <div class="mini-organizers">
-  {% if record.needed_organizers != 0 %}
-        <span class="align-middle
-          {% if record.needed_organizers != 0 %}
-            {% if record.needed_organizers > organizers.count %}
-              text-danger
-            {% elif record.needed_organizers <= organizers.count %}
-              text-success
-            {% else %}
-              text-warning
-            {% endif %}
-          {% endif %}">
-            {{ organizers.count }}/{{ record.needed_organizers }}
-        </span>
-    {% endif %}
-    {% for orga in organizers %}
-      <div class="position-relative float-left mini d-none d-md-block d-lg-block">
-      {% if orga.avatar_img %}
-        {% thumbnail orga.avatar_img "25x25" crop="center" format="PNG" as im %}
-          <img src="{{ im.url }}" class="rounded-circle"/>
-        {% endthumbnail %}
-      {% else %}
-        {% if orga.first_name %}
-          {% get_initial_avatar orga 25 'circle' %}
-        {% endif %}
+  {% with organizers=record.organizers.all needed_organizers=record.needed_organizers %}
+    <div class="mini-organizers">
+      {% if needed_organizers != 0 %}
+          <span class="align-middle
+            {% if needed_organizers != 0 %}
+              {% if needed_organizers > organizers.count %}
+                text-danger
+              {% elif needed_organizers <= organizers.count %}
+                text-success
+              {% else %}
+                text-warning
+              {% endif %}
+            {% endif %}">
+              {{ organizers.count }}/{{ needed_organizers }}
+          </span>
       {% endif %}
-      </div>
-    {% endfor %}
-  </div>
+      {% for orga in organizers %}
+        <div class="position-relative float-left mini d-none d-md-block d-lg-block">
+        {% if orga.avatar_img %}
+          {% thumbnail orga.avatar_img "25x25" crop="center" format="PNG" as im %}
+            <img src="{{ im.url }}" class="rounded-circle"/>
+          {% endthumbnail %}
+        {% else %}
+          {% if orga.first_name %}
+            {% get_initial_avatar orga 25 'circle' %}
+          {% endif %}
+        {% endif %}
+        </div>
+      {% endfor %}
+    </div>
   {% endwith %}
 
 {% elif column == "seats" %}

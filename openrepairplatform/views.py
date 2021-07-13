@@ -186,7 +186,6 @@ class OrganizationMembersView(
     paginate_by = 20
     table_class = MemberTable
     filterset_class = MemberFilter
-    paginate_by = 40
     dataset_kwargs = {"title": "Members"}
 
     def get_queryset(self):
@@ -198,7 +197,8 @@ class OrganizationMembersView(
                     "member_organizations",
                     "volunteer_organizations",
                     "active_organizations",
-                    "admin_organizations"
+                    "admin_organizations",
+                    "memberships",
                 )
             )
         return queryset
@@ -210,11 +210,6 @@ class OrganizationMembersView(
         context["organization"] = self.organization
         context["search_form"] = CustomUserSearchForm
         context["add_member_form"] = MoreInfoCustomUserForm
-        context["future_event"] = (
-            Event.future_published_events()
-            .filter(organization=self.organization)
-            .order_by("date")
-        )
         return context
 
 

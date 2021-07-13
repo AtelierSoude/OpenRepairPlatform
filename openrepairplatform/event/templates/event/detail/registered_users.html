@@ -23,12 +23,12 @@
             {% endif %}
           </div>
           <div class="d-inline">
-            <h6 class="card-title">
-              {{user}}
-            </h6>
-            {% if user.first_name or user.last_name %}
-            {% endif %}
-            <h6 class="card-subtitle mb-2 text-muted">{{ user.email }}</h6>
+            <a href={{user.get_absolute_url}} >
+              <h6 class="card-title">
+                {{user}}
+              </h6>
+              <h6 class="card-subtitle mb-2 text-muted">{{ user.email }}</h6>
+            </a>
           </div>
           <div class="ml-auto">
             <a class="btn btn-sm btn-danger" href="{% url 'event:cancel_reservation' tok_event_cancel %}"><i class="fa fa-trash"></i></a>

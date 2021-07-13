@@ -42,29 +42,8 @@ class EventViewMixin(PermissionOrgaContextMixin, DetailView):
             ctx["user_is_member"] = self.request.user.memberships.filter(
                 organization=self.object.organization
             ).first()
-        ctx["users"] = [
-            (
-                (
-                    f"{user.get('email', '-')} ({user.get('first_name', '-')} "
-                    f"{user.get('last_name', '-')})",
-                    user.get("email"),
-                )
-                for user in CustomUser.objects.values(
-                    "email", "first_name", "last_name"
-                )
-            )
-        ]
         ctx["register_form"] = CustomUserEmailForm
-        ctx["participation_form"] = ParticipationForm
         ctx["event_menu"] = "active"
-        ctx["present_form"] = MoreInfoCustomUserForm
-        ctx["total_fees"] = sum([fee.amount for fee in self.get_object().fees.all()])
-        ctx["total_participations"] = sum(
-            [
-                participation.amount
-                for participation in self.get_object().participations.all()
-            ]
-        )
         # Display success booking informations and inventory
         if self.request.GET.get("success_booking"):
             user_pk = self.request.GET.get("user_pk")
@@ -86,8 +65,19 @@ class EventAdminView(HasVolunteerPermissionMixin, EventViewMixin):
         context["invitation_form"] = InvitationForm
         context["emails"] = [
             (f"{user.email} ({user.first_name} {user.last_name})", user.email)
-            for user in CustomUser.objects.all()
+            for user in CustomUser.objects.only(
+                    "email", "first_name", "last_name"
+                )
         ]
+        context["present_form"] = MoreInfoCustomUserForm
+        context["total_fees"] = sum([fee.amount for fee in self.get_object().fees.all()])
+        context["total_participations"] = sum(
+            [
+                participation.amount
+                for participation in self.get_object().participations.all()
+            ]
+        )
+        context["participation_form"] = ParticipationForm
         return context
 
 
@@ -107,8 +97,7 @@ class EventListView(ListView):
         return context
 
     def get_queryset(self):
-        # queryset = Event.future_published_events()
-        queryset = Event.objects.order_by("-date")[:20]
+        queryset = Event.future_published_events()
         form = EventSearchForm(self.request.GET)
         if not form.is_valid():
             return queryset.select_related(

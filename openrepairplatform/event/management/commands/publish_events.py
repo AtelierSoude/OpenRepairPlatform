@@ -16,6 +16,7 @@ class Command(BaseCommand):
         unpublished_events = Event.objects.filter(published=False).filter(
             publish_at__lte=timezone.now()
         )
+        import pdb; pdb.set_trace()
         for event in unpublished_events:
             event.published = True
             event.save()

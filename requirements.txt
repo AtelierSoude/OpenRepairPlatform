@@ -165,7 +165,7 @@ tinycss2==1.1.0
     #   weasyprint
 weasyprint==52.5
     # via openrepairplatform (setup.py)
-webassets==0.12
+webassets==0.12.1
     # via django-assets
 webencodings==0.5.1
     # via

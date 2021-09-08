@@ -5,7 +5,7 @@ services:
     image: postgres:11
     container_name: postgres
     env_file:
-      - ../openrepairplatform/.env
+      - .env
     volumes:
       - ./openrepairplatform_data/postgres_data:/var/lib/postgresql/data
     networks:
@@ -13,12 +13,12 @@ services:
 
   django:
     build:
-      context: .
-      dockerfile: django
+      context: ../
+      dockerfile: deployment/django/Dockerfile
     image: openrepairplatform_python
     container_name: openrepairplatform_python
     env_file:
-      - ../openrepairplatform/.env
+      - .env
     volumes:
       - ./openrepairplatform_data/openrepairplatform_static:/srv/static
       - ./openrepairplatform_data/openrepairplatform_media:/srv/media
@@ -29,21 +29,23 @@ services:
 
   nginx:
     build:
-      context: .
-      dockerfile: nginx
+      context: ../
+      dockerfile: deployment/nginx/Dockerfile
     image: openrepairplatform_nginx
     container_name: openrepairplatform_nginx
     ports:
       - 80:80
       - 443:443
     env_file:
-      - ../openrepairplatform/.env
+      - .env
     volumes:
       - ./openrepairplatform_data/openrepairplatform_static:/srv/static:ro
       - ./openrepairplatform_data/openrepairplatform_media:/srv/media:ro
       - ./openrepairplatform_data/openrepairplatform_letsencrypt:/etc/letsencrypt/:rw
     networks:
       - openrepairplatform-net
+    depends_on:
+      - django 
 
 networks:
   openrepairplatform-net:

@@ -1,4 +1,6 @@
-from django.core.management import BaseCommand
+import os
+os.environ['DJANGO_SETTINGS_MODULE'] = 'openrepairplatform.settings'
+from django.core.management.base import BaseCommand
 from django.utils import timezone
 
 from openrepairplatform.event.models import Event

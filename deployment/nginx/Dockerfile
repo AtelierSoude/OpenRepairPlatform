@@ -1,3 +1,4 @@
+
 FROM debian:buster
 
 RUN apt update -y && apt upgrade -y
@@ -12,6 +13,7 @@ RUN mkdir /var/www/letsencrypt/.well-known
 RUN mkdir /var/www/letsencrypt/.well-known/acme-challenge
 
 #command to run on first exec to generate diffie helman cert use to secure tls handshake
-#CMD openssl dhparam -out /etc/ssl/certsdhparam.pem 4096
+CMD openssl dhparam -out /etc/ssl/certsdhparam.pem 4096
 
 CMD while :; do sleep 12h & wait ${!}; certbot renew; nginx -s reload; done & nginx -g "daemon off;"
+

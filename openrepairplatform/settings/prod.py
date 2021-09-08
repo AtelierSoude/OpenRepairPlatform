@@ -7,11 +7,11 @@ load_dotenv()
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
-    "" "127.0.0.1",
-    "localhost",
+    "127.0.0.1",
+    "reparons.org",
     os.getenv("DOMAIN_NAME"),
 ]
 

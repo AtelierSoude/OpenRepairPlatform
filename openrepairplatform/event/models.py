@@ -119,7 +119,7 @@ class Event(models.Model):
         verbose_name=_("Published"),
         default=False,
     )
-    publish_at = models.DateTimeField(
+    publish_at = models.DateField(
         verbose_name=_("Publication date and time"), default=timezone.now
     )
     activity = models.ForeignKey(

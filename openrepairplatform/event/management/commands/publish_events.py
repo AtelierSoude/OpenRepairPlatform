@@ -1,5 +1,3 @@
-import os
-os.environ['DJANGO_SETTINGS_MODULE'] = 'openrepairplatform.settings'
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 
@@ -16,7 +14,6 @@ class Command(BaseCommand):
         unpublished_events = Event.objects.filter(published=False).filter(
             publish_at__lte=timezone.now()
         )
-        import pdb; pdb.set_trace()
         for event in unpublished_events:
             event.published = True
             event.save()

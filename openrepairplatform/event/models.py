@@ -119,13 +119,8 @@ class Event(models.Model):
         verbose_name=_("Published"),
         default=False,
     )
-<<<<<<< HEAD
-    publish_at = models.DateField(
-        verbose_name=_("Publication date and time"), default=timezone.now()
-=======
     publish_at = models.DateTimeField(
         verbose_name=_("Publication date and time"), default=timezone.now
->>>>>>> origin/fix_publish
     )
     activity = models.ForeignKey(
         Activity, on_delete=models.SET_NULL, null=True, related_name="events"

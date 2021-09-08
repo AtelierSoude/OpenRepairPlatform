@@ -1,5 +1,4 @@
-* * * * * openrepairplatform cd /srv/app && LANG=fr_FR.UTF-8 EMAIL_PASSWORD={{EMAIL_PASSWORD}} SECRET_KEY={{SECRET_KEY}} DJANGO_SETTINGS_MODULE=openrepairplatform.settings.prod /usr/local/bin/python3 manage.py 
- publish_events > /tmp/log_publish_events 2>&1
+* * * * * openrepairplatform cd /srv/app && LANG=fr_FR.UTF-8 EMAIL_PASSWORD={{EMAIL_PASSWORD}} SECRET_KEY={{SECRET_KEY}} DJANGO_SETTINGS_MODULE=openrepairplatform.settings.prod /usr/local/bin/python3 manage.py publish_events > /tmp/log_publish_events 2>&1
 0 16 * * * openrepairplatform cd /srv/app && LANG=fr_FR.UTF-8 EMAIL_PASSWORD={{EMAIL_PASSWORD}} SECRET_KEY={{SECRET_KEY}} DJANGO_SETTINGS_MODULE=openrepairplatform.settings.prod /usr/local/bin/python3 manage.py notify_next_day_events https://reparons.org > /tmp/log_nextday_events 2>&1
 0 22 * * * openrepairplatform cd /srv/app && LANG=fr_FR.UTF-8 EMAIL_PASSWORD={{EMAIL_PASSWORD}} SECRET_KEY={{SECRET_KEY}} DJANGO_SETTINGS_MODULE=openrepairplatform.settings.prod /usr/local/bin/python3  manage.py clean_inactive_users > /tmp/clean_users 2>&1
 # empty line

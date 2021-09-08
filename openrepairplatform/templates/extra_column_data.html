@@ -18,10 +18,10 @@
     {% endif %}
 
 {% elif column == "membership_status" %}
-    {% for membership in record.memberships.all %}
+    {% for membership in memberships %}
       {% if membership.organization == organization %}
-        {% if membership.current_contribution == 0 %} 
-            <small class="text-danger" >Pas à jour</small>
+        {% if membership.current_contribution == 0 %}
+            <small class="text-danger" >Pas à jour </small>
             <span class="badge badge-pill badge-danger" >{{membership.current_contribution}}€</span>
         {% elif membership.current_contribution >= organization.advised_fee %}
             <small class="text-success" >A jour </small>
@@ -35,10 +35,10 @@
   </small>
 
 {% elif column == "member_update" %}
-    {% for membership in record.memberships.all %}
+    {% for membership in memberships %}
         {% if membership.organization == organization %}
-            <button class="btn btn-success btn-sm" 
-            data-toggle="modal" 
+            <button class="btn btn-success btn-sm"
+            data-toggle="modal"
             data-target="#more-info-{{ membership.user.pk }}">
             <i class="fa fa-plus"></i>
             Mettre à jour
@@ -46,8 +46,8 @@
             {% include "user/organization/modal_more_info.html" with object=organization anonymous_user=record form=add_member_form|initial:record %}
         {% endif %}
     {% endfor %}
-    
-{% elif column == "date" %}   
+
+{% elif column == "date" %}
     <div class="row border-secondary border text-center bg-white ml-2 mr-2 calendar">
       <small class="col-12 bg-secondary">
         {{ record.date|date:"N"|upper }} {{ record.date|date:"Y"|upper }}
@@ -57,39 +57,40 @@
       </small>
     </div>
 
-{% elif column == "needed_organizers" %}   
-  <div class="mini-organizers">
-  {% if record.needed_organizers != 0 %}
-        <span class="align-middle
-          {% if record.needed_organizers != 0 %}
-            {% if record.needed_organizers > record.organizers.all.count %}
-              text-danger
-            {% elif record.needed_organizers <= record.organizers.all.count %}
-              text-success
-            {% else %}
-              text-warning
-            {% endif %}
-          {% endif %}"> 
-            {{ record.organizers.all.count }}/{{ record.needed_organizers }}
-        </span>
-    {% endif %}
-    {% for orga in record.organizers.all %}
-      <div class="position-relative float-left mini d-none d-md-block d-lg-block">
-      {% if orga.avatar_img %}
-        {% thumbnail orga.avatar_img "25x25" crop="center" format="PNG" as im %}
-          <img src="{{ im.url }}" class="rounded-circle"/>
-        {% endthumbnail %}
-      {% else %}
-        {% if orga.first_name %}
-          {% get_initial_avatar orga 25 'circle' %}
-        {% endif %}
+{% elif column == "needed_organizers" %}
+  {% with organizers=record.organizers.all needed_organizers=record.needed_organizers %}
+    <div class="mini-organizers">
+      {% if needed_organizers != 0 %}
+          <span class="align-middle
+            {% if needed_organizers != 0 %}
+              {% if needed_organizers > organizers.count %}
+                text-danger
+              {% elif needed_organizers <= organizers.count %}
+                text-success
+              {% else %}
+                text-warning
+              {% endif %}
+            {% endif %}">
+              {{ organizers.count }}/{{ needed_organizers }}
+          </span>
       {% endif %}
-      </div>
-    {% endfor %}
-  </div>
+      {% for orga in organizers %}
+        <div class="position-relative float-left mini d-none d-md-block d-lg-block">
+        {% if orga.avatar_img %}
+          {% thumbnail orga.avatar_img "25x25" crop="center" format="PNG" as im %}
+            <img src="{{ im.url }}" class="rounded-circle"/>
+          {% endthumbnail %}
+        {% else %}
+          {% if orga.first_name %}
+            {% get_initial_avatar orga 25 'circle' %}
+          {% endif %}
+        {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  {% endwith %}
 
-
-{% elif column == "seats" %}   
+{% elif column == "seats" %}
   {% if record.is_free %}
     Illimité
   {% else %}
@@ -103,7 +104,7 @@
         text-warning
       {% endif %}
       ">
-    <i class="fas fa-users"></i>    
+    <i class="fas fa-users"></i>
       {{ record.remaining_seats}}/{{ record.available_seats }}
     </span>
 {% endif %}

@@ -41,22 +41,9 @@ class EventViewMixin(PermissionOrgaContextMixin, DetailView):
         if not self.request.user.is_anonymous:
             ctx["user_is_member"] = self.request.user.memberships.filter(
                 organization=self.object.organization
-            ).first
-        ctx["users"] = [
-            (f"{user.email} ({user.first_name} {user.last_name})", user.email)
-            for user in CustomUser.objects.all()
-        ]
+            ).first()
         ctx["register_form"] = CustomUserEmailForm
-        ctx["participation_form"] = ParticipationForm
         ctx["event_menu"] = "active"
-        ctx["present_form"] = MoreInfoCustomUserForm
-        ctx["total_fees"] = sum([fee.amount for fee in self.get_object().fees.all()])
-        ctx["total_participations"] = sum(
-            [
-                participation.amount
-                for participation in self.get_object().participations.all()
-            ]
-        )
         # Display success booking informations and inventory
         if self.request.GET.get("success_booking"):
             user_pk = self.request.GET.get("user_pk")
@@ -78,8 +65,19 @@ class EventAdminView(HasVolunteerPermissionMixin, EventViewMixin):
         context["invitation_form"] = InvitationForm
         context["emails"] = [
             (f"{user.email} ({user.first_name} {user.last_name})", user.email)
-            for user in CustomUser.objects.all()
+            for user in CustomUser.objects.only(
+                    "email", "first_name", "last_name"
+                )
         ]
+        context["present_form"] = MoreInfoCustomUserForm
+        context["total_fees"] = sum([fee.amount for fee in self.get_object().fees.all()])
+        context["total_participations"] = sum(
+            [
+                participation.amount
+                for participation in self.get_object().participations.all()
+            ]
+        )
+        context["participation_form"] = ParticipationForm
         return context
 
 
@@ -102,7 +100,23 @@ class EventListView(ListView):
         queryset = Event.future_published_events()
         form = EventSearchForm(self.request.GET)
         if not form.is_valid():
-            return queryset
+            return queryset.select_related(
+                "organization",
+                "activity",
+                "activity__category",
+                "activity__organization",
+                "location",
+            ).prefetch_related(
+                "conditions",
+                "registered",
+                "presents",
+                "organizers",
+                "stuffs",
+                "organization__members",
+                "organization__volunteers",
+                "organization__actives",
+                "organization__admins",
+            )
         if form.cleaned_data["place"]:
             queryset = queryset.filter(location=form.cleaned_data["place"])
         if form.cleaned_data["organization"]:
@@ -114,9 +128,22 @@ class EventListView(ListView):
         if form.cleaned_data["starts_after"]:
             queryset = queryset.filter(date__gte=form.cleaned_data["starts_after"])
         return queryset.select_related(
-            "organization", "activity", "location"
+            "organization",
+            "activity",
+            "activity__category",
+            "activity__organization",
+            "location",
+            "location__organization",
         ).prefetch_related(
-            "conditions", "registered", "presents", "organizers", "stuffs"
+            "conditions",
+            "registered",
+            "presents",
+            "organizers",
+            "stuffs",
+            "organization__members",
+            "organization__volunteers",
+            "organization__actives",
+            "organization__admins",
         )
 
 
@@ -146,6 +173,7 @@ class EventFormView(HasActivePermissionMixin):
 
 class EventEditView(RedirectQueryParamView, EventFormView, UpdateView):
     success_message = "L'évènement a bien été modifié"
+
 
 class EventCreateView(RedirectQueryParamView, EventFormView, CreateView):
     success_message = "L'évènement a bien été créé"

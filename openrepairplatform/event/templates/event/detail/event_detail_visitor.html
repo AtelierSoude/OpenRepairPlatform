@@ -1,6 +1,7 @@
 {% load assets l10n app_filters static %}
 {% load thumbnail %}
 {% load initialavatar %}
+{% with organizers=event.organizers.all registered=event.registered.all %}
 <div class="row p-4">
   <div class="col-md-7">
     <div class="pr-4 pt-2" id="event_about">
@@ -42,10 +43,10 @@
         {% elif event.external == True %}
           <span class="badge badge-secondary badge-pill">Réservation externe</span>
         {% endif %}
-        {% if request.user in event.registered.all or request.user in event.presents.all %}
+        {% if request.user in registered or request.user in event.presents.all %}
           <span class="badge badge-success badge-pill">Inscrit</span>
         {% endif %}
-        {% if request.user in event.organizers.all %}
+        {% if request.user in organizers %}
           <span class="badge badge-success badge-pill">Animateur</span>
         {% endif %}
       </h5>
@@ -62,7 +63,7 @@
                 <div class="col-md-6">
                   <b>Participants</b>
                   <div style="line-height: 50px;">
-                    {% for user in event.registered.all %}
+                    {% for user in registered %}
                     <div class="position-relative float-left mini">
                       {% if user.avatar_img %}
                         {% thumbnail user.avatar_img "35x35" crop="center" format="PNG" as im %}
@@ -75,26 +76,24 @@
                       {% endfor %}
                     <span class="align-middle
                       {% if event.available_seats != 0 %}
-                        {% if event.available_seats > event.registered.all.count %}
+                        {% if event.available_seats > registered.count %}
                           text-warning
-                        {% elif event.available_seats <= event.registered.all.count %}
+                        {% elif event.available_seats <= registered.count %}
                           text-success
                         {% else %}
                           text-danger
                         {% endif %}
                       {% endif %}"> 
                       {% if event.available_seats != 0 %}
-                        {{ event.registered.all.count }}/{{ event.available_seats }} participants
+                        {{ registered.count }}/{{ event.available_seats }} participants
                       {% endif %}
                     </span>
                   </div>
                 </div>
-              {% if event.needed_organizers %}
-              {% endif %}
                 <div class="col-md-6">
                   <b>Animateurs</b>
                   <div style="line-height: 50px;">
-                    {% for orga in event.organizers.all %}
+                    {% for orga in organizers %}
                     <div class="position-relative float-left mini">
                       {% if orga.avatar_img %}
                         {% thumbnail orga.avatar_img "35x35" crop="center" format="PNG" as im %}
@@ -109,16 +108,16 @@
                       {% endfor %}
                     <span class="align-middle
                       {% if event.needed_organizers != 0 %}
-                        {% if event.needed_organizers > event.organizers.all.count %}
+                        {% if event.needed_organizers > organizers.count %}
                           text-danger
-                        {% elif event.needed_organizers <= event.organizers.all.count %}
+                        {% elif event.needed_organizers <= organizers.count %}
                           text-success
                         {% else %}
                           text-warning
                         {% endif %}
                       {% endif %}"> 
                       {% if event.needed_organizers != 0 %}
-                        {{ event.organizers.all.count }}/{{ event.needed_organizers }} animateurs
+                        {{ organizers.count }}/{{ event.needed_organizers }} animateurs
                       {% endif %}
                     </span>
                   </div>
@@ -244,7 +243,7 @@
       {% if user_success_booking %}
       shadow-xxl
       {% endif %}" style="position: relative; top:-50px">
-          {% if request.user in event.registered.all or request.user in event.organizers.all %}
+          {% if request.user in registered or request.user in organizers %}
             {% if user_success_booking %}
             <div class="card-header bg-success text-center">
             {% else %}
@@ -254,7 +253,7 @@
             <div class="card-header bg-primary text-center">
           {% endif %}
           <h4 class="text-white"  id="book_show" onclick="display_book()"><i class="fas fa-calendar-day"></i>
-            {% if request.user in event.registered.all %}
+            {% if request.user in registered %}
               {% if user_success_booking %}
                 {% if event.allow_stuffs %}
                   Ajouter un appareil 
@@ -264,7 +263,7 @@
               {% else %}
                 Annuler ma réservation
               {% endif %}
-            {% elif request.user in event.organizers.all %}
+            {% elif request.user in organizers %}
               Je n'anime plus
             {% else %}
               Réserver{% if is_active %}/Animer{% endif %}
@@ -277,7 +276,7 @@
           </div>
         {% else %}
           <div class="card-body">
-            {% if request.user in event.registered.all %}
+            {% if request.user in registered %}
             <b>Ah mince... vous ne pouvez pas venir finalement ? </b>
             <p>Pas de soucis mais pensez à éviter d'annuler au dernier moment... cela a comme conséquence d'avoir bloqué une place 
               que quelqu'un d'autre aurait pu prendre. 
@@ -314,7 +313,7 @@
               {% endif %}
             </ul>
             {% endif %}
-            {% if event.members_only or request.user in event.registered.all %}
+            {% if event.members_only or request.user in registered %}
               <div class="">
                 <b>Adhérer à {{event.organization.name}}</b>
                 <p>
@@ -355,9 +354,9 @@
             {% elif event.booking == True %}
               {% include "event/register.html" with event=event %}
             {% endif %}
-            {% if is_volunteer and user not in event.registered.all %}
+            {% if is_volunteer and user not in registered %}
               <form
-                  {% if user in event.organizers.all %}
+                  {% if user in organizers %}
                     action="{% url 'event:remove_active' event.pk %}"
                   {% else %}
                     action="{% url 'event:add_active' event.pk %}"
@@ -365,7 +364,7 @@
                   method="post"
                   class="d-inline">
                 {% csrf_token %}
-                {% if user in event.organizers.all %}
+                {% if user in organizers %}
                   <button class="btn btn-secondary btn-block mt-2" type="submit">
                     je n'anime plus
                   </button>
@@ -383,7 +382,7 @@
     </div>
   </div>
 </div>
-
+{% endwith %}
 {% block extra_js %}
 
 <script>

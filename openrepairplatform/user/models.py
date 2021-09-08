@@ -115,7 +115,16 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     @property
     def full_name(self):
-        return '{0} {1}'.format(self.first_name, self.last_name)
+        return "{0} {1}".format(self.first_name, self.last_name)
+
+    @property
+    def active_organizations(self):
+        organizations = (
+            self.active_organizations.all()
+            .union(self.volunteer_organizations.all(), self.admin_organizations.all())
+            .prefetch_related("organization")
+        )
+        return organizations
 
     def clean(self):
         super().clean()
@@ -327,9 +336,7 @@ class Membership(models.Model):
         And the date limit.
         """
 
-        fees = self.fees.filter(
-            date__gte=self.first_payment, date__lte=self.date_limit
-        )
+        fees = self.fees.filter(date__gte=self.first_payment, date__lte=self.date_limit)
         self.amount = sum(fee.amount for fee in fees)
 
     @property

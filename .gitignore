@@ -81,8 +81,9 @@ celerybeat-schedule
 *.sage.py
 
 # dotenv
-openrepairplatform/.env
+./openrepairplatform/.env
 .env
+deployment/.env
 
 # virtualenv
 .venv

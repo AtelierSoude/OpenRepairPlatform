@@ -23,6 +23,7 @@ from django_tables2.export.views import ExportMixin
 from .tables import StockTable
 from .models import (
     Stuff,
+    Action,
     Device,
     Category,
     Observation,
@@ -339,7 +340,7 @@ class ObservationAutocomplete(autocomplete.Select2QuerySetView):
 
 class ActionAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
-        qs = Observation.objects.all()
+        qs = Action.objects.all()
 
         if self.q:
             qs = qs.filter(name__icontains=self.q)

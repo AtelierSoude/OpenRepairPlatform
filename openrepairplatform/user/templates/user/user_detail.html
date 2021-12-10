@@ -298,8 +298,7 @@
               {% endif %}
               <span class="badge badge-pill badge-success float-right">{{ membership.current_contribution }}€</span></h5>
               <table class="table table-striped table-hover">
-              {% for fee in fees %}
-                {% if fee.organization == membership.organization %}
+                {% for fee in membership.fees.all %}
                   <tr>
                     <td>
                     le {{ fee.date|date:"d F Y" }}
@@ -328,7 +327,6 @@
                     {% endif %}
                     </td>
                   </tr>
-                  {% endif %}
                 {% endfor %}
                 </table>
               {% else %}

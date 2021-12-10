@@ -14,7 +14,7 @@ SECRET_KEY = "H/hXAUnb1ZKNGpToim2cg38dxiyHM6b+zB9zozhpTzkP"
 
 DEBUG = True
 
-ALLOWED_HOSTS = ["127.0.0.1"]
+ALLOWED_HOSTS = []
 
 SITE_ID = 1
 
@@ -92,7 +92,7 @@ WSGI_APPLICATION = "openrepairplatform.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.getenv("POSTGRES_DB_NAME"),
+        "NAME": os.getenv("POSTGRES_DB_NAME", "ateliersoude"),
     }
 }
 

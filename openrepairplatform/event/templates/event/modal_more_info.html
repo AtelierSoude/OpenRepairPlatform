@@ -16,11 +16,11 @@
             {% filter_orga queryset=user.memberships organization=event.organization as membership %}
               {% if membership %}
               <p>
-                statut 
-                  {% if membership.current_contribution == 0 %} 
+                statut
+                  {% if membership.current_contribution == 0 %}
                       <span class="text-danger" >Pas à jour</span>
                       <span class="badge badge-pill badge-danger" >{{membership.current_contribution}}€</span>
-                  {% elif membership.current_contribution >= organization.advised_fee %}
+                  {% elif membership.current_contribution >= event.organization.advised_fee %}
                       <span class="text-success" >A jour </span>
                       <span class="badge badge-pill badge-success" >{{membership.current_contribution}}€</span>
                   {% else %}
@@ -36,7 +36,7 @@
             {% if event.organization.advised_fee == event.organization.min_fee %}
             est de {{event.organization.min_fee}}€
             {% else %}
-            va de {{event.organization.min_fee}}€ à {{event.organization.advised_fee}}€ 
+            va de {{event.organization.min_fee}}€ à {{event.organization.advised_fee}}€
             {% endif %}
           </p>
         </b>

@@ -1,9 +1,8 @@
-from rest_framework import routers
-
 from . import api_views
+from django.urls import path
 
 app_name = "api_user"
 
-router = routers.SimpleRouter()
-router.register(r"", api_views.CustomUserViewSet)
-urlpatterns = router.urls
+urlpatterns = [
+    path("<int:pk>/", api_views.CustomUserAPIView.as_view(), name="detail")
+]

@@ -182,3 +182,56 @@ def test_current_contribution(membership):
     assert membership.amount == 10
     assert membership.current_contribution == 0
     assert membership.amount == 0
+
+
+def test_api_user_admin(api_client_log, custom_user, organization, membership_factory):
+    membership_factory(user=custom_user, organization=organization)
+    current_user = api_client_log.request().wsgi_request.user
+    organization.admins.add(current_user)
+    response = api_client_log.get(
+        reverse(
+            "api_user:detail",
+            kwargs={"pk": custom_user.pk},
+        )
+    )
+    assert response.json() == {
+        "first_name": custom_user.first_name,
+        "last_name": custom_user.last_name,
+        "street_address": custom_user.street_address,
+        "email": custom_user.email,
+    }
+
+
+def test_api_user_volunteer(
+    api_client_log, custom_user, organization, membership_factory
+):
+    membership_factory(user=custom_user, organization=organization)
+    current_user = api_client_log.request().wsgi_request.user
+    organization.volunteers.add(current_user)
+    response = api_client_log.get(
+        reverse(
+            "api_user:detail",
+            kwargs={"pk": custom_user.pk},
+        )
+    )
+    assert response.json() == {
+        "first_name": custom_user.first_name,
+        "last_name": custom_user.last_name,
+        "street_address": custom_user.street_address,
+        "email": custom_user.email,
+    }
+
+
+def test_api_user_no_admin(
+    api_client_log, custom_user, organization, membership_factory
+):
+    membership_factory(user=custom_user, organization=organization)
+    response = api_client_log.get(
+        reverse(
+            "api_user:detail",
+            kwargs={"pk": custom_user.pk},
+        )
+    )
+    assert response.json() == {
+        "detail": "Vous n'avez pas la permission d'effectuer cette action."
+    }

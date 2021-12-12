@@ -188,6 +188,8 @@ def test_api_user_admin(api_client_log, custom_user, organization, membership_fa
     membership_factory(user=custom_user, organization=organization)
     current_user = api_client_log.request().wsgi_request.user
     organization.admins.add(current_user)
+    organization.refresh_from_db()
+    current_user.refresh_from_db()
     response = api_client_log.get(
         reverse(
             "api_user:detail",
@@ -208,6 +210,8 @@ def test_api_user_volunteer(
     membership_factory(user=custom_user, organization=organization)
     current_user = api_client_log.request().wsgi_request.user
     organization.volunteers.add(current_user)
+    organization.refresh_from_db()
+    current_user.refresh_from_db()
     response = api_client_log.get(
         reverse(
             "api_user:detail",

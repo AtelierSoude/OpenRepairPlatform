@@ -7,16 +7,13 @@ from rest_framework.permissions import BasePermission
 class OrganizationOwner(BasePermission):
     def has_permission(self, request, view):
         authenticated = request.user and request.user.is_authenticated
-        memberships = CustomUser.objects.get(pk=view.kwargs["pk"]).memberships.all()
-        if authenticated:
-            for membership in memberships:
-                is_manager = (
-                    request.user in membership.organization.admins.all() or
-                    request.user in membership.organization.volunteers.all()
-                )
-                if is_manager:
-                    return True
-        return False
+        manager_organizations = (
+            request.user.active_organizations.all().union(
+                request.user.volunteer_organizations.all(),
+                request.user.admin_organizations.all()
+            )
+        )
+        return bool(authenticated and manager_organizations)
 
 
 class CustomUserAPIView(RetrieveAPIView):

@@ -5,6 +5,10 @@ from django_tables2_column_shifter.tables import ColumnShiftTable
 
 class StockTable(ColumnShiftTable):
 
+    def get_column_default_show(self):
+        self.column_default_show = ["id", "device","localisation", "state", "is_visible", "action"]
+        return super(StockTable, self).get_column_default_show()
+
     id = tables.Column(
         attrs={"td": {"class": "small-column"}, "th": {"class": "small-column"}}
     )
@@ -22,9 +26,6 @@ class StockTable(ColumnShiftTable):
         verbose_name="Action",
         linkify=True,
     )
-
-    def get_column_default_show(self):
-        self.column_default_show = ["id", "device", "state", "action"]
 
     class Meta:
         model = Stuff

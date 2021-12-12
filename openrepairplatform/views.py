@@ -191,14 +191,10 @@ class OrganizationMembersView(
     def get_queryset(self):
         self.object = self.organization
         queryset = (
-            self.organization.members.all()
-                .order_by("last_name")
-                .prefetch_related(
-                    "member_organizations",
-                    "volunteer_organizations",
-                    "active_organizations",
-                    "admin_organizations",
-                    "memberships",
+            self.organization.memberships.all()
+                .order_by("-first_payment")
+                .select_related(
+                    "user",
                 )
             )
         return queryset
@@ -210,6 +206,10 @@ class OrganizationMembersView(
         context["organization"] = self.organization
         context["search_form"] = CustomUserSearchForm
         context["add_member_form"] = MoreInfoCustomUserForm
+        filtered_data = MemberFilter(
+            self.request.GET, queryset=self.get_queryset().all()
+        )
+        context["total_members"] = filtered_data.qs.count()
         return context
 
 

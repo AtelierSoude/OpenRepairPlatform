@@ -7,45 +7,36 @@
 <button class='btn btn-secondary btn-small'>Voir</button>
 
 {% elif column == "avatar" %}
-    {% if record.avatar_img %}
-      {% thumbnail record.avatar_img "30x30" crop="center" format="PNG" as im %}
+    {% if record.user.avatar_img %}
+      {% thumbnail record.user.avatar_img "30x30" crop="center" format="PNG" as im %}
         <img src="{{ im.url }}" class="rounded-circle"/>
       {% endthumbnail %}
     {% else %}
-      {% if record.first_name %}
-        {% get_initial_avatar record 30 'circle' %}
+      {% if record.user.first_name %}
+        {% get_initial_avatar record.user 30 'circle' %}
       {% endif %}
     {% endif %}
 
 {% elif column == "membership_status" %}
-    {% for membership in memberships %}
-      {% if membership.organization == organization %}
-        {% if membership.current_contribution == 0 %}
-            <small class="text-danger" >Pas à jour </small>
-            <span class="badge badge-pill badge-danger" >{{membership.current_contribution}}€</span>
-        {% elif membership.current_contribution >= organization.advised_fee %}
-            <small class="text-success" >A jour </small>
-            <span class="badge badge-pill badge-success" >{{membership.current_contribution}}€</span>
-        {% else %}
-            <small class="text-warning" >Incomplet </small>
-            <span class="badge badge-pill badge-warning" >{{membership.current_contribution}}€</span>
-        {% endif %}
-      {% endif %}
-    {% endfor %}
-  </small>
+  {% if record.current_contribution == 0 %}
+  <span class="text-danger" >Pas de cotisation</span>
+  <span class="badge badge-pill badge-danger" >0€</span>
+  {% elif record.current_contribution >= record.organization.advised_fee %}
+  <span class="text-success" >A jour </span>
+  <span class="badge badge-pill badge-success" >{{record.current_contribution}}€/{{record.organization.advised_fee}}€</span>
+  {% else %}
+  <span class="text-warning" >Incomplet</span>
+  <span class="badge badge-pill badge-warning" >{{record.current_contribution}}€</span>
+  {% endif %}
 
 {% elif column == "member_update" %}
-    {% for membership in memberships %}
-        {% if membership.organization == organization %}
-            <button class="btn btn-success btn-sm"
-            data-toggle="modal"
-            data-target="#more-info-{{ membership.user.pk }}">
-            <i class="fa fa-plus"></i>
-            Mettre à jour
-            </button>
-            {% include "user/organization/modal_more_info.html" with object=organization anonymous_user=record form=add_member_form|initial:record %}
-        {% endif %}
-    {% endfor %}
+    <button class="btn btn-success btn-sm"
+    data-toggle="modal"
+    data-target="#more-info-{{ record.user.pk }}">
+    <i class="fa fa-plus"></i>
+    Mettre à jour
+    </button>
+    {% include "user/organization/modal_more_info.html" with object=organization anonymous_user=record.user form=add_member_form|initial:record.user %}
 
 {% elif column == "date" %}
     <div class="row border-secondary border text-center bg-white ml-2 mr-2 calendar">

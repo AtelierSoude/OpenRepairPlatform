@@ -11,8 +11,9 @@
         <div id="search" class="collapse">
             <form method="GET" class="form-row" action="{% url 'event:list' %}">
                 <div class="input-group search-bar d-flex">
-                    {% bootstrap_field search_form.activity form_group_class="col-md-5" %}
-                    {% bootstrap_field search_form.place form_group_class="col-md-5" %}
+                    {% bootstrap_field search_form.activity form_group_class="col-md-4" %}
+                    {% bootstrap_field search_form.place form_group_class="col-md-4" %}
+                    {% bootstrap_field search_form.organization form_group_class="col-md-2" %}
                     <div class="col-md-2 p-3 mt-3">
                       <button type="submit" class="btn btn-secondary w-100">
                         <span class=""><i class="fa fa-search"></i>Rechercher</span>
@@ -37,7 +38,7 @@
       </a>
     </div>
   </section>
-  <section class="container">
+  <section class="container-fluid">
   <!-- alerts
   <div class="container-fluid">
       <div class="alert alert-danger alert-dismissible fade show mb-0" role="alert">
@@ -47,12 +48,12 @@
         </button>
       </div>
   </div>-->
-    <div class="row">
-        <div class="infinite-container event_list_cards col-md-8 mt-4">
+    <div class="col-md-8 d-flex justify-content-center flex">
+        <div class="infinite-container event_list_cards col-md-10 mt-4">
           {% include "event/event_cards.html" with event_list=event_list card_size='col-md-12' %}
         </div>
-        <div class="col-md-4 no-gutters" id="map">
-          {% include "location/place_list.html" %}
+        <div class="col-md-4 no-gutters" id="map">          
+            {% include "location/place_list.html" %}
         </div>
     </div>
   </section>

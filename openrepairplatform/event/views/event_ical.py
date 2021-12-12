@@ -1,6 +1,8 @@
 from datetime import date, datetime
+
 from django.http import HttpResponse
 from django.urls import reverse
+from django.utils import timezone
 from django.views.generic import DetailView
 
 from html2text import html2text
@@ -30,8 +32,8 @@ class EventByOrganizationICSView(DetailView):
             events.append(
                 ICSEvent(
                     name=str(event),
-                    begin=datetime.combine(event.date, event.starts_at),
-                    end=datetime.combine(event.date, event.ends_at),
+                    begin=timezone.make_aware(datetime.combine(event.date, event.starts_at)),
+                    end=timezone.make_aware(datetime.combine(event.date, event.ends_at)),
                     organizer=organizer,
                     url=event_url,
                     location=event.location.name,
@@ -64,8 +66,8 @@ class EventICSView(DetailView):
         )
         event_ics = ICSEvent(
             name=str(event),
-            begin=datetime.combine(event.date, event.starts_at),
-            end=datetime.combine(event.date, event.ends_at),
+            begin=timezone.make_aware(datetime.combine(event.date, event.starts_at)),
+            end=timezone.make_aware(datetime.combine(event.date, event.ends_at)),
             organizer=organizer,
             url=event_url,
             location=event.location.name,

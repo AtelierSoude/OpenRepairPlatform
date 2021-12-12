@@ -323,7 +323,7 @@ class Membership(models.Model):
         Then is a new cycle of membership, so the first_payment field is
         updated with this fee date. If there is'nt fees, first_payment is today.
         """
-        last_fee = self.fees.last()
+        last_fee = self.fees.first()
         if last_fee:
             if last_fee.date > self.date_limit:
                 self.first_payment = last_fee.date

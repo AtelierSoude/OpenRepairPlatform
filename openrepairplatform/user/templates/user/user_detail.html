@@ -320,6 +320,7 @@
                     <td>
                     {% if membership.organization in user.admin_organizations.all or user.volunteer_organizations.all or user.active_organizations.all %}
                     <form action="{% url 'user:fee_delete' fee.pk %}" method="post">
+                      {% csrf_token %}
                       <button type="submit" class="btn btn-danger btn-sm">
                         <i class="fa fa-trash-alt"></i>
                       </button>

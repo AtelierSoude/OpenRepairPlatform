@@ -1,7 +1,7 @@
 import django_filters
 from dal import autocomplete
 
-from openrepairplatform.user.models import Fee, CustomUser
+from openrepairplatform.user.models import Fee, CustomUser, Membership
 from openrepairplatform.event.models import Event
 from openrepairplatform.location.models import Place
 from openrepairplatform.event.models import Activity
@@ -33,9 +33,10 @@ class FeeFilter(django_filters.FilterSet):
 
 class MemberFilter(django_filters.FilterSet):
     class Meta:
-        model = CustomUser
+        model = Membership
         fields = {
-            "first_name": ["icontains"],
-            "last_name": ["icontains"],
-            "email": ["icontains"],
+            "user__first_name": ["icontains"],
+            "user__last_name": ["icontains"],
+            "user__street_address": ["icontains"],
+        #   add a filter in order to filter only up to date memberships
         }

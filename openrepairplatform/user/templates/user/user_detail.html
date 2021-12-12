@@ -208,7 +208,7 @@
                             </td>
                             <td>
                             {% if status == "organizer" %}
-                              <span class="badge badge-pill badge-success">Orga</span>
+                              <span class="badge badge-pill badge-success">Animateur</span>
                             {% else %}
                               {% if object.pk == request.user.pk %}
                                 {% tokenize user=object event=event action='cancel' as tok %}
@@ -302,7 +302,7 @@
                   <tr>
                     <td>
                     le {{ fee.date|date:"d F Y" }}
-                    {% if fee.membership %}
+                    {% if fee.membership and fee.date == membership.first_payment %}
                       <span class="badge badge-pill badge-warning">référence</span></h5>
                     {% endif %}
                     </td>

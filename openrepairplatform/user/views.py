@@ -180,7 +180,7 @@ class UserDetailView(PermissionCreateUserStuffMixin, DetailView):
         ]
         context["passed_rendezvous"] = (
             [(event, "present") for event in user.presents_events.all()]
-            + [(event, "absent") for event in registered if event.has_ended]
+            + [(event, "absent") for event in registered if event.has_ended and event not in user.presents_events.all()]
             + [
                 (event, "organizer")
                 for event in user.organizers_events.all()

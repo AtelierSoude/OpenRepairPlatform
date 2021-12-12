@@ -200,37 +200,39 @@
             </ul>
             </div>
             <div class="col-md-6" id="membership-infos">
-              <b>Adhérer à {{event.organization.name}}</b>
-              <p>
-                {% if user_is_member %}
-                Vous êtes membre de {{event.organization}}<br>
-                <small>statut</small>
-                  {% if user_is_member.current_contribution == 0 %} 
-                      <small class="text-danger" >Pas à jour</small>
-                      <span class="badge badge-pill badge-danger" >{{user_is_member.current_contribution}}€</span>
-                  {% elif user_is_member.current_contribution >= organization.advised_fee %}
-                      <small class="text-success" >A jour </small>
-                      <span class="badge badge-pill badge-success" >{{user_is_member.current_contribution}}€</span>
-                  {% else %}
-                      <small class="text-warning" >Incomplet </small>
-                      <span class="badge badge-pill badge-warning" >{{user_is_member.current_contribution}}€</span>
+              {% if event.members_only %}
+                <b>Adhérer à {{event.organization.name}}</b>
+                <p>
+                  {% if user_is_member %}
+                  Vous êtes membre de {{event.organization}}<br>
+                  <small>statut</small>
+                    {% if user_is_member.current_contribution == 0 %} 
+                        <small class="text-danger" >Pas à jour</small>
+                        <span class="badge badge-pill badge-danger" >{{user_is_member.current_contribution}}€</span>
+                    {% elif user_is_member.current_contribution >= organization.advised_fee %}
+                        <small class="text-success" >A jour </small>
+                        <span class="badge badge-pill badge-success" >{{user_is_member.current_contribution}}€</span>
+                    {% else %}
+                        <small class="text-warning" >Incomplet </small>
+                        <span class="badge badge-pill badge-warning" >{{user_is_member.current_contribution}}€</span>
+                    {% endif %}
                   {% endif %}
+                </p>
+                <p>{{ event.organization.get_membership_system_display }} Elle
+                  {% if event.organization.advised_fee == event.organization.min_fee %}
+                  est de {{event.organization.min_fee}}€
+                  {% else %}
+                  va de {{event.organization.min_fee}}€ à {{event.organization.advised_fee}}€ 
+                  {% endif %}
+                  {% if event.organization.membership_url %}
+                    Vous pouvez
+                    <a class="" target="_blank" href="{{event.organization.membership_url}}">
+                      Adhérer en ligne 
+                    </a>
+                    ou une fois sur place 
                 {% endif %}
-              </p>
-              <p>{{ event.organization.get_membership_system_display }} Elle
-                {% if event.organization.advised_fee == event.organization.min_fee %}
-                est de {{event.organization.min_fee}}€
-                {% else %}
-                va de {{event.organization.min_fee}}€ à {{event.organization.advised_fee}}€ 
-                {% endif %}
-                {% if event.organization.membership_url %}
-                  Vous pouvez
-                  <a class="" target="_blank" href="{{event.organization.membership_url}}">
-                    Adhérer en ligne 
-                  </a>
-                  ou une fois sur place 
+                </p>
               {% endif %}
-              </p>
             </div>
           </div>
         </div>
@@ -281,7 +283,6 @@
             <p>Pas de soucis mais pensez à éviter d'annuler au dernier moment... cela a comme conséquence d'avoir bloqué une place 
               que quelqu'un d'autre aurait pu prendre. 
             </p>
-            <p>{{event.organization}} est une association. Soutenez-la en adhérant, même si vous ne venez pas :</p>
             {% else %}
             <b>Avant de réserver, prenez connaissance de ces informations : </b>
             <ul class="list-unstyled">
@@ -308,12 +309,15 @@
               {% if event.members_only %}
               <li class="align-middle mt-1">
                 <i class="far fa-check-circle fa-1x text-success"></i> 
-                <span>Vous devez adhérer à <a href="#membership-infos">{{event.organization}}</a></span>
+                <span>Vous devez être adhérent <a href="#membership-infos">{{event.organization}}</a></span>
               </li>
               {% endif %}
             </ul>
             {% endif %}
-            {% if event.members_only or request.user in registered %}
+            {% if event.members_only %}
+              {% if request.user in registered %}
+              Soutenez {{event.organization}} en adhérant même si vous ne venez pas : 
+              {% endif %}
               <div class="">
                 <b>Adhérer à {{event.organization.name}}</b>
                 <p>

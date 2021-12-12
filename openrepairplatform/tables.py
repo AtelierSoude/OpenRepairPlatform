@@ -1,5 +1,5 @@
 import django_tables2 as tables
-from openrepairplatform.user.models import Fee, CustomUser
+from openrepairplatform.user.models import Fee, CustomUser, Membership
 from openrepairplatform.event.models import Event
 from django_tables2_column_shifter.tables import ColumnShiftTable
 
@@ -14,7 +14,7 @@ class EventTable(ColumnShiftTable):
             "seats",
             "action",
         ]
-        return super(MemberTable, self).get_column_default_show()
+        return super(EventTable, self).get_column_default_show()
 
     date = tables.TemplateColumn(
         accessor="date",
@@ -78,14 +78,15 @@ class MemberTable(ColumnShiftTable):
     def get_column_default_show(self):
         self.column_default_show = [
             "avatar",
-            "full_name",
+            "user",
             "membership_status",
             "member_update",
         ]
         return super(MemberTable, self).get_column_default_show()
 
-    full_name = tables.Column(accessor="full_name", verbose_name="Nom", linkify=True)
-    email = tables.Column(linkify=False)
+    user = tables.Column(linkify=True, verbose_name="Membre")
+    email = tables.Column(accessor="user.email")
+    street_address = tables.Column(accessor="user.street_address")
     avatar = tables.TemplateColumn(
         template_name="extra_column_data.html",
         extra_context={"column": "avatar"},
@@ -105,32 +106,22 @@ class MemberTable(ColumnShiftTable):
     )
 
     class Meta:
-        model = CustomUser
+        model = Membership
         attrs = {"class": "table table-fixed table-hover"}
         sequence = (
             "avatar",
-            "full_name",
+            "user",
             "email",
             "street_address",
-            "phone_number",
             "membership_status",
+            "disabled",
             "member_update",
         )
         exclude = (
-            "password",
-            "last_name",
-            "id",
-            "is_active",
-            "is_visible",
-            "is_superuser",
-            "last_login",
-            "date_joined",
-            "birth_date",
-            "bio",
-            "is_staff",
-            "gender",
-            "avatar_img",
-            "first_name",
+            "first_payment",
+            "organization",
+            "amount",
+            "id"
         )
 
 

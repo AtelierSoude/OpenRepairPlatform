@@ -7,15 +7,15 @@
     {% if request.user in registereds or request.user in organizers %}
     border-success {% endif %}
     event shadow-sm p-2" data-location="{{event.location.pk|escape}}">
-      <div class="col-2 text-muted text-center">
+      <div class="col-2 p-1 text-muted text-center">
         {% if event.organization.picture %}
           {% thumbnail event.organization.picture "100x100" crop="left" format="PNG" as img %}
-            <img class="img-fluid rounded-circle float-left" src="{{ img.url }}" alt="organization img">
+            <img class="img-fluid rounded-circle" src="{{ img.url }}" alt="organization img">
           {% endthumbnail %}
         {% endif %}
-        <span class="text-muted">
-          <small><i>{{event.organization}}</i></small>
-        </span><br>
+        <span class="">
+          <h6><i>{{event.organization}}</i></h6>
+        </span>
         {% if request.user in registereds %}
           <span class="badge badge-success badge-pill">Je participe</span><br>
         {% endif %}
@@ -23,7 +23,7 @@
           <span class="badge badge-success badge-pill">J'anime</span><br>
         {% endif %}
         {% if event.is_free %}
-          <span class="text-success">Pas de limite de places</span>
+          <span class="text-success">Places non limitées</span>
         {% elif event.remaining_seats <= 0 %}
           <span class="text-danger">Complet</span>
         {% else %}
@@ -38,7 +38,7 @@
             {% endif %}
             ">
           <i class="fas fa-users"></i>
-          {{event.remaining_seats}}/{{ event.available_seats}}
+          {{event.remaining_seats}}/{{event.available_seats}} places
           </span>
         {% endif %}
       </div>
@@ -59,16 +59,16 @@
             <div>
               {% if minimal != True %}
                 <h5 class="mb-0">{{ event.activity.category.name }}</h5>
-                <h5 class="mb-0">{{ event.activity.name|truncatechars:40 }}</h5>
+                <h4 class="mb-0 font-weight-bold">{{ event.activity.name|truncatechars:40 }}</h4>
                 {% if event.collaborator %}
-                  <small class="text-muted mb-1">en partenariat avec {{ event.collaborator }}</small>
+                  <span class="text-primary mb-1">en collaboration avec <span class="font-weight-bold">{{ event.collaborator }}</span></span>
                 {% endif %}
               {% endif %}
             </div>
-            <small>
+            <span>
               <i class="fa fa-map-marker-alt text-success"></i>
               {{event.location.name}}
-            </small>
+            </span>
             {% if request.user in active_organizations %}
               <div class="mini-organizers pl-2 pt-1">
                 {% for orga in organizers %}

@@ -56,7 +56,7 @@
         <h6 class="text-muted"><i class="fas fa-tools"></i> Cet événement gère les réparations</h6>
       {% endif %}
       {% if event.booking == True and event.external == False %}
-        <h3>Total perçus: <b>{{ total_fees }}€</b></h3>
+        <h3>Total perçus: <b>{{ total_fees }}€ cotisations  {% if event.conditions %} / {{total_participations}}€ participations {% endif %}</b></h3>
       {% endif %}
     </div>
       {% with organizers=event.organizers.all %}

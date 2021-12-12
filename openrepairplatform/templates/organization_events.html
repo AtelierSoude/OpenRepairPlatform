@@ -8,8 +8,8 @@
   <section class="container text-center">
     <h2 class="text-center mt-4">Evénements de {{ organization }}</h2>
     {% if is_active %}
-    <input type="text" value="{{ request.META.HTTP_HOST }}{% url 'event:ical_events' organization.pk %}" class="d-none" id="myInput">
-    <button onclick="myFunction()" class="btn btn-light mb-2">
+    <p class="d-none" id="ical">{{ request.META.HTTP_HOST }}{% url 'event:ical_events' organization.pk %}</p>
+    <button onclick="copyToClipboard('#ical')" class="btn btn-light mb-2">
       <i class="far fa-calendar-plus"></i> Copier l'url Ical
     </button>
       <button class="btn-absolute btn btn-success" id="more-button">
@@ -48,11 +48,12 @@
 {{filter.form.media}}
 
 <script>
-  function myFunction() {
-    var copyText = document.getElementById("myInput");
-    copyText.select();
-    copyText.setSelectionRange(0, 99999);
+  function copyToClipboard(element) {
+    var $temp = $("<input>");
+    $("body").append($temp);
+    $temp.val($(element).text()).select();
     document.execCommand("copy");
+    $temp.remove();
   }
 </script>
 

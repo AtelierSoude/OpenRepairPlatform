@@ -48,16 +48,16 @@ def related_user(queryset, user):
 
 
 @register.simple_tag
+def related_membership(queryset, membership):
+    return queryset.filter(membership=membership)
+
+
+@register.simple_tag
 def query_transform(request, **kwargs):
     updated = request.GET.copy()
     for k, v in kwargs.items():
         updated[k] = v
     return updated.urlencode()
-
-
-@register.simple_tag
-def organization_fees(organization, user):
-    return Fee.objects.filter(organization=organization, user=user)
 
 
 @register.simple_tag

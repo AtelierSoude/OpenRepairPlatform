@@ -3,7 +3,7 @@
     {% for user in users %}
       {% filter_orga queryset=user.memberships organization=event.organization as membership %}
       {% filter_user queryset=event.participations user=user as participation %}
-      {% related_user queryset=event.fees user=user as fees %}
+      {% related_membership queryset=event.fees membership=membership as fees %}
       {% sum_conditions conditions=event.conditions.all as condition_prices %}
       {% tokenize user=user event=event action='present' as tok_event_present %}
       {% tokenize user=user event=event action='absent' as tok_event_absent %}

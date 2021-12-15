@@ -65,12 +65,17 @@ class EventAdminView(HasVolunteerPermissionMixin, EventViewMixin):
         context["invitation_form"] = InvitationForm
         context["emails"] = [
             (f"{user.email} ({user.first_name} {user.last_name})", user.email)
-            for user in CustomUser.objects.only(
-                    "email", "first_name", "last_name"
-                )
+            for user in CustomUser.objects.only("email", "first_name", "last_name")
         ]
-        context["present_form"] = MoreInfoCustomUserForm
-        context["total_fees"] = sum([fee.amount for fee in self.get_object().fees.all()])
+        context["present_form"] = MoreInfoCustomUserForm(
+            **{
+                "initial": {"date": self.object.date.strftime("%Y-%m-%d")},
+                "is_event": True,
+            }
+        )
+        context["total_fees"] = sum(
+            [fee.amount for fee in self.get_object().fees.all()]
+        )
         context["total_participations"] = sum(
             [
                 participation.amount

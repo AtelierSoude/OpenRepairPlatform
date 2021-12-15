@@ -350,7 +350,7 @@ class StuffForm(BSModalModelForm):
         label="Je souhaite ajouter un dossier de réparation", required=False
     )
     repair_date = forms.DateField(
-        initial=dt.today(),
+        initial=dt.today,
         label="date",
         widget=forms.DateInput(attrs={"type": "date"}, format="%Y-%m-%d"),
         required=False,

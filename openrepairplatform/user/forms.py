@@ -61,6 +61,11 @@ class CustomUserSearchForm(forms.Form):
 
 
 class MoreInfoCustomUserForm(forms.ModelForm):
+    def __init__(self, is_event=False, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if is_event:
+            self.fields["date"].widget = forms.HiddenInput()
+
     amount_paid = forms.IntegerField(min_value=0, initial=0)
     payment = forms.ChoiceField(
         choices=[
@@ -72,11 +77,7 @@ class MoreInfoCustomUserForm(forms.ModelForm):
         ],
         label="Type de paiement",
     )
-    date = forms.DateField(
-        initial=dt.today().strftime("%Y-%m-%d"),
-        widget=forms.HiddenInput(),
-    )
-    first_fee = forms.BooleanField(widget=forms.HiddenInput(), required=False)
+    date = forms.DateField(initial=dt.today)
 
     class Meta:
         model = CustomUser

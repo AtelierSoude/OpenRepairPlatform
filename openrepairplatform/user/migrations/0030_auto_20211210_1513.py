@@ -5,13 +5,18 @@ from openrepairplatform.user.models import Membership
 
 
 def update_old_fees(apps, schema_editor):
-    for membership in Membership.objects.all():
+    AbstractMembership = apps.get_model('user', 'Membership')
+    for membership in AbstractMembership.objects.all():
         if membership.user.fees.all():
             for fee in membership.user.fees.all():
                 membership.fees.add(fee)
-            membership.update_first_payment()
-            membership.computed_amount()
-            membership.save()
+
+
+def real_update_memberships(apps, schema_editor):
+    for membership in Membership.objects.all():
+        membership.update_first_payment()
+        membership.computed_amount()
+        membership.save()
 
 
 class Migration(migrations.Migration):
@@ -22,4 +27,5 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RunPython(update_old_fees, migrations.RunPython.noop),
+        migrations.RunPython(real_update_memberships, migrations.RunPython.noop),
     ]

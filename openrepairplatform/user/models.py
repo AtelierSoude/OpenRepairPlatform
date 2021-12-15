@@ -242,9 +242,8 @@ class Fee(models.Model):
     event = models.ForeignKey(
         "event.Event", null=True, on_delete=models.SET_NULL, related_name="fees"
     )
-    date = models.DateField(default=timezone.now)
+    date = models.DateField(default=date.today)
     amount = models.PositiveIntegerField(default=0)
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="fees")
     membership = models.ForeignKey(
         "user.Membership",
         on_delete=models.SET_NULL,

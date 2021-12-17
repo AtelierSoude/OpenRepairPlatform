@@ -39,7 +39,7 @@ h5{
   padding-top: 0px;
 }
 
-.bg-grey { 
+.bg-grey {
   background-color: #fdfdfd !important;
 }
 
@@ -47,7 +47,7 @@ h5{
   box-shadow: 0 1rem 20rem rgba(0,0,0,0.350) !important;
 }
 
-/* tables */ 
+/* tables */
 thead {
   background-color: rgb(249, 249, 249);
   a{
@@ -80,7 +80,7 @@ tbody {
 
 .small-column{
   width:70px;
-}  
+}
 .form-xs {
   input {
     height: calc(1em + .375rem + 2px) !important;
@@ -97,8 +97,8 @@ tbody {
 }
 
 td {
-  white-space: normal !important; 
-  word-wrap: break-word;  
+  white-space: normal !important;
+  word-wrap: break-word;
 }
 
 .column-shifter-container .dropdown-toggle {
@@ -113,12 +113,12 @@ td {
   max-width:120px
 }
 
-/* forms */ 
+/* forms */
 
 .form-select {
   display: block;
   width: 100%;
-  height: calc(1.5em+.75rem+2px);
+  height: calc(1.5em + .75rem + 2px);
   padding: .375rem .75rem;
   font-size: 1rem;
   font-weight: 400;
@@ -158,40 +158,40 @@ td {
 
 /* Custom auto-complete */
 .autocomplete-suggestions {
-  text-align: left; 
-  cursor: default; 
-  border: 1px solid #ccc; 
-  border-top: 0; 
-  background: #fff; 
+  text-align: left;
+  cursor: default;
+  border: 1px solid #ccc;
+  border-top: 0;
+  background: #fff;
   box-shadow: -1px 1px 3px rgba(0,0,0,.1);
-  position: absolute; 
-  display: none; 
-  z-index: 9999; 
-  max-height: 254px; 
-  overflow: hidden; 
-  overflow-y: auto; 
+  position: absolute;
+  display: none;
+  z-index: 9999;
+  max-height: 254px;
+  overflow: hidden;
+  overflow-y: auto;
   box-sizing: border-box;
 }
 
-.autocomplete-suggestion { 
-  position: relative; 
-  padding: 0.6em; 
-  line-height: 23px; 
-  white-space: nowrap; 
-  overflow: hidden; 
-  text-overflow: ellipsis; 
-  font-size: 1.02em; 
-  color: #333; 
+.autocomplete-suggestion {
+  position: relative;
+  padding: 0.6em;
+  line-height: 23px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 1.02em;
+  color: #333;
   b {
-    font-weight: normal; 
-    color: $success; 
+    font-weight: normal;
+    color: $success;
   }
-  .selected { 
-    background: #f0f0f0; 
+  .selected {
+    background: #f0f0f0;
   }
 }
 
-/* pagination fix */ 
+/* pagination fix */
 .pagination {
   justify-content: center !important;
   li {
@@ -255,14 +255,14 @@ td {
       font-size: 75%;
     }
   }
-} 
+}
 
 .navbar ul li.active{
   background-color: $secondary;
   a{
     color: $primary !important;
   }
-} 
+}
 .navbar-brand.avatar{
   margin: 0px !important;
 }
@@ -277,7 +277,7 @@ td {
   color: #828282;
 }
 
-/* buttons */ 
+/* buttons */
 .btn {
   border-radius: 5px;
 }
@@ -311,7 +311,7 @@ td {
   }
 }
 
-/* jumbotron */ 
+/* jumbotron */
 .no-padding-jumbotron {
   padding: 1rem 0rem 0rem 0rem;
   margin-bottom: 0px;
@@ -393,7 +393,7 @@ position: relative;
 }
 
 .parallax {
-  min-height: 200px; 
+  min-height: 200px;
   background-attachment: fixed;
   background-position: center;
   background-repeat: no-repeat;
@@ -409,8 +409,8 @@ position: relative;
 }
 
 #place_map {
-  right:0px; 
-  top:40px; 
+  right:0px;
+  top:40px;
   z-index: 0 !important;
 }
 .leaflet-left{
@@ -457,7 +457,7 @@ position: relative;
 /* autocomplete */
 .select2-selection__clear{
   font-size: 20px;
-  color:#ff2241; 
+  color:#ff2241;
 }
 
 .tox-tinymce{
@@ -572,13 +572,13 @@ position: relative;
   }
 }
 
-// Menu hack for mobile slide left up // 
+// Menu hack for mobile slide left up //
 
 
 @media (min-width: 992px) {
 
   .main-container {
-    padding-left: 75px; 
+    padding-left: 75px;
   }
 
   .vertical-nav {
@@ -614,3 +614,13 @@ position: relative;
   }
 }
 
+input.toggle-modal {
+  visibility: hidden;
+}
+
+input.toggle-modal:checked ~ .modal {
+  display: block;
+  opacity: 1;
+  padding-top: 2rem;
+  background-color: rgba(0,0,0,0.3);
+}

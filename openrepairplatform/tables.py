@@ -126,7 +126,7 @@ class MemberTable(ColumnShiftTable):
 
 
 class FeeTable(tables.Table):
-    user = tables.Column(linkify=True, verbose_name="Membre")
+    membership = tables.Column(linkify=True, verbose_name="Membre")
     participation = tables.RelatedLinkColumn(
         verbose_name="Evénement", attrs={"td": {"class": "small"}}
     )
@@ -140,5 +140,5 @@ class FeeTable(tables.Table):
     class Meta:
         model = Fee
         attrs = {"class": "table table-fixed table-hover"}
-        sequence = ("date", "user", "participation", "payment", "amount")
+        sequence = ("date", "membership", "participation", "payment", "amount")
         exclude = ("organization", "id")

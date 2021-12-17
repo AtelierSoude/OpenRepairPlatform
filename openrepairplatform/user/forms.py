@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 from datetime import date as dt
 from dal import autocomplete
 
-from .models import CustomUser, Organization
+from .models import CustomUser, Organization, Fee, Membership
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -61,11 +61,6 @@ class CustomUserSearchForm(forms.Form):
 
 
 class MoreInfoCustomUserForm(forms.ModelForm):
-    def __init__(self, is_event=False, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        if is_event:
-            self.fields["date"].widget = forms.HiddenInput()
-
     amount_paid = forms.IntegerField(min_value=0, initial=0)
     payment = forms.ChoiceField(
         choices=[
@@ -99,4 +94,23 @@ class OrganizationForm(forms.ModelForm):
             "volunteers",
             "admins",
             "slug",
+        ]
+
+
+class AddFeeForm(forms.ModelForm):
+    membership = forms.ModelChoiceField(
+        queryset=Membership.objects.all(), widget=forms.HiddenInput()
+    )
+    organization = forms.ModelChoiceField(
+        queryset=Organization.objects.all(), widget=forms.HiddenInput()
+    )
+
+    class Meta:
+        model = Fee
+        fields = [
+            "payment",
+            "date",
+            "amount",
+            "membership",
+            "organization",
         ]

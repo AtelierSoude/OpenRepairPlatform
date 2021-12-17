@@ -91,8 +91,9 @@ class CreateMembershipMixin(HasActivePermissionMixin, RedirectView):
     def post(self, request, *args, **kwargs):
         res = super().post(request, *args, **kwargs)
         user = CustomUser.objects.filter(email=request.POST["email"]).first()
-        form = MoreInfoCustomUserForm(request.POST, instance=user)
-        user = form.save()
+        form = self.form_class(data=request.POST, instance=user)
+        if form.is_valid():
+            user = form.save()
         amount = form.cleaned_data["amount_paid"]
         membership, exist = Membership.objects.get_or_create(
             organization=self.organization,
@@ -102,7 +103,6 @@ class CreateMembershipMixin(HasActivePermissionMixin, RedirectView):
         event = Event.objects.filter(pk=event_pk).first() if event_pk else None
         if amount > 0:
             Fee.objects.create(
-                user=user,
                 event=event,
                 organization=self.organization,
                 membership=membership,
@@ -135,7 +135,6 @@ class UpdateMembershipMixin(HasActivePermissionMixin, UpdateView):
         if amount > 0:
             Fee.objects.create(
                 amount=amount,
-                user=user,
                 event=event,
                 organization=self.organization,
                 date=date,

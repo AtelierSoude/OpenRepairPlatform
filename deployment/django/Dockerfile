@@ -3,9 +3,8 @@ FROM python:3.9-slim-buster
 RUN apt update && apt upgrade -y && apt install -y --force-yes python3-pip libpq-dev locales locales-all cron make ruby ruby-dev
 RUN apt-get update && \
     curl -sL https://deb.nodesource.com/setup_14.x | bash - && \
-    apt-get install -y libpq-dev curl gcc default-libmysqlclient-dev npm sass nodejs wget gettext
+    apt-get install -y npm nodejs wget gettext
 
-RUN npm i -g node-sass
 RUN pip3 install uwsgi
 
 COPY requirements.txt /

@@ -95,4 +95,9 @@ urlpatterns = [
         views.FeeDeleteView.as_view(),
         name="fee_delete",
     ),
+    path(
+        "fee/create/",
+        views.FeeCreateView.as_view(),
+        name="fee_create",
+    )
 ]

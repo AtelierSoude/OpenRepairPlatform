@@ -297,6 +297,37 @@
                 <small class="text-warning">Incomplet </small>
               {% endif %}
               <span class="badge badge-pill badge-success float-right">{{ membership.current_contribution }}€</span></h5>
+
+              <div>
+                <label class="btn btn-success btn-sm" for="modal_fee_{{ membership.organization.name }}">Ajouter une cotisation</label>
+                <input class="toggle-modal" id="modal_fee_{{ membership.organization.name }}" type="checkbox">
+                <section class="modal fade" tabindex="-1" role="dialog">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title">Ajout d'une cotisation</h5>
+                        <label class="close" for="modal_fee_{{ membership.organization.name }}">×</label>
+                      </div>
+                      <div class="modal-body">
+                        <form method="post" action="{% url 'user:fee_create' %}">
+                          {% csrf_token %}
+                          {% for field in add_fee_form %}
+                            {% if field.name == 'organization' %}
+                              <input type="hidden" name="{{ field.name }}" value="{{ membership.organization.pk|escape }}"/>
+                            {% elif field.name == 'membership' %}
+                              <input type="hidden" name="{{ field.name }}" value="{{ membership.pk|escape }}"/>
+                            {% else %}
+                              {% bootstrap_field field %}
+                            {% endif %}
+                          {% endfor %}
+                          <button type="submit" class="btn btn-primary">Enregistrer</button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+              </div>
+
               <table class="table table-striped table-hover">
                 {% for fee in membership.fees.all %}
                   <tr>

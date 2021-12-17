@@ -1,5 +1,5 @@
 {% load bootstrap5 app_filters %}
-<div class="modal" id="more-info-{{ user.pk }}" tabindex="-1" role="dialog">
+<div class="modal" id="more-info-{{ user.pk|escape }}" tabindex="-1" role="dialog">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -45,10 +45,14 @@
               method="post"
               class="text-left">
           <div class="modal-body">
-            {% csrf_token %}
+              {% csrf_token %}
               <div class="row m-2">
                 {% for field in form %}
-                  {% bootstrap_field field form_group_class="col-md-6 p-2"%}
+                  {% if field.name == "date" %}
+                    <input type="hidden" name="{{ field.name }}" value="{{ event.date|date:"Y-m-d" }}"/>
+                  {% else %}
+                    {% bootstrap_field field form_group_class="col-md-6 p-2" %}
+                  {% endif %}
                 {% endfor %}
               </div>
           </div>

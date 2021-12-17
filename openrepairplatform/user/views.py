@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.db.models import Q
-from django.http import Http404
+from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
 from django.utils.decorators import method_decorator
@@ -22,7 +22,7 @@ from openrepairplatform.mixins import (
     HasVolunteerPermissionMixin,
 )
 from openrepairplatform.inventory.mixins import PermissionCreateUserStuffMixin
-from openrepairplatform.user.models import CustomUser, Organization, Fee
+from openrepairplatform.user.models import CustomUser, Organization, Fee, Membership
 from openrepairplatform.inventory.models import Stuff
 from openrepairplatform.inventory.forms import StuffForm
 
@@ -31,6 +31,7 @@ from .forms import (
     UserCreateForm,
     OrganizationForm,
     CustomUserEmailForm,
+    AddFeeForm,
 )
 
 EVENTS_PER_PAGE = 6
@@ -198,6 +199,7 @@ class UserDetailView(PermissionCreateUserStuffMixin, DetailView):
         context["future_rendezvous"].sort(key=lambda evt: evt[0].date)
         context["stock"] = Stuff.objects.filter(member_owner=self.get_object())
         context["add_member_stuff"] = StuffForm
+        context["add_fee_form"] = AddFeeForm
         return context
 
 
@@ -382,3 +384,18 @@ class RemoveVolunteerFromOrganization(RemoveUserFromOrganization):
     @staticmethod
     def remove_user_from_orga(orga, user):
         orga.volunteers.remove(user)
+
+
+class FeeCreateView(RedirectView):
+    form_class = AddFeeForm
+    http_method_names = ['post']
+
+    def post(self, request, *args, **kwargs):
+        data = {
+            key: value for key, value in request.POST.dict().items()
+            if key in self.form_class.base_fields.keys()
+        }
+        form = self.form_class(data=data)
+        if form.is_valid():
+            form.save()
+        return HttpResponseRedirect(self.request.META["HTTP_REFERER"])

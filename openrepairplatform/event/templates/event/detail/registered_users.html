@@ -55,16 +55,17 @@
                     Non membre
                 {% endif %}
               </p>
+
               {% include "event/modal_more_info.html" with user=user membership=membership form=present_form|initial:user %}
             </div>
             <div class="col-6 mb-2">
                 {% if membership %}
                   <b>Cotisations</b>
-                  <button class="btn btn-light btn-sm" data-toggle="modal" data-target="#more-info-{{ user.pk }}">
+                  <button class="btn btn-light btn-sm" data-toggle="modal" data-target="#more-info-{{ user.pk|escape }}">
                     <i class="fa fa-plus"></i> ajouter
                   </button><br>
                 {% else %}
-                  <button class="btn btn-light btn-sm" data-toggle="modal" data-target="#more-info-{{ user.pk }}">
+                  <button class="btn btn-light btn-sm" data-toggle="modal" data-target="#more-info-{{ user.pk|escape }}">
                     <i class="fa fa-plus"></i><i class="fa fa-user"></i> ajouter membre
                   </button>
                 {% endif %}

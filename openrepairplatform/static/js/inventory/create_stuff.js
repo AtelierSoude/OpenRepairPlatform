@@ -6,7 +6,6 @@ $(document).ready(function(){
   if (category) {
     category.onchange=function() {  
       if($(this).val()){
-        console.log("pouet")
         $("#devicesearch").show()  
       }
     };

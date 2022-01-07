@@ -24,15 +24,12 @@
   <meta name="msapplication-TileColor" content="#ffffff">
   <meta name="msapplication-TileImage" content="{% static 'img/favicon/ms-icon-144x144.png' %}">
   <meta name="theme-color" content="#ffffff">
-
   <!-- FONT -->
   <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
-
   <!-- Fontawesome -->
   <!--<link rel="stylesheet" href="{% static 'fontawesome/css/fontawesome-all.min.css' %}"> -->
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.10.2/css/all.css">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.10.2/css/v4-shims.css">
-
   <!-- for leaflet -->
   <link rel="stylesheet"
   href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
@@ -45,17 +42,6 @@
   {% assets "css_openrepairplatform" %}
     <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet"/>
   {% endassets %}
-  <!-- Bootstrap -->
- <!-- <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}"> -->
-  <script src="{% static 'bootstrap/js/jquery.min.js' %}"></script>
-  <script src="{% static 'js/jquery.bootstrap.modal.forms.js' %}"></script>
-  <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-  <script src="{% static 'js/lib/sticky_polyfill.js' %}"></script>
-  <script type="text/javascript" src="{% static 'django_tables2_column_shifter/js/django_tables2_column_shifter.min.js' %}">
-  </script>
-  {% assets "js_base" %}
-  <script src="{{ ASSET_URL }}"></script>
-  {% endassets %}
 </head>
 
 <body class="bg-grey">
@@ -64,48 +50,11 @@
   {% include "menu.html" %}
 {% endblock menu %}
 
-{% block left-menu %}
-  {% include "left-menu.html" %}
-{% endblock left-menu %}
-
-<div class="main-container">
-  <div class="container-fluid">
-    {% for message in messages %}
-      <div class="alert alert-{{ message.level_tag }} alert-dismissible fade show mb-0" role="alert">
-        {{ message }}
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-    {% endfor %}
-  </div>
+<div style="padding-top: 65px;">
   <main class="content-page">
     {% block content %}{% endblock %}
   </main>
 </div>
 
-{% block extra_js %}
-<script>
-    $(document).ready(function(){
-      $(".jumbotron").sticky({topSpacing:0});
-    });
-</script>
-<script>
-  jQuery(document).ready(function(){
-    jQuery("#toggler").click(function() {
-      if (jQuery(this).hasClass("fa-times-circle")){
-        jQuery(this).addClass("fa-bars");
-        jQuery(this).removeClass("fa-times-circle");
-        jQuery(".header").removeClass("position-fixed").removeClass("w-100");
-      }
-      else {
-        jQuery(".header").addClass("position-fixed").addClass("w-100");
-        jQuery(this).addClass("fa-times-circle");
-        jQuery(this).removeClass("fa-bars");
-      }
-    });
-  });
-</script>
-{% endblock %}
 </body>
 </html>

@@ -219,6 +219,12 @@ class Organization(models.Model):
     def actives_or_more(self):
         return self.actives.union(self.admins.all())
 
+    @property
+    def organizers(self):
+        return self.actives.all().union(
+            self.volunteers.all(), self.admins.all()
+        )
+
     def __str__(self):
         return self.name
 

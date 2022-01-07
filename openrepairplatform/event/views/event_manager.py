@@ -1,8 +1,11 @@
+import json
 from django.conf import settings
 from django.contrib import messages
+from django.core.serializers import serialize
+from django.forms.models import model_to_dict
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views.generic import (
     CreateView,
     DetailView,
@@ -12,7 +15,7 @@ from django.views.generic import (
     FormView,
 )
 
-from openrepairplatform.event.models import Event
+from openrepairplatform.event.models import Event, Condition, Activity
 from openrepairplatform.event.forms import (
     EventForm,
     EventSearchForm,
@@ -20,12 +23,14 @@ from openrepairplatform.event.forms import (
     ParticipationForm,
     InvitationForm,
 )
+from openrepairplatform.location.models import Place
 from openrepairplatform.mail import event_send_mail
 from openrepairplatform.mixins import (
     RedirectQueryParamView,
     HasAdminPermissionMixin,
     HasActivePermissionMixin,
     HasVolunteerPermissionMixin,
+    LocationRedirectMixin,
 )
 from openrepairplatform.user.forms import CustomUserEmailForm, MoreInfoCustomUserForm
 from openrepairplatform.user.mixins import PermissionOrgaContextMixin
@@ -81,23 +86,64 @@ class EventAdminView(HasVolunteerPermissionMixin, EventViewMixin):
         return context
 
 
-class EventListView(ListView):
+class EventListView(LocationRedirectMixin, ListView):
     model = Event
     form_class = EventSearchForm
     context_object_name = "event_list"
     template_name = "event/event_list.html"
     paginate_by = 30
+    future_published_events = None
+    object_list = None
+
+    def serializer_places(self, queryset):
+        return [
+            {
+                "pk": event.location.pk,
+                "latitude": event.location.latitude,
+                "longitude": event.location.longitude,
+                "absolute_url": event.location.get_absolute_url(),
+                "name": event.location.name,
+                "address": event.location.address,
+                "future_events": event.location.future_published_events().count(),
+            }
+            for event in queryset
+        ]
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["search_form"] = EventSearchForm(self.request.GET)
+        context["search_form"] = EventSearchForm()
         context["register_form"] = CustomUserEmailForm
         context["event_menu"] = "active"
         context["results_number"] = self.get_queryset().count()
+        context["places"] = self.serializer_places(self.get_queryset())
         return context
 
+    def get(self, request, *args, **kwargs):
+        res = super().get(request, *args, **kwargs)
+        if not self.object_list and self.future_published_events:
+            addresses = "<br/>".join(
+                {
+                    f"- {event.location.zipcode}"
+                    for event in self.future_published_events
+                }
+            )
+            message = f"""
+                <p>
+                    <b>
+                    Il n'y a pas d'événements dans la zone selectionnée.
+                    Vous pouvez retrouver nos événements de réparation dans
+                    les zones suivantes :
+                    </b>
+                </p>
+                {addresses}
+            """
+            messages.info(request, message, extra_tags="safe")
+            return HttpResponseRedirect(reverse("homepage"))
+        return res
+
     def get_queryset(self):
-        queryset = Event.future_published_events()
+        self.future_published_events = Event.future_published_events()
+        queryset = self.filter_queryset_location(self.future_published_events)
         form = EventSearchForm(self.request.GET)
         if not form.is_valid():
             return queryset.select_related(
@@ -117,8 +163,6 @@ class EventListView(ListView):
                 "organization__actives",
                 "organization__admins",
             )
-        if form.cleaned_data["place"]:
-            queryset = queryset.filter(location=form.cleaned_data["place"])
         if form.cleaned_data["organization"]:
             queryset = queryset.filter(organization=form.cleaned_data["organization"])
         if form.cleaned_data["activity"]:
@@ -173,6 +217,27 @@ class EventFormView(HasActivePermissionMixin):
 
 class EventEditView(RedirectQueryParamView, EventFormView, UpdateView):
     success_message = "L'évènement a bien été modifié"
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx["json_event"] = serialize("json", [self.object])
+        ctx["json_activities"] = serialize(
+            "json", Activity.objects.all(), fields=["name", "description", "picture"]
+        )
+        ctx["json_places"] = serialize(
+            "json", Place.objects.all(), fields=["name", "description", "picture"]
+        )
+        ctx["json_conditions"] = serialize(
+            "json",
+            Condition.objects.filter(organization=self.object.organization),
+            fields=["name", "description", "price"],
+        )
+        ctx["json_organizers"] = serialize(
+            "json",
+            self.object.organization.organizers,
+            fields=["first_name", "last_name"],
+        )
+        return ctx
 
 
 class EventCreateView(RedirectQueryParamView, EventFormView, CreateView):

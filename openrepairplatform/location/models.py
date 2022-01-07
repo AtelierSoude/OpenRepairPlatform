@@ -1,4 +1,4 @@
-from django.db import models
+from django.contrib.gis.db import models
 from django.urls import reverse
 from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
@@ -23,8 +23,8 @@ class Place(models.Model):
     category = models.CharField(max_length=100, default="Other")
     slug = models.SlugField(default="", blank=True)
     address = models.CharField(max_length=255, verbose_name=_("street address"))
-    longitude = models.FloatField()
-    latitude = models.FloatField()
+    location = models.PointField(null=True, blank=True, geography=True)
+    zipcode = models.CharField(default="", blank=True, max_length=5)
     picture = models.ImageField(
         upload_to="places/",
         blank=True,
@@ -54,6 +54,18 @@ class Place(models.Model):
 
     def future_published_events(self):
         return get_future_published_events(self.events)
+
+    @property
+    def latitude(self):
+        if self.location:
+            return self.location.y
+        return None
+
+    @property
+    def longitude(self):
+        if self.location:
+            return self.location.x
+        return None
 
     def __str__(self):
         return self.name + ", " + str(self.address)

@@ -1,15 +1,24 @@
-{% block menu %}
 {% load thumbnail %}
 {% load initialavatar %}
 {% load static %}
 
 <nav class="header nav-header navbar navbar-expand-lg" style="width:100%; position:fixed">
-  <a href="{% url "homepage" %}" class="navbar-brand float-left d-block d-sm-none" style="width:50px; z-index: 150;"> 
+  <a href="{% url "homepage" %}" class="navbar-brand float-left d-block d-sm-none" style="width:50px; z-index: 150;">
     <img src="{% static 'img/logo-simple.png' %}" class="brand-logo w-100">
   </a>
   <a href="{% url "homepage" %}" class="brand-logo d-none d-sm-block">
     <img src="{% static 'img/logo.png' %}">
   </a>
+  <label for="current-localisation">
+    <input type="checkbox" id="current-localisation" class="toggle-modal"/>
+    <div class="d-flex align-items-end">
+      <form class="mr-2 menu-localisation" action="{% url 'where' %}" method="get">
+        {% csrf_token %}
+        <input type="text" pattern="[0-9]*" value="{{ request.session.postcode }}" required class="form-control" placeholder="Code postal" name="postcode"/>
+      </form>
+      <a><i class="fas fa-map-marked-alt fa-3x text-secondary"></i></a>
+    </div>
+  </label>
   <div class="collapse navbar-collapse bg-primary" style="width:100%">
   </div>
   <div class="navbar navbar-expand-lg d-flex justify-content-end p-0">
@@ -23,7 +32,7 @@
       </div>
     {% else %}
     <div class="navbar-brand avatar">
-      <a class="nav-link" href="{{ user.get_absolute_url }}"> 
+      <a class="nav-link" href="{{ user.get_absolute_url }}">
         {% if user.avatar_img %}
           {% thumbnail user.avatar_img "35x35" crop="center" format="PNG" as im %}
             <img src="{{ im.url }}" class="rounded-circle"/>
@@ -33,7 +42,7 @@
             {% get_initial_avatar user 35 'circle' %}
           {% endif %}
         {% endif %}
-       <small>{{ user.first_name }}</small> 
+       <small>{{ user.first_name }}</small>
       </a>
     </div>
     <div class="navbar-brand arrow-login">
@@ -60,44 +69,4 @@
     </div>
     {% endif %}
   </div>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon text-secondary">
-      <i class="fa fa-bars text-secondary" style="font-size: 30px;" id="toggler"></i>
-    </span>
-  </button>
-  <div class="collapse navbar-collapse bg-primary" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-auto flex-column vertical-nav bg-primary">
-      <li class="nav-item text-center {{event_menu}}">
-        <a href="{% url "event:list" %}">
-          <i class="far fa-calendar-alt fa-2x"></i><br>
-          <small>Évenements</small>
-        </a>
-        </li>
-        <li class="nav-item text-center {{activity_menu}}" >
-        <a href="{% url "event:activity_list" %}">
-          <i class="fas fa-fist-raised fa-2x"></i><br>
-          <small>Activités</small>
-        </a>
-        </li>
-        <li class="nav-item text-center {{organization_menu}}">
-        <a href="{% url "user:organization_list" %}">
-          <i class="fas fa-network-wired fa-2x"></i><br>
-          <small>Organisations</small>
-        </a>
-        </li>
-        <li class="nav-item text-center {{stock_menu}}" >
-          <a href="{% url "inventory:stock_list" %}">
-            <i class="fas fa-box-open fa-2x"></i><br>
-            <small class="">Stocks</small>
-          </a>
-          </li>
-        <li class="nav-item text-center text-muted {{repair_menu}}">
-          <a>
-            <i class="fas fa-tools fa-2x text-muted"></i><br>
-            <small class="text-muted">Réparations</small>
-          </a>
-          </li>
-    </ul>
-  </div>
 </nav>
-{% endblock %}

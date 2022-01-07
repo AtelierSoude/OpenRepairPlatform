@@ -3,6 +3,7 @@ $(document).ready(function() {
           function() {
             var location_id = $(this).data("location")
             $(this).addClass("shadow")
+            $(this).removeClass("shadow-sm")
             $(".awesome-marker[data-location='" + location_id +"' ]").addClass("awesome-marker_hover")
           }
         );
@@ -10,6 +11,7 @@ $(document).ready(function() {
       function() {
         var location_id = $(this).data("location")
         $(this).removeClass("shadow")
+        $(this).addClass("shadow-sm")
         $(".awesome-marker[data-location='" + location_id +"' ]").removeClass("awesome-marker_hover")
       }
     );

@@ -1,53 +1,5 @@
 {
-  "name": "static",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
   "dependencies": {
-    "autoprefixer": "^10.0.1",
-    "css-minimizer-webpack-plugin": "^1.1.5",
-    "postcss": "^8.1.6",
-    "postcss-cli": "^8.2.0",
-    "postcss-loader": "^4.0.4",
-    "save": "^2.4.0",
-    "sortablejs": "1.12.0",
-    "vue-draggable-next": "^2.0.0",
-    "vue-hooks-form": "^0.2.2",
-    "vue-select": "^3.10.8"
-  },
-  "devDependencies": {
-    "@fortawesome/fontawesome-free": "^5.15.1",
-    "@intlify/vue-i18n-loader": "^2.0.0-beta.1",
-    "@kazupon/vue-i18n-loader": "^0.5.0",
-    "@vue/compiler-sfc": "^3.0.2",
-    "bootstrap": "^4.5.3",
-    "jquery": "3.5.1",
-    "popper.js": "^1.16.1",
-    "css-loader": "^5.0.1",
-    "eslint": "^7.13.0",
-    "eslint-config-standard": "^16.0.1",
-    "eslint-loader": "^4.0.2",
-    "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-vue": "^7.1.0",
-    "file-loader": "^6.2.0",
-    "mini-css-extract-plugin": "^1.2.1",
-    "node-sass": "^5.0.0",
-    "sass-loader": "^10.0.5",
-    "vue": "^3.0.2",
-    "vue-i18n": "^9.0.0-beta.6",
-    "vue-loader": "^16.0.0-rc.0",
-    "vue-style-loader": "^4.1.2",
-    "webpack": "^5.4.0",
-    "webpack-cli": "^4.2.0"
-  },
-  "scripts": {
-    "dev": "webpack --config ./webpack-dev.config.js ./js/vue/appVue.js --watch",
-    "lint": "eslint --fix ./js/vue/ ./js/modules/ ./js/api/ ./js/utils/",
-    "build": "webpack --config ./webpack.config.js ./js/vue/appVue.js"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+    "bootstrap": "^5.1.3"
+  }
 }

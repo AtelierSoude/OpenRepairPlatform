@@ -4,7 +4,7 @@
 {% with organizers=event.organizers.all registered=event.registered.all %}
 <div class="row p-4">
   <div class="col-md-7">
-    <div class="pr-4 pt-2" id="event_about">
+    <div class="pe-4 pt-2" id="event_about">
       <h5 class="text-danger">
         <i class="fa fa-calendar-alt"></i> {{ event.date|date:"l j F Y " }} de {{ event.starts_at }} à {{ event.ends_at }}
       </h5>
@@ -30,24 +30,24 @@
       {% endif %}
       <h5 class="text-muted">
         {% if event.is_free %}
-          <span class="badge badge-secondary badge-pill">Sans limite de place</span>
+          <span class="badge bg-secondary badge-pill">Sans limite de place</span>
         {% else %}
           {% if event.remaining_seats <= 0 %}
-            <span class="badge badge-warning badge-pill">Complet</span>
+            <span class="badge bg-warning badge-pill">Complet</span>
           {% else %}
-            <span class="badge badge-secondary badge-pill">{{ event.remaining_seats }}</span> places disponibles
+            <span class="badge bg-secondary badge-pill">{{ event.remaining_seats }}</span> places disponibles
           {% endif %}
         {% endif %}
         {% if event.booking == False and event.external == False %}
-          <span class="badge badge-secondary badge-pill">Sans réservation</span>
+          <span class="badge bg-secondary badge-pill">Sans réservation</span>
         {% elif event.external == True %}
-          <span class="badge badge-secondary badge-pill">Réservation externe</span>
+          <span class="badge bg-secondary badge-pill">Réservation externe</span>
         {% endif %}
         {% if request.user in registered or request.user in event.presents.all %}
-          <span class="badge badge-success badge-pill">Inscrit</span>
+          <span class="bg-success badge-pill badge">Inscrit</span>
         {% endif %}
         {% if request.user in organizers %}
-          <span class="badge badge-success badge-pill">Animateur</span>
+          <span class="bg-success badge-pill badge">Animateur</span>
         {% endif %}
       </h5>
       {% if event.allow_stuffs %}
@@ -64,7 +64,7 @@
                   <b>Participants</b>
                   <div style="line-height: 50px;">
                     {% for user in registered %}
-                    <div class="position-relative float-left mini">
+                    <div class="position-relative float-start mini">
                       {% if user.avatar_img %}
                         {% thumbnail user.avatar_img "35x35" crop="center" format="PNG" as im %}
                           <img src="{{ im.url }}" class="rounded-circle"/>
@@ -94,7 +94,7 @@
                   <b>Animateurs</b>
                   <div style="line-height: 50px;">
                     {% for orga in organizers %}
-                    <div class="position-relative float-left mini">
+                    <div class="position-relative float-start mini">
                       {% if orga.avatar_img %}
                         {% thumbnail orga.avatar_img "35x35" crop="center" format="PNG" as im %}
                           <img src="{{ im.url }}" class="rounded-circle"/>
@@ -166,7 +166,7 @@
                   <img class="img-fluid p-0"
                     src="{{ event.activity.picture.url }}"
                     alt="activity illustration">
-                  <a href="{% url 'event:activity_detail' event.activity.pk event.activity.slug %}" class="btn btn-light btn-sm col-md-12 float-right">
+                  <a href="{% url 'event:activity_detail' event.activity.pk event.activity.slug %}" class="btn btn-light btn-sm col-md-12 float-end">
                     <i class="fa fa-eye"></i>
                   </a>
                 </div>
@@ -188,7 +188,7 @@
               {% for condition in event.conditions.all %}
                 <li class="">
                   {% if condition.price > 0 %}
-                    <span class="badge badge-pill badge-secondary">
+                    <span class="badge badge-pill bg-secondary">
                       {{ condition.price }}€</span>
                     {% else %}
                     {% endif %}
@@ -208,13 +208,13 @@
                   <small>statut</small>
                     {% if user_is_member.current_contribution == 0 %} 
                         <small class="text-danger" >Pas à jour</small>
-                        <span class="badge badge-pill badge-danger" >{{user_is_member.current_contribution}}€</span>
+                        <span class="badge badge-pill bg-danger" >{{user_is_member.current_contribution}}€</span>
                     {% elif user_is_member.current_contribution >= organization.advised_fee %}
                         <small class="text-success" >A jour </small>
-                        <span class="badge badge-pill badge-success" >{{user_is_member.current_contribution}}€</span>
+                        <span class="badge badge-pill bg-success" >{{user_is_member.current_contribution}}€</span>
                     {% else %}
                         <small class="text-warning" >Incomplet </small>
-                        <span class="badge badge-pill badge-warning" >{{user_is_member.current_contribution}}€</span>
+                        <span class="badge badge-pill bg-warning" >{{user_is_member.current_contribution}}€</span>
                     {% endif %}
                   {% endif %}
                 </p>
@@ -254,24 +254,24 @@
           {% else %}
             <div class="card-header bg-primary text-center">
           {% endif %}
-          <h4 class="text-white"  id="book_show" onclick="display_book()"><i class="fas fa-calendar-day"></i>
-            {% if request.user in registered %}
-              {% if user_success_booking %}
-                {% if event.allow_stuffs %}
-                  Ajouter un appareil 
+                <h4 class="text-white"  id="book_show" onclick="display_book()"><i class="fas fa-calendar-day"></i>
+                {% if request.user in registered %}
+                  {% if user_success_booking %}
+                    {% if event.allow_stuffs %}
+                      Ajouter un appareil 
+                    {% else %}
+                      Réservation confirmée
+                    {% endif %}
+                  {% else %}
+                    Annuler ma réservation
+                  {% endif %}
+                {% elif request.user in organizers %}
+                  Je n'anime plus
                 {% else %}
-                  Réservation confirmée
+                  Réserver{% if is_active %}/Animer{% endif %}
                 {% endif %}
-              {% else %}
-                Annuler ma réservation
-              {% endif %}
-            {% elif request.user in organizers %}
-              Je n'anime plus
-            {% else %}
-              Réserver{% if is_active %}/Animer{% endif %}
-            {% endif %}
-         </h4>
-        </div>
+              </h4>
+            </div>
         {% if user_success_booking %}
           <div class="card-body text-center">
             {% include "event/book_confirm_add_stuff.html" %}
@@ -291,7 +291,7 @@
                 <li class="align-middle mt-1">
                   <i class="far fa-check-circle fa-1x text-success"></i> 
                   {% if condition.price > 0 %}
-                    <span class="badge badge-pill badge-secondary">
+                    <span class="badge badge-pill bg-secondary">
                       {{ condition.price }}€</span>
                   {% endif %}
                   <span>{{ condition.description | safe }}</span>
@@ -326,13 +326,13 @@
                   <small>status</small>
                     {% if user_is_member.current_contribution == 0 %} 
                         <small class="text-danger" >Pas à jour</small>
-                        <span class="badge badge-pill badge-danger" >{{user_is_member.current_contribution}}€</span>
+                        <span class="badge badge-pill bg-danger" >{{user_is_member.current_contribution}}€</span>
                     {% elif user_is_member.current_contribution >= organization.advised_fee %}
                         <small class="text-success" >A jour </small>
-                        <span class="badge badge-pill badge-success" >{{user_is_member.current_contribution}}€</span>
+                        <span class="badge badge-pill bg-success" >{{user_is_member.current_contribution}}€</span>
                     {% else %}
                         <small class="text-warning" >Incomplet </small>
-                        <span class="badge badge-pill badge-warning" >{{user_is_member.current_contribution}}€</span>
+                        <span class="badge badge-pill bg-warning" >{{user_is_member.current_contribution}}€</span>
                     {% endif %}
                   {% endif %}
                 </p>

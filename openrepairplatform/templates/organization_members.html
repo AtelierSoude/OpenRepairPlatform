@@ -12,7 +12,7 @@
       <div class="mb-4 text-center">
         <button onclick="autocompleteUserInfo()" class="btn btn-success btn-absolute" data-toggle="modal" data-target="#more-info-{{ anonymous_user.pk }}">
           <i class="fa fa-plus"></i><i class="fas fa-user"></i>
-          <span class="btn-label d-none pl-1">Ajouter un membre</span>
+          <span class="btn-label d-none ps-1">Ajouter un membre</span>
         </button>
         {% include "user/organization/modal_more_info.html" with object=organization form=add_member_form %}
       </div>
@@ -26,7 +26,7 @@
       <h4 class="text-center mt-4">{{total_members}} membres</h4>
       {% endif %}
       <div class="box-shadow mb-5">
-        <span class="float-right">Télécharger le résultat :
+        <span class="float-end">Télécharger le résultat :
           <a class="btn btn-success btn-sm" href="{% querystring '_export'='csv' %}">CSV</a>
           <a class="btn btn-success btn-sm" href="{% querystring '_export'='ods' %}">ODS</a>
         </span>
@@ -42,10 +42,10 @@
   $(document).ready(function(){
     $( ".btn-absolute" ).hover(
   function() {
-    $( ".btn-label" ).addClass( "d-block" );
+    $( ".btn-label" ).removeClass( "d-none" );
     $( this ).css( "width", "200px" );
   }, function() {
-    $( ".btn-label" ).removeClass( "d-block" );
+    $( ".btn-label" ).addClass( "d-none" );
     $( this ).css( "width", "63px" );
   }
   );

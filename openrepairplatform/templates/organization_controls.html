@@ -21,7 +21,7 @@
         </div>
         <h4 class="mt-4">Conditions d'accès</h4>
         <div class="card p-4">
-          <a class="btn btn-primary btn float-right" href="{% url 'event:condition_create' organization.pk %}" title="create condition">
+          <a class="btn btn-primary btn float-end" href="{% url 'event:condition_create' organization.pk %}" title="create condition">
               <i class="fa fa-plus-circle"></i> Ajouter
           </a>
           <div class="card-columns">
@@ -41,12 +41,12 @@
                   <div class="card-body">
                     <h4 class="card-title">{{ place.name }}</h4>
                     <h6 class="card-subtitle mb-2 text-muted">{{ place.address }}</h6>
-                    <span class="badge badge-secondary">{{ place.category }}</span>
+                    <span class="badge bg-secondary">{{ place.category }}</span>
                     {{ place.description | safe | truncatewords_html:10 }}
                   </div>
                   {% if is_admin %}
                     <div class="card-footer">
-                      <a class="btn btn-info btn-sm" href="{% url 'location:edit' place.id %}">
+                      <a class="btn btn-success btn-sm" href="{% url 'location:edit' place.id %}">
                         <i class="fa fa-pencil-alt"></i>
                         Editer ce lieu
                       </a>

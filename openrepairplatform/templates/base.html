@@ -38,15 +38,10 @@
   href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
   integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
   crossorigin=""/>
-   <!-- Custom -->
-   {% assets "css_custom_bootstrap" %}
-   <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet"/>
-  {% endassets %}
+   <!-- Custom & bootstrap -->
   {% assets "css_openrepairplatform" %}
     <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet"/>
   {% endassets %}
-  <!-- Bootstrap -->
- <!-- <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}"> -->
   <script src="{% static 'bootstrap/js/jquery.min.js' %}"></script>
   <script src="{% static 'js/jquery.bootstrap.modal.forms.js' %}"></script> 
   <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
@@ -58,7 +53,7 @@
   {% endassets %}
 </head>
 
-<body class="bg-grey">
+<body class="bg-light">
 {% include "menu.html" %}
 <div class="main-container">
 <div class="container-fluid">

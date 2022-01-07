@@ -1,8 +1,8 @@
 FROM python:3.9-slim-buster
 
-RUN apt-get update && apt-get install -y python3-pip libpq-dev locales locales-all cron make ruby ruby-dev
-RUN gem install sass
+RUN apt update && apt upgrade -y && apt install -y --force-yes python3-pip libpq-dev locales locales-all cron make nodejs npm sassc
 RUN pip3 install uwsgi
+RUN ln /usr/bin/sassc /usr/bin/sass
 
 COPY requirements.txt /
 RUN pip3 install -r /requirements.txt && rm /requirements.txt
@@ -24,6 +24,8 @@ COPY deployment/django/uwsgi.ini .
 COPY deployment/django/start.sh /
 COPY openrepairplatform ./openrepairplatform
 COPY deployment/django/openrepairplatform.cron /etc/cron.d/openrepairplatform
+
+RUN cd openrepairplatform/static/ && npm i && cd -
 
 RUN chmod 0644 /etc/cron.d/openrepairplatform
 RUN cron

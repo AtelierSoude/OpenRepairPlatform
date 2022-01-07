@@ -11,14 +11,14 @@
         {% filter_orga queryset=user.memberships organization=event.organization as membership %}
         {% if membership %}
           {% if membership.current_contribution == 0 %}
-            <span class="badge badge-pill badge-primary text-danger float-left" >0€</span>
+            <span class="badge badge-pill bg-primary text-danger float-start" >0€</span>
           {% elif membership.current_contribution >= event.organization.advised_fee %}
-            <span class="badge badge-pill badge-primary text-success float-left">{{ membership.current_contribution }}€</span>
+            <span class="badge badge-pill bg-primary text-success float-start">{{ membership.current_contribution }}€</span>
           {% else %}
-            <span class="badge badge-pill badge-primary text-warning float-left" >{{ membership.current_contribution }}€</span>
+            <span class="badge badge-pill bg-primary text-warning float-start" >{{ membership.current_contribution }}€</span>
           {% endif %}
         {% else %}
-          <span class="badge badge-pill badge-primary text-danger float-left" >0€</span>
+          <span class="badge badge-pill bg-primary text-danger float-start" >0€</span>
         {% endif %}
       {% endif %}
       </div>
@@ -49,7 +49,7 @@
           {% if is_admin %}
             <form action="{% url 'user:remove_from_admins' organization.pk user.pk %}" class="col-2">
               {% csrf_token %}
-              <button type="submit" class="btn badge badge-pill badge-danger float-right" onclick="return confirm('Êtes-vous sûr ?')">&times;</button>
+              <button type="submit" class="btn badge badge-pill bg-danger float-end" onclick="return confirm('Êtes-vous sûr ?')">&times;</button>
             </form>
           {% endif %}
         {% endif %}
@@ -58,7 +58,7 @@
          {% if is_admin %}
           <form action="{% url 'user:remove_from_actives' organization.pk user.pk %}" class="col-2">
             {% csrf_token %}
-            <button type="submit" class="btn badge badge-pill badge-danger float-right" onclick="return confirm('Êtes-vous sûr ?')">&times;</button>
+            <button type="submit" class="btn badge badge-pill bg-danger float-end" onclick="return confirm('Êtes-vous sûr ?')">&times;</button>
           </form>
          {% endif %}
         {% endif %}
@@ -67,7 +67,7 @@
           {% if is_admin %}
           <form action="{% url 'user:remove_from_volunteers' organization.pk user.pk %}" class="col-2">
             {% csrf_token %}
-            <button type="submit" class="btn badge badge-pill badge-danger float-right" onclick="return confirm('Êtes-vous sûr ?')">&times;</button>
+            <button type="submit" class="btn badge badge-pill bg-danger float-end" onclick="return confirm('Êtes-vous sûr ?')">&times;</button>
           </form>
           {% endif %}
         {% endif %}

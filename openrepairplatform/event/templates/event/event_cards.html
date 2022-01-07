@@ -17,10 +17,10 @@
           <h6><i>{{event.organization}}</i></h6>
         </span>
         {% if request.user in registereds %}
-          <span class="badge badge-success badge-pill">Je participe</span><br>
+          <span class="bg-success badge-pill badge">Je participe</span><br>
         {% endif %}
         {% if request.user in organizers %}
-          <span class="badge badge-success badge-pill">J'anime</span><br>
+          <span class="bg-success badge-pill badge">J'anime</span><br>
         {% endif %}
         {% if event.is_free %}
           <span class="text-success">Places non limitées</span>
@@ -70,9 +70,9 @@
               {{event.location.name}}
             </span>
             {% if request.user in active_organizations %}
-              <div class="mini-organizers pl-2 pt-1">
+              <div class="mini-organizers ps-2 pt-1">
                 {% for orga in organizers %}
-                <div class="position-relative float-left mini">
+                <div class="position-relative float-start mini">
                   {% if orga.avatar_img %}
                     {% thumbnail orga.avatar_img "25x25" crop="center" format="PNG" as im %}
                       <img src="{{ im.url }}" class="rounded-circle"/>

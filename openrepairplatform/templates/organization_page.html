@@ -39,14 +39,14 @@
               <div class="card p-2 m-2">
                 <h4 class="mt-2">Informations  
                   {% if is_admin %}
-                    <a class="btn btn-success btn-sm float-right" href="{% url 'user:organization_update' organization.pk %}">
+                    <a class="btn btn-success btn-sm float-end" href="{% url 'user:organization_update' organization.pk %}">
                       <i class="fa fa-pencil-alt"></i> Editer
                     </a>
                   {% endif %}
                 </h4>
                 <div class="">
                   <div class="p-1">
-                    <i class="fa fa-phone pr-2"></i>
+                    <i class="fa fa-phone pe-2"></i>
                     {% if organization.phone_number %}
                       {{ organization.phone_number }}
                     {% else %}
@@ -54,7 +54,7 @@
                     {% endif %}
                   </div>
                   <div class="p-1">
-                    <i class="fa fa-envelope pr-2"></i>
+                    <i class="fa fa-envelope pe-2"></i>
                     {% if object.email %}
                     <a href="{{organization.email}}">{{ object.email }}</a>
                     {% else %}
@@ -62,7 +62,7 @@
                     {% endif %}
                   </div>
                   <div class="p-1">
-                    <i class="fa fa-map pr-2"></i>
+                    <i class="fa fa-map pe-2"></i>
                     {% if organization.website %}
                       <a href="{{organization.website}}">{{ organization.website }}</a>
                     {% else %}
@@ -77,7 +77,7 @@
                       {% else %}
                         L'adhésion est de 
                       {% endif %}
-                      <span class="badge badge-pill badge-secondary">
+                      <span class="badge badge-pill bg-secondary">
                         {% if organization.min_fee %}
                           {{ organization.min_fee }} - 
                         {% endif %}    
@@ -105,7 +105,7 @@
                           <div class="card-body">
                             <h5 class="card-title">{{ place.name }}</h5>
                             <small class="card-subtitle mb-2 text-muted">{{ place.address }}</small><br>
-                            <span class="badge badge-secondary">{{ place.category }}</span><br>
+                            <span class="badge bg-secondary">{{ place.category }}</span><br>
                             <small>{{ place.description | safe | truncatewords_html:10 }}</small>
                           </div>
                         </a>

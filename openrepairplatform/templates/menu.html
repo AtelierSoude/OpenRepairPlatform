@@ -4,7 +4,7 @@
 {% load static %}
 
 <nav class="header nav-header navbar navbar-expand-lg" style="width:100%; position:fixed">
-  <a href="{% url "homepage" %}" class="navbar-brand float-left d-block d-sm-none" style="width:50px; z-index: 150;"> 
+  <a href="{% url "homepage" %}" class="navbar-brand float-start d-block d-sm-none" style="width:50px; z-index: 150;"> 
     <img src="{% static 'img/logo-simple.png' %}" class="brand-logo w-100">
   </a>
   <a href="{% url "homepage" %}" class="brand-logo d-none d-sm-block">
@@ -37,7 +37,7 @@
       </a>
     </div>
     <div class="navbar-brand arrow-login">
-      <a class="nav-link mr-2 dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <a class="nav-link me-2 dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <i class=""></i>
       </a>
       <div class="dropdown-menu " aria-labelledby="navbarDropdownMenuLink">
@@ -66,7 +66,7 @@
     </span>
   </button>
   <div class="collapse navbar-collapse bg-primary" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-auto flex-column vertical-nav bg-primary">
+    <ul class="navbar-nav me-auto flex-column vertical-nav bg-primary">
       <li class="nav-item text-center {{event_menu}}">
         <a href="{% url "event:list" %}">
           <i class="far fa-calendar-alt fa-2x"></i><br>

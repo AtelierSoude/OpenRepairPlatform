@@ -15,14 +15,16 @@ from django.views.generic import (
     RedirectView,
 )
 from openrepairplatform.event.models import Event, Participation
+from openrepairplatform.location.models import Place
 from openrepairplatform.event.templatetags.app_filters import tokenize
 from openrepairplatform.mixins import (
     HasAdminPermissionMixin,
     HasActivePermissionMixin,
     HasVolunteerPermissionMixin,
+    LocationOrganization,
 )
 from openrepairplatform.inventory.mixins import PermissionCreateUserStuffMixin
-from openrepairplatform.user.models import CustomUser, Organization, Fee, Membership
+from openrepairplatform.user.models import CustomUser, Organization, Fee
 from openrepairplatform.inventory.models import Stuff
 from openrepairplatform.inventory.forms import StuffForm
 
@@ -230,7 +232,7 @@ class OrganizationEventsListView(HasVolunteerPermissionMixin, ListView):
         return organization.events.order_by("date")
 
 
-class OrganizationListView(ListView):
+class OrganizationListView(LocationOrganization, ListView):
     model = Organization
     template_name = "user/organization/organization_list.html"
 
@@ -238,6 +240,31 @@ class OrganizationListView(ListView):
         context = super().get_context_data(**kwargs)
         context["organization_menu"] = "active"
         return context
+
+    def get_queryset(self):
+        queryset = self.filter_queryset_location(super().get_queryset())
+        return queryset
+
+    def get(self, request, *args, **kwargs):
+        res = super().get(request, *args, **kwargs)
+        places = Place.objects.all()
+        if not self.object_list:
+            zipcodes = "<br/>".join({
+                f"- {place.zipcode}" for place in places if place.address
+            })
+            message = f"""
+                <p>
+                    <b>
+                    Il n'y a pas d'organisation dans la zone selectionnée.
+                    Vous pouvez retrouver nos organisations de réparation dans les zones
+                    suivantes :
+                    </b>
+                </p>
+                {zipcodes}
+            """
+            messages.info(request, message, extra_tags="safe")
+            return HttpResponseRedirect(reverse("homepage"))
+        return res
 
 
 @method_decorator(staff_member_required, name="dispatch")

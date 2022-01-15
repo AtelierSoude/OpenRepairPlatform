@@ -1,0 +1,45 @@
+{% load thumbnail %}
+{% load initialavatar %}
+{% load static %}
+
+<nav class="header nav-header navbar navbar-expand-lg" style="width:100%; position:fixed; z-index: 1 !important;">
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon text-secondary">
+      <i class="fa fa-bars text-secondary" style="font-size: 30px;" id="toggler"></i>
+    </span>
+  </button>
+  <div class="collapse navbar-collapse bg-primary" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto flex-column vertical-nav bg-primary">
+      <li class="nav-item text-center {{event_menu}}">
+        <a href="{% url "event:list" %}">
+          <i class="far fa-calendar-alt fa-2x"></i><br>
+          <small>Évenements</small>
+        </a>
+      </li>
+      <li class="nav-item text-center {{activity_menu}}" >
+        <a href="{% url "event:activity_list" %}">
+          <i class="fas fa-fist-raised fa-2x"></i><br>
+          <small>Activités</small>
+        </a>
+      </li>
+      <li class="nav-item text-center {{organization_menu}}">
+        <a href="{% url "user:organization_list" %}">
+          <i class="fas fa-network-wired fa-2x"></i><br>
+          <small>Organisations</small>
+        </a>
+      </li>
+      <li class="nav-item text-center {{stock_menu}}" >
+        <a href="{% url "inventory:stock_list" %}">
+          <i class="fas fa-box-open fa-2x"></i><br>
+          <small class="">Stocks</small>
+        </a>
+      </li>
+      <li class="nav-item text-center text-muted {{repair_menu}}">
+        <a>
+          <i class="fas fa-tools fa-2x text-muted"></i><br>
+          <small class="text-muted">Réparations</small>
+        </a>
+      </li>
+    </ul>
+  </div>
+</nav>

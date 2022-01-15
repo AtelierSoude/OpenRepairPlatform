@@ -18,10 +18,14 @@ cairocffi==1.2.0
     #   weasyprint
 cairosvg==2.5.2
     # via weasyprint
+certifi==2021.10.8
+    # via requests
 cffi==1.14.5
     # via
     #   cairocffi
     #   weasyprint
+charset-normalizer==2.0.9
+    # via requests
 cssmin==0.2.0
     # via openrepairplatform (setup.py)
 cssselect2==0.4.1
@@ -98,8 +102,8 @@ html5lib==1.1
     # via weasyprint
 ics==0.7
     # via openrepairplatform (setup.py)
-importlib-metadata==3.10.1
-    # via django-bootstrap-v5
+idna==3.3
+    # via requests
 jsmin==2.2.2
     # via openrepairplatform (setup.py)
 lxml==4.6.3
@@ -137,6 +141,8 @@ pyyaml==5.4.1
     # via tablib
 raven==6.10.0
     # via openrepairplatform (setup.py)
+requests==2.26.0
+    # via openrepairplatform (setup.py)
 six==1.16.0
     # via
     #   bleach
@@ -163,6 +169,8 @@ tinycss2==1.1.0
     #   cairosvg
     #   cssselect2
     #   weasyprint
+urllib3==1.26.7
+    # via requests
 weasyprint==52.5
     # via openrepairplatform (setup.py)
 webassets==2.0
@@ -177,8 +185,6 @@ xlrd==2.0.1
     # via tablib
 xlwt==1.3.0
     # via tablib
-zipp==3.4.1
-    # via importlib-metadata
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools

@@ -278,14 +278,6 @@ class EventSearchForm(forms.Form):
             ),
             label="Activité",
         )
-        self.fields["place"] = forms.ModelChoiceField(
-            required=False,
-            queryset=Place.objects.filter(events__in=future_events).distinct(),
-            widget=autocomplete.ModelSelect2(
-                url="event:future_event_place_autocomplete", forward=["activity"]
-            ),
-            label="Lieu",
-        )
         self.fields["organization"] = forms.ModelChoiceField(
             required=False,
             queryset=Organization.objects.filter(events__in=future_events).distinct(),

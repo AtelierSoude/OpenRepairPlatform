@@ -16,6 +16,7 @@ from openrepairplatform.mixins import (
     HasAdminPermissionMixin,
 )
 from openrepairplatform.user.mixins import PermissionOrgaContextMixin
+from openrepairplatform.mixins import LocationActivity
 
 
 class ActivityView(PermissionOrgaContextMixin, DetailView):
@@ -28,7 +29,7 @@ class ActivityView(PermissionOrgaContextMixin, DetailView):
         return context
 
 
-class ActivityListView(ListView):
+class ActivityListView(LocationActivity, ListView):
     model = Activity
     template_name = "event/activity/list.html"
 
@@ -39,6 +40,7 @@ class ActivityListView(ListView):
             .order_by("-category_count")
         )
         queryset = queryset.order_by("category__name")
+        queryset = self.filter_queryset_location(queryset)
         return queryset
 
     def get_context_data(self, **kwargs):

@@ -1,11 +1,12 @@
 from dal import autocomplete
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
-
+from django.urls import reverse
 from django.views.generic import (
     TemplateView,
     DetailView,
     FormView,
+    RedirectView,
 )
 import django_tables2 as tables
 from django_filters.views import FilterView
@@ -15,7 +16,7 @@ from openrepairplatform.tables import FeeTable, MemberTable, EventTable
 from openrepairplatform.filters import FeeFilter, MemberFilter, EventFilter
 
 from openrepairplatform.user.mixins import PermissionOrgaContextMixin
-from openrepairplatform.mixins import HasActivePermissionMixin
+from openrepairplatform.mixins import HasActivePermissionMixin, LocationRedirectMixin
 from openrepairplatform.user.models import CustomUser, Organization, Fee
 from openrepairplatform.event.models import Event, Activity, Place
 from openrepairplatform.user.forms import (
@@ -36,29 +37,10 @@ class HomeView(TemplateView, FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["search_form"] = EventSearchForm(self.request.GET)
         context["event_count"] = Event.objects.all().count()
         context["user_count"] = CustomUser.objects.all().count()
         context["organization_count"] = Organization.objects.all().count()
-        context["results_number"] = self.get_queryset().count()
         return context
-
-    def get_queryset(self):
-        queryset = Event.future_published_events()
-        form = EventSearchForm(self.request.GET)
-        if not form.is_valid():
-            return queryset
-        if form.cleaned_data["place"]:
-            queryset = queryset.filter(location=form.cleaned_data["place"])
-        if form.cleaned_data["organization"]:
-            queryset = queryset.filter(organization=form.cleaned_data["organization"])
-        if form.cleaned_data["activity"]:
-            queryset = queryset.filter(activity=form.cleaned_data["activity"])
-        if form.cleaned_data["starts_before"]:
-            queryset = queryset.filter(date__lte=form.cleaned_data["starts_before"])
-        if form.cleaned_data["starts_after"]:
-            queryset = queryset.filter(date__gte=form.cleaned_data["starts_after"])
-        return queryset
 
 
 class OrganizationPageView(PermissionOrgaContextMixin, DetailView):
@@ -106,23 +88,27 @@ class OrganizationEventsView(
         orga_slug = self.kwargs.get("orga_slug")
         organization = get_object_or_404(Organization, slug=orga_slug)
         self.object = organization
-        return organization.events.order_by("-date").select_related(
-            "organization",
-            "activity",
-            "activity__category",
-            "activity__organization",
-            "location",
-            "location__organization",
-        ).prefetch_related(
-            "conditions",
-            "registered",
-            "presents",
-            "organizers",
-            "stuffs",
-            "organization__members",
-            "organization__volunteers",
-            "organization__actives",
-            "organization__admins",
+        return (
+            organization.events.order_by("-date")
+            .select_related(
+                "organization",
+                "activity",
+                "activity__category",
+                "activity__organization",
+                "location",
+                "location__organization",
+            )
+            .prefetch_related(
+                "conditions",
+                "registered",
+                "presents",
+                "organizers",
+                "stuffs",
+                "organization__members",
+                "organization__volunteers",
+                "organization__actives",
+                "organization__admins",
+            )
         )
 
     def get_context_data(self, **kwargs):
@@ -192,11 +178,11 @@ class OrganizationMembersView(
         self.object = self.organization
         queryset = (
             self.organization.memberships.all()
-                .order_by("-first_payment")
-                .select_related(
-                    "user",
-                )
+            .order_by("-first_payment")
+            .select_related(
+                "user",
             )
+        )
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -353,3 +339,12 @@ class ActivityAutocomplete(autocomplete.Select2QuerySetView):
             qs = qs.filter(name__icontains=self.q)
 
         return qs
+
+
+class LocaliseRedirect(LocationRedirectMixin, RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        referer = self.request.META.get("HTTP_REFERER", "/")
+        host = self.request.META.get("HTTP_HOST")
+        if referer.split(host)[-1] == "/":
+            return reverse("event:list")
+        return self.request.META.get("HTTP_REFERER", "/")

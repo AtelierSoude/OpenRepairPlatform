@@ -1,5 +1,7 @@
-@import url('https://fonts.googleapis.com/css?family=Inconsolata&display=swap');
 @import 'variables.scss';
+@import '../node_modules/bootstrap/scss/bootstrap.scss';
+@import '../node_modules/vue-multiselect/dist/vue-multiselect.css';
+@import url('https://fonts.googleapis.com/css?family=Inconsolata&display=swap');
 
 .container-fluid{
   padding: 0px;
@@ -613,8 +615,16 @@ position: relative;
   }
 }
 
+.menu-localisation input {
+  width: 0%;
+  background-color: $primary;
+  border-color: $primary;
+  transition: all 0.3s ease;
+}
+
 input.toggle-modal {
   visibility: hidden;
+  position: absolute;
 }
 
 input.toggle-modal:checked ~ .modal {
@@ -622,4 +632,10 @@ input.toggle-modal:checked ~ .modal {
   opacity: 1;
   padding-top: 2rem;
   background-color: rgba(0,0,0,0.3);
+}
+
+input.toggle-modal:checked ~ div .menu-localisation input {
+  width: 100%;
+  background-color: white;
+  border-color: #ced4da;
 }

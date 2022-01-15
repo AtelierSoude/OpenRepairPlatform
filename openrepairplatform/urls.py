@@ -32,6 +32,10 @@ urlpatterns = [
         include("openrepairplatform.user.api_urls", namespace="api_user"),
     ),
     path(
+        "api/event/",
+        include("openrepairplatform.event.api_urls", namespace="api_event"),
+    ),
+    path(
         "place_autocomplete/",
         views.PlaceAutocomplete.as_view(),
         name="place_autocomplete",

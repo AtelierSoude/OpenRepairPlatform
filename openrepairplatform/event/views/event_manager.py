@@ -1,5 +1,7 @@
 from django.conf import settings
 from django.contrib import messages
+from django.core.serializers import serialize
+from django.forms.models import model_to_dict
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
@@ -12,7 +14,7 @@ from django.views.generic import (
     FormView,
 )
 
-from openrepairplatform.event.models import Event
+from openrepairplatform.event.models import Event, Condition, Activity
 from openrepairplatform.event.forms import (
     EventForm,
     EventSearchForm,
@@ -20,6 +22,7 @@ from openrepairplatform.event.forms import (
     ParticipationForm,
     InvitationForm,
 )
+from openrepairplatform.location.models import Place
 from openrepairplatform.mail import event_send_mail
 from openrepairplatform.mixins import (
     RedirectQueryParamView,
@@ -173,6 +176,27 @@ class EventFormView(HasActivePermissionMixin):
 
 class EventEditView(RedirectQueryParamView, EventFormView, UpdateView):
     success_message = "L'évènement a bien été modifié"
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx["json_event"] = serialize("json", [self.object])
+        ctx["json_activities"] = serialize(
+            "json", Activity.objects.all(), fields=["name", "description", "picture"]
+        )
+        ctx["json_places"] = serialize(
+            "json", Place.objects.all(), fields=["name", "description", "picture"]
+        )
+        ctx["json_conditions"] = serialize(
+            "json",
+            Condition.objects.filter(organization=self.object.organization),
+            fields=["name", "description", "price"],
+        )
+        ctx["json_organizers"] = serialize(
+            "json",
+            self.object.organization.organizers,
+            fields=["first_name", "last_name", "avatar_img"],
+        )
+        return ctx
 
 
 class EventCreateView(RedirectQueryParamView, EventFormView, CreateView):

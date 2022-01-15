@@ -12,7 +12,7 @@
             <form method="GET" class="form-row" action="{% url 'event:list' %}">
                 <div class="input-group search-bar d-flex un-z-index">
                     {% bootstrap_field search_form.activity form_group_class="col-md-4" %}
-                    {% bootstrap_field search_form.organization form_group_class="col-md-2" %}
+                    {% bootstrap_field search_form.organization form_group_class="col-md-4" %}
                     <div class="col-md-2 p-3 mt-3">
                       <button type="submit" class="btn btn-secondary w-100">
                         <span class=""><i class="fa fa-search"></i>Rechercher</span>

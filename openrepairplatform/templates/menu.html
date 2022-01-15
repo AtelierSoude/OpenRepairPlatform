@@ -11,12 +11,13 @@
   </a>
   <label for="current-localisation">
     <input type="checkbox" id="current-localisation" class="toggle-modal"/>
-    <div class="d-flex align-items-end">
-      <form class="mr-2 menu-localisation" action="{% url 'where' %}" method="get">
+    <div class="d-flex align-items-center">
+      <form class="menu-localisation me-2" action="{% url 'where' %}" method="get">
         {% csrf_token %}
         <input type="text" pattern="[0-9]*" value="{{ request.session.postcode }}" required class="form-control" placeholder="Code postal" name="postcode"/>
       </form>
-      <a><i class="fas fa-map-marked-alt fa-3x text-secondary"></i></a>
+      <a title="Cliquez pour modifier la localité" class="d-flex align-items-end"><i class="fas fa-map-marked-alt fa-2x text-secondary"></i>
+      <span class="ps-2 text-success fw-bold">{{ request.session.postcode }}</span></a>
     </div>
   </label>
   <div class="collapse navbar-collapse bg-primary" style="width:100%">

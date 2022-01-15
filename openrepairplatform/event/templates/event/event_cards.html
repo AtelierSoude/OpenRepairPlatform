@@ -59,9 +59,9 @@
             <div>
               {% if minimal != True %}
                 <h5 class="mb-0">{{ event.activity.category.name }}</h5>
-                <h4 class="mb-0 font-weight-bold">{{ event.activity.name|truncatechars:40 }}</h4>
+                <h4 class="mb-0 fw-bold">{{ event.activity.name|truncatechars:40 }}</h4>
                 {% if event.collaborator %}
-                  <span class="text-primary mb-1">en collaboration avec <span class="font-weight-bold">{{ event.collaborator }}</span></span>
+                  <span class="text-primary mb-1">en collaboration avec <span class="fw-bold">{{ event.collaborator }}</span></span>
                 {% endif %}
               {% endif %}
             </div>

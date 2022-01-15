@@ -2,11 +2,6 @@ from django_assets import Bundle, register
 
 # SCSS
 
-scss_custom_bootstrap = Bundle(
-    "scss/custom_bootstrap.scss",
-    filters="scss",
-    output="css/custom_bootstrap.css",
-)
 scss_openrepairplatform = Bundle(
     "scss/openrepairplatform.scss",
     filters="scss",
@@ -31,11 +26,7 @@ scss_detail_event = Bundle(
 )
 
 # CSS minify
-css_custom_bootstrap = Bundle(
-    scss_custom_bootstrap,
-    filters="cssrewrite,cssmin",
-    output="css/custom_bootstrap.min.css",
-)
+
 css_openrepairplatform = Bundle(
     scss_openrepairplatform,
     filters="cssrewrite,cssmin",
@@ -143,7 +134,6 @@ js_infinite = Bundle(
     "js/lib/infinite.min.js", filters="jsmin", output="js/user/infinite.min.js"
 )
 
-register("css_custom_bootstrap", css_custom_bootstrap)
 register("css_openrepairplatform", css_openrepairplatform)
 register("css_places", css_places)
 register("css_detail_place", css_detail_place)

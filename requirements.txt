@@ -173,7 +173,7 @@ urllib3==1.26.7
     # via requests
 weasyprint==52.5
     # via openrepairplatform (setup.py)
-webassets==0.12
+webassets==2.0
     # via django-assets
 webencodings==0.5.1
     # via

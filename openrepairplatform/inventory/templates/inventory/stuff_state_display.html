@@ -1,17 +1,17 @@
 {% if stuff_state == "En panne" %}
-<span class="badge badge-pill badge-danger">En panne</span>
+<span class="badge badge-pill bg-danger">En panne</span>
 {% elif stuff_state == "Désassemblé" %}
-<span class="badge badge-pill badge-danger">Désassemblé</span>
+<span class="badge badge-pill bg-danger">Désassemblé</span>
 {% elif stuff_state == "Evaporé" %}
-<span class="badge badge-pill badge-primary">Evaporé</span>
+<span class="badge badge-pill bg-primary">Evaporé</span>
 {% elif stuff_state == "En réparation" %}
-<span class="badge badge-pill badge-secondary">En réparation</span>
+<span class="badge badge-pill bg-secondary">En réparation</span>
 {% elif stuff_state == "En réparation" %}
-<span class="badge badge-pill badge-success">Réparé</span>
+<span class="badge badge-pill bg-success">Réparé</span>
 {% elif stuff_state == "Partiel" %}
-<span class="badge badge-pill badge-secondary">Incomplet / fonctionnement partiel</span>
+<span class="badge badge-pill bg-secondary">Incomplet / fonctionnement partiel</span>
 {% elif stuff_state == "Réparé" %}
-<span class="badge badge-pill badge-success">Réparé</span>
+<span class="badge badge-pill bg-success">Réparé</span>
 {% else %}
-<span class="badge badge-pill badge-success">Fonctionnel</span>
+<span class="badge badge-pill bg-success">Fonctionnel</span>
 {% endif %}

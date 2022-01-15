@@ -10,7 +10,7 @@
       <div class="col-lg bg-white">
         <div id="search" class="collapse">
             <form method="GET" class="form-row" action="{% url 'event:list' %}">
-                <div class="input-group search-bar d-flex">
+                <div class="input-group search-bar d-flex un-z-index">
                     {% bootstrap_field search_form.activity form_group_class="col-md-4" %}
                     {% bootstrap_field search_form.organization form_group_class="col-md-2" %}
                     <div class="col-md-2 p-3 mt-3">

@@ -4,7 +4,7 @@ FROM debian:buster
 RUN apt update -y && apt upgrade -y
 RUN apt install -y nginx certbot
 
-CMD sed -i "s/{{DOMAINE_NAME}}/${DOMAINE_NAME}/" /deployment/nginx/nginx.conf
+CMD sed -i "s/{{DOMAINE_NAME}}/${DOMAINE_NAME}/g" /deployment/nginx/nginx.conf
 COPY deployment/nginx/nginx.conf /etc/nginx/sites-enabled/default
 COPY deployment/nginx/nginx-snippet.conf /etc/nginx/snippets/ssl-params.conf
 

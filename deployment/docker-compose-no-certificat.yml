@@ -1,0 +1,49 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:11
+    container_name: postgres
+    env_file:
+      - ../openrepairplatform/.env
+    volumes:
+      - ./openrepairplatform_data/postgres_data:/var/lib/postgresql/data
+    networks:
+      - openrepairplatform-net
+
+  django:
+    build:
+      context: ../
+      dockerfile: deployment/django/Dockerfile
+    image: openrepairplatform_python
+    container_name: openrepairplatform_python
+    ports:
+      - "8000:8000"
+    env_file:
+      - ../openrepairplatform/.env
+    volumes:
+      - ./openrepairplatform_data/openrepairplatform_static:/srv/static
+      - ./openrepairplatform_data/openrepairplatform_media:/srv/media
+    depends_on:
+      - db
+    networks:
+      - openrepairplatform-net
+
+  nginx:
+    image: nginx
+    container_name: openrepairplatform_nginx
+    ports:
+      - "80:80"
+    env_file:
+      - ../openrepairplatform/.env
+    volumes:
+      - ./openrepairplatform_data/openrepairplatform_static:/srv/static:ro
+      - ./openrepairplatform_data/openrepairplatform_media:/srv/media:ro
+      - ./nginx/nginx-no-certificat.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - openrepairplatform-net
+    depends_on:
+      - django 
+
+networks:
+  openrepairplatform-net:

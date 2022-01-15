@@ -38,27 +38,33 @@
   href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
   integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
   crossorigin=""/>
-   <!-- Custom -->
-  {#  {% assets "css_custom_bootstrap" %} #}
-  {#  <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet"/> #}
-  {# {% endassets %} #}
+   <!-- Custom & bootstrap -->
   {% assets "css_openrepairplatform" %}
     <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet"/>
   {% endassets %}
-  <!-- Bootstrap -->
- <!-- <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}"> -->
-  <script src="{% static 'bootstrap/js/jquery.min.js' %}"></script>
-  <script src="{% static 'js/jquery.bootstrap.modal.forms.js' %}"></script>
+  <script src="{% static 'node_modules/jquery/dist/jquery.min.js' %}"></script> 
+  <script src="{% static 'js/jquery.bootstrap.modal.forms.js' %}"></script> 
   <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
   <script src="{% static 'js/lib/sticky_polyfill.js' %}"></script>
   <script type="text/javascript" src="{% static 'django_tables2_column_shifter/js/django_tables2_column_shifter.min.js' %}">
   </script>
   {% assets "js_base" %}
   <script src="{{ ASSET_URL }}"></script>
-  {% endassets %}
 </head>
 
-<body class="bg-grey">
+<body class="bg-light">
+{% include "menu.html" %}
+  <div class="main-container">
+  <div class="container-fluid">
+    {% for message in messages %}
+      <div class="alert alert-{{ message.level_tag }} alert-dismissible fade show mb-0" role="alert">
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    {% endfor %}
+  </div>
 
 {% block menu %}
   {% include "menu.html" %}
@@ -107,5 +113,6 @@
   });
 </script>
 {% endblock %}
+{% endassets %}
 </body>
 </html>

@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.staticfiles",
     "django.contrib.messages",
+    "django.contrib.gis",
     "simple_history",
     "rest_framework",
     "bootstrap",
@@ -91,7 +92,7 @@ WSGI_APPLICATION = "openrepairplatform.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
+        "ENGINE": "django.contrib.gis.db.backends.postgis",
         "NAME": os.getenv("POSTGRES_DB_NAME", "ateliersoude"),
     }
 }
@@ -160,3 +161,5 @@ AVATAR_COLORS = ((254, 229, 110), (8, 51, 66), (43, 230, 171),)
 
 # Django tables2
 DJANGO_TABLES2_TEMPLATE = "django_tables2/bootstrap4.html"
+
+KM_DISTANCE = 50

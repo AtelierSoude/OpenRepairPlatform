@@ -6,7 +6,7 @@
     <a class="text-center nav-link {{ events_tab }}" 
     href="{% url 'organization_events' organization.slug %}">
       <i style="font-size: 22px" class="fas fa-calendar-alt d-none d-sm-block d-md-none d-block"></i>    
-      <span class="d-none d-sm-none d-md-block">Evenements <span class="badge badge-light">{{future_event.all.count}}</span></span>
+      <span class="d-none d-sm-none d-md-block">Evenements <span class="badge bg-light">{{future_event.all.count}}</span></span>
     </a>
     <a class="text-center nav-link {{ groups_tab }}" 
     href="{% url 'organization_groups' organization.slug %}">

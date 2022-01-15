@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-rm /start.sh
 sed -i "s/{{SECRET_KEY}}/${SECRET_KEY}/" /etc/cron.d/openrepairplatform
 sed -i "s/{{EMAIL_PASSWORD}}/${EMAIL_PASSWORD}/" /etc/cron.d/openrepairplatform
 service cron start

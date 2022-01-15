@@ -124,6 +124,8 @@ def test_location_create(client_log, location_data, organization):
     )
     assert response_ok.status_code == 302
     assert len(places) == 1
+    assert places[0].location.x == location_data["longitude"]
+    assert places[0].location.y == location_data["latitude"]
     assert response_ok["Location"] == reverse(
         "location:detail", args=[places[0].pk, places[0].slug]
     )

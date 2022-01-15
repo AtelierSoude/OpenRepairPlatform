@@ -18,13 +18,13 @@
     {% if is_active %}
     <button class="btn btn-success btn-absolute bs-modal" id="add-stuff">
       <i class="fa fa-plus"></i><i class="fas fa-box-open"></i>
-      <span class="btn-label d-none pl-1">Ajouter un objet</span>
+      <span class="btn-label d-none ps-1">Ajouter un objet</span>
     </button>
     {% endif %}
   </section>
   {% if filter %}
   <div class="card mb-4 text-center">
-    <form action="" method="get" class="form-inline justify-content-center form-xs">
+    <form action="" method="get" class="un-z-index form-inline justify-content-center form-xs">
         {% bootstrap_form filter.form %}
         <a class="btn-secondary">{% bootstrap_button 'filtrer' %}</a>
     </form>
@@ -32,7 +32,7 @@
   {% endif %}
   <section class="box-shadow">
     {% if is_active %}
-      <span class="float-right">Télécharger le résultat :
+      <span class="float-end">Télécharger le résultat :
         <a class="btn btn-success btn-sm" href="{% querystring '_export'='csv' %}">CSV</a>
         <a class="btn btn-success btn-sm" href="{% querystring '_export'='ods' %}">ODS</a>
       </span>
@@ -47,10 +47,10 @@
   $(document).ready(function(){
     $( ".btn-absolute" ).hover(
   function() {
-    $( ".btn-label" ).addClass( "d-block" );
+    $( ".btn-label" ).removeClass( "d-none" );
     $( this ).css( "width", "200px" );
   }, function() {
-    $( ".btn-label" ).removeClass( "d-block" );
+    $( ".btn-label" ).addClass( "d-none" );
     $( this ).css( "width", "63px" );
   }
   );

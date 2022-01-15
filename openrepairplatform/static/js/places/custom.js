@@ -28,24 +28,20 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
     reuseTiles: true,
 }).addTo(place_map);
 
-fetch('/api/location/place-list/')
-    .then(function(res){ return res.json(); })
-    .then(function(places){
-        places.forEach(function(place){
-            index = 0 
-            if (place.future_events) {
-                var blueMarker = L.AwesomeMarkers.icon({
-                    prefix: 'fa',
-                    icon: 'home',
-                    markerColor: 'darkblue',
-                    myCustomId: place.pk,
-                });
-                let marker = L.marker([place.latitude, place.longitude], {icon: blueMarker, myCustomId: place.pk}).addTo(place_map);
-                marker.bindPopup(popup_message(place));
-                if (index==0) {
-                    marker.openPopup()
-                }
-                index+=1
-            }
+places.forEach(function(place){
+    index = 0
+    if (place.future_events) {
+        var blueMarker = L.AwesomeMarkers.icon({
+            prefix: 'fa',
+            icon: 'home',
+            markerColor: 'darkblue',
+            myCustomId: place.pk,
         });
-    });
+        let marker = L.marker([place.latitude, place.longitude], {icon: blueMarker, myCustomId: place.pk}).addTo(place_map);
+        marker.bindPopup(popup_message(place));
+        if (index==0) {
+            marker.openPopup()
+        }
+        index+=1
+    }
+});

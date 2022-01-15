@@ -8,6 +8,7 @@
     "esbuild-plugin-vue3": "^0.3.0",
     "sass-loader": "^12.4.0",
     "vue": "^3.2.26",
-    "vue-multiselect": "^3.0.0-alpha.2"
+    "vue-multiselect": "^3.0.0-alpha.2",
+    "jquery": "^3.6.0"
   }
 }

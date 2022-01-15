@@ -2,7 +2,9 @@
     <section class="section mt-4">
       <form class="mb-4" @submit.prevent="onSubmit">
         <section class="mb-4">
-          <p><b>Quel est l'activité de l'événement ?</b></p>
+          <label><b>Lévénement est en collaboration avec un autre orgaisme ?</b></label>
+          <input class="form-control mb-2" type="text" v-model="collaborator" placeholder="Collaborateur.."/>
+          <label><b>Quel est l'activité de l'événement ?</b></label>
           <VueMultiselect v-model="activity" :options="optionActivities" label="name" track-by="name"/>
           <div class="invalid-feedback" v-if="error.activities">
             {{ error.activities }}
@@ -27,23 +29,23 @@
         </section>
         <section class="mb-4" v-if="activity">
           <p><b>Quel est le lieu ?</b></p>
-          <VueMultiselect v-model="place" :options="optionPlaces" label="name" track-by="name"/>
-          <div class="invalid-feedback" v-if="error.places">
-            {{ error.places }}
+          <VueMultiselect v-model="location" :options="optionLocations" label="name" track-by="name"/>
+          <div class="invalid-feedback" v-if="error.locations">
+            {{ error.locations }}
           </div>
-          <section v-if="place" class="mt-4">
+          <section v-if="location" class="mt-4">
             <div class="card">
-              <h5 class="card-header">{{ activity.name }}</h5>
+              <h5 class="card-header">{{ location.name }}</h5>
               <div class="card-body">
                 <div class="d-flex">
-                  <img :src="`/media/${place.picture}`" v-if="place.picture" :alt="place.name" width="200"/>
-                  <p class="card-text ms-2" v-html="place.description"></p>
+                  <img :src="`/media/${location.picture}`" v-if="location.picture" :alt="location.name" width="200"/>
+                  <p class="card-text ms-2" v-html="location.description"></p>
                 </div>
               </div>
             </div>
           </section>
         </section>
-        <section class="mb-4" v-if="place">
+        <section class="mb-4" v-if="location">
           <div class="card text-dark bg-warning mb-3">
             <div class="card-body">
               <div class="form-check">
@@ -81,46 +83,49 @@ export default {
   },
   props: {
     activities: Array,
-    places: Array,
+    locations: Array,
     initials: Object,
   },
   mounted () {
     this.makeOptions(this.activities, this.optionActivities)
-    this.makeOptions(this.places, this.optionPlaces)
+    this.makeOptions(this.locations, this.optionLocations)
     this.activity = this.optionActivities.find(
       option => option.pk === this.initials.activity
     )
-    this.place = this.optionPlaces.find(
-      option => option.pk === this.initials.place
+    this.location = this.optionLocations.find(
+      option => option.pk === this.initials.location
     )
     this.description = this.initials.description
     this.allow_stuffs = this.initials.allow_stuffs
+    this.collaborator = this.initials.collaborator
   },
   data () {
     return {
+      collaborator: "",
       activity: null,
-      place: null,
+      location: null,
       description: "",
       allow_stuffs: false,
       optionActivities: [],
-      optionPlaces: [],
+      optionLocations: [],
       error: {
         activities: "",
-        places: "",
+        locations: "",
       }
     }
   },
   methods: {
     onSubmit () {
-      if (!this.place || !this.activity) {
+      if (!this.location || !this.activity) {
         this.error.activities = this.activity ? "" : "Vous devez renseigner une activité."
-        this.error.places = this.place ? "" : "Vous devez renseigner un lieu."
+        this.error.locations = this.location ? "" : "Vous devez renseigner un lieu."
       } else {
         this.error.activities = ""
-        this.error.places = ""
+        this.error.locations = ""
         this.$emit(
           "next", {
-            place: this.place.pk,
+            collaborator: this.collaborator,
+            location: this.location.pk,
             activity: this.activity.pk,
             description: this.description,
             allow_stuffs: this.allow_stuffs

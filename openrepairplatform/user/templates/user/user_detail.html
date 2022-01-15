@@ -38,7 +38,7 @@
       </div>
       <h2 class="header_detail_page_title">{{ object }}</h2>
       {% if object.pk == request.user.pk %}
-      <a class="btn ml-2 btn-success btn rounded-circle" href="{% url "user:user_update" object.pk %}">
+      <a class="btn ms-2 btn-success btn rounded-circle" href="{% url "user:user_update" object.pk %}">
           <i class="fa fa-pencil-alt"></i>
       </a>
       {% endif %}
@@ -47,15 +47,15 @@
     <div class="text-center d-flex justify-content-center align-items-center flex-md-column" id="v-pills-tab" role="tablist" aria-orientation="horizontal">
       <nav class="nav nav-pills justify-content-center bg-secondary w-100" id="h_nav">
         <a class="nav-link active" id="v-pills-info-tab" data-toggle="pill" href="#v-pills-info" role="tab" aria-controls="v-pills-info" aria-selected="false">Informations</a>
-        <a class="nav-link" id="v-pills-rdv-tab" data-toggle="pill" href="#v-pills-rdv" role="tab" aria-controls="v-pills-rdv" aria-selected="true">Rendez-vous  <span class="badge badge-light">
+        <a class="nav-link" id="v-pills-rdv-tab" data-toggle="pill" href="#v-pills-rdv" role="tab" aria-controls="v-pills-rdv" aria-selected="true">Rendez-vous  <span class="badge bg-light">
           {{future_rendezvous|length}}</span>
         </a>
         <a class="nav-link" id="v-pills-membership-tab" data-toggle="pill" href="#v-pills-membership" role="tab" aria-controls="v-pills-membership" aria-selected="false">Adhésions
-          <span class="badge badge-light">
+          <span class="badge bg-light">
             {{object.memberships.all.count}}</span>
         </a>
         <a class="nav-link" id="v-pills-stock-tab" data-toggle="pill" href="#v-pills-stock" role="tab" aria-controls="v-pills-stock" aria-selected="false">Inventaire
-          <span class="badge badge-light">
+          <span class="badge bg-light">
             {{stock.all.count}}</span>
         </a>
       </nav>
@@ -69,14 +69,14 @@
         <div class="tab-pane fade show active" id="v-pills-info" role="tabpanel" aria-labelledby="v-pills-info-tab">
           <div class="text-center user-title">
             {% for organization in object.visitor_organizations.all %}
-              <small class="badge badge-light">
+              <small class="badge bg-light">
                 Visiteur de
                 <a href="{% url 'organization_page' organization.slug %}">
                     {{ organization.name }}
                 </a>
               {% endfor %}
               {% for organization in object.member_organizations.all %}
-              <small class="badge badge-light">
+              <small class="badge bg-light">
                 Membre de
                 <a href="{% url 'organization_page' organization.slug %}">
                     {{ organization.name }}
@@ -84,7 +84,7 @@
               </small>
               {% endfor %}
               {% for organization in object.volunteer_organizations.all %}
-              <small class="badge badge-light">
+              <small class="badge bg-light">
                   Membre volontaire de
                   <a href="{% url 'organization_page' organization.slug %}">
                       {{ organization.name }}
@@ -92,7 +92,7 @@
               </small>
               {% endfor %}
               {% for organization in object.active_organizations.all %}
-              <small class="badge badge-light">
+              <small class="badge bg-light">
                   Membre actif de
                   <a href="{% url 'organization_page' organization.slug %}">
                       {{ organization.name }}
@@ -100,7 +100,7 @@
               </small>
               {% endfor %}
               {% for organization in object.admin_organizations.all %}
-              <small class="badge badge-light">
+              <small class="badge bg-light">
                   Administrateur de
                   <a href="{% url 'organization_page' organization.slug %}">
                       {{ organization.name }}
@@ -119,7 +119,7 @@
           <div class="card p-4">
             <div class="row">
               <div class="col-md-6 p-1">
-                <i class="fa fa-phone pr-2"></i>Téléphone
+                <i class="fa fa-phone pe-2"></i>Téléphone
               </div>
               <div class="col-md-6 p-1">
                 {% if object.phone_number %}
@@ -129,7 +129,7 @@
                 {% endif %}
               </div>
               <div class="col-md-6 p-1">
-                <i class="fa fa-envelope pr-2"></i>Adresse mail
+                <i class="fa fa-envelope pe-2"></i>Adresse mail
               </div>
               <div class="col-md-6 p-1">
                 {% if object.email %}
@@ -139,7 +139,7 @@
                 {% endif %}
               </div>
               <div class="col-md-6 p-1">
-                <i class="fa fa-map pr-2"></i>Adresse physique
+                <i class="fa fa-map pe-2"></i>Adresse physique
               </div>
               <div class="col-md-6 p-1">
                 {% if object.street_address %}
@@ -149,7 +149,7 @@
                 {% endif %}
               </div>
               <div class="col-md-6 p-1">
-                  <i class="fa fa-birthday-cake pr-2"></i>Date d'anniversaire
+                  <i class="fa fa-birthday-cake pe-2"></i>Date d'anniversaire
               </div>
               <div class="col-md-6 p-1">
                   <p class="mt-1">
@@ -208,7 +208,7 @@
                             </td>
                             <td>
                             {% if status == "organizer" %}
-                              <span class="badge badge-pill badge-success">Animateur</span>
+                              <span class="badge badge-pill bg-success">Animateur</span>
                             {% else %}
                               {% if object.pk == request.user.pk %}
                                 {% tokenize user=object event=event action='cancel' as tok %}
@@ -263,11 +263,11 @@
                             </td>
                             <td>
                               {% if status == "organizer" %}
-                                  <span class="badge badge-pill badge-success">Animateur</span>
+                                  <span class="badge badge-pill bg-success">Animateur</span>
                                 {% elif status == "absent" %}
-                                  <span class="badge badge-pill badge-secondary">Absent</span>
+                                  <span class="badge badge-pill bg-secondary">Absent</span>
                                 {% elif status == "present" %}
-                                  <span class="badge badge-pill badge-info">A participé</span>
+                                  <span class="badge badge-pill bg-info">A participé</span>
                               {% endif %}
                             </td>
                           </tr>
@@ -334,7 +334,7 @@
                     <td>
                     le {{ fee.date|date:"d F Y" }}
                     {% if fee.membership and fee.date == membership.first_payment %}
-                      <span class="badge badge-pill badge-warning">référence</span></h5>
+                      <span class="badge badge-pill bg-warning">référence</span></h5>
                     {% endif %}
                     </td>
                     <td>

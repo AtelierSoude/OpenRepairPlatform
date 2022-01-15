@@ -8,12 +8,6 @@
   {% endif %}
 {% endblock %}
 
-{% block extra_css %}
-  {% assets "css_create_edit_event" %}
-    <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet"/>
-  {% endassets %}
-{% endblock %}
-
 {% block content %}
   {% url "event:list" as event_list_url %}
   {% if event %}
@@ -40,24 +34,15 @@
       <div id="event-form-app"
            data-event="{{ json_event }}"
            data-activities="{{ json_activities }}"
-           data-places="{{ json_places }}"
+           data-locations="{{ json_locations }}"
            data-conditions="{{ json_conditions }}"
            data-organizers="{{ json_organizers }}">
       </div>
-      {# <form method="post" enctype="multipart/form-data"> #}
-      {#   {% csrf_token %} #}
-      {#   {% bootstrap_form form %} #}
-      {#   <div class="form-group p-2"> #}
-      {#     <button type="submit" class="btn btn-success w-100 p-3">Valider</button> #}
-      {#   </div> #}
-      {# </form> #}
 
     </div>
   </section>
-  <script src="{% static 'js/vue.apps.bundle.js' %}"></script>
-  <link type="text/css" href="{% static 'js/vue.apps.bundle.css' %}" rel="stylesheet"/>
 {% endblock %}
 
-{# {% block extra_js %} #}
-{# {{ form.media }} #}
-{# {% endblock %} #}
+{% block extra_js %}
+  <script src="{% static 'js/vue.apps.bundle.js' %}"></script>
+{% endblock %}

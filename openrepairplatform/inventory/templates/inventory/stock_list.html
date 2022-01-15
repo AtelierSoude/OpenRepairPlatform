@@ -10,15 +10,16 @@
     <div class="container text-center">
       <h2>Stock / inventaire</h2>
       <hr>
-      <span>Retrouvez ici ce que les organisations ont à proposer</span><br>
-      <small>Contactez l'organisation si vous souhaitez acquérir un bien</small>
+      <span>Retrouvez ici le stock visible des organisations inscrites</span><br>
+      <b>Il s'agit d'appareils de seconde main disponibles à la vente ou au don. </b><br>
+      <small> Contactez l'organisation si vous souhaitez acquérir un bien</small>
     </div>
   </div>
   <section class="container">
     <div class="col-md-12 mt-2">
         {% if filter %}
         <div class="text-center w-100 card p-2 mb-2">
-            <form action="" method="get" class="form-inline justify-content-center form-xs">
+            <form action="" method="get" class="un-z-index form-inline justify-content-center form-xs">
                 <label class="">Rechercher par catégorie</label>
                 {% bootstrap_field filter.form.device__category show_label=False %}
                 {{filter.form.media}}

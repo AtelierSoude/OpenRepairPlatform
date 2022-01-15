@@ -1,22 +1,37 @@
 <template>
   <section class="section">
-    <label>Date :</label>
-    <input class="form-control" type="date" :value="data.date" disabled/>
-    <label>Date de publication :</label>
-    <input class="form-control" type="datetime-local" :value="data.publish_at" disabled/>
-    <label>Heure de début :</label>
-    <input class="form-control" type="time" :value="data.starts_at" disabled/>
-    <label>Heure de fin :</label>
-    <input class="form-control" type="time" :value="data.ends_at" disabled/>
+
+    <template v-if="data.recurrent === 'oui'">
+      <label>Date de début :</label>
+      <input class="form-control" type="date" :value="data.date" disabled/>
+      <label>Date de fin :</label>
+      <input class="form-control" type="date" :value="data.end_date" disabled/>
+      <label>Heure de début :</label>
+      <input class="form-control" type="time" :value="data.starts_at" disabled/>
+      <label>Heure de fin :</label>
+      <input class="form-control" type="time" :value="data.ends_at" disabled/>
+      <p class="mt-2"><b>Période avant la publication : {{ data.period_before_publish }} jour(s) avant</b></p>
+    </template>
+
+    <template v-else>
+      <label>Date :</label>
+      <input class="form-control" type="date" :value="data.date" disabled/>
+      <label>Date de publication :</label>
+      <input class="form-control" type="datetime-local" :value="data.publish_at" disabled/>
+      <label>Heure de début :</label>
+      <input class="form-control" type="time" :value="data.starts_at" disabled/>
+      <label>Heure de fin :</label>
+      <input class="form-control" type="time" :value="data.ends_at" disabled/>
+    </template>
 
     <hr/>
 
     <label>Lieux :</label>
-    <section class="mb-4" v-if="data.place">
+    <section class="mb-4" v-if="data.location">
       <div class="card">
-        <h5 class="card-header">{{ data.place.fields.name }}</h5>
+        <h5 class="card-header">{{ data.location.fields.name }}</h5>
         <div class="card-body">
-          <p class="card-text ms-2" v-html="data.place.fields.description"></p>
+          <p class="card-text ms-2" v-html="data.location.fields.description"></p>
         </div>
       </div>
     </section>
@@ -71,10 +86,10 @@
       <label>Conditions :</label>
       <section class="mb-4">
         <div class="card" v-for="condition in data.conditions" :key="condition.pk">
-          <h5 class="card-header">{{ condition.name }}</h5>
+          <h5 class="card-header">{{ condition.fields.name }}</h5>
           <div class="card-body">
-            <p class="card-text ms-2" v-html="condition.description"></p>
-            <b v-if="condition.price">{{ condition.price }} €</b>
+            <p class="card-text ms-2" v-html="condition.fields.description"></p>
+            <b v-if="condition.price">{{ condition.fields.price }} €</b>
           </div>
         </div>
       </section>
@@ -94,30 +109,6 @@
   </section>
 </template>
 
-activity: 9
-allow_stuffs: false
-available_seats: 20
-booking: true
-collaborator: ""
-conditions: []
-created_at: "2021-09-23T08:45:32.941Z"
-date: "2021-10-12"
-description: ""
-ends_at: "19:00:00"
-external: false
-external_url: ""
-is_free: false
-location: 8632
-members_only: true
-needed_organizers: 2
-organization: 1
-organizers: (4) [2497, 2775, 2833, 2844]
-publish_at: "2021-09-13T22:00:00Z"
-published: true
-registered: (3) [106, 3560, 3561]
-slug: "rencontre-benevoles"
-starts_at: "17:00:00"
-
 <script>
 export default {
   name: 'EventStepFour',
@@ -126,7 +117,7 @@ export default {
     dataTwo: Object,
     dataThree: Object,
     activities: Array,
-    places: Array,
+    locations: Array,
     conditions: Array,
     organizers: Array,
   },
@@ -142,7 +133,7 @@ export default {
   mounted () {
     this.data = {...this.dataOne, ...this.dataTwo, ...this.dataThree}
     this.data.activity = this.activities.find(activity => activity.pk === this.data.activity)
-    this.data.place = this.places.find(place => place.pk === this.data.place)
+    this.data.location = this.locations.find(location => location.pk === this.data.location)
     this.data.conditions = this.conditions.filter(condition => this.data.conditions.includes(condition.pk))
     this.data.organizers = this.organizers.filter(organizer => this.data.organizers.includes(organizer.pk))
     console.log(this.data)

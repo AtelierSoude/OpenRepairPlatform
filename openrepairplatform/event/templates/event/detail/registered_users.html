@@ -1,5 +1,5 @@
 {% load app_filters thumbnail initialavatar %}
-    <section class="row pl-4 pr-4 pb-4">
+    <section class="row ps-4 pe-4 pb-4">
     {% for user in users %}
       {% filter_orga queryset=user.memberships organization=event.organization as membership %}
       {% filter_user queryset=event.participations user=user as participation %}
@@ -11,7 +11,7 @@
       <div class="col-md-4 mb-4">
       <div class="p-0 shadow-sm user">
         <div class="card-header d-flex">
-          <div class="d-inline pr-2 float-left">
+          <div class="d-inline pe-2 float-start">
           {% if user.avatar_img %}
               {% thumbnail user.avatar_img "35x35" crop="center" format="PNG" as im %}
                 <img src="{{ im.url }}" class="m-2 rounded-circle"/>
@@ -30,7 +30,7 @@
               <h6 class="card-subtitle mb-2 text-muted">{{ user.email }}</h6>
             </a>
           </div>
-          <div class="ml-auto">
+          <div class="ms-auto">
             <a class="btn btn-sm btn-danger" href="{% url 'event:cancel_reservation' tok_event_cancel %}"><i class="fa fa-trash"></i></a>
           </div>
         </div>
@@ -43,13 +43,13 @@
                 {% if membership %}
                   {% if membership.current_contribution == 0 %}
                   <span class="text-danger" >Pas de cotisation</span>
-                  <span class="badge badge-pill badge-danger" >0€</span>
+                  <span class="badge badge-pill bg-danger" >0€</span>
                   {% elif membership.current_contribution >= event.organization.advised_fee %}
                   <span class="text-success" >A jour </span>
-                  <span class="badge badge-pill badge-success" >{{membership.current_contribution}}€/{{event.organization.advised_fee}}€</span>
+                  <span class="badge badge-pill bg-success" >{{membership.current_contribution}}€/{{event.organization.advised_fee}}€</span>
                   {% else %}
                   <span class="text-warning" >Incomplet</span>
-                  <span class="badge badge-pill badge-warning" >{{membership.current_contribution}}€</span>
+                  <span class="badge badge-pill bg-warning" >{{membership.current_contribution}}€</span>
                   {% endif %}
                 {% else %}
                     Non membre
@@ -71,7 +71,7 @@
                 {% endif %}
                 {% if fees %}
                   {% for fee in fees %}
-                  <span class="badge badge-pill badge-light pr-2 m-2">
+                  <span class="badge badge-pill badge-light pe-2 m-2">
                     {{ fee.amount }}€
                     {{ fee.get_payment_display }}
                     <form class="d-inline" action="{% url 'user:fee_delete' fee.pk %}" method="post">

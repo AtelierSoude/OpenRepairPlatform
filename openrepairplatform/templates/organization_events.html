@@ -12,21 +12,39 @@
     <button onclick="copyToClipboard('#ical')" class="btn btn-light mb-2">
       <i class="far fa-calendar-plus"></i> Copier l'url Ical
     </button>
-      <button class="btn-absolute btn btn-success" id="more-button">
-        <i class="fa fa-plus"></i><i class="fa fa-calendar-alt"></i>  
-        <a class="d-none btn-event pl-1" href="{% url 'event:create' organization.id %}">
-          ajouter un événement
-        </a>        
-        <a class="btn btn-primary btn-reccurent-event d-none btn-absolute" style="bottom:100px" href="{% url 'event:recurrent_create' organization.id %}">
-          <i class="fa fa-plus pr-1"></i>
-          événement récurrent
-        </a>
-      </button>
+    <section class="add-event">
+    <label class="btn-absolute btn btn-success" id="more-button" for="add-event-modal">
+      <i class="fa fa-plus"></i><i class="fa fa-calendar-alt"></i>
+      <span class="d-none btn-event ps-1">
+         ajouter événement(s)
+      </span>
+    </label>
+    <input type="checkbox" class="toggle-modal" id="add-event-modal"/>
+    <div class="modal">
+      <div class="modal-event">
+         <div class="modal-content">
+           <div class="modal-header">
+             <h5 class="modal-title">Création d'un événement</h5>
+             <label for="add-event-modal" class="btn-close" aria-label="Close"></label>
+           </div>
+           <div class="modal-body">
+              <div id="event-form-app" class="text-start"
+                   data-organization="{{ json_organisation }}"
+                   data-activities="{{ json_activities }}"
+                   data-locations="{{ json_locations }}"
+                   data-conditions="{{ json_conditions }}"
+                   data-organizers="{{ json_organizers }}">
+              </div>
+           </div>
+         </div>
+       </div>
+    </div>
+    </section>
     {% endif %}
   </section>
   {% if filter %}
   <div class="card mb-4 text-center">
-    <form action="" method="get" class="form-inline justify-content-center form-xs">
+    <form action="" method="get" class="un-z-index form-inline justify-content-center form-xs">
         {% bootstrap_form filter.form %}
         <a class="btn-secondary">{% bootstrap_button 'filtrer' %}</a>
     </form>
@@ -35,7 +53,7 @@
   <h4 class="text-center mt-4">{{total_events}} dates</h4>
   <section class="box-shadow">
     {% if is_active %}
-      <span class="float-right">Télécharger le résultat :
+      <span class="float-end">Télécharger le résultat :
         <a class="btn btn-success btn-sm" href="{% querystring '_export'='csv' %}">CSV</a>
         <a class="btn btn-success btn-sm" href="{% querystring '_export'='ods' %}">ODS</a>
       </span>
@@ -46,7 +64,6 @@
 
 {% block extra_js %}
 {{filter.form.media}}
-
 <script>
   function copyToClipboard(element) {
     var $temp = $("<input>");
@@ -56,7 +73,6 @@
     $temp.remove();
   }
 </script>
-
 <script>
   $(document).ready(function(){
     $("#h_nav").sticky({topSpacing:125});
@@ -67,15 +83,14 @@
   $(document).ready(function(){
     $( "#more-button" ).hover(
   function() {
-    $( ".btn-event" ).addClass( "d-block" );
+    $( ".btn-event" ).removeClass( "d-none" );
     $( this ).css( "width", "250px" );
-    $( ".btn-reccurent-event" ).addClass( "d-block" ).css( "width", "250px" );
   }, function() {
-    $( ".btn-event" ).removeClass( "d-block" );
+    $( ".btn-event" ).addClass( "d-none" );
     $( this ).css( "width", "63px" );
-    $( ".btn-reccurent-event" ).removeClass( "d-block" ).css( "width", "0px" );
   }
   );
   });
 </script>
+<script src="{% static 'js/vue.apps.bundle.js' %}"></script>
 {% endblock %}

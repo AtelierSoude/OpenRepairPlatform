@@ -20,13 +20,13 @@
 {% elif column == "membership_status" %}
   {% if record.current_contribution == 0 %}
   <span class="text-danger" >Pas de cotisation</span>
-  <span class="badge badge-pill badge-danger" >0€</span>
+  <span class="badge badge-pill bg-danger" >0€</span>
   {% elif record.current_contribution >= record.organization.advised_fee %}
   <span class="text-success" >A jour </span>
-  <span class="badge badge-pill badge-success" >{{record.current_contribution}}€/{{record.organization.advised_fee}}€</span>
+  <span class="badge badge-pill bg-success" >{{record.current_contribution}}€/{{record.organization.advised_fee}}€</span>
   {% else %}
   <span class="text-warning" >Incomplet</span>
-  <span class="badge badge-pill badge-warning" >{{record.current_contribution}}€</span>
+  <span class="badge badge-pill bg-warning" >{{record.current_contribution}}€</span>
   {% endif %}
 
 {% elif column == "member_update" %}
@@ -39,7 +39,7 @@
     {% include "user/organization/modal_more_info.html" with object=organization anonymous_user=record.user form=add_member_form|initial:record.user %}
 
 {% elif column == "date" %}
-    <div class="row border-secondary border text-center bg-white ml-2 mr-2 calendar">
+    <div class="row border-secondary border text-center bg-white ms-2 me-2 calendar">
       <small class="col-12 bg-secondary">
         {{ record.date|date:"N"|upper }} {{ record.date|date:"Y"|upper }}
       </small>
@@ -66,7 +66,7 @@
           </span>
       {% endif %}
       {% for orga in organizers %}
-        <div class="position-relative float-left mini d-none d-md-block d-lg-block">
+        <div class="position-relative float-start mini d-none d-md-block d-lg-block">
         {% if orga.avatar_img %}
           {% thumbnail orga.avatar_img "25x25" crop="center" format="PNG" as im %}
             <img src="{{ im.url }}" class="rounded-circle"/>
@@ -86,7 +86,7 @@
     Illimité
   {% else %}
     <span
-    class=" float-left
+    class=" float-start
       {% if record.remaining_seats <= 0 %}
         text-danger
       {% elif record.remaining_seats == record.available_seats %}

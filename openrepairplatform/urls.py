@@ -10,6 +10,7 @@ from openrepairplatform.inventory.views import OrganizationStockView
 urlpatterns = [
     # View test vuejs
     path("", views.HomeView.as_view(), name="homepage"),
+    path("where/", views.LocaliseRedirect.as_view(), name="where"),
     path("user/", include("openrepairplatform.user.urls", namespace="user")),
     path("avatar/", include("initial_avatars.urls")),
     path("admin/", admin.site.urls),

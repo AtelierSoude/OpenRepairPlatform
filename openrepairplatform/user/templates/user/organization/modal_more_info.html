@@ -47,14 +47,14 @@
           <p>
             <b>Note:</b>
             La contribution minimale pour cette organisation est de
-            <span class="badge badge-pill badge-secondary">{{ object.min_fee }}€</span>
+            <span class="badge badge-pill bg-secondary">{{ object.min_fee }}€</span>
             et la contribution totale conseillée est de
-            <span class="badge badge-pill badge-success">{{ object.advised_fee }}€</span>
+            <span class="badge badge-pill bg-success">{{ object.advised_fee }}€</span>
             {% if anonymous_user and anonymous_user.first_name %}
               <br>
               {% filter_orga queryset=anonymous_user.memberships organization=object as membership %}
               {% if membership %}
-                {{ anonymous_user }} a payé <span class="badge badge-pill badge-primary">{{ membership.current_contribution }}€</span> depuis le {{ membership.first_payment|date:"d F Y" }}
+                {{ anonymous_user }} a payé <span class="badge badge-pill bg-primary">{{ membership.current_contribution }}€</span> depuis le {{ membership.first_payment|date:"d F Y" }}
               {% else %}
                 {{ anonymous_user }} n'a pas encore contribué pour <b>{{ object }}</b>
               {% endif %}

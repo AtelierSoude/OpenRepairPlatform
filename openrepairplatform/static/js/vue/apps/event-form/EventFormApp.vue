@@ -27,9 +27,9 @@
       </ul>
       <section>
         <EventStepOne @next="getDataOne" v-if="currentStep === 1" :initials="dataOne"/>
-        <EventStepTwo @next="getDataTwo" @previous="previousStep" v-if="currentStep === 2" :initials="dataTwo" :activities="activities" :places="places"/>
+        <EventStepTwo @next="getDataTwo" @previous="previousStep" v-if="currentStep === 2" :initials="dataTwo" :activities="activities" :locations="locations"/>
         <EventStepThree @next="getDataThree" @previous="previousStep" v-if="currentStep === 3" :initials="dataThree" :orgaConditions="conditions" :orgaOrganizers="organizers"/>
-        <EventStepFour @previous="previousStep" v-if="currentStep === 4" :dataOne="dataOne" :dataTwo="dataTwo" :dataThree="dataThree" :activities="activities" :places="places" :conditions="conditions" :organizers="organizers" @submit="submit"/>
+        <EventStepFour @previous="previousStep" v-if="currentStep === 4" :dataOne="dataOne" :dataTwo="dataTwo" :dataThree="dataThree" :activities="activities" :locations="locations" :conditions="conditions" :organizers="organizers" @submit="submit"/>
       </section>
     </section>
 </template>
@@ -61,7 +61,8 @@ export default {
         ends_at: "",
       },
       dataTwo: {
-        place: null,
+        collaborator: "",
+        location: null,
         activity: null,
         description: "",
         allow_stuffs: false,
@@ -80,7 +81,7 @@ export default {
       currentStep: 0,
       validatedSteps: [],
       activities: [],
-      places: [],
+      locations: [],
       conditions: [],
       organizers: [],
       successMessage: "",
@@ -88,13 +89,16 @@ export default {
   },
   mounted () {
     const target = this.$el.parentElement
-
-    const event = JSON.parse(target.dataset.event)[0]
+    let event = null
+    if (target.dataset.event) {
+      event = JSON.parse(target.dataset.event)[0]
+    } else {
+      this.organization = JSON.parse(target.dataset.organization)[0]
+    }
     const activities = JSON.parse(target.dataset.activities)
-    const places = JSON.parse(target.dataset.places)
+    const locations = JSON.parse(target.dataset.locations)
     const conditions = JSON.parse(target.dataset.conditions)
     const organizers = JSON.parse(target.dataset.organizers)
-
     if (event) {
       this.dataOne.updated = true
       this.dataOne.recurrent = "non"
@@ -104,8 +108,9 @@ export default {
       this.dataOne.starts_at = event.fields.starts_at
       this.dataOne.ends_at = event.fields.ends_at
       // Data two
+      this.dataTwo.collaborator = event.fields.collaborator
       this.dataTwo.activity = event.fields.activity
-      this.dataTwo.place = event.fields.location
+      this.dataTwo.location = event.fields.location
       this.dataTwo.description = event.fields.description
       this.dataTwo.allow_stuffs = event.fields.allow_stuffs
       // Data three
@@ -124,7 +129,7 @@ export default {
     }
 
     this.activities = activities
-    this.places = places
+    this.locations = locations
     this.conditions = conditions
     this.organizers = organizers
 
@@ -157,6 +162,9 @@ export default {
     },
     submit () {
       const data = {...this.dataOne, ...this.dataTwo, ...this.dataThree}
+      delete data.recurrent
+      delete data.updated
+      data["organization"] = this.organization.pk
       const url = this.event ? `/api/event/${this.event.pk}/` : "/api/event/"
       if (this.event) {
         put(url, data).then(res => {
@@ -166,7 +174,7 @@ export default {
         })
       } else {
         post(url, data).then(res => {
-          console.log(res)
+          window.location = `/${this.organization.fields.slug}/events/`
         }).catch(error => {
           console.log(error)
         })

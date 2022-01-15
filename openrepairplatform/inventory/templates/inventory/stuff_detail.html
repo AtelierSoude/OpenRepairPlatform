@@ -38,7 +38,7 @@
             </span>
             <div class="card col-md-12 mb-2 p-3">
               <span>
-                <b class="pr-2">Categorie</b> 
+                <b class="pe-2">Categorie</b> 
                 {% for parent in stuff.device.category.get_ancestors %}
                   {{ parent }} > 
                 {% endfor %}
@@ -47,14 +47,14 @@
             </div>
             <div class="card col-md-12 mb-2 p-3">
               <span>
-                <b class="pr-2">Visibilité</b> 
+                <b class="pe-2">Visibilité</b> 
                 {% if stuff.is_visible %}
                   Visibilité publique
                 {% else %}
                   Non visible du public
                 {% endif %}
                 {% if can_edit %}
-                <a class="btn btn-default rounded-circle btn-sm bs-modal float-right" data-form-url="{% url 'inventory:update_visibility_stuff' stuff.pk %}">
+                <a class="btn btn-default rounded-circle btn-sm bs-modal float-end" data-form-url="{% url 'inventory:update_visibility_stuff' stuff.pk %}">
                   <i class="fa fa-pencil-alt"></i>
                 </a>
               {% endif %}
@@ -62,7 +62,7 @@
             </div>
             <div class="card col-md-12 mb-2 p-3">
               <span>
-                <b class="pr-2">Propriétaire</b> 
+                <b class="pe-2">Propriétaire</b> 
                 {% if can_edit or stuff.organization_owner %}
                   {% if stuff.owner.picture %}
                     {% thumbnail stuff.owner.picture "30x30" crop="left" format="PNG" as im %}
@@ -77,7 +77,7 @@
                     Utilisateur non connu sur ce site
                   {% endif %}
                   {% if can_edit %}
-                    <a class="btn btn-default rounded-circle btn-sm bs-modal float-right" data-form-url="{% url 'inventory:update_owner_stuff' stuff.pk %}">
+                    <a class="btn btn-default rounded-circle btn-sm bs-modal float-end" data-form-url="{% url 'inventory:update_owner_stuff' stuff.pk %}">
                       <i class="fa fa-pencil-alt"></i>
                     </a>
                   {% endif %}
@@ -88,7 +88,7 @@
             </div>
             <div class="card col-md-12 mb-2 p-3">
               <span>
-              <b class="pr-2">Localisation</b> 
+              <b class="pe-2">Localisation</b> 
               {% if stuff.place %}
                 <a href="{{stuff.place.get_absolute_url}}">
                     {{stuff.place}}
@@ -97,7 +97,7 @@
                 Chez l'utilisateur
               {% endif %}
               {% if can_edit %}
-                <a class="btn btn-default rounded-circle btn-sm bs-modal float-right" data-form-url="{% url 'inventory:update_place_stuff' stuff.pk %}">
+                <a class="btn btn-default rounded-circle btn-sm bs-modal float-end" data-form-url="{% url 'inventory:update_place_stuff' stuff.pk %}">
                   <i class="fa fa-pencil-alt"></i>
                 </a>
               {% endif %}
@@ -105,10 +105,10 @@
             </div>
             <div class="card col-md-12 mb-2 p-3">
               <span>
-                <b class="pr-2">Etat</b> 
+                <b class="pe-2">Etat</b> 
                 {% include "inventory/stuff_state_display.html" with stuff_state=stuff.get_state_display %}
                 {% if can_edit %}
-                  <a class="btn btn-default rounded-circle btn-sm bs-modal float-right" data-form-url="{% url 'inventory:update_state_stuff' stuff.pk %}">
+                  <a class="btn btn-default rounded-circle btn-sm bs-modal float-end" data-form-url="{% url 'inventory:update_state_stuff' stuff.pk %}">
                     <i class="fa fa-pencil-alt"></i>
                   </a>
                 {% endif %}

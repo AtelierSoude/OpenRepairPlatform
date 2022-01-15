@@ -14,7 +14,12 @@
   </section>
 {% endblock %}
 
+{{ places|json_script:"places" }}
+
 {% block extra_js %}
+  <script>
+    const places = JSON.parse(document.getElementById('places').textContent);
+  </script>
   {% assets "js_places" %}
     <script src="{{ ASSET_URL }}"></script>
   {% endassets %}

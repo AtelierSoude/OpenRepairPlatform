@@ -1,8 +1,12 @@
+import requests
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import UserPassesTestMixin
+from django.contrib.gis.geos import Point
+from django.contrib.gis.measure import D
 from django.core import signing
 from django.http import HttpResponseRedirect
-from django.urls import Resolver404, resolve
+from django.urls import Resolver404, resolve, reverse
 from django.shortcuts import get_object_or_404
 from django.views.generic import UpdateView, RedirectView, DeleteView
 
@@ -161,3 +165,66 @@ class DeleteMembershipMixin(HasActivePermissionMixin, DeleteView):
 
     def get_success_url(self, *args, **kwargs):
         return self.request.META["HTTP_REFERER"]
+
+
+class LocationRedirectMixin:
+    def get(self, request, *args, **kwargs):
+        postcode = request.GET.get("postcode", False)
+        if postcode:
+            request.session["postcode"] = postcode
+            request.session["location"] = None
+            point = requests.get(
+                "https://api-adresse.data.gouv.fr/search/"
+                f"?q={postcode}&type=municipality"
+            )
+            if point.json()['features']:
+                request.session["location"] = (
+                    point.json()['features'][0]['geometry']['coordinates']
+                )
+
+        if not request.session.get("location", False):
+            if request.session.get("postcode", False):
+                messages.info(request, "Vous devez renseigner un code postal valide.")
+            else:
+                messages.info(request, "Vous devez renseigner un code postal.")
+            return HttpResponseRedirect(reverse("homepage"))
+        else:
+            return super().get(request, *args, **kwargs)
+
+    def get_distance(self):
+        if self.request.GET.get("distance", False):
+            self.request.session["distance"] = int(self.request.GET["distance"])
+        distance = (
+            self.request.session.get("distance")
+            if self.request.session.get("distance", False)
+            else settings.KM_DISTANCE
+        )
+        return distance
+
+    def filter_queryset_location(self, queryset):
+        location = Point(self.request.session["location"])
+        return queryset.filter(
+            location__location__dwithin=(
+               location, D(km=self.get_distance())
+            )
+        )
+
+
+class LocationOrganization(LocationRedirectMixin):
+    def filter_queryset_location(self, queryset):
+        location = Point(self.request.session["location"])
+        return queryset.filter(
+            places__location__dwithin=(
+               location, D(km=self.get_distance())
+            )
+        ).distinct()
+
+
+class LocationActivity(LocationRedirectMixin):
+    def filter_queryset_location(self, queryset):
+        location = Point(self.request.session["location"])
+        return queryset.filter(
+            organization__places__location__dwithin=(
+               location, D(km=self.get_distance())
+            )
+        ).distinct()

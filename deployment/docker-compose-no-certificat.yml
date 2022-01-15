@@ -2,7 +2,7 @@ version: '3'
 
 services:
   db:
-    image: postgres:11
+    image: postgis/postgis
     container_name: postgres
     env_file:
       - ../openrepairplatform/.env

@@ -1,6 +1,6 @@
 FROM python:3.9-slim-buster
 
-RUN apt update && apt upgrade -y && apt install -y --force-yes python3-pip libpq-dev locales locales-all cron make nodejs npm sassc
+RUN apt update && apt upgrade -y && apt install -y --force-yes python3-pip libpq-dev locales locales-all cron make nodejs npm sassc binutils libproj-dev gdal-bin
 RUN pip3 install uwsgi
 RUN ln /usr/bin/sassc /usr/bin/sass
 

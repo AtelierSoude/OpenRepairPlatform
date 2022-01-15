@@ -19,8 +19,8 @@ ASSETS_ROOT = STATIC_ROOT
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.getenv("POSTGRES_DB_NAME"),
+        "ENGINE": "django.contrib.gis.db.backends.postgis",
+        "NAME": os.getenv("POSTGRES_DBNAME"),
         "USER": os.getenv("POSTGRES_USER"),
         "HOST": "db",
         "PASSWORD": os.getenv("POSTGRES_PASSWORD"),

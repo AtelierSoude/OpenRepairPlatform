@@ -333,14 +333,21 @@ input.toggle-modal:checked ~ div .menu-localisation input {
 }
 .navbar-brand.avatar{
   margin: 0px !important;
+  .nav-link{
+    color:#fff;
+  }
 }
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
   border-bottom: 3px solid $link;
   background: inherit !important;
-  color: #484848;
+  color: $primary;
+  border-radius: 0px !important;
 }
 .nav-link {
-  color: #fff;
+  color: #484848;
+  :hover{
+    color:$primary;
+  }
 }
 
 /* buttons */ 

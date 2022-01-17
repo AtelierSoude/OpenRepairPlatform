@@ -50,7 +50,7 @@
       <a class="nav-link me-2 dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <i class=""></i>
       </a>
-      <div class="dropdown-menu " aria-labelledby="navbarDropdownMenuLink">
+      <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
         <a class="dropdown-item" href="{{ user.get_absolute_url }}"> voir profil </a>
         <div class="dropdown-divider"></div>
         <a class="dropdown-item" href="{{ user.get_absolute_url }}"> mes rendez-vous</a>
@@ -68,6 +68,11 @@
         </a>
       </div>
     </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon text-secondary">
+        <i class="fa fa-bars text-secondary" style="font-size: 30px;" id="toggler"></i>
+      </span>
+    </button>
     {% endif %}
   </div>
 </nav>

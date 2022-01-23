@@ -30,7 +30,7 @@ services:
       - openrepairplatform-net
 
   nginx:
-    image: nginx
+    image: nginx:latest
     container_name: openrepairplatform_nginx
     ports:
       - "80:80"

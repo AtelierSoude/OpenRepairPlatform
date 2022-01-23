@@ -23,8 +23,8 @@ class Place(models.Model):
     category = models.CharField(max_length=100, default="Other")
     slug = models.SlugField(default="", blank=True)
     address = models.CharField(max_length=255, verbose_name=_("street address"))
-    longitude = models.FloatField()
     latitude = models.FloatField()
+    longitude = models.FloatField()
     picture = models.ImageField(
         upload_to="places/",
         blank=True,

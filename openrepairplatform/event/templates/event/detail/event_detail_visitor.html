@@ -309,7 +309,7 @@
                 </li>
                 {% endfor %}
               {% endif %}
-              {% if booking == True or external == True %}
+              {% if event.booking == True or event.external == True %}
                 <li class="align-middle mt-1">
                   <i class="far fa-check-circle fa-1x text-success"></i> 
                   <span>Un mail de confirmation contenant un lien d'annulation vous serez envoyé</span>

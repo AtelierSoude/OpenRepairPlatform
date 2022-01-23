@@ -118,11 +118,10 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         return "{0} {1}".format(self.first_name, self.last_name)
 
     @property
-    def active_organizations(self):
+    def groups_organizations(self):
         organizations = (
             self.active_organizations.all()
             .union(self.volunteer_organizations.all(), self.admin_organizations.all())
-            .prefetch_related("organization")
         )
         return organizations
 
@@ -219,6 +218,12 @@ class Organization(models.Model):
     def actives_or_more(self):
         return self.actives.union(self.admins.all())
 
+    @property
+    def organizers(self):
+        return self.actives.all().union(
+            self.volunteers.all(), self.admins.all()
+        )
+
     def __str__(self):
         return self.name
 
@@ -234,7 +239,7 @@ class Fee(models.Model):
         (PAYMENT_BANK, _("Online")),
         (PAYMENT_BANK_CHECK, _("Chèque")),
         (PAYMENT_CB, _("CB")),
-        (PAYMENT_LOCAL_CASH, _("Monnaie locale")),
+        (PAYMENT_LOCAL_CASH, _("Monnaie Locale")),
     )
     payment = models.CharField(
         max_length=1, choices=PAYMENTS, blank=True, default=PAYMENT_CASH

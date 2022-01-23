@@ -36,12 +36,13 @@ services:
     env_file:
       - ../openrepairplatform/.env
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx/templates:/etc/nginx/templates
       - ./nginx/nginx-snippet.conf:/etc/nginx/snippets/ssl-params.conf
       - ./certbot/www:/var/www/certbot/:ro
       - ./certbot/conf/:/etc/nginx/ssl/:ro
       - ./openrepairplatform_data/openrepairplatform_static:/srv/static:ro
       - ./openrepairplatform_data/openrepairplatform_media:/srv/media:ro
+      - certs:/etc/letsencrypt
     # command: openssl dhparam -out /etc/ssl/certsdhparam.pem 4096
     networks:
       - openrepairplatform-net
@@ -63,6 +64,8 @@ services:
     env_file:
       - ../openrepairplatform/.env
     restart: unless-stopped
+    networks:
+      - openrepairplatform-net
 
 networks:
   openrepairplatform-net:

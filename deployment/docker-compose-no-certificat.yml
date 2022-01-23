@@ -30,7 +30,7 @@ services:
       - openrepairplatform-net
 
   nginx:
-    image: nginx
+    image: nginx:latest
     container_name: openrepairplatform_nginx
     ports:
       - "80:80"
@@ -39,7 +39,7 @@ services:
     volumes:
       - ./openrepairplatform_data/openrepairplatform_static:/srv/static:ro
       - ./openrepairplatform_data/openrepairplatform_media:/srv/media:ro
-      - ./nginx/nginx-no-certificat.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx/templates-no-certificat:/etc/nginx/templates
     networks:
       - openrepairplatform-net
     depends_on:

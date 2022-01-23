@@ -10,7 +10,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    os.getenv("DOMAIN_NAME"),
+    os.getenv("DOMAINS"),
 ]
 
 STATIC_ROOT = "/srv/static/"

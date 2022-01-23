@@ -6,13 +6,13 @@ server {
     listen 80;
     listen [::]:80 default_server;
     server_tokens off; #hide nginx version (security best practice)
-    server_name ${DOMAINE_NAME};
+    server_name ${DOMAINS};
     add_header  Strict-Transport-Security "max-age=31536000";
 
     
     location ~ /\.well-known/acme-challenge {
         allow all;
-        root /var/www/letsencrypt;
+        root /var/www/certbot;
     }
 
     # Deny access to . files
@@ -36,8 +36,8 @@ server {
     access_log  /dev/stdout;
     error_log   /dev/stderr;
 
-    ssl_certificate /etc/letsencrypt/live/reparons.org/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/reparons.org/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/${DOMAINS}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/${DOMAINS}/privkey.pem;
 
     location /static/ {
         alias /srv/static/;

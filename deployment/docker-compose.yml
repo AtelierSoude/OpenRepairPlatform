@@ -5,7 +5,7 @@ services:
     image: postgres:11
     container_name: postgres
     env_file:
-      - .env
+      - ../openrepairplatform/.env
     volumes:
       - ./openrepairplatform_data/postgres_data:/var/lib/postgresql/data
     networks:
@@ -18,7 +18,7 @@ services:
     image: openrepairplatform_python
     container_name: openrepairplatform_python
     env_file:
-      - .env
+      - ../openrepairplatform/.env
     volumes:
       - ./openrepairplatform_data/openrepairplatform_static:/srv/static
       - ./openrepairplatform_data/openrepairplatform_media:/srv/media
@@ -28,25 +28,47 @@ services:
       - openrepairplatform-net
 
   nginx:
-    build:
-      context: ../
-      dockerfile: deployment/nginx/Dockerfile
-    image: openrepairplatform_nginx
+    image: nginx:latest
     container_name: openrepairplatform_nginx
     ports:
       - 80:80
       - 443:443
     env_file:
-      - .env
+      - ../openrepairplatform/.env
     volumes:
+      - ./nginx/templates:/etc/nginx/templates
+      - ./nginx/nginx-snippet.conf:/etc/nginx/snippets/ssl-params.conf
+      - ./certbot/www:/var/www/certbot/:ro
+      - ./certbot/conf/:/etc/nginx/ssl/:ro
       - ./openrepairplatform_data/openrepairplatform_static:/srv/static:ro
       - ./openrepairplatform_data/openrepairplatform_media:/srv/media:ro
-      - ./openrepairplatform_data/openrepairplatform_letsencrypt:/etc/letsencrypt/:rw
+      - certs:/etc/letsencrypt
+    # command: openssl dhparam -out /etc/ssl/certsdhparam.pem 4096
     networks:
       - openrepairplatform-net
     depends_on:
       - django 
+    restart: unless-stopped
+
+  certbot:
+    image: gordonchan/auto-letsencrypt
+    links:
+    - nginx
+    volumes: 
+      - ./certbot/www/:/var/www/certbot/:rw 
+      - ./certbot/conf/:/etc/lestencrypt/:rw 
+      - /var/log/letsencrypt/:/var/log/letsencrypt
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/letsencrypt:/var/lib/letsencrypt
+      - certs:/etc/letsencrypt
+    env_file:
+      - ../openrepairplatform/.env
+    restart: unless-stopped
+    networks:
+      - openrepairplatform-net
 
 networks:
   openrepairplatform-net:
 
+volumes:
+  certs: 

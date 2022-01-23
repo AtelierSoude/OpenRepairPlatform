@@ -284,18 +284,18 @@
               que quelqu'un d'autre aurait pu prendre. 
             </p>
             {% else %}
-            {% if booking == True or external == True %}
-              <b>Avant de réserver, prenez connaissance de ces informations : </b>
-            {% else %}
-              <b>C'est un événement sans réservation. 
-                {% if event.external_url %}
-                <a class="" target="_blank" href="{{event.external_url}}"> Plus d'information ici.</a>
-                {% endif %}
-                {% if event.conditions.all or event.members_only %} 
-                  Prenez connaissance de ces informations : 
-                {% endif %}
-              </b>
-            {% endif %}
+              {% if event.booking == True or event.external == True %}
+                <b>Avant de réserver, prenez connaissance de ces informations : </b>
+              {% else %}
+                <b>C'est un événement sans réservation. 
+                  {% if event.external_url %}
+                  <a class="" target="_blank" href="{{event.external_url}}"> Plus d'information ici.</a>
+                  {% endif %}
+                  {% if event.conditions.all or event.members_only %} 
+                    Prenez connaissance de ces informations : 
+                  {% endif %}
+                </b>
+              {% endif %}
             <ul class="list-unstyled">
               {% if event.conditions %}
                 {% for condition in event.conditions.all %}

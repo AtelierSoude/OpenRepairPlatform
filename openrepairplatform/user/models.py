@@ -118,11 +118,10 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         return "{0} {1}".format(self.first_name, self.last_name)
 
     @property
-    def active_organizations(self):
+    def groups_organizations(self):
         organizations = (
             self.active_organizations.all()
             .union(self.volunteer_organizations.all(), self.admin_organizations.all())
-            .prefetch_related("organization")
         )
         return organizations
 

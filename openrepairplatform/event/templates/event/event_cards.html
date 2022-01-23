@@ -76,7 +76,7 @@
               <i class="fa fa-map-marker-alt text-success"></i>
               {{event.location.name}}
             </span>
-            {% if request.user in active_organizations %}
+            {% if event.organization in request.user.groups_organizations %}
               <div class="mini-organizers ps-2 pt-1">
                 {% for orga in organizers %}
                 <div class="position-relative float-start mini">

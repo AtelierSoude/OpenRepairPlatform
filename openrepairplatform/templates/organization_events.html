@@ -12,12 +12,16 @@
     <button onclick="copyToClipboard('#ical')" class="btn btn-light mb-2">
       <i class="far fa-calendar-plus"></i> Copier l'url Ical
     </button>
-      <button class="btn-absolute btn btn-success" id="more-button">
-        <i class="fa fa-plus"></i><i class="fa fa-calendar-alt"></i>  
-        <a class="d-none btn-event ps-1" href="{% url 'event:create' organization.id %}">
-           ajouter événement(s)
-        </a>        
-      </button>
+    <button class="btn-absolute btn btn-success" id="more-button">
+      <i class="fa fa-plus"></i><i class="fa fa-calendar-alt"></i>  
+      <a class="d-none btn-event pl-1" href="{% url 'event:create' organization.id %}">
+        ajouter un événement
+      </a>        
+      <a class="btn btn-primary btn-reccurent-event d-none btn-absolute" style="bottom:100px" href="{% url 'event:recurrent_create' organization.id %}">
+        <i class="fa fa-plus pr-1"></i>
+        événement récurrent
+      </a>
+    </button>
     {% endif %}
   </section>
   {% if filter %}
@@ -63,9 +67,11 @@
   function() {
     $( ".btn-event" ).removeClass( "d-none" );
     $( this ).css( "width", "250px" );
+    $( ".btn-reccurent-event" ).removeClass("d-none").addClass( "d-block" ).css( "width", "250px" );
   }, function() {
     $( ".btn-event" ).addClass( "d-none" );
     $( this ).css( "width", "63px" );
+    $( ".btn-reccurent-event" ).addClass("d-none").removeClass( "d-block" ).css( "width", "0px" );
   }
   );
   });

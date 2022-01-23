@@ -52,49 +52,56 @@
   <script src="{{ ASSET_URL }}"></script>
 </head>
 
+
 <body class="bg-light">
-{% include "menu.html" %}
-<div class="main-container">
-<div class="container-fluid">
-  {% for message in messages %}
-    <div class="alert alert-{{ message.level_tag }} alert-dismissible fade show mb-0" role="alert">
-      {{ message }}
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
+
+  {% block menu %}
+    {% include "menu.html" %}
+  {% endblock menu %}
+  
+  {% block left-menu %}
+    {% include "left-menu.html" %}
+  {% endblock left-menu %}
+  
+  <div class="main-container">
+    <div class="container-fluid">
+      {% for message in messages %}
+        <div class="alert alert-{{ message.level_tag }} alert-dismissible fade show mb-0" role="alert">
+          {{ message }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      {% endfor %}
     </div>
-  {% endfor %}
-</div>
-
-<main class="content-page">
-  {% block content %}
+    <main class="content-page">
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+  
+  {% block extra_js %}
+  <script>
+      $(document).ready(function(){
+        $(".jumbotron").sticky({topSpacing:0});
+      });
+  </script>
+  <script>
+    jQuery(document).ready(function(){
+      jQuery("#toggler").click(function() {
+        if (jQuery(this).hasClass("fa-times-circle")){
+          jQuery(this).addClass("fa-bars");
+          jQuery(this).removeClass("fa-times-circle");
+          jQuery(".header").removeClass("position-fixed").removeClass("w-100");
+        }
+        else {
+          jQuery(".header").addClass("position-fixed").addClass("w-100");
+          jQuery(this).addClass("fa-times-circle");
+          jQuery(this).removeClass("fa-bars");
+        }
+      });
+    });
+  </script>
   {% endblock %}
-</main>
-</div>
-
-{% block extra_js %}
-<script>
-    $(document).ready(function(){
-      $(".jumbotron").sticky({topSpacing:0});
-    });
-</script>
-<script>
-  jQuery(document).ready(function(){
-    jQuery("#toggler").click(function() {
-      if (jQuery(this).hasClass("fa-times-circle")){
-        jQuery(this).addClass("fa-bars");
-        jQuery(this).removeClass("fa-times-circle");
-        jQuery(".header").removeClass("position-fixed").removeClass("w-100");
-      }
-      else {
-        jQuery(".header").addClass("position-fixed").addClass("w-100");
-        jQuery(this).addClass("fa-times-circle");
-        jQuery(this).removeClass("fa-bars");
-      } 
-    });
-  });
-</script>
-{% endblock %}
-{% endassets %}
-</body>
-</html>
+  {% endassets %}
+  </body>
+  </html>

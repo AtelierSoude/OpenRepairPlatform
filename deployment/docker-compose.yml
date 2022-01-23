@@ -42,7 +42,7 @@ services:
       - ./certbot/conf/:/etc/nginx/ssl/:ro
       - ./openrepairplatform_data/openrepairplatform_static:/srv/static:ro
       - ./openrepairplatform_data/openrepairplatform_media:/srv/media:ro
-    command: openssl dhparam -out /etc/ssl/certsdhparam.pem 4096
+    # command: openssl dhparam -out /etc/ssl/certsdhparam.pem 4096
     networks:
       - openrepairplatform-net
     depends_on:

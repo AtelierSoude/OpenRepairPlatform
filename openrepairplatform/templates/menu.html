@@ -3,7 +3,7 @@
 {% load static %}
 
 <nav class="header nav-header navbar navbar-expand-lg" style="width:100%; position:fixed">
-  <a href="{% url "homepage" %}" class="navbar-brand float-start d-block d-sm-none" style="width:50px; z-index: 150;"> 
+  <a href="{% url "homepage" %}" class="navbar-brand me-0 float-start d-block d-sm-none" style="width:50px; z-index: 150;"> 
     <img src="{% static 'img/logo-simple.png' %}" class="brand-logo w-100">
   </a>
   <a href="{% url "homepage" %}" class="brand-logo d-none d-sm-block">
@@ -11,12 +11,13 @@
   </a>
   <label for="current-localisation">
     <input type="checkbox" id="current-localisation" class="toggle-modal"/>
-    <div class="d-flex align-items-end">
-      <form class="mr-2 menu-localisation" action="{% url 'where' %}" method="get">
+    <div class="d-flex align-items-center">
+      <form class="menu-localisation me-2" action="{% url 'where' %}" method="get">
         {% csrf_token %}
         <input type="text" pattern="[0-9]*" value="{{ request.session.postcode }}" required class="form-control" placeholder="Code postal" name="postcode"/>
       </form>
-      <a><i class="fas fa-map-marked-alt fa-3x text-secondary"></i></a>
+      <a title="Cliquez pour modifier la localité" class="d-flex align-items-end"><i class="fas fa-map-marked-alt fa-2x text-secondary"></i>
+      <span class="ps-2 text-success fw-bold">{{ request.session.postcode }}</span></a>
     </div>
   </label>
   <div class="collapse navbar-collapse bg-primary" style="width:100%">
@@ -49,7 +50,7 @@
       <a class="nav-link me-2 dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <i class=""></i>
       </a>
-      <div class="dropdown-menu " aria-labelledby="navbarDropdownMenuLink">
+      <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
         <a class="dropdown-item" href="{{ user.get_absolute_url }}"> voir profil </a>
         <div class="dropdown-divider"></div>
         <a class="dropdown-item" href="{{ user.get_absolute_url }}"> mes rendez-vous</a>
@@ -67,6 +68,11 @@
         </a>
       </div>
     </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon text-secondary">
+        <i class="fa fa-bars text-secondary" style="font-size: 30px;" id="toggler"></i>
+      </span>
+    </button>
     {% endif %}
   </div>
 </nav>

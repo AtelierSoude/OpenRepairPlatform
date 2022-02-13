@@ -68,7 +68,7 @@ class MoreInfoCustomUserForm(forms.ModelForm):
             (2, "Online"),
             (3, "Chèque"),
             (4, "CB"),
-            (5, "Gonettes"),
+            (5, "Monnaie locale"),
         ],
         label="Type de paiement",
     )

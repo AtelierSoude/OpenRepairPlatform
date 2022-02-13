@@ -22,6 +22,13 @@
         {% if request.user in organizers %}
           <span class="bg-success badge-pill badge">J'anime</span><br>
         {% endif %}
+        {% if booking == False %}
+          {% if external == True %}
+            <span class="text-success">Réservation externe</span>
+          {% else %}
+            <span class="text-success">Sans réservation</span>
+          {% endif %}
+        {% endif %}
         {% if event.is_free %}
           <span class="text-success">Places non limitées</span>
         {% elif event.remaining_seats <= 0 %}
@@ -38,7 +45,7 @@
             {% endif %}
             ">
           <i class="fas fa-users"></i>
-          {{event.remaining_seats}}/{{event.available_seats}} places
+          {{event.remaining_seats}}/{{event.available_seats}} places disponibles
           </span>
         {% endif %}
       </div>
@@ -59,9 +66,9 @@
             <div>
               {% if minimal != True %}
                 <h5 class="mb-0">{{ event.activity.category.name }}</h5>
-                <h4 class="mb-0 font-weight-bold">{{ event.activity.name|truncatechars:40 }}</h4>
+                <h4 class="mb-0 fw-bold">{{ event.activity.name|truncatechars:40 }}</h4>
                 {% if event.collaborator %}
-                  <span class="text-primary mb-1">en collaboration avec <span class="font-weight-bold">{{ event.collaborator }}</span></span>
+                  <span class="text-primary mb-1">en collaboration avec <span class="fw-bold">{{ event.collaborator }}</span></span>
                 {% endif %}
               {% endif %}
             </div>
@@ -69,7 +76,7 @@
               <i class="fa fa-map-marker-alt text-success"></i>
               {{event.location.name}}
             </span>
-            {% if request.user in active_organizations %}
+            {% if event.organization in request.user.groups_organizations %}
               <div class="mini-organizers ps-2 pt-1">
                 {% for orga in organizers %}
                 <div class="position-relative float-start mini">

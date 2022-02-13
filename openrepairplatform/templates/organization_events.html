@@ -85,9 +85,11 @@
   function() {
     $( ".btn-event" ).removeClass( "d-none" );
     $( this ).css( "width", "250px" );
+    $( ".btn-reccurent-event" ).removeClass("d-none").addClass( "d-block" ).css( "width", "250px" );
   }, function() {
     $( ".btn-event" ).addClass( "d-none" );
     $( this ).css( "width", "63px" );
+    $( ".btn-reccurent-event" ).addClass("d-none").removeClass( "d-block" ).css( "width", "0px" );
   }
   );
   });

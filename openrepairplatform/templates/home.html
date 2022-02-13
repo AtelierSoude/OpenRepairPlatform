@@ -6,17 +6,21 @@
 {% block content %}
 <div class="d-flex flex-column justify-content-between" style="height: calc(100vh - 65px);">
   <div class="container">
-    <h4 class="pt-5 text-center">Vous avez envie de réparer ? Prenez rendez-vous et nous réparons ensemble !</h4>
+    <div class="d-flex justify-content-center">
+      <img src="{% static 'img/logo-simple.png' %}" class="mt-5" width="120">
+    </div>
+    <h4 class="pt-2 text-center text-success">Bienvenue sur Réparons !</h4>
+    <h4 class="text-center">Vous avez envie de réparer ou de créer ? Prenez rendez-vous et nous le faisons ensemble !</h4>
     <div class="d-flex flex-column align-items-center">
-      <h6 class="pt-2">
-        Entrez votre code postal pour trouver les événements à proximité
-      </h6>
-      <section class="w-50">
+      <section class="w-75">
+        <h6 class="pt-2 text-center">
+          Entrez votre code postal pour trouver les événements à proximité
+        </h6>
         <form method="get" class="form-row" action="{% url 'event:list' %}">
           <div class="input-group mb-3">
             <input required type="text" class="form-control" placeholder="Code postal" name="postcode" pattern="[0-9]*" value="{{ request.session.postcode }}"/>
             <div class="input-group-append">
-              <button class="btn btn-outline-primary" type="submit"><i class="fa fa-search"></i></button>
+              <button class="btn btn-outline-primary bg-secondary" type="submit"><i class="fa fa-search"></i></button>
             </div>
             <small class="form-text">
               Attention: Pour les grandes villes, vous devez renseigner un code postal avec l'arrondissement (exemple: pour Lyon, mettre 69007 si vous êtes dans le 7eme arrondissement, 69000 n'est pas autorisé)
@@ -41,24 +45,24 @@
       {% endfor %}
 
     </div>
-    <div class="d-flex justify-content-between mt-2">
-      <div class="p-2 w-25 text-center">
-        <img class="img-responsive w-50 mb-4" src="http://atelier-soude.fr/images/50.png">
-        <h6 class="">Propulsons nos talents <br>ensemble !</h6>
+    <div class="d-flex flex-sm-row flex-column mt-2">
+      <div class="text-center">
+        <img class="p-5 img-responsive w-50" src="http://atelier-soude.fr/images/50.png">
+        <h5 class="fw-bolder">Transmettre les savoirs</h4>
       </div>
-      <div class="p-2 w-25 text-center">
-        <img class="img-responsive w-50 mb-4" src="http://atelier-soude.fr/images/5.png">
-        <h6 class="">Réparez tout <br>ce que vous avez !</h6>
+      <div class="text-center">
+        <img class="p-5 img-responsive w-50" src="http://atelier-soude.fr/images/5.png">
+        <h5 class="fw-bolder">Réparer ensemble</h4>
       </div>
-      <div class="p-2 w-25 text-center">
-        <img class="img-responsive w-50 mb-4" src="http://atelier-soude.fr/images/200.png">
-        <h6 class="">Entrez dans la <br>communauté !</h6>
+      <div class="text-center">
+        <img class="p-5 img-responsive w-50" src="http://atelier-soude.fr/images/200.png">
+        <h5 class="fw-bolder">Faire communauté</h4>
       </div>
     </div>
   </div>
 
   <div class="bg-success p-4 mt-5">
-    <div class="d-flex justify-content-around">
+    <div class="d-flex justify-content-around container">
       <div class="m-2">
         <h3 class="text-center text-secondary" style="font-size: 3rem;">
           {{event_count}}

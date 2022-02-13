@@ -146,7 +146,7 @@
       </div>
       <div class="card mb-2">
         <div class="card-body">
-          <h5><i class="fa fa-fist-raised"></i> A propos</h5>
+          tn btn-block btn-success    <h5><i class="fa fa-fist-raised"></i> A propos</h5>
             {% if event.external_url and event.external == False %}
             <a href="{{event.external_url}}" target="_blank" class="">Plus d'informations sur l'évènement</a>
             {% endif %}
@@ -284,7 +284,18 @@
               que quelqu'un d'autre aurait pu prendre. 
             </p>
             {% else %}
-            <b>Avant de réserver, prenez connaissance de ces informations : </b>
+              {% if event.booking == True or event.external == True %}
+                <b>Avant de réserver, prenez connaissance de ces informations : </b>
+              {% else %}
+                <b>C'est un événement sans réservation. 
+                  {% if event.external_url %}
+                  <a class="" target="_blank" href="{{event.external_url}}"> Plus d'information ici.</a>
+                  {% endif %}
+                  {% if event.conditions.all or event.members_only %} 
+                    Prenez connaissance de ces informations : 
+                  {% endif %}
+                </b>
+              {% endif %}
             <ul class="list-unstyled">
               {% if event.conditions %}
                 {% for condition in event.conditions.all %}
@@ -298,14 +309,16 @@
                 </li>
                 {% endfor %}
               {% endif %}
-              <li class="align-middle mt-1">
-                <i class="far fa-check-circle fa-1x text-success"></i> 
-                <span>Un mail de confirmation contenant un lien d'annulation vous serez envoyé</span>
-              </li>
-              <li class="align-middle mt-1">
-                <i class="far fa-check-circle fa-1x text-success"></i> 
-                <span>Réserver vous engage à participer</span>
-              </li>
+              {% if event.booking == True or event.external == True %}
+                <li class="align-middle mt-1">
+                  <i class="far fa-check-circle fa-1x text-success"></i> 
+                  <span>Un mail de confirmation contenant un lien d'annulation vous serez envoyé</span>
+                </li>
+                <li class="align-middle mt-1">
+                  <i class="far fa-check-circle fa-1x text-success"></i> 
+                  <span>Réserver vous engage à participer</span>
+                </li>
+              {% endif %}
               {% if event.members_only %}
               <li class="align-middle mt-1">
                 <i class="far fa-check-circle fa-1x text-success"></i> 

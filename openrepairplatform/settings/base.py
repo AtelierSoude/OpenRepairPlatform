@@ -93,7 +93,7 @@ WSGI_APPLICATION = "openrepairplatform.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.contrib.gis.db.backends.postgis",
-        "NAME": os.getenv("POSTGRES_DB_NAME", "ateliersoude"),
+        "NAME": os.getenv("POSTGRES_DBNAME", "ateliersoude"),
     }
 }
 

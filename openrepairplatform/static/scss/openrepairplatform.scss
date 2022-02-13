@@ -263,6 +263,34 @@ td {
 }
 
 /* Menu */
+
+
+.menu-localisation input {
+  width: 0%;
+  background-color: $primary;
+  border-color: $primary;
+  transition: all 0.3s ease;
+}
+
+input.toggle-modal {
+  visibility: hidden;
+  position: absolute;
+}
+
+input.toggle-modal:checked ~ .modal {
+  display: block;
+  opacity: 1;
+  padding-top: 2rem;
+  background-color: rgba(0,0,0,0.3);
+}
+
+input.toggle-modal:checked ~ div .menu-localisation input {
+  width: 100%;
+  background-color: white;
+  border-color: #ced4da;
+  max-width: 80px;
+}
+
 .header{
   z-index:1250 !important;
   width: 100%;
@@ -287,7 +315,6 @@ td {
   background-color: $primary;
   padding: 0.3em;
   position: relative;
-  z-index: 4 !important;
 }
 .navbar ul li a:hover, .navbar .fa:hover, .avatar a:hover, .dropdown-toggle:hover{
   color: gray;
@@ -314,14 +341,23 @@ td {
 }
 .navbar-brand.avatar{
   margin: 0px !important;
+  .nav-link{
+    color:#fff;
+  }
 }
+
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
   border-bottom: 3px solid $link;
   background: inherit !important;
-  color: #484848;
+  color: $primary;
+  border-radius: 0px !important;
 }
+
 .nav-link {
-  color: #828282;
+  color: #484848;
+  :hover{
+    color:$primary;
+  }
 }
 
 /* buttons */
@@ -584,6 +620,9 @@ position: relative;
   #side_nav{
     width:100%;
   }
+  .navbar-brand.avatar .nav-link small {
+    display: none;
+  }
 
   .header_detail_page_picture{
     padding-top: 10px !important;
@@ -626,7 +665,7 @@ position: relative;
     visibility: hidden;
   }
   .header_detail_page, #h_nav, #breadcrumb, #jumbotron, #search_tab, #event_title, .booking_form, .jumbotron {
-    z-index: 2 !important;
+    z-index: 1 !important;
   }
   .modal.show .modal-dialog {
     z-index: 3 !important;

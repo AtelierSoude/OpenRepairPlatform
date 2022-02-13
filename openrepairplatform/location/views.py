@@ -35,7 +35,6 @@ class PlaceMapView(TemplateView):
     template_name = "location/place_list.html"
 
     def get(self, request, *args, **kwargs):
-        breakpoint()
         return super().get(request, *args, **kwargs)
 
 

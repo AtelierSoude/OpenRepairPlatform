@@ -1,5 +1,12 @@
 <template>
-  <section class="section">
+  <section class="section" v-if="loading"> 
+    <div class="d-flex justify-content-center mt-5 mb-5 pt-2">
+      <div class="spinner-border text-secondary" style="width: 5rem; height: 5rem;" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+  </section>
+  <section class="section" v-else>
 
     <template v-if="data.recurrent === 'oui'">
       <label>Date de début :</label>
@@ -124,6 +131,7 @@ export default {
   components: {},
   data () {
     return {
+      loading: false,
       data: {
         conditions: [],
         organizers: [],
@@ -140,6 +148,7 @@ export default {
   },
   methods: {
     submitEvent () {
+      this.loading = true
       this.$emit('submit')
     }
   },

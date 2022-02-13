@@ -29,7 +29,6 @@ class EventCreateAPIView(CreateAPIView):
         headers = self.get_success_headers(serializer.data)
         res = Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
         if res.status_code == 201:
-            breakpoint()
             if request.data.get("recurrent_type", False):
                 message = f"{obj} événements ont été créé."
             else:

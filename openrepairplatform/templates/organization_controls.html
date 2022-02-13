@@ -24,7 +24,7 @@
           <a class="btn btn-primary btn float-end" href="{% url 'event:condition_create' organization.pk %}" title="create condition">
               <i class="fa fa-plus-circle"></i> Ajouter
           </a>
-          <div class="card-columns">
+          <div class="row row-cols-1 row-cols-md-3 g-4 ms-0">
             {% include 'event/condition/list.html' with conditions=organization.conditions.all %}
           </div>
         </div>
@@ -34,8 +34,9 @@
           <i class="fa fa-plus-circle"></i> Ajouter un lieu
         </a>
           {% if organization.places.all %}
-          <div class="card-columns">
+          <div class="row row-cols-1 row-cols-md-3 g-4 ms-0">
             {% for place in organization.places.all %}
+            <div class="col">
               <div class="card">  
                 <a class="card-link" href="{% url 'location:detail' place.pk place.slug %}">
                   <div class="card-body">
@@ -58,6 +59,7 @@
                   {% endif %}
                 </a>
               </div>
+            </div>
             {% endfor %}
           </div>
         {% else %}

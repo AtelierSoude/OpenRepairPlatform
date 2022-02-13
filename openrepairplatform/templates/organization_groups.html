@@ -22,7 +22,7 @@
         </button>
     </form>
     {% endif %}
-    <div class="card-columns">
+    <div class="row row-cols-1 row-cols-md-3 g-4 ms-0">
       {% include "user/user_card.html" with users=admins admin_remove_controls=True %}
     </div>
 
@@ -36,7 +36,7 @@
         </button>
     </form>
     {% endif %}
-    <div class="card-columns">
+    <div class="row row-cols-1 row-cols-md-3 g-4 ms-0">
       {% include "user/user_card.html" with users=actives active_remove_controls=True %}
     </div>
 
@@ -50,7 +50,7 @@
         </button>
       </form>
     {% endif %}
-    <div class="card-columns">
+    <div class="row row-cols-1 row-cols-md-3 g-4 ms-0">
       {% include "user/user_card.html" with users=volunteers volunteer_remove_controls=True %}
     </div>
 

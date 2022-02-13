@@ -1,4 +1,5 @@
 {% for condition in conditions %}
+<div class="col">
   <div class="card">
     <div class="card-body">
       <h5 class="card-title">{{ condition.name }}</h5>
@@ -22,6 +23,7 @@
       </a>
     </div>
   </div>
+</div>
 {% empty %}
   Aucune condition pour le moment, créez-en !
 {% endfor %}

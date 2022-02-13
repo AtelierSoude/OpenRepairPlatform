@@ -1,17 +1,19 @@
 {% load thumbnail %}
 
 {% for organization in organizations %}
-<div class="card text-center col-sm-12">  
-  <a class="card-link text-center" href="{% url 'organization_page' organization.slug %}">
-    {% if organization.picture %}
-    {% thumbnail organization.picture "250" format="PNG" as im %}
-      <img class="d-inline" src="{{ im.url }}"/>
-    {% endthumbnail %}
-    {% endif %}
-    <div class="card-body">
-      <h5 class="card-title">{{ organization.name }}</h5>
-    </div>
-  </a>
+<div class="col">
+  <div class="card text-center h-100">  
+    <a class="card-link text-center" href="{% url 'organization_page' organization.slug %}">
+      {% if organization.picture %}
+      {% thumbnail organization.picture "250" format="PNG" as im %}
+        <img class="d-inline" src="{{ im.url }}"/>
+      {% endthumbnail %}
+      {% endif %}
+      <div class="card-body">
+        <h5 class="card-title">{{ organization.name }}</h5>
+      </div>
+    </a>
+  </div>
 </div>
 {% empty %}
   <div>Aucune organisation n'est inscrite sur le site pour le moment</div>

@@ -3,8 +3,8 @@
 {% load initialavatar %}
 
 {% for user in users %}
-
-  <div class="card mx-2 p-2">
+<div class="col">
+  <div class="card p-2">
     <a class="card-link" href="{{ user.get_absolute_url }}">
       <div class="row">
       {% if event_control == True %}
@@ -53,16 +53,16 @@
             </form>
           {% endif %}
         {% endif %}
-  
+
         {% if active_remove_controls == True %}
-         {% if is_admin %}
+          {% if is_admin %}
           <form action="{% url 'user:remove_from_actives' organization.pk user.pk %}" class="col-2">
             {% csrf_token %}
             <button type="submit" class="btn badge badge-pill bg-danger float-end" onclick="return confirm('Êtes-vous sûr ?')">&times;</button>
           </form>
-         {% endif %}
+          {% endif %}
         {% endif %}
-  
+
         {% if volunteer_remove_controls == True %}
           {% if is_admin %}
           <form action="{% url 'user:remove_from_volunteers' organization.pk user.pk %}" class="col-2">
@@ -74,7 +74,7 @@
       </div>
     </a>
   </div>
-
+</div>
 {% empty %}
   <div class="col-lg">Pas encore d'utilisateur</div>
 {% endfor %}

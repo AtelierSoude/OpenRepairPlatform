@@ -78,6 +78,7 @@ TEMPLATES = [
         "OPTIONS": {
             "context_processors": [
                 "openrepairplatform.context_processors.site_title",
+                "openrepairplatform.context_processors.settings_variables",
                 "django.template.context_processors.debug",
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
@@ -163,3 +164,5 @@ AVATAR_COLORS = ((254, 229, 110), (8, 51, 66), (43, 230, 171),)
 DJANGO_TABLES2_TEMPLATE = "django_tables2/bootstrap4.html"
 
 KM_DISTANCE = 50
+
+LOCATION = os.getenv("LOCATION", "False").lower() in ('true', '1', 'y')

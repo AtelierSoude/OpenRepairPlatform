@@ -3,12 +3,13 @@
 {% load static %}
 
 <nav class="header nav-header navbar navbar-expand-lg" style="width:100%; position:fixed">
-  <a href="{% url "homepage" %}" class="navbar-brand me-0 float-start d-block d-sm-none" style="width:50px; z-index: 150;"> 
+  <a href="{% url "homepage" %}" class="navbar-brand me-0 float-start d-block d-sm-none" style="width:50px; z-index: 150;">
     <img src="{% static 'img/logo-simple.png' %}" class="brand-logo w-100">
   </a>
   <a href="{% url "homepage" %}" class="brand-logo d-none d-sm-block">
     <img src="{% static 'img/logo.png' %}">
   </a>
+  {% if LOCATION %}
   <label for="current-localisation">
     <input type="checkbox" id="current-localisation" class="toggle-modal"/>
     <div class="d-flex align-items-center">
@@ -20,6 +21,7 @@
       <span class="ps-2 text-success fw-bold">{{ request.session.postcode }}</span></a>
     </div>
   </label>
+  {% endif %}
   <div class="collapse navbar-collapse bg-primary" style="width:100%">
   </div>
   <div class="navbar navbar-expand-lg d-flex justify-content-end p-0">

@@ -170,7 +170,7 @@ class DeleteMembershipMixin(HasActivePermissionMixin, DeleteView):
 class LocationRedirectMixin:
     def get(self, request, *args, **kwargs):
         postcode = request.GET.get("postcode", False)
-        if postcode:
+        if postcode and settings.LOCATION:
             request.session["postcode"] = postcode
             request.session["location"] = None
             point = requests.get(
@@ -182,7 +182,7 @@ class LocationRedirectMixin:
                     point.json()['features'][0]['geometry']['coordinates']
                 )
 
-        if not request.session.get("location", False):
+        if not request.session.get("location", False) and settings.LOCATION:
             if request.session.get("postcode", False):
                 messages.info(request, "Vous devez renseigner un code postal valide.")
             else:
@@ -202,6 +202,8 @@ class LocationRedirectMixin:
         return distance
 
     def filter_queryset_location(self, queryset):
+        if not settings.LOCATION:
+            return queryset
         location = Point(self.request.session["location"])
         return queryset.filter(
             location__location__dwithin=(
@@ -212,6 +214,8 @@ class LocationRedirectMixin:
 
 class LocationOrganization(LocationRedirectMixin):
     def filter_queryset_location(self, queryset):
+        if not settings.LOCATION:
+            return queryset
         location = Point(self.request.session["location"])
         return queryset.filter(
             places__location__dwithin=(
@@ -222,6 +226,8 @@ class LocationOrganization(LocationRedirectMixin):
 
 class LocationActivity(LocationRedirectMixin):
     def filter_queryset_location(self, queryset):
+        if not settings.LOCATION:
+            return queryset
         location = Point(self.request.session["location"])
         return queryset.filter(
             organization__places__location__dwithin=(

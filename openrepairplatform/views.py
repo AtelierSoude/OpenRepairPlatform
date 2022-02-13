@@ -1,5 +1,6 @@
 from dal import autocomplete
 from django.shortcuts import get_object_or_404
+from django.conf import settings
 from django.core.serializers import serialize
 from django.db.models import Q
 from django.urls import reverse
@@ -35,6 +36,11 @@ EVENTS_PER_PAGE = 6
 class HomeView(TemplateView, FormView):
     form_class = EventSearchForm
     template_name = "home.html"
+
+    def get_template_names(self):
+        if settings.LOCATION:
+            return "home_location.html"
+        return "home.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

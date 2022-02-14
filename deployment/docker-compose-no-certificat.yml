@@ -39,7 +39,7 @@ services:
     volumes:
       - ./openrepairplatform_data/openrepairplatform_static:/srv/static:ro
       - ./openrepairplatform_data/openrepairplatform_media:/srv/media:ro
-      - ./nginx/templates-no-certificat:/etc/nginx/templates
+      - ./nginx/templates-no-certificat/:/etc/nginx/templates
     networks:
       - openrepairplatform-net
     depends_on:

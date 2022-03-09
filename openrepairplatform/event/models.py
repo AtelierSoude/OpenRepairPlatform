@@ -87,6 +87,8 @@ class Activity(models.Model):
     def next_events(self):
         return get_future_published_events(self.events)[0:3]
 
+    class Meta:
+        verbose_name_plural = 'Activities'
 
 class Event(models.Model):
     WEEKS = [

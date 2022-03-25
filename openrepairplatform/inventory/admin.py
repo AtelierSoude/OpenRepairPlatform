@@ -20,7 +20,7 @@ from .models import (
 )
 
 
-class DeviceAdmin(DynamicArrayMixin, SimpleHistoryAdmin):
+class DeviceAdmin(DynamicArrayMixin, ImportExportActionModelAdmin, SimpleHistoryAdmin):
     class Meta:
         model = Device
 
@@ -34,13 +34,28 @@ class CategoryAdmin(ImportExportActionModelAdmin, TreeAdmin):
     form = movenodeform_factory(Category)
 
 
-admin.site.register(Brand, SimpleHistoryAdmin)
+class BrandAdmin(ImportExportActionModelAdmin, SimpleHistoryAdmin):
+    ... 
+
+class ObservationAdmin(ImportExportActionModelAdmin, SimpleHistoryAdmin):
+    ... 
+
+class ActionAdmin(ImportExportActionModelAdmin, SimpleHistoryAdmin):
+    ... 
+
+class ReasoningAdmin(ImportExportActionModelAdmin, SimpleHistoryAdmin):
+    ... 
+
+class StatusAdmin(ImportExportActionModelAdmin, SimpleHistoryAdmin):
+    ... 
+
+admin.site.register(Brand, BrandAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Device, DeviceAdmin)
 admin.site.register(Stuff, SimpleHistoryAdmin)
-admin.site.register(Observation, SimpleHistoryAdmin)
-admin.site.register(Action, SimpleHistoryAdmin)
-admin.site.register(Reasoning, SimpleHistoryAdmin)
+admin.site.register(Observation,ObservationAdmin)
+admin.site.register(Action, ActionAdmin)
+admin.site.register(Reasoning, ReasoningAdmin)
 admin.site.register(Intervention, SimpleHistoryAdmin)
 admin.site.register(RepairFolder, SimpleHistoryAdmin)
-admin.site.register(Status, SimpleHistoryAdmin)
+admin.site.register(Status, StatusAdmin)

@@ -7,7 +7,7 @@ services:
     env_file:
       - ../openrepairplatform/.env
     volumes:
-      - ./openrepairplatform_data/postgres_data:/var/lib/postgresql/data
+      - db-data:/var/lib/postgresql/data
     networks:
       - openrepairplatform-net
 
@@ -24,8 +24,12 @@ services:
     volumes:
       - ./openrepairplatform_data/openrepairplatform_static:/srv/static
       - ./openrepairplatform_data/openrepairplatform_media:/srv/media
+      - ./deployment:/srv/app/deployment
+      - ./openrepairplatform:/srv/app/openrepairplatform
+      - ./deployment/django/openrepairplatform.cron:/etc/cron.d/openrepairplatform
     depends_on:
       - db
+    command: echo "cd  /srv/app/openrepairplatform/static/ && npm i && node build.prod.js && cd /srv/app/deployment/django/ && ./start.sh"
     networks:
       - openrepairplatform-net
 
@@ -47,3 +51,6 @@ services:
 
 networks:
   openrepairplatform-net:
+
+volumes: 
+  db-data:

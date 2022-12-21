@@ -15,7 +15,6 @@ services:
     build:
       context: ../
       dockerfile: deployment/django/Dockerfile
-    image: openrepairplatform_python
     container_name: openrepairplatform_python
     ports:
       - "8000:8000"

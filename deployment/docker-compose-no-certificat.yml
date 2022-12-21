@@ -24,12 +24,13 @@ services:
     volumes:
       - ./openrepairplatform_data/openrepairplatform_static:/srv/static
       - ./openrepairplatform_data/openrepairplatform_media:/srv/media
-      - ./deployment:/srv/app/deployment
-      - ./openrepairplatform:/srv/app/openrepairplatform
-      - ./deployment/django/openrepairplatform.cron:/etc/cron.d/openrepairplatform
+      - ./django:/srv/app/deployment/django
+      - ../openrepairplatform:/srv/app/openrepairplatform
+      - ./django/openrepairplatform.cron:/etc/cron.d/openrepairplatform
+      - ./django/start.sh:/srv/app/start.sh
     depends_on:
       - db
-    command: echo "cd  /srv/app/openrepairplatform/static/ && npm i && node build.prod.js && cd /srv/app/deployment/django/ && ./start.sh"
+    command: bash -c " cd /srv/app/openrepairplatform/static/ && npm i && node build.prod.js && cd /srv/app/ && ./start.sh"
     networks:
       - openrepairplatform-net
 

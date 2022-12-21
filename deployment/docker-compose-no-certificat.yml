@@ -15,6 +15,7 @@ services:
     build:
       context: ../
       dockerfile: deployment/django/Dockerfile
+    image: openrepairplatform_python
     container_name: openrepairplatform_python
     ports:
       - "8000:8000"
@@ -23,13 +24,10 @@ services:
     volumes:
       - ./openrepairplatform_data/openrepairplatform_static:/srv/static
       - ./openrepairplatform_data/openrepairplatform_media:/srv/media
-      - ./django:/srv/app/deployment/django
-      - ../openrepairplatform:/srv/app/openrepairplatform
-      - ./django/openrepairplatform.cron:/etc/cron.d/openrepairplatform
-      - ./django/start.sh:/srv/app/start.sh
+      - /root/OpenRepairPlatform:/srv/app
     depends_on:
       - db
-    command: bash -c " cd /srv/app/openrepairplatform/static/ && npm i && node build.prod.js && cd /srv/app/ && ./start.sh"
+    command: bash -c "cd /srv/app/openrepairplatform/static/ && npm i && node build.prod.js && cd /srv/app/deployment/django && ./start.sh"
     networks:
       - openrepairplatform-net
     tty: true

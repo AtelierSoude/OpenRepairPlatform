@@ -26,11 +26,11 @@ WORKDIR /srv/app
 #COPY deployment/django/uwsgi.ini .
 #COPY deployment/django/start.sh /
 #COPY openrepairplatform ./openrepairplatform
-#COPY deployment/django/openrepairplatform.cron /etc/cron.d/openrepairplatform
+COPY deployment/django/openrepairplatform.cron /etc/cron.d/openrepairplatform
 
 #RUN cd openrepairplatform/static/ && npm i && node build.prod.js && cd -
 
-#RUN chmod 0644 /etc/cron.d/openrepairplatform
+RUN chmod 0644 /etc/cron.d/openrepairplatform
 RUN cron
 RUN useradd openrepairplatform
 

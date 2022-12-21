@@ -14,7 +14,9 @@ SECRET_KEY = "H/hXAUnb1ZKNGpToim2cg38dxiyHM6b+zB9zozhpTzkP"
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    os.getenv("DOMAINS"),
+]
 
 SITE_ID = 1
 

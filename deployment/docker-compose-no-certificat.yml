@@ -32,7 +32,9 @@ services:
     command: bash -c " cd /srv/app/openrepairplatform/static/ && npm i && node build.prod.js && cd /srv/app/ && ./start.sh"
     networks:
       - openrepairplatform-net
-
+    tty: true
+    stdin: true
+    
   nginx:
     image: nginx:latest
     container_name: openrepairplatform_nginx

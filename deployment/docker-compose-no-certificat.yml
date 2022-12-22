@@ -10,6 +10,8 @@ services:
       - db-data:/var/lib/postgresql/data
     networks:
       - openrepairplatform-net
+    ports:
+      - 5432:5432
 
   django:
     build:
@@ -18,7 +20,7 @@ services:
     image: openrepairplatform_python
     container_name: openrepairplatform_python
     ports:
-      - "8000:8000"
+      - 8000:8000
     env_file:
       - ../openrepairplatform/.env
     volumes:
@@ -27,27 +29,9 @@ services:
       - /root/OpenRepairPlatform:/srv/app
     depends_on:
       - db
-    command: bash -c "cd /srv/app/openrepairplatform/static/ && npm i && node build.prod.js && cd /srv/app/deployment/django && ./start.sh"
+    command: bash -c "cd /srv/app/openrepairplatform/static/ && npm i && cd /srv/app/deployment/django && ./start-dev.sh"
     networks:
       - openrepairplatform-net
-    tty: true
-    stdin_open: true
-
-  nginx:
-    image: nginx:latest
-    container_name: openrepairplatform_nginx
-    ports:
-      - "80:80"
-    env_file:
-      - ../openrepairplatform/.env
-    volumes:
-      - ./openrepairplatform_data/openrepairplatform_static:/srv/static:ro
-      - ./openrepairplatform_data/openrepairplatform_media:/srv/media:ro
-      - ./nginx/templates-no-certificat/:/etc/nginx/templates
-    networks:
-      - openrepairplatform-net
-    depends_on:
-      - django 
 
 networks:
   openrepairplatform-net:

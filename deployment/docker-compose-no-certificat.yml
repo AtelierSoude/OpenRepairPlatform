@@ -21,6 +21,8 @@ services:
     container_name: openrepairplatform_python
     ports:
       - 8000:8000
+      - 5678:5678
+      - 5679:5679
     env_file:
       - ../openrepairplatform/.env
     volumes:

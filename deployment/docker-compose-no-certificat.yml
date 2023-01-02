@@ -35,22 +35,6 @@ services:
     command: bash -c "cd /srv/app/openrepairplatform/static/ && npm i && node build.prod.js && cd /srv/app/deployment/django && ./start-dev.sh"
     networks:
       - openrepairplatform-net
-  nginx:
-    image: nginx:latest
-    container_name: openrepairplatform_nginx
-    ports:
-      - "80:80"
-    env_file:
-      - ../openrepairplatform/.env
-    volumes:
-      - ./openrepairplatform_data/openrepairplatform_static:/srv/static:ro
-      - ./openrepairplatform_data/openrepairplatform_media:/srv/media:ro
-      - ./nginx/templates-no-certificat/:/etc/nginx/templates
-    networks:
-      - openrepairplatform-net
-    depends_on:
-      - django
-
 networks:
   openrepairplatform-net:
 

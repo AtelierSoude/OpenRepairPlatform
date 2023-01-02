@@ -6,9 +6,7 @@ Ce projet cherche à faciliter l’accessibilité de la réparation par le plus 
 OpenRepairPlateform est une application basée sur Django, pensée pour organiser les structures de réparations participatives.
 Elle intègre principalement des fonctionnalités de gestion d'organisation, de membres, de comptabilité, la publication d'événements, d'inventaire et de suivi/partage de réparations.
 
-Cette application est développée et notamment utilisée par [l'Atelier Soudé](https://atelier-soude.fr) pour la plateforme [Réparons](https://dev.atelier-soude.fr).
-
-Toute la documentation d'installation et d'utilisation est disposible [ici](https://openrepairplatform.readthedocs.io/en/latest/).
+Cette application est développée et notamment utilisée par [l'Atelier Soudé](https://atelier-soude.fr).
 
 ----- ENG -----
 
@@ -29,12 +27,44 @@ For basic develop installation, follow those steps:
 
 1.Set django, postgres and nginx/domain variables in `openrepairplatform/.env` 
 
+```
+# POSTGRES settings
+POSTGRES_USER=ateliersoude
+POSTGRES_PASSWORD=ateliersoude
+POSTGRES_DBNAME=ateliersoude
+#DJANGO settings
+DJANGO_SETTINGS_MODULE=openrepairplatform.settings.prod
+SECRET_KEY=CHANGE_ME
+
+#Emailing settings
+EMAIL_PASSWORD=CHANGE_ME
+EMAIL_HOST_USER=CHANGE_ME
+EMAIL_HOST=CHANGE_ME
+DEFAULT_FROM_EMAIL=CHANGE_ME
+
+#Let's encrypt and nginx settings
+DOMAINS=reparons.org
+EMAIL=CHANGE_ME
+SERVER_CONTAINER=openrepairplatform_nginx
+WEBROOT_PATH=/var/www/certbot
+CERTS_PATH=/etc/letsencrypt
+CHECK_FREQ=7
+
+LOCATION=False
+```
+
 2.Run the following command:
 
+
+```bash
+cd [git checkout directory]/deployment
+docker-compose -f docker-compose-no-certificat.yml up
 ```
-docker-compose up
+
+Then in the docker terminal, run the following command for livereload 
+```bash
+python manage.py livereload --host=0.0.0.0
 ```
-You can then access `http://127.0.0.1:8000/` and log with the admin user `admin@example.com` // `adminpass`
 
 3.Create an organization within the `http://127.0.0.1:8000/organizations` path and you can start everythings else (further documentation will come)
 
@@ -56,10 +86,6 @@ In the lower part of vs code, in the `DEBUG CONSOLE`, you can test code.
 
 In the debug section, in the left vertical bar, you can see all the breakpoints, all the variables and their content, and the call stack.
 You can click on any step of the call stack, and browser the variables, test some code, etc, at this step.
-
-### Coding "live"
-
-The local code is mounted in a Docker volume, so if you change the code locally and refresh your browser, you will immediatly see the changes.
 
 ### Run unit tests
 

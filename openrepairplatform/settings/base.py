@@ -3,9 +3,13 @@ import os
 
 from bootstrap5 import forms
 from django.contrib import messages
-from dotenv import load_dotenv
 
-load_dotenv()
+
+
+STATIC_ROOT = "/srv/static/"
+MEDIA_ROOT = "/srv/media/"
+ASSETS_ROOT = STATIC_ROOT
+
 
 PROJECT_DIR = dirname(dirname(abspath(__file__)))
 BASE_DIR = dirname(PROJECT_DIR)
@@ -16,6 +20,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     os.getenv("DOMAINS"),
+    '127.0.0.1',
+    '0.0.0.0'
 ]
 
 SITE_ID = 1
@@ -96,9 +102,13 @@ WSGI_APPLICATION = "openrepairplatform.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.contrib.gis.db.backends.postgis",
-        "NAME": os.getenv("POSTGRES_DBNAME", "ateliersoude"),
+        "NAME": os.getenv("POSTGRES_DBNAME"),
+        "USER": os.getenv("POSTGRES_USER"),
+        "HOST": "db",
+        "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
     }
 }
+
 
 # custom User model
 AUTH_USER_MODEL = "user.CustomUser"
@@ -121,6 +131,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
 LANGUAGE_CODE = "fr-fr"
+
+INTERNAL_IPS = ["127.0.0.1", "0.0.0.0"]
 
 TIME_ZONE = "Europe/Paris"
 

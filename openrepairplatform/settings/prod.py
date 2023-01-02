@@ -1,31 +1,10 @@
 import os
 from .base import *  # noqa
 
-from dotenv import load_dotenv
-
-load_dotenv()
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 
-DEBUG = True
-
-ALLOWED_HOSTS = [
-    os.getenv("DOMAINS"),
-]
-
-STATIC_ROOT = "/srv/static/"
-MEDIA_ROOT = "/srv/media/"
-ASSETS_ROOT = STATIC_ROOT
-
-DATABASES = {
-    "default": {
-        "ENGINE": "django.contrib.gis.db.backends.postgis",
-        "NAME": os.getenv("POSTGRES_DBNAME"),
-        "USER": os.getenv("POSTGRES_USER"),
-        "HOST": "db",
-        "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
-    }
-}
+DEBUG = False
 
 raven = os.getenv("RAVEN_DNS")
 

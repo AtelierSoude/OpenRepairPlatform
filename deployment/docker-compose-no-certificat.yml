@@ -23,6 +23,7 @@ services:
       - 8000:8000
       - 5678:5678
       - 5679:5679
+      - 35729:35729
     env_file:
       - ../openrepairplatform/.env
     volumes:

@@ -1,6 +1,7 @@
-from .base import *  # noqa
+from .base import *  
 
+INSTALLED_APPS += ["debug_toolbar","livereload"]  
 
-INSTALLED_APPS += ["debug_toolbar"]  # noqa
+MIDDLEWARE.insert(0, "debug_toolbar.middleware.DebugToolbarMiddleware")  
+MIDDLEWARE.insert(0, 'livereload.middleware.LiveReloadScript') 
 
-MIDDLEWARE.insert(0, "debug_toolbar.middleware.DebugToolbarMiddleware")  # noqa

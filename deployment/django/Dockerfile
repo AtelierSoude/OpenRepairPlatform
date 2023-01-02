@@ -7,8 +7,9 @@ RUN apt update && apt upgrade -y && apt install -y --force-yes yarn python3-pip 
 RUN pip3 install uwsgi
 RUN ln /usr/bin/sassc /usr/bin/sass
 
+COPY requirements_dev.txt /
 COPY requirements.txt /
-RUN pip3 install -r /requirements.txt && rm /requirements.txt
+RUN pip3 install -r /requirements_dev.txt && rm /requirements_dev.txt
 
 # French ENV for date
 RUN sed -i -e 's/# fr_FR.UTF-8 UTF-8/fr_FR.UTF-8 UTF-8/' /etc/locale.gen && \
@@ -33,7 +34,5 @@ COPY deployment/django/openrepairplatform.cron /etc/cron.d/openrepairplatform
 RUN chmod 0644 /etc/cron.d/openrepairplatform
 RUN cron
 RUN useradd openrepairplatform
-
-EXPOSE 8000
 
 #CMD /start.sh

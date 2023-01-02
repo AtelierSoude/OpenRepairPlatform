@@ -8,7 +8,7 @@
   {% include "breadcrumb.html" with current="Événements" %}
   <section class="container-fluid shadow-sm" id="search_tab">
       <div class="col-lg bg-white">
-        <div id="search" class="collapse">
+        <div id="search" >
             <form method="GET" class="form-row" action="{% url 'event:list' %}">
                 <div class="input-group search-bar d-flex un-z-index">
                     {% bootstrap_field search_form.activity form_group_class="col-md-4" %}
@@ -28,13 +28,7 @@
               {{ results_number }} résultats pour votre recherche
             {% endif %}
           </div>
-      <a class="text-center d-block"
-        data-toggle="collapse" href="#search" role="button" aria-expanded="false" aria-controls="search">
-       Filtrer les résultats
-       <span class="btn btn-secondary">
-          <i class="fa fa-search"></i>
-       </span>
-      </a>
+      
     </div>
   </section>
   <section class="container-fluid">

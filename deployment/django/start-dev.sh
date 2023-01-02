@@ -5,6 +5,6 @@
 #service cron start
 #chown -R openrepairplatform:openrepairplatform /srv/*
 python3 ../../manage.py migrate
-python3 ../../manage.py shell -c "from openrepairplatform.user.models import CustomUser; CustomUser.objects.create_superuser('admin@example.com', 'adminpass')" || true
+python3 ../../manage.py shell -c "from openrepairplatform.user.models import CustomUser; CustomUser.objects.filter(email='admin@example.com').exists() or CustomUser.objects.create_superuser('admin@example.com', 'adminpass')" || true
 python3 ../../manage.py runserver 0.0.0.0:8000
 #uwsgi ./uwsgi.ini

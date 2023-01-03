@@ -173,3 +173,9 @@ openrepairplatform/static/css/vue-app.css
 
 openrepairplatform/static/js/vue.apps.bundle.js
 openrepairplatform/static/js/vue.apps.bundle.css
+
+
+# Dumps de bases
+*dump_*.sql
+*dump_*.sql.gzip
+*dump_*.sql.zip

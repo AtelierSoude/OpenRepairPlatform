@@ -5,7 +5,7 @@ services:
     image: postgis/postgis
     container_name: postgres
     env_file:
-      - ../openrepairplatform/.env
+      - ../.env
     volumes:
       - db-data:/var/lib/postgresql/data
     networks:
@@ -25,7 +25,7 @@ services:
       - 5679:5679
       - 35729:35729
     env_file:
-      - ../openrepairplatform/.env
+      - ../.env
     volumes:
       - ./openrepairplatform_data/openrepairplatform_static:/srv/static
       - ./openrepairplatform_data/openrepairplatform_media:/srv/media

@@ -13,8 +13,6 @@ Cette application est développée et notamment utilisée par [l'Atelier Soudé]
 This application is still in developpment.
 Any contributes are welcome. Please contact us if you want to contribute and we tell you how to.
 
-# Atelier Soudé
-
 OpenRepairPlatform is a Django based application designed to organize collaborative repair structures, features provides organization managment, event publishing, community members managment, repair tracking and sharing.
 
 The plateform is created by Atelier Soudé, an organization which repair everyday's people electric and electronic objects in Lyon, France.

@@ -26,12 +26,15 @@ For basic develop installation, follow those steps:
 1.Set django, postgres and nginx/domain variables in `openrepairplatform/.env` 
 
 ```
+# Activate the location search on home page
+LOCATION=1
+
 # POSTGRES settings
 POSTGRES_USER=ateliersoude
-POSTGRES_PASSWORD=ateliersoude
+POSTGRES_PASSWORD=mangerdespommes
 POSTGRES_DBNAME=ateliersoude
 #DJANGO settings
-DJANGO_SETTINGS_MODULE=openrepairplatform.settings.prod
+DJANGO_SETTINGS_MODULE=openrepairplatform.settings.dev
 SECRET_KEY=CHANGE_ME
 
 #Emailing settings
@@ -48,7 +51,7 @@ WEBROOT_PATH=/var/www/certbot
 CERTS_PATH=/etc/letsencrypt
 CHECK_FREQ=7
 
-LOCATION=False
+
 ```
 
 2.Run the following command:

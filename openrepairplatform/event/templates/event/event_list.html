@@ -13,7 +13,7 @@
                 <div class="input-group search-bar d-flex un-z-index">
                     {% bootstrap_field search_form.activity form_group_class="col-md-4" %}
                     {% bootstrap_field search_form.organization form_group_class="col-md-4" %}
-                    <div class="col-md-2 p-3 mt-3">
+                    <div class="col-md-2 p-2 mt-3">
                       <button type="submit" class="btn btn-secondary w-100">
                         <span class=""><i class="fa fa-search"></i>Rechercher</span>
                       </button>
@@ -21,7 +21,7 @@
                 </div>
             </form>
         </div>
-        <div class="col-lg text-center mb-3">
+        <div class="col-lg text-left mb-3">
             {% if results_number == 0 %}
               Aucun évènement trouvé pour vos critères de recherche
             {% else %}

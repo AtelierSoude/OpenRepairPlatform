@@ -410,6 +410,7 @@ input.toggle-modal:checked ~ div .menu-localisation input {
 }
 .breadcrumb{
   margin-bottom: 0px !important;
+  padding: 0.75rem 2rem;
   border-width: 0px;
   z-index: 2;
 }
@@ -747,3 +748,6 @@ input.toggle-modal:checked ~ div .menu-localisation input {
     width: 90vw;
   }
 }
+
+
+@import "./includes/_search-bar.scss";

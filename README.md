@@ -21,18 +21,67 @@ Full installation and user documentation are avalaible [here](https://openrepair
 
 For basic develop installation, follow those steps:
 
-## Run the application (in Develop mode only)
+## Run the application in production mode
 
-1.Set django, postgres and nginx/domain variables in `openrepairplatform/.env` 
+1 - set up the environment
 
+```bash
+git clone https://github.com/AtelierSoude/OpenRepairPlatform.git
+cd OpenRepairPlatform
+touch .env
 ```
+
+2 - Populate the envfile with the following content. Make sure to change the vars.
+
+```bash
+#default content of the configuration .env file
 # Activate the location search on home page
 LOCATION=1
 
 # POSTGRES settings
-POSTGRES_USER=ateliersoude
-POSTGRES_PASSWORD=mangerdespommes
-POSTGRES_DBNAME=ateliersoude
+POSTGRES_USER=CHANGE_ME
+POSTGRES_PASSWORD=CHANGE_ME
+POSTGRES_DBNAME=CHANGE_ME
+
+#DJANGO settings
+DJANGO_SETTINGS_MODULE=openrepairplatform.settings.prod
+SECRET_KEY=CHANGE_ME
+
+#Emailing settings
+EMAIL_PASSWORD=CHANGE_ME
+EMAIL_HOST_USER=CHANGE_ME
+EMAIL_HOST=CHANGE_ME
+DEFAULT_FROM_EMAIL=CHANGE_ME
+
+#Let's encrypt and nginx settings
+DOMAINS=yourdomain.org
+EMAIL=CHANGE_ME
+SERVER_CONTAINER=openrepairplatform_nginx
+WEBROOT_PATH=/var/www/certbot
+CERTS_PATH=/etc/letsencrypt
+CHECK_FREQ=7
+```
+
+3 - launch the application
+
+```bash
+docker-compose up -d
+```
+
+## Run the application (in Develop mode only)
+
+1.Set django, postgres and nginx/domain variables in `openrepairplatform/.env`
+
+```bash
+#default content of the configuration .env file
+# Activate the location search on home page
+LOCATION=1
+
+# POSTGRES settings
+POSTGRES_USER=CHANGE_ME
+POSTGRES_PASSWORD=CHANGE_ME
+POSTGRES_DBNAME=CHANGE_ME
+
 #DJANGO settings
 DJANGO_SETTINGS_MODULE=openrepairplatform.settings.dev
 SECRET_KEY=CHANGE_ME
@@ -44,30 +93,65 @@ EMAIL_HOST=CHANGE_ME
 DEFAULT_FROM_EMAIL=CHANGE_ME
 
 #Let's encrypt and nginx settings
-DOMAINS=reparons.org
+DOMAINS=yourdomain.org
 EMAIL=CHANGE_ME
 SERVER_CONTAINER=openrepairplatform_nginx
 WEBROOT_PATH=/var/www/certbot
 CERTS_PATH=/etc/letsencrypt
 CHECK_FREQ=7
-
-
 ```
 
 2.Run the following command:
 
-
 ```bash
-cd [git checkout directory]/deployment
-docker-compose -f docker-compose-no-certificat.yml up
+cd [git checkout directory]/
+docker-compose up
 ```
 
-Then in the docker terminal, run the following command for livereload 
+The website is now deployed and accessible on htt://localhost:8000
+
+Then in the docker terminal, run the following command for livereload.
+
 ```bash
 python manage.py livereload --host=0.0.0.0
 ```
 
-3.Create an organization within the `http://127.0.0.1:8000/organizations` path and you can start everythings else (further documentation will come)
+3 - Create an organization within the `http://localhost:8000/admin` path and you can start everythings else (further documentation will come).
+
+## Build the application from a branch to a docker image
+
+### build from github branch
+
+You can directly build an image by running the following command. This command will build the image from the selected branch localy. That way you will not have to clone the project localy and just use the image builded from github.
+
+```bash
+# Replace the BRANCHNAME with the branch name you want to build
+docker build --file /django/Dockerfile-build-prod https://github.com/AtelierSoude/OpenRepairPlatform.git\#BRANCHNAME:deployment
+```
+
+### build from local repository
+
+1 - First you have to clone the project inyour directory using the following commands depending on your configuration.
+
+```bash
+ git clone https://github.com/AtelierSoude/OpenRepairPlatform.git
+
+ #OR if you have a ssh key on github.com
+
+ git clone git@github.com:AtelierSoude/OpenRepairPlatform.git
+
+```
+
+2 - You can now build your image using the following command
+
+```bash
+# enter your cloned directory
+cd OpenRepairPlatform
+
+# Build the image
+# The -t option allows you to specify the name of the container it has to match the name in your docker-compose file for production
+ docker build --file deployment/django/Dockerfile-build-prod -t openrepairplateform-prod .
+ ```
 
 ### Debug with Visual Studio Code
 
@@ -76,7 +160,7 @@ If you open the main folder with vs code, you will be able to use the configurat
 This will allow you to connect to the container in debug mode and to stop at breakpoints in the code, which is quite confortable to inspect the variables and test new code in the required state of the program (typically before a failure).
 Before starting, you may have to install the Python extension.
 
-For this, just click on `Debug`, and `Start Debugging`: you will run the `Debug Django app` configuration. 
+For this, just click on `Debug`, and `Start Debugging`: you will run the `Debug Django app` configuration.
 A small additional bar will appear with useful commands for the debug: go to next breakpoint, stop debugging, etc
 More information on debugging with vs code: `https://code.visualstudio.com/Docs/editor/debugging`
 
@@ -120,8 +204,7 @@ First, start the Docker containers with `docker-compose up`, and then:
 
 If you uncomment the following lines, it will wait for a debugger to connect before running the tests
 
-```
+```bash
 ptvsd.enable_attach()
 ptvsd.wait_for_attach()
 ```
-

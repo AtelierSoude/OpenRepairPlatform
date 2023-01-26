@@ -1,5 +1,5 @@
 upstream openrepairplatform_uwsgi {
-    server openrepairplatform_python:8000;
+    server openrepairplatform:8000;
 }
 
 server {

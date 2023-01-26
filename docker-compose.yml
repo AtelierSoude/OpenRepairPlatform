@@ -26,7 +26,7 @@ services:
     volumes:
       - ./deployment/openrepairplatform_data/openrepairplatform_static:/srv/static
       - ./deployment/openrepairplatform_data/openrepairplatform_media:/srv/media
-      - ./OpenRepairPlatform:/srv/app # uncomment for dev env
+      - ../OpenRepairPlatform:/srv/app # uncomment for dev env
     command: bash -c "cd /srv/app/openrepairplatform/static/ && npm i && cd /srv/app/deployment/django && ./start-dev.sh" # uncomment for dev env
     ports: # uncomment for dev env
       - 8000:8000 # uncomment for dev env

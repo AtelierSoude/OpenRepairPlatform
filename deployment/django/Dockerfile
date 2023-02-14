@@ -17,17 +17,34 @@ ENV LC_ALL fr_FR
 ENV LANG fr_FR
 ENV LANGUAGE fr_FR
 
-RUN ln /usr/bin/sassc /usr/bin/sass
-
 RUN mkdir /srv/app /srv/static /srv/media
 WORKDIR /srv/app
 
 COPY ../../requirements.txt ./
 RUN pip3 install -r ./requirements.txt
 
+RUN ln /usr/bin/sassc /usr/bin/sass
+
 COPY manage.py . 
 COPY deployment/django/openrepairplatform.cron /etc/cron.d/openrepairplatform
 RUN chmod 0644 /etc/cron.d/openrepairplatform
+
+COPY deployment/django/start.sh .
+
+
+
+################ BUILDER #########################
+FROM base AS builder
+
+WORKDIR /srv/app
+
+COPY ../../openrepairplatform ./openrepairplatform
+
+RUN cd ./openrepairplatform/static  && npm install && node build.prod.js
+
+RUN chown -R openrepairplatform:openrepairplatform /srv/*
+USER openrepairplatform
+RUN python3 ./manage.py collectstatic --noinput
 
 ################ DEVEVOPPEMENT #########################
 
@@ -44,29 +61,12 @@ RUN cron
 
 ################ PRODUCTION #########################
 
-# building the production image 
 FROM base AS production
 
-WORKDIR /srv/app
-
 RUN pip3 install uwsgi
-
-COPY deployment/django/start.sh /
 COPY deployment/django/uwsgi.ini .
-COPY ../../openrepairplatform ./openrepairplatform
 
-RUN cd openrepairplatform/static/ 
-RUN npm install
-RUN node build.prod.js
-
-RUN chown -R openrepairplatform:openrepairplatform /srv/*
-USER openrepairplatform
-RUN python3 ./manage.py collectstatic --noinput
-
-COPY /srv/app/openrepairplatform/static/ /srv/static
-
-
-RUN rm -rf /srv/app/openrepairplatform
+COPY --from=builder /srv/app/openrepairplatform/static/ /srv/static
 
 RUN sed -i "s/{{SECRET_KEY}}/${SECRET_KEY}/" /etc/cron.d/openrepairplatform
 RUN sed -i "s/{{EMAIL_PASSWORD}}/${EMAIL_PASSWORD}/" /etc/cron.d/openrepairplatform

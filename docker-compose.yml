@@ -17,22 +17,22 @@ services:
     ############# From localy builded image 
     build:
       dockerfile: ./deployment/django/Dockerfile
-      target: developpement # rename for developpement env : developpement / production : production
+      target: production # rename for developpement env : developpement / production : production
     ############# From docker hub image 
     #image: openrepairplatform:latest
     container_name: openrepairplatform
     env_file:
       - .env
-    volumes:
-      - ./deployment/openrepairplatform_data/openrepairplatform_static:/srv/static
-      - ./deployment/openrepairplatform_data/openrepairplatform_media:/srv/media
-      - ../OpenRepairPlatform:/srv/app # uncomment for dev env
-    command: bash -c "cd /srv/app/openrepairplatform/static/ && npm i && cd /srv/app/deployment/django && ./start-dev.sh" # uncomment for dev env
-    ports: # uncomment for dev env
-      - 8000:8000 # uncomment for dev env
-      - 5678:5678 # uncomment for dev env
-      - 5679:5679 # uncomment for dev env
-      - 35729:35729 # uncomment for dev env
+    #volumes:
+      #- ./deployment/openrepairplatform_data/openrepairplatform_static:/srv/static
+      #- ./deployment/openrepairplatform_data/openrepairplatform_media:/srv/media
+      #- ../OpenRepairPlatform:/srv/app # uncomment for dev env
+    #command: bash -c "cd /srv/app/openrepairplatform/static/ && npm i && cd /srv/app/deployment/django && ./start-dev.sh" # uncomment for dev env
+    #ports: # uncomment for dev env
+      #- 8000:8000 # uncomment for dev env
+      #- 5678:5678 # uncomment for dev env
+      #- 5679:5679 # uncomment for dev env
+      #- 35729:35729 # uncomment for dev env
     depends_on:
       - db
     networks:

@@ -1,4 +1,3 @@
-
 ################ BASE #########################
 FROM python:3.9-slim-buster AS base
 
@@ -23,6 +22,10 @@ WORKDIR /srv/app
 COPY ../../requirements.txt ./
 RUN pip3 install -r ./requirements.txt
 
+COPY ../../requirements_dev.txt /srv/app/requirements_dev.txt 
+RUN pip3 install -r /srv/app/requirements_dev.txt 
+RUN rm /srv/app/requirements_dev.txt
+
 RUN ln /usr/bin/sassc /usr/bin/sass
 
 COPY manage.py . 
@@ -44,7 +47,7 @@ RUN cd ./openrepairplatform/static  && npm install && node build.prod.js
 
 RUN chown -R openrepairplatform:openrepairplatform /srv/*
 USER openrepairplatform
-RUN python3 ./manage.py collectstatic --noinput
+RUN python3 manage.py collectstatic --noinput
 
 ################ DEVEVOPPEMENT #########################
 
@@ -52,16 +55,14 @@ FROM base AS developpement
 
 WORKDIR /srv/app
 
-COPY ../../requirements_dev.txt /srv/app/requirements_dev.txt 
-RUN pip3 install -r /srv/app/requirements_dev.txt 
-RUN rm /srv/app/requirements_dev.txt
-
 RUN chmod 0644 /etc/cron.d/openrepairplatform
 RUN cron
 
 ################ PRODUCTION #########################
 
 FROM base AS production
+
+WORKDIR /srv/app
 
 RUN pip3 install uwsgi
 COPY deployment/django/uwsgi.ini .
@@ -71,5 +72,5 @@ COPY --from=builder /srv/app/openrepairplatform/static/ /srv/static
 RUN sed -i "s/{{SECRET_KEY}}/${SECRET_KEY}/" /etc/cron.d/openrepairplatform
 RUN sed -i "s/{{EMAIL_PASSWORD}}/${EMAIL_PASSWORD}/" /etc/cron.d/openrepairplatform
 
-CMD /start.sh
+CMD ./start.sh
 

@@ -18,12 +18,12 @@ SECRET_KEY = "H/hXAUnb1ZKNGpToim2cg38dxiyHM6b+zB9zozhpTzkP"
 
 DEBUG = True
 
-ALLOWED_HOSTS = [
-    os.getenv("DOMAINS"),
-    '127.0.0.1',
-    '0.0.0.0',
-    'localhost'
-]
+#Set domains
+domainOS = str(os.environ.get("DOMAINS")) + "" + str(os.environ.get("DOMAINSDNS"))
+domains = []
+if domainOS is not None:
+    domains.append(domainOS.split(" "))
+ALLOWED_HOSTS = domains
 
 SITE_ID = 1
 

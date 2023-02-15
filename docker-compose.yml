@@ -67,9 +67,8 @@ services:
     volumes: 
       - ./deployment/certbot/www/:/var/www/certbot/:rw 
       - ./deployment/certbot/conf/:/etc/lestencrypt/:rw 
-      - /var/log/letsencrypt/:/var/log/letsencrypt
       - /var/run/docker.sock:/var/run/docker.sock
-      - /var/lib/letsencrypt:/var/lib/letsencrypt
+
       - ./deployment/certs:/etc/letsencrypt
     env_file:
       - .env

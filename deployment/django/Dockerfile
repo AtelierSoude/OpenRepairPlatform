@@ -1,13 +1,17 @@
 ################ BASE #########################
-FROM python:3.9-slim-buster AS base
+FROM python:3.9.6-slim-buster AS base
 
-RUN apt-get update && apt-get upgrade -y && apt-get install -y curl 
+# set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+RUN apt-get update
+RUN apt-get install -y curl
 RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
 RUN apt-get install -y nodejs
-RUN apt-get install -y yarn python3-pip locales locales-all cron make sassc binutils libproj-dev gdal-bin
+RUN apt-get install -y libproj-dev locales locales-all cron gdal-bin
 
-RUN groupadd -r openrepairplatform 
-RUN  useradd -r -g openrepairplatform openrepairplatform
+RUN pip install --upgrade pip
 
 # French ENV for date
 RUN sed -i -e 's/# fr_FR.UTF-8 UTF-8/fr_FR.UTF-8 UTF-8/' /etc/locale.gen && \
@@ -16,24 +20,31 @@ ENV LC_ALL fr_FR
 ENV LANG fr_FR
 ENV LANGUAGE fr_FR
 
-RUN mkdir /srv/app /srv/static /srv/media
-WORKDIR /srv/app
+RUN mkdir -p /srv/app /srv/static /srv/media
 
-COPY ../../requirements.txt ./
-RUN pip3 install -r ./requirements.txt
-
-COPY ../../requirements_dev.txt /srv/app/requirements_dev.txt 
-RUN pip3 install -r /srv/app/requirements_dev.txt 
-RUN rm /srv/app/requirements_dev.txt
-
-RUN ln /usr/bin/sassc /usr/bin/sass
-
-COPY manage.py . 
 COPY deployment/django/openrepairplatform.cron /etc/cron.d/openrepairplatform
 RUN chmod 0644 /etc/cron.d/openrepairplatform
 
-COPY deployment/django/start.sh .
+RUN groupadd -r openrepairplatform 
+RUN  useradd -ms /bin/bash -r -g openrepairplatform openrepairplatform
+RUN chown -R openrepairplatform:openrepairplatform /srv/*
 
+# set work directory
+WORKDIR /srv/app
+
+# install dependencies
+COPY ../../requirements.txt ./
+COPY ../../requirements_dev.txt /srv/app/requirements_dev.txt 
+RUN pip install -r requirements_dev.txt
+
+#RUN apt-get install -y yarn python3-pip make sassc binutils 
+
+
+#RUN ln /usr/bin/sassc /usr/bin/sass
+
+COPY manage.py . 
+
+COPY deployment/django/start.sh .
 
 
 ################ BUILDER #########################
@@ -43,7 +54,7 @@ WORKDIR /srv/app
 
 COPY ../../openrepairplatform ./openrepairplatform
 
-RUN cd ./openrepairplatform/static  && npm install && node build.prod.js
+RUN cd ./openrepairplatform/static && npm install && node build.prod.js
 
 RUN chown -R openrepairplatform:openrepairplatform /srv/*
 USER openrepairplatform
@@ -64,13 +75,20 @@ FROM base AS production
 
 WORKDIR /srv/app
 
-RUN pip3 install uwsgi
-COPY deployment/django/uwsgi.ini .
+COPY ../../openrepairplatform ./openrepairplatform
 
-COPY --from=builder /srv/app/openrepairplatform/static/ /srv/static
+USER root
+RUN apt-get install -y uwsgi
+COPY deployment/django/uwsgi.ini .
 
 RUN sed -i "s/{{SECRET_KEY}}/${SECRET_KEY}/" /etc/cron.d/openrepairplatform
 RUN sed -i "s/{{EMAIL_PASSWORD}}/${EMAIL_PASSWORD}/" /etc/cron.d/openrepairplatform
+
+USER openrepairplatform
+
+COPY --from=builder /srv/app/openrepairplatform/static/ /srv/static
+
+
 
 CMD ./start.sh
 

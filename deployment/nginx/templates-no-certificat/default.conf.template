@@ -5,7 +5,7 @@ upstream openrepairplatform_uwsgi {
 
 server {
     listen 80;
-    server_name ${DOMAINS};
+    server_name ${DOMAINDNS};
     location ~ /\. { deny all; access_log off; log_not_found off; }
 
     access_log  /dev/stdout;

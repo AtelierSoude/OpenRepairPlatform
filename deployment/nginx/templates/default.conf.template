@@ -6,7 +6,7 @@ server {
     listen 80;
     listen [::]:80 default_server;
     server_tokens off; #hide nginx version (security best practice)
-    server_name ${DOMAINS};
+    server_name ${DOMAINDNS};
     add_header  Strict-Transport-Security "max-age=31536000";
 
     
@@ -36,8 +36,8 @@ server {
     access_log  /dev/stdout;
     error_log   /dev/stderr;
 
-    ssl_certificate /etc/letsencrypt/live/${DOMAINS}/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/${DOMAINS}/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/${DOMAINDNS}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/${DOMAINDNS}/privkey.pem;
 
     location /static/ {
         alias /srv/static/;

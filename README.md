@@ -83,7 +83,7 @@ POSTGRES_PASSWORD=CHANGE_ME
 POSTGRES_DBNAME=CHANGE_ME
 
 #DJANGO settings
-DJANGO_SETTINGS_MODULE=openrepairplatform.settings.dev
+DJANGO_SETTINGS_MODULE=openrepairplatform.settings.prod
 SECRET_KEY=CHANGE_ME
 
 #Emailing settings

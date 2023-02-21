@@ -1,0 +1,73 @@
+version: '3'
+
+services:
+  db:
+    image: postgis/postgis
+    container_name: postgres
+    env_file:
+      - .env
+    volumes:
+      - openrepairplatform-db:/var/lib/postgresql/data
+      - ./deployment/saves-bdd:/saves-bdd
+    networks:
+      - openrepairplatform
+  openrepairplatform:
+    build:
+      dockerfile: ./deployment/django/Dockerfile
+      target: production
+    ############# From docker hub image 
+    #image: openrepairplatform:latest
+    container_name: openrepairplatform
+    env_file:
+      - .env
+    #ports: # uncomment for dev env
+      #- 8000:8000 # uncomment for dev env
+      #- 5678:5678 # uncomment for dev env
+      #- 5679:5679 # uncomment for dev env
+      #- 35729:35729 # uncomment for dev env
+    depends_on:
+      - db
+    networks:
+      - openrepairplatform
+    restart: unless-stopped
+  nginx:
+    image: nginx:latest
+    container_name: openrepairplatform_nginx
+    ports:
+      - 80:80
+      - 443:443
+    env_file:
+      - .env
+    volumes:
+      - ./deployment/nginx/templates:/etc/nginx/templates
+      - ./deployment/nginx/nginx-snippet.conf:/etc/nginx/snippets/ssl-params.conf
+      - ./deployment/certbot/www:/var/www/certbot/:ro
+      - ./deployment/certbot/conf/:/etc/nginx/ssl/:ro
+      - ./deployment/openrepairplatform_data/openrepairplatform_static:/srv/static:ro
+      - ./deployment/openrepairplatform_data/openrepairplatform_media:/srv/media:ro
+      - ./deployment/certs:/etc/letsencrypt
+    command: openssl dhparam -out /etc/ssl/certsdhparam.pem 4096
+    networks:
+      - openrepairplatform
+    depends_on:
+      - openrepairplatform 
+    restart: unless-stopped
+  certbot:
+    image: gordonchan/auto-letsencrypt
+    links:
+    - nginx
+    volumes: 
+      - ./deployment/certbot/www/:/var/www/certbot/:rw 
+      - ./deployment/certbot/conf/:/etc/lestencrypt/:rw 
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./deployment/certs:/etc/letsencrypt
+    env_file:
+      - .env
+    restart: unless-stopped
+    networks:
+      - openrepairplatform
+networks:
+  openrepairplatform:
+volumes:
+  certs:
+  openrepairplatform-db: 

@@ -23,7 +23,7 @@ domainOS = str(os.environ.get("DOMAINS")) + "" + str(os.environ.get("DOMAINSDNS"
 domains = []
 if domainOS is not None:
     domains.append(domainOS.split(" "))
-ALLOWED_HOSTS = domains
+ALLOWED_HOSTS = domains[0]
 
 SITE_ID = 1
 

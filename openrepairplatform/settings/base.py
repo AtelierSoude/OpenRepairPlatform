@@ -19,10 +19,9 @@ SECRET_KEY = "H/hXAUnb1ZKNGpToim2cg38dxiyHM6b+zB9zozhpTzkP"
 DEBUG = True
 
 #Set domains
-domainOS = str(os.environ.get("DOMAINS")) + "" + str(os.environ.get("DOMAINSDNS"))
+domainOS = str(os.environ.get("DOMAINDNS")) + " " + str(os.environ.get("DOMAINS")) 
 domains = []
-if domainOS is not None:
-    domains.append(domainOS.split(" "))
+domains.append(domainOS.split(" "))
 ALLOWED_HOSTS = domains[0]
 
 SITE_ID = 1

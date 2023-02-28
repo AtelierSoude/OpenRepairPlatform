@@ -179,3 +179,4 @@ openrepairplatform/static/js/vue.apps.bundle.css
 *dump_*.sql
 *dump_*.sql.gzip
 *dump_*.sql.zip
+deployment/nginx/shared/*

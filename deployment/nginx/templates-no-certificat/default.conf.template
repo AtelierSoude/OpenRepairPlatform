@@ -24,6 +24,9 @@ server {
         add_header Cache-Control public;
         access_log off;
     }
+    location ~* ^/(?:favicon|apple-touch-icon|android-chrome-|mstile-|safari-pinned-tab.svg|browserconfig.xml|mainfest.json){
+        alias /srv/static/img/favicon;
+     }
 
     location / {
         uwsgi_pass openrepairplatform_uwsgi;
@@ -31,4 +34,7 @@ server {
 
         client_max_body_size 20m;
     }
+    
+    
+   
 }

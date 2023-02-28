@@ -17,7 +17,7 @@ services:
     build:
       dockerfile: ./deployment/django/Dockerfile
       target: developpement 
-    container_name: openrepairplatform_dev
+    container_name: openrepairplatform
     env_file:
       - .env
     volumes:

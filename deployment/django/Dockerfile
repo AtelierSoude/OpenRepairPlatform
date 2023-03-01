@@ -25,10 +25,10 @@ RUN mkdir -p /srv/app /srv/static /srv/media
 COPY deployment/django/openrepairplatform.cron /etc/cron.d/openrepairplatform
 RUN chmod 0644 /etc/cron.d/openrepairplatform
 
-#RUN groupadd -r openrepairplatform 
-#RUN useradd -ms /bin/bash -r -g openrepairplatform openrepairplatform
-#RUN usermod -G openrepairplatform,www-data openrepairplatform
-#RUN chown -R openrepairplatform:openrepairplatform /srv/*
+RUN groupadd -r openrepairplatform 
+RUN useradd -ms /bin/bash -r -g openrepairplatform openrepairplatform
+RUN usermod -G openrepairplatform,www-data openrepairplatform
+RUN chown -R openrepairplatform:openrepairplatform /srv/*
 
 #RUN mkdir /var/uwsgi
 #RUN touch /var/uwsgi/openrepairplatform.sock
@@ -68,7 +68,7 @@ WORKDIR /srv/app
 
 COPY ../../openrepairplatform ./openrepairplatform
 
-#RUN chown -R openrepairplatform:openrepairplatform /srv/*
+
 
 RUN cd ./openrepairplatform/static && npm install && node build.prod.js
 
@@ -101,9 +101,11 @@ COPY deployment/django/uwsgi.ini .
 
 #RUN mkdir /srv/app/uwsig
 #RUN chown -R www-data:www-data /srv/app/uwsig/
-
+USER openrepairplatform
 COPY --from=builder /srv/app/openrepairplatform/static/ /srv/static
 
+USER root
+RUN chown -R openrepairplatform:openrepairplatform /srv/*
 EXPOSE 8000
 
 CMD ./start.sh

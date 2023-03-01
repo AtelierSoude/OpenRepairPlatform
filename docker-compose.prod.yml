@@ -43,13 +43,12 @@ services:
       - .env.prod
     volumes:
       - ./deployment/nginx/templates/openrepairplatform.conf:/etc/nginx/templates/default.conf.template
-      - ./deployment/nginx/nginx-snippet.conf:/etc/nginx/snippets/ssl-params.conf
-      - ./deployment/nginx/uwsgi_params:/srv/uwsgi_params
+      #- ./deployment/nginx/templates/openrepairplatform.conf:/etc/nginx/templates/default.conf.template
+      #- ./deployment/nginx/nginx-snippet.conf:/etc/nginx/snippets/ssl-params.conf
+      #- ./deployment/nginx/uwsgi_params:/srv/uwsgi_params
       - ./deployment/certbot/www:/var/www/certbot/:ro
-      - ./deployment/certbot/conf/:/etc/nginx/ssl/:ro
       - ./deployment/openrepairplatform_data/openrepairplatform_static:/srv/static:ro
       - ./deployment/openrepairplatform_data/openrepairplatform_media:/srv/media:ro
-      - ./deployment/certs:/etc/letsencrypt
     #command: openssl dhparam -out /etc/ssl/certsdhparam.pem 4096
     networks:
       - openrepairplatform
@@ -57,14 +56,16 @@ services:
       - openrepairplatform 
     restart: unless-stopped
   certbot:
-    image: gordonchan/auto-letsencrypt
+    image: certbot/certbot:latest
     links:
-    - nginx
+      - nginx
+    depends_on:
+      - nginx
     volumes: 
       - ./deployment/certbot/www/:/var/www/certbot/:rw 
       - ./deployment/certbot/conf/:/etc/lestencrypt/:rw 
+      - ./deployment/certbot/lib/letsencrypt:/var/lib/letsencrypt
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./deployment/certs:/etc/letsencrypt
     env_file:
       - .env.prod
     restart: unless-stopped

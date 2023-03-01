@@ -1,40 +1,40 @@
-
 upstream openrepairplatform_uwsgi {
-    server openrepairplatform_dev:8000;
+    server openrepairplatform:8000;
 }
 
 server {
-    listen 80;
+    # the port your site will be served on
+    listen      80;
+    listen [::]:80 default_server;
+    # the domain name it will serve for
     server_name ${DOMAINDNS};
-    location ~ /\. { deny all; access_log off; log_not_found off; }
+    charset     utf-8;
 
-    access_log  /dev/stdout;
-    error_log   /dev/stderr;
+    # max upload size
+    client_max_body_size 75M;  
 
-    location /static/ {
-        alias /srv/static/;
+    # Django media
+    location /media  {
+        alias /srv/media;
         expires 100d;
         add_header Cache-Control public;
         access_log off;
     }
 
-    location /media/ {
-        alias /srv/media/;
+    location /static {
+        alias /srv/static; 
         expires 100d;
         add_header Cache-Control public;
         access_log off;
     }
+
     location ~* ^/(?:favicon|apple-touch-icon|android-chrome-|mstile-|safari-pinned-tab.svg|browserconfig.xml|mainfest.json){
-        alias /srv/static/img/favicon;
-     }
-
-    location / {
-        uwsgi_pass openrepairplatform_uwsgi;
-        include uwsgi_params;
-
-        client_max_body_size 20m;
+        alias /srv/static/img/favicon/;
     }
-    
-    
-   
+
+    # Finally, send all non-media requests to the Django server.
+    location / {
+        include     /srv/uwsgi_params;
+        uwsgi_pass openrepairplatform_uwsgi;
+    }
 }

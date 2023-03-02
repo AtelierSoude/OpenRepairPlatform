@@ -9,6 +9,7 @@ services:
     volumes:
       - openrepairplatform-db:/var/lib/postgresql/data
       - ./deployment/saves-bdd:/saves-bdd
+      - ./deployment/saves-bdd:/srv/saves-bdd 
     ports: # uncomment for dev env
       - 5432:5432 # uncomment for dev env
     networks:
@@ -23,10 +24,11 @@ services:
     volumes:
       - ./deployment/openrepairplatform_data/openrepairplatform_static:/srv/static
       - ./deployment/openrepairplatform_data/openrepairplatform_media:/srv/media
-      - ../OpenRepairPlatform:/srv/app 
+      - ../OpenRepairPlatform:/srv/app
+      - ./deployment/saves-bdd:/srv/saves-bdd 
     command: bash -c "cd /srv/app/openrepairplatform/static/ && npm i && cd /srv/app/deployment/django && ./start-dev.sh" # uncomment for dev env
     ports: 
-      - 8000:8000 
+      - 80:80 
       - 5678:5678 
       - 5679:5679 
       - 35729:35729 

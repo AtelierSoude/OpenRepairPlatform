@@ -52,12 +52,11 @@ services:
     networks:
       - openrepairplatform
     depends_on:
-      - openrepairplatform 
+      - openrepairplatform
+      - certbot
     restart: unless-stopped
   certbot:
     image: certbot/certbot:latest
-    depends_on:
-      - nginx
     volumes: 
       - ./deployment/certbot/www/:/var/www/certbot/:rw 
       - ./deployment/certbot/conf/:/etc/lestencrypt/:rw 
@@ -65,6 +64,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     env_file:
       - .env.prod
+    command:
     restart: unless-stopped
     networks:
       - openrepairplatform

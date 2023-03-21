@@ -18,7 +18,7 @@ services:
       dockerfile: ./deployment/django/Dockerfile
       target: production
       args:
-        - DOMAINDNS=reparons.soude
+        - DOMAINDNS=preprod.reparons.org
         - DOMAINS=localhost 127.0.0.1 [::1]
     ############# From docker hub image 
     #image: openrepairplatform-openrepairplatform:latest

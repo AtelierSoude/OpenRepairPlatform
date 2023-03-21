@@ -16,6 +16,7 @@ services:
   openrepairplatform:
     build:
       dockerfile: ./deployment/django/Dockerfile
+      image: openrepairplatform-openrepairplatform:latest
       target: production
       args:
         - DOMAINDNS=reparons.soude

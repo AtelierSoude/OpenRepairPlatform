@@ -21,7 +21,7 @@ services:
         - DOMAINDNS=reparons.soude
         - DOMAINS=localhost 127.0.0.1 [::1]
     ############# From docker hub image 
-    image: openrepairplatform-openrepairplatform:latest
+    #image: openrepairplatform-openrepairplatform:latest
     container_name: openrepairplatform
     env_file:
       - .env.prod

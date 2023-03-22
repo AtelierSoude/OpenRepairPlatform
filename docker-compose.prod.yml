@@ -39,18 +39,12 @@ services:
       - 443:443
     env_file:
       - .env.prod
-    tty: true
-    stdin_open: true
     volumes:
       - ./deployment/nginx/templates/openrepairplatform.conf:/etc/nginx/templates/default.conf.template:ro
-      #- ./deployment/nginx/templates/openrepairplatform.conf:/etc/nginx/templates/default.conf.template
-      - ./deployment/nginx/nginx-snippet.conf:/etc/nginx/snippets/ssl-params.conf
-      - ./deployment/nginx/uwsgi_params:/srv/uwsgi_params
-      - ./deployment/certbot/www:/var/www/certbot/:ro
-      - ./deployment/certbot/conf/:/etc/nginx/ssl/live:ro
+      - ./deployment/certbot/data/:/var/www/certbot/ 
+      - ./deployment/certbot/letsencrypt/:/etc/letsencrypt/
       - ./deployment/openrepairplatform_data/openrepairplatform_static:/srv/static:ro
       - ./deployment/openrepairplatform_data/openrepairplatform_media:/srv/media:ro
-    #command: openssl dhparam -out /etc/ssl/certsdhparam.pem 4096
     networks:
       - openrepairplatform
     depends_on:
@@ -59,21 +53,20 @@ services:
     restart: unless-stopped
   certbot:
     image: certbot/certbot:latest
-    tty: true
-    stdin_open: true
+    depends_on:
+      - nginx
     volumes: 
-      - ./deployment/certbot/www/:/var/www/certbot/:rw 
-      - ./deployment/certbot/conf/:/etc/letsencrypt/live/:rw
-      - ./deployment/certbot/lib/letsencrypt:/var/lib/letsencrypt
-      - /var/run/docker.sock:/var/run/docker.sock
-    command: certonly --non-interactive --webroot --agree-tos --email contact@atelier-soude.fr --webroot-path /var/www/certbot/ -d preprod.reparons.org
+      - ./deployment/certbot/data/:/var/www/certbot/ 
+      - ./deployment/certbot/letsencrypt/:/etc/letsencrypt/
+    command: >-
+             certonly --reinstall --webroot --webroot-path=/var/www/certbot
+             --email ${EMAIL} --agree-tos --no-eff-email
+             -d ${DOMAIN}
     env_file:
       - .env.prod
-    restart: unless-stopped
     networks:
       - openrepairplatform
 networks:
   openrepairplatform:
 volumes:
-  certs:
   openrepairplatform-db: 

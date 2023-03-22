@@ -39,6 +39,8 @@ services:
       - 443:443
     env_file:
       - .env
+    depends_on:
+      - openrepairplatform
     volumes:
       - ./deployment/nginx/templates/openrepairplatform.conf:/etc/nginx/templates/default.conf.template:ro
       - ./deployment/certbot/data/:/var/www/certbot/ 

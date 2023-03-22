@@ -12,7 +12,7 @@ services:
       - openrepairplatform-db:/var/lib/postgresql/data
       - ./deployment/saves-bdd:/saves-bdd
     networks:
-      - openrepairplatform
+      - openrepairplatform-db
   openrepairplatform:
     build:
       dockerfile: ./deployment/django/Dockerfile
@@ -30,6 +30,7 @@ services:
       - db
     networks:
       - openrepairplatform
+      - openrepairplatform-db
     restart: unless-stopped
   nginx:
     image: nginx:latest
@@ -67,5 +68,6 @@ services:
       - openrepairplatform
 networks:
   openrepairplatform:
+  openrepairplatform-db:
 volumes:
   openrepairplatform-db: 

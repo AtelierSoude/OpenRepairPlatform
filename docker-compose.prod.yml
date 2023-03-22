@@ -66,7 +66,7 @@ services:
       - ./deployment/certbot/conf/:/etc/letsencrypt/live/:rw
       - ./deployment/certbot/lib/letsencrypt:/var/lib/letsencrypt
       - /var/run/docker.sock:/var/run/docker.sock
-    command: certonly --non-interactive --webroot --webroot-path /var/www/certbot/ -d preprod.reparons.org --dry-run
+    command: certonly --non-interactive --webroot --agree-tos --email contact@atelier-soude.fr --webroot-path /var/www/certbot/ -d preprod.reparons.org
     env_file:
       - .env.prod
     restart: unless-stopped

@@ -5,11 +5,11 @@ EMAIL=$2
 
 # TODO : generate .env variables
 #echo MARIADB_USER=matomo > .env.prod
-echo POSTGRES_PASSWORD=`openssl rand 30 | base64 -w 0` >> .env.prod
+echo POSTGRES_PASSWORD=`openssl rand 30 | base64 -w 0` >> .env
  
 # Phase 1
-docker compose -f ./docker-compose-initiate.prod.yml up -d nginx --env-file .env.prod
-docker compose -f ./docker-compose-initiate.prod.yml up certbot --env-file .env.prod
+docker compose -f ./docker-compose-initiate.prod.yml up -d nginx
+docker compose -f ./docker-compose-initiate.prod.yml up certbot
 docker compose -f ./docker-compose-initiate.prod.yml down 
  
 # some configurations for let's encrypt

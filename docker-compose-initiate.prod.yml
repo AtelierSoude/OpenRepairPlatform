@@ -7,7 +7,7 @@ services:
     ports:
       - 80:80
     env_file:
-      - .env.prod
+      - .env
     volumes:
       - ./deployment/nginx/templates-no-certificat/openrepairplatform.conf:/etc/nginx/templates/default.conf.template:ro
       - ./deployment/certbot/data/:/var/www/certbot/ 
@@ -16,8 +16,6 @@ services:
       - ./deployment/openrepairplatform_data/openrepairplatform_media:/srv/media:ro
     networks:
       - openrepairplatform
-    depends_on:
-      - certbot
     restart: unless-stopped
   certbot:
     image: certbot/certbot:latest
@@ -28,8 +26,10 @@ services:
              certonly --reinstall --webroot --webroot-path=/var/www/certbot
              --email ${EMAIL} --agree-tos --no-eff-email
              -d ${DOMAINDNS}
+    depends_on:
+      - nginx
     env_file:
-      - .env.prod
+      - .env
     networks:
       - openrepairplatform
 networks:

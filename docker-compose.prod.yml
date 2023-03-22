@@ -22,7 +22,7 @@ services:
         - DOMAINS=localhost 127.0.0.1 [::1]
     container_name: openrepairplatform
     env_file:
-      - .env.prod
+      - .env
     volumes:
       - ./deployment/openrepairplatform_data/openrepairplatform_static:/srv/static
       - ./deployment/openrepairplatform_data/openrepairplatform_media:/srv/media
@@ -38,7 +38,7 @@ services:
       - 80:80
       - 443:443
     env_file:
-      - .env.prod
+      - .env
     volumes:
       - ./deployment/nginx/templates/openrepairplatform.conf:/etc/nginx/templates/default.conf.template:ro
       - ./deployment/certbot/data/:/var/www/certbot/ 
@@ -63,7 +63,7 @@ services:
              --email ${EMAIL} --agree-tos --no-eff-email
              -d ${DOMAINDNS}
     env_file:
-      - .env.prod
+      - .env
     networks:
       - openrepairplatform
 networks:

@@ -47,9 +47,6 @@ services:
       - ./deployment/openrepairplatform_data/openrepairplatform_media:/srv/media:ro
     networks:
       - openrepairplatform
-    depends_on:
-      - openrepairplatform
-      - certbot
     restart: unless-stopped
   certbot:
     image: certbot/certbot:latest

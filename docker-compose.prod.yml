@@ -47,7 +47,7 @@ services:
       - ./deployment/nginx/nginx-snippet.conf:/etc/nginx/snippets/ssl-params.conf
       - ./deployment/nginx/uwsgi_params:/srv/uwsgi_params
       - ./deployment/certbot/www:/var/www/certbot/:ro
-      - ./deployment/certbot/conf/:/etc/nginx/ssl/:ro
+      - ./deployment/certbot/conf/:/etc/nginx/ssl/live:ro
       - ./deployment/openrepairplatform_data/openrepairplatform_static:/srv/static:ro
       - ./deployment/openrepairplatform_data/openrepairplatform_media:/srv/media:ro
     #command: openssl dhparam -out /etc/ssl/certsdhparam.pem 4096
@@ -63,9 +63,10 @@ services:
     stdin_open: true
     volumes: 
       - ./deployment/certbot/www/:/var/www/certbot/:rw 
-      - ./deployment/certbot/conf/:/etc/lestencrypt/:rw 
+      - ./deployment/certbot/conf/:/etc/letsencrypt/live/:rw
       - ./deployment/certbot/lib/letsencrypt:/var/lib/letsencrypt
       - /var/run/docker.sock:/var/run/docker.sock
+    command: certbot --nginx --dry-run
     env_file:
       - .env.prod
     restart: unless-stopped

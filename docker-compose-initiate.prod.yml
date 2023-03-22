@@ -19,7 +19,6 @@ services:
     networks:
       - openrepairplatform
     depends_on:
-      - openrepairplatform
       - certbot
     restart: unless-stopped
   certbot:

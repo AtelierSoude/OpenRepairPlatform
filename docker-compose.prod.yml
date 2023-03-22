@@ -44,7 +44,7 @@ services:
     volumes:
       - ./deployment/nginx/templates/openrepairplatform.conf:/etc/nginx/templates/default.conf.template:ro
       #- ./deployment/nginx/templates/openrepairplatform.conf:/etc/nginx/templates/default.conf.template
-      #- ./deployment/nginx/nginx-snippet.conf:/etc/nginx/snippets/ssl-params.conf
+      - ./deployment/nginx/nginx-snippet.conf:/etc/nginx/snippets/ssl-params.conf
       #- ./deployment/nginx/uwsgi_params:/srv/uwsgi_params
       - ./deployment/certbot/www:/var/www/certbot/:ro
       - ./deployment/certbot/conf/:/etc/nginx/ssl/:ro

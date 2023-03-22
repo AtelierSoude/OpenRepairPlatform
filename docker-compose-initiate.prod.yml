@@ -8,8 +8,6 @@ services:
       - 80:80
     env_file:
       - .env.prod
-    tty: true
-    stdin_open: true
     volumes:
       - ./deployment/nginx/templates-no-certificat/openrepairplatform.conf:/etc/nginx/templates/default.conf.template:ro
       - ./deployment/certbot/data/:/var/www/certbot/ 

@@ -5,7 +5,7 @@ EMAIL=$2
 
 # TODO : generate .env variables
 #echo MARIADB_USER=matomo > .env.prod
-echo POSTGRES_PASSWORD=`openssl rand 30 | base64 -w 0` >> .env
+#echo POSTGRES_PASSWORD=`openssl rand 30 | base64 -w 0` >> .env
  
 # Phase 1
 docker compose -f ./docker-compose-initiate.prod.yml up -d nginx

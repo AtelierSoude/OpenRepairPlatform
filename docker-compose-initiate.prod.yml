@@ -9,7 +9,7 @@ services:
     env_file:
       - .env
     volumes:
-      - ./deployment/nginx/templates-no-certificat/openrepairplatform.conf:/etc/nginx/templates/default.conf.template:ro
+      - ./deployment/nginx/templates/openrepairplatform-initiate.conf:/etc/nginx/templates/default.conf.template:ro
       - ./deployment/certbot/data/:/var/www/certbot/ 
       - ./deployment/certbot/letsencrypt/:/etc/letsencrypt/
       - ./deployment/openrepairplatform_data/openrepairplatform_static:/srv/static:ro

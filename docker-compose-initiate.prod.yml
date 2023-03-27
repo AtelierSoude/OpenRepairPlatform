@@ -22,8 +22,9 @@ services:
     volumes: 
       - ./deployment/certbot/data/:/var/www/certbot/ 
       - ./deployment/certbot/letsencrypt/:/etc/letsencrypt/
-    command: >-
-             certonly --reinstall --webroot --webroot-path=/var/www/certbot
+    command: >- 
+            openssl dhparam -out /etc/letsencrypt/ssl-dhparams.pem 2048 &&
+            certonly --reinstall --webroot --webroot-path=/var/www/certbot
              --email ${EMAIL} --agree-tos --no-eff-email
              -d ${DOMAINDNS}
     depends_on:

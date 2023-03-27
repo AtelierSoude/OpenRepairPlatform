@@ -46,6 +46,7 @@ services:
       - ./deployment/nginx/templates/openrepairplatform.conf:/etc/nginx/templates/default.conf.template:ro
       - ./deployment/certbot/data/:/var/www/certbot/ 
       - ./deployment/certbot/letsencrypt/:/etc/letsencrypt/
+      - ./deployment/nginx/options-ssl-nginx.conf:/etc/letsencrypt/options-ssl-nginx.conf
       - ./deployment/openrepairplatform_data/openrepairplatform_static:/srv/static:ro
       - ./deployment/openrepairplatform_data/openrepairplatform_media:/srv/media:ro
     networks:

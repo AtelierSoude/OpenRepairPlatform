@@ -23,10 +23,9 @@ services:
       - ./deployment/certbot/data/:/var/www/certbot/ 
       - ./deployment/certbot/letsencrypt/:/etc/letsencrypt/
     command: >- 
-            openssl dhparam -out /etc/letsencrypt/ssl-dhparams.pem 2048 &&
             certonly --reinstall --webroot --webroot-path=/var/www/certbot
              --email ${EMAIL} --agree-tos --no-eff-email
-             -d ${DOMAINDNS}
+             -d ${DOMAINDNS} && openssl dhparam -out /etc/letsencrypt/ssl-dhparams.pem 2048 
     depends_on:
       - nginx
     env_file:

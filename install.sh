@@ -3,6 +3,8 @@
 DOMAINDNS=$1
 EMAIL=$2
 
+docker compose -f ./docker-compose.prod.yml down 
+
 # TODO : generate .env variables
 #echo MARIADB_USER=matomo > .env.prod
 #echo POSTGRES_PASSWORD=`openssl rand 30 | base64 -w 0` >> .env

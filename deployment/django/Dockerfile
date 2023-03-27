@@ -9,8 +9,7 @@ RUN apt-get update
 RUN apt-get install -y curl
 RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
 RUN apt-get install -y nodejs
-RUN apt-get install -y libproj-dev locales locales-all cron gdal-bin build-essential sassc
-RUN ln /usr/bin/sassc /usr/bin/sass
+RUN apt-get install -y libproj-dev locales locales-all cron gdal-bin build-essential 
 
 RUN pip install --upgrade pip
 
@@ -64,15 +63,13 @@ FROM base AS builder
 
 WORKDIR /srv/app
 
-
-
-
 COPY ../../openrepairplatform ./openrepairplatform
 
+WORKDIR /srv/app/openrepairplatform/static
+RUN  npm install  
+RUN  node build.prod.js
 
-
-RUN cd ./openrepairplatform/static && npm install && node build.prod.js
-
+WORKDIR /srv/app
 RUN python3 manage.py collectstatic --noinput
 
 ################ DEVEVOPPEMENT #########################
@@ -103,7 +100,8 @@ COPY deployment/django/uwsgi.ini .
 #RUN mkdir /srv/app/uwsig
 #RUN chown -R www-data:www-data /srv/app/uwsig/
 USER openrepairplatform
-COPY --from=builder /srv/app/openrepairplatform/static/ /srv/static
+COPY --from=builder /srv/app/openrepairplatform/static/* /srv/static
+COPY --from=builder /srv/app/openrepairplatform/static/node_modules/* /srv/app/openrepairplatform/static/node_modules
 
 USER root
 RUN chown -R openrepairplatform:openrepairplatform /srv/*

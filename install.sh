@@ -20,4 +20,4 @@ docker compose -f ./docker-compose-initiate.prod.yml down
  
 # Phase 2
 #crontab /etc/crontab
-docker compose -f ./docker-compose.prod.yml up -d
+docker compose -f ./docker-compose.prod.yml up 

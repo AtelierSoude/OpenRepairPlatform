@@ -42,6 +42,7 @@ services:
       - .env
     depends_on:
       - openrepairplatform
+      - certbot
     volumes:
       - ./deployment/nginx/templates/openrepairplatform.conf:/etc/nginx/templates/default.conf.template:ro
       - ./deployment/certbot/data/:/var/www/certbot/ 
@@ -55,15 +56,13 @@ services:
     restart: unless-stopped
   certbot:
     image: certbot/certbot:latest
-    depends_on:
-      - nginx
     volumes: 
       - ./deployment/certbot/data/:/var/www/certbot/ 
       - ./deployment/certbot/letsencrypt/:/etc/letsencrypt/
-    command: >-
-             certonly --reinstall --webroot --webroot-path=/var/www/certbot
-             --email ${EMAIL} --agree-tos --no-eff-email
-             -d ${DOMAINDNS}
+#   command: >-
+#             certonly --reinstall --webroot --webroot-path=/var/www/certbot
+#             --email ${EMAIL} --agree-tos --no-eff-email
+#             -d ${DOMAINDNS}
     env_file:
       - .env
     networks:

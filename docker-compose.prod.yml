@@ -5,7 +5,7 @@ services:
     image: postgis/postgis
     container_name: postgres
     env_file:
-      - .env.prod
+      - .env
     ports:
       - 5432:5432
     volumes:

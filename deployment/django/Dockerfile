@@ -9,7 +9,7 @@ RUN apt-get update
 RUN apt-get install -y curl
 RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
 RUN apt-get install -y nodejs
-RUN apt-get install -y libproj-dev locales locales-all cron gdal-bin build-essential
+RUN apt-get install -y libproj-dev locales locales-all cron gdal-bin build-essential sass
 
 RUN pip install --upgrade pip
 

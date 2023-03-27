@@ -24,8 +24,8 @@ services:
     env_file:
       - .env
     volumes:
-      - ./deployment/openrepairplatform_data/openrepairplatform_static:/srv/static
-      - ./deployment/openrepairplatform_data/openrepairplatform_media:/srv/media
+      - ./deployment/openrepairplatform_data/openrepairplatform_static:/srv/app/static
+      - ./deployment/openrepairplatform_data/openrepairplatform_media:/srv/app/media
     depends_on:
       - db
     networks:
@@ -56,6 +56,7 @@ services:
     restart: unless-stopped
   certbot:
     image: certbot/certbot:latest
+    container_name: openrepairplatform_certbot
     volumes: 
       - ./deployment/certbot/data/:/var/www/certbot/ 
       - ./deployment/certbot/letsencrypt/:/etc/letsencrypt/

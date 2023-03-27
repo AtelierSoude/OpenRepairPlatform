@@ -42,7 +42,6 @@ services:
       - .env
     depends_on:
       - openrepairplatform
-      - certbot
     volumes:
       - ./deployment/nginx/templates/openrepairplatform.conf:/etc/nginx/templates/default.conf.template:ro
       - ./deployment/certbot/data/:/var/www/certbot/ 
@@ -59,10 +58,9 @@ services:
     volumes: 
       - ./deployment/certbot/data/:/var/www/certbot/ 
       - ./deployment/certbot/letsencrypt/:/etc/letsencrypt/
-#   command: >-
-#             certonly --reinstall --webroot --webroot-path=/var/www/certbot
-#             --email ${EMAIL} --agree-tos --no-eff-email
-#             -d ${DOMAINDNS}
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+    depends_on:
+      - nginx
     env_file:
       - .env
     networks:

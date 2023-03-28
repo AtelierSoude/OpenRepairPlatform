@@ -104,7 +104,6 @@ COPY deployment/django/uwsgi.ini .
 #RUN chown -R www-data:www-data /srv/app/uwsig/
 #USER openrepairplatform
 COPY ../../openrepairplatform/static/ /srv/app/static/
-COPY ../../openrepairplatform/media/ /srv/app/media/
 #COPY --from=builder /srv/app/openrepairplatform/static/node_modules/ /srv/app/openrepairplatform/static/node_modules/
 
 USER root

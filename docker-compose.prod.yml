@@ -24,7 +24,7 @@ services:
     env_file:
       - .env
     volumes:
-      - ./deployment/openrepairplatform_data/openrepairplatform_static/:/srv/app/static
+      - openrepairplatform_static:/srv/app/static
       - ./deployment/openrepairplatform_data/openrepairplatform_media/:/srv/app/media
     depends_on:
       - db
@@ -49,8 +49,8 @@ services:
       - ./deployment/certbot/letsencrypt/:/etc/nginx/ssl/
       - ./deployment/nginx/uwsgi_params:/srv/uwsgi_params:ro
       - ./deployment/nginx/options-ssl-nginx.conf:/etc/letsencrypt/options-ssl-nginx.conf:ro
-      - ./deployment/openrepairplatform_data/openrepairplatform_static/:/srv/static:ro
-      - ./deployment/openrepairplatform_data/openrepairplatform_media/:/srv/media:ro
+      - openrepairplatform_static:/srv/static
+      - ./deployment/openrepairplatform_data/openrepairplatform_media/:/srv/media
     networks:
       - openrepairplatform
     restart: unless-stopped
@@ -70,3 +70,4 @@ networks:
   openrepairplatform-db:
 volumes:
   openrepairplatform-db:
+  openrepairplatform_static:

@@ -21,7 +21,7 @@ ENV LC_ALL fr_FR
 ENV LANG fr_FR
 ENV LANGUAGE fr_FR
 
-RUN mkdir -p /srv/app /srv/static /srv/media
+RUN mkdir -p /srv/app /srv/app/static /srv/app/media
 
 COPY deployment/django/openrepairplatform.cron /etc/cron.d/openrepairplatform
 RUN chmod 0644 /etc/cron.d/openrepairplatform

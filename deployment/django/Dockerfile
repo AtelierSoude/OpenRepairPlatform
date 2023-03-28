@@ -21,7 +21,7 @@ ENV LC_ALL fr_FR
 ENV LANG fr_FR
 ENV LANGUAGE fr_FR
 
-RUN mkdir -p /srv/app /srv/app/static /srv/app/media
+RUN mkdir -p /srv/app /srv/static /srv/media
 
 COPY deployment/django/openrepairplatform.cron /etc/cron.d/openrepairplatform
 RUN chmod 0644 /etc/cron.d/openrepairplatform
@@ -91,7 +91,7 @@ RUN  npm install
 RUN  node build.prod.js
 
 WORKDIR /srv/app
-RUN python3 manage.py collectstatic --noinput
+RUN python3 manage.py collectstatic --noinput --clear
 
 COPY deployment/django/uwsgi.ini .
 
@@ -99,12 +99,13 @@ COPY deployment/django/uwsgi.ini .
 #RUN chown -R www-data:www-data /srv/app/uwsig/
 #USER openrepairplatform
 #COPY ../../openrepairplatform/static/ /srv/app/static/
-COPY ../../openrepairplatform/static/ /srv/app/static/
+#COPY ../../openrepairplatform/static/ /srv/static/
 
 
 RUN chown -R openrepairplatform:openrepairplatform /srv/*
 EXPOSE 8000
 
+USER openrepairplatform
 
 CMD ./start.sh
 

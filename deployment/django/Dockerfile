@@ -65,7 +65,6 @@ FROM base AS builder
 WORKDIR /srv/app
 
 
-
 ################ DEVEVOPPEMENT #########################
 
 FROM base AS developpement
@@ -80,8 +79,8 @@ RUN cron
 
 FROM base AS production
 
+USER root
 WORKDIR /srv/app
-
 ARG DOMAINDNS
 ARG DOMAINS
 
@@ -94,23 +93,18 @@ RUN  node build.prod.js
 WORKDIR /srv/app
 RUN python3 manage.py collectstatic --noinput
 
-
-COPY ../../openrepairplatform ./openrepairplatform
-
-
 COPY deployment/django/uwsgi.ini .
 
 #RUN mkdir /srv/app/uwsig
 #RUN chown -R www-data:www-data /srv/app/uwsig/
 #USER openrepairplatform
+#COPY ../../openrepairplatform/static/ /srv/app/static/
 COPY ../../openrepairplatform/static/ /srv/app/static/
-#COPY --from=builder /srv/app/openrepairplatform/static/node_modules/ /srv/app/openrepairplatform/static/node_modules/
 
-USER root
+
 RUN chown -R openrepairplatform:openrepairplatform /srv/*
 EXPOSE 8000
 
-USER openrepairplatform
 
 CMD ./start.sh
 

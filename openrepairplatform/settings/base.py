@@ -144,7 +144,7 @@ USE_THOUSAND_SEPARATOR = True
 
 STATICFILES_DIRS = [join(PROJECT_DIR, "static")]
 
-STATIC_ROOT = join(BASE_DIR, "static")
+#STATIC_ROOT = join(BASE_DIR, "static")
 STATIC_URL = "/static/"
 
 MEDIA_URL = "/media/"

@@ -109,7 +109,7 @@ USER root
 RUN chown -R openrepairplatform:openrepairplatform /srv/*
 EXPOSE 8000
 
-USER openrepairplatform
+#USER openrepairplatform
 
 CMD ./start.sh
 

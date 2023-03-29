@@ -30,9 +30,7 @@ urlpatterns = [
         "api/location/",
         include("openrepairplatform.location.api_urls", namespace="api_location"),
     ),
-    path(
-        "robots.txt",
-        TemplateView.as_view(template_name="robots.txt", content_type="text/plain"),    ),
+    
     path(
         "api/user/",
         include("openrepairplatform.user.api_urls", namespace="api_user"),

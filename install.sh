@@ -19,4 +19,4 @@ curl -L --create-dirs -o ./deployment/nginx/options-ssl-nginx.conf https://raw.g
  
 # Phase 2
 #crontab /etc/crontab
-docker compose -f ./docker-compose.prod.yml up 
+docker compose -f ./docker-compose.prod.yml up -d

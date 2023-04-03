@@ -12,6 +12,7 @@
     "vue-multiselect": "^3.0.0-alpha.2"
   },
   "scripts": {
-    "build": "esbuild build.js "
+    "build": "node build.prod.js",
+    "buildprod": "node build.prod.js"
   }
 }

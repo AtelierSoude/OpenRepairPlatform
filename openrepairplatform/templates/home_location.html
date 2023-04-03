@@ -18,7 +18,7 @@
         </h6>
         <form method="get" class="form-row" action="{% url 'event:list' %}">
           <div class="input-group mb-3">
-            <input required type="text" class="form-control" placeholder="Code postal" name="postcode" pattern="[0-9]*" value="{{ postcode }}"/>
+            <input required type="text" class="form-control" placeholder="Code postal" name="postcode" pattern="^(?:0[1-9]|[1-8]\d|9[0-8])\d{3}$" value="{{ postcode }}"/>
             <div class="input-group-append">
               <button class="btn btn-outline-primary bg-secondary" type="submit"><i class="fa fa-search"></i></button>
             </div>

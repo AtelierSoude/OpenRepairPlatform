@@ -4,14 +4,11 @@ import os
 from bootstrap5 import forms
 from django.contrib import messages
 
-
-
-STATIC_ROOT = "/srv/static/"
-ASSETS_ROOT = STATIC_ROOT
-
-
 PROJECT_DIR = dirname(dirname(abspath(__file__)))
 BASE_DIR = dirname(PROJECT_DIR)
+STATIC_ROOT = "/srv/app/openrepairplatform/static"
+ASSETS_ROOT = STATIC_ROOT
+
 
 SECRET_KEY = "H/hXAUnb1ZKNGpToim2cg38dxiyHM6b+zB9zozhpTzkP"
 
@@ -141,9 +138,8 @@ USE_TZ = True
 USE_THOUSAND_SEPARATOR = True
 
 
-STATICFILES_DIRS = [join(PROJECT_DIR, "static")]
+STATICFILES_DIRS = ["/srv/static/"]
 
-#STATIC_ROOT = join(BASE_DIR, "static")
 STATIC_URL = "/static/"
 
 MEDIA_URL = "/media/"

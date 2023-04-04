@@ -23,7 +23,7 @@ services:
       - .env
     volumes:
       - ./openrepairplatform/static/:/srv/static
-      - ./deployment/openrepairplatform_data/openrepairplatform_media:/srv/media
+      - ./deployment/openrepairplatform_data/openrepairplatform_media/:/srv/media
       - ../OpenRepairPlatform:/srv/app
       - ./deployment/saves-bdd:/srv/saves-bdd 
     command: bash -c "cd /srv/app/openrepairplatform/static/ && npm i && cd /srv/app/deployment/django && ./start-dev.sh" # uncomment for dev env

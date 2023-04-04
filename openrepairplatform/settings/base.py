@@ -7,7 +7,6 @@ from django.contrib import messages
 
 
 STATIC_ROOT = "/srv/static/"
-MEDIA_ROOT = "/srv/media/"
 ASSETS_ROOT = STATIC_ROOT
 
 
@@ -148,7 +147,7 @@ STATICFILES_DIRS = [join(PROJECT_DIR, "static")]
 STATIC_URL = "/static/"
 
 MEDIA_URL = "/media/"
-MEDIA_ROOT = join(BASE_DIR, "media")
+MEDIA_ROOT = "/srv/media/openrepairplatform_media/"
 
 FILE_UPLOAD_HANDLERS = [
     "django.core.files.uploadhandler.TemporaryFileUploadHandler",

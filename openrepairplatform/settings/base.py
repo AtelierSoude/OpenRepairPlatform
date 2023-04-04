@@ -147,7 +147,7 @@ STATICFILES_DIRS = [join(PROJECT_DIR, "static")]
 STATIC_URL = "/static/"
 
 MEDIA_URL = "/media/"
-MEDIA_ROOT = "/srv/media/openrepairplatform_media/"
+MEDIA_ROOT = "/srv/media/"
 
 FILE_UPLOAD_HANDLERS = [
     "django.core.files.uploadhandler.TemporaryFileUploadHandler",

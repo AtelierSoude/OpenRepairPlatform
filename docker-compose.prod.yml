@@ -25,7 +25,7 @@ services:
       - .env
     volumes:
       - openrepairplatform_static:/srv/static
-      - ./deployment/openrepairplatform_data/openrepairplatform_media/:/srv/app/media
+      - openrepairplatform_media:/srv/media
     depends_on:
       - db
     networks:
@@ -70,4 +70,5 @@ networks:
   openrepairplatform-db:
 volumes:
   openrepairplatform-db:
+  openrepairplatform_media:
   openrepairplatform_static:

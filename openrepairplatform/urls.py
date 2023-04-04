@@ -4,6 +4,7 @@ from django.contrib import admin
 from django.conf.urls.static import static
 from django.views.generic.base import TemplateView
 
+import debug_toolbar
 
 from . import views
 from openrepairplatform.inventory.views import OrganizationStockView
@@ -103,7 +104,6 @@ urlpatterns = [
 ]
 
 if settings.DEBUG:
-    import debug_toolbar  # noqa
 
     urlpatterns = [path("__debug__/", include(debug_toolbar.urls))] + urlpatterns
 

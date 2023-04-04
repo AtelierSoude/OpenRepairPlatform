@@ -1,5 +1,5 @@
 {
     "restructuredtext.confPath": "",
-    "python.pythonPath": "/Users/clementpoudret/env/ateliersoude/bin/python",
+    "python.pythonPath": "/usr/bin/python3",
     "git.ignoreLimitWarning": true
 }

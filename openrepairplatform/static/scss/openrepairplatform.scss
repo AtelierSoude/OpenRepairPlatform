@@ -749,5 +749,6 @@ input.toggle-modal:checked ~ div .menu-localisation input {
   }
 }
 
+@import "./includes/_menu.scss";
 
 @import "./includes/_search-bar.scss";

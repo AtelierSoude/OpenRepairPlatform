@@ -39,9 +39,7 @@
   integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
   crossorigin=""/>
    <!-- Custom & bootstrap -->
-  {% assets "css_openrepairplatform" %}
-    <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet"/>
-  {% endassets %}
+  <link rel="stylesheet" href="{% static 'css/openrepairplatform.css' %}">
   <script src="{% static 'node_modules/jquery/dist/jquery.min.js' %}"></script>
   <script src="{% static 'js/jquery.bootstrap.modal.forms.js' %}"></script>
   <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>

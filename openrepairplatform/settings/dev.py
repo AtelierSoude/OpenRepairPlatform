@@ -5,8 +5,8 @@ MEDIA_ROOT = "/srv/media/"
 
 INSTALLED_APPS += ["debug_toolbar","livereload"]  
 
-MIDDLEWARE.insert(0, "debug_toolbar.middleware.DebugToolbarMiddleware")  
-#MIDDLEWARE.insert(0, 'livereload.middleware.LiveReloadScript') 
+MIDDLEWARE.insert(101, "debug_toolbar.middleware.DebugToolbarMiddleware")  
+MIDDLEWARE.insert(100, 'livereload.middleware.LiveReloadScript') 
 
 DEBUG_TOOLBAR_PANELS = [
         'debug_toolbar.panels.versions.VersionsPanel',
@@ -22,4 +22,10 @@ DEBUG_TOOLBAR_PANELS = [
         'debug_toolbar.panels.logging.LoggingPanel',
         'debug_toolbar.panels.redirects.RedirectsPanel',
     ]
+
+
+if DEBUG:
+    import socket  # only if you haven't already imported this
+    hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
+    INTERNAL_IPS = [ip[: ip.rfind(".")] + ".1" for ip in ips] + ["127.0.0.1", "10.0.2.2"]
 

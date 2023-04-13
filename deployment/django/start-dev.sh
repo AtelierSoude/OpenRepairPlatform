@@ -10,5 +10,6 @@ python3 ../../manage.py shell -c "from openrepairplatform.user.models import Cus
 #uwsgi ./uwsgi.ini
 
 npm run build -prefix ../../openrepairplatform/static/ &
-python3 ../../manage.py runserver 0.0.0.0:80 --insecure
+python3 ../../manage.py runserver 0.0.0.0:80 --insecure &
+python3 ../../manage.py livereload --host=0.0.0.0
 #uwsgi ./uwsgi.ini

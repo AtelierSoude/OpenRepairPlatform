@@ -5,36 +5,34 @@
 <nav class="header nav-header navbar navbar-expand-lg" style="width:100%; position:fixed; z-index: 4 !important;">
   <div class="collapse navbar-collapse bg-primary" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto flex-column vertical-nav bg-primary">
+      <a href="{% url "event:list" %}">
       <li class="nav-item text-center {{event_menu}}">
-        <a href="{% url "event:list" %}">
           <i class="far fa-calendar-alt fa-2x"></i><br>
           <small>Évenements</small>
-        </a>
-      </li>
-      <li class="nav-item text-center {{activity_menu}}" >
-        <a href="{% url "event:activity_list" %}">
-          <i class="fas fa-fist-raised fa-2x"></i><br>
-          <small>Activités</small>
-        </a>
-      </li>
+              </li>
+    </a>
+      <a href="{% url "event:activity_list" %}">
+        <li class="nav-item text-center {{activity_menu}}" >
+            <i class="fas fa-fist-raised fa-2x"></i><br>
+              <small>Activités</small>
+            </li>
+      </a>
+      <a href="{% url "user:organization_list" %}">
       <li class="nav-item text-center {{organization_menu}}">
-        <a href="{% url "user:organization_list" %}">
           <i class="fas fa-network-wired fa-2x"></i><br>
           <small>Organisations</small>
-        </a>
+        
       </li>
+    </a>
+    <a href="{% url "inventory:stock_list" %}">
+
       <li class="nav-item text-center {{stock_menu}}" >
-        <a href="{% url "inventory:stock_list" %}">
           <i class="fas fa-box-open fa-2x"></i><br>
           <small class="">Stocks</small>
-        </a>
+        
       </li>
-      <li class="nav-item text-center text-muted {{repair_menu}}">
-        <a>
-          <i class="fas fa-tools fa-2x text-muted"></i><br>
-          <small class="text-muted">Réparations</small>
-        </a>
-      </li>
+      </a>
+
     </ul>
   </div>
 </nav>

@@ -1,7 +1,7 @@
 from .base import *  
 
 #pourquoi ? ... parceque...
-MEDIA_ROOT = "/srv/media/openrepairplatform_media/"
+MEDIA_ROOT = "/srv/media/"
 
 INSTALLED_APPS += ["debug_toolbar","livereload"]  
 

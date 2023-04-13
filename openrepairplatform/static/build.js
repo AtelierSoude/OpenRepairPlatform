@@ -6,7 +6,7 @@ esbuild.build({
   entryPoints: ['./js/vue/apps.js'],
   bundle: true,
   minify: true,
-  outdir: '/srv/static/',
+  outfile: '/srv/static/js/vue.apps.bundle.js',
   watch: {
     onRebuild(error, result) {
       if (error) console.error('watch build failed:', error)

@@ -22,8 +22,7 @@ services:
     env_file:
       - .env
     volumes:
-      - ./openrepairplatform/static/node_modules:/srv/static/node_modules
-      - ./openrepairplatform/static/img:/srv/static/img
+      - ./openrepairplatform/static:/srv/static
       - ../OpenRepairPlatform:/srv/app
       - ./deployment/saves-bdd:/srv/saves-bdd
       - ./deployment/openrepairplatform_data/openrepairplatform_media/:/srv/media

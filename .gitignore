@@ -144,7 +144,7 @@ media
 tmp
 *.min.js
 *.min.css
-openrepairplatform/static/css
+openrepairplatform/static/css/*.css
 openrepairplatform_static/
 !openrepairplatform_static/img/*
 openrepairplatform_media/

@@ -191,9 +191,13 @@ td {
   width: 100% !important;
 }
 
-.model_edit_stuff span{
-  min-width: 0em !important;
-
+.model_edit_stuff {
+  span{
+    min-width: 0em !important;
+  }
+  .select2-selection{
+    background-image: none !important;
+  }
 }
 .search-bar{
   .form-group{

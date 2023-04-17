@@ -85,13 +85,15 @@ ARG DOMAINDNS
 ARG DOMAINS
 
 COPY ../../openrepairplatform ./openrepairplatform
+COPY ../../openrepairplatform/static /srv/static
 
-WORKDIR /srv/app/openrepairplatform/static
+
+WORKDIR /srv/static
 RUN  npm install  
 RUN  node build.prod.js
 
 WORKDIR /srv/app
-RUN python3 manage.py collectstatic --noinput --clear
+RUN python3 manage.py collectstatic --noinput
 
 COPY deployment/django/uwsgi.ini .
 

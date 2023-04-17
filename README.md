@@ -66,10 +66,17 @@ POSTGRES_DBNAME=openrepairplatform
 POSTGRES_PASSWORD=mangerdespommes
 ```
 
-3 - launch the application in dev mode
+3 - launch the application in production mode
+
+This script will stop all previous openrepairplatform services and start the application.
+1 - obtaining the certificate for the domain by using certbot/nginx
+2 - building the application
+3 - starting the application
+4 - running all the migrations
+5 - starting the application
 
 ```bash
-docker-compose up -d
+sh ./install.prod.sh
 ```
 
 ## Run the application (in Develop mode only)

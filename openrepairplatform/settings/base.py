@@ -6,10 +6,11 @@ from django.contrib import messages
 
 PROJECT_DIR = dirname(dirname(abspath(__file__)))
 BASE_DIR = dirname(PROJECT_DIR)
-STATIC_ROOT = "/srv/app/openrepairplatform/static"
+STATIC_ROOT = "/srv/static"
 ASSETS_ROOT = STATIC_ROOT
+STATICFILES_DIRS = ["/srv/app/openrepairplatform/static"]
 STATIC_URL = "/static/"
-ASSETS_ROOT = "/srv/static/"
+ASSETS_ROOT = STATICFILES_DIRS[0]
 ASSETS_DEBUG = True
 
 

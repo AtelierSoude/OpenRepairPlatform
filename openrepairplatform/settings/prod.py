@@ -2,6 +2,7 @@ import os
 from .base import *  # noqa
 
 
+STATIC_ROOT = "/srv/static"
 
 
 

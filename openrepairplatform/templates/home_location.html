@@ -18,7 +18,7 @@
         </h6>
         <form method="get" class="form-row" action="{% url 'event:list' %}">
           <div class="input-group mb-3">
-            <input required type="text" class="form-control" placeholder="Code postal" name="postcode" pattern="[0-9]*" value="{{ request.session.postcode }}"/>
+            <input required type="text" class="form-control" placeholder="Code postal" name="postcode" pattern="^(?:0[1-9]|[1-8]\d|9[0-8])\d{3}$" value="{{ postcode }}"/>
             <div class="input-group-append">
               <button class="btn btn-outline-primary bg-secondary" type="submit"><i class="fa fa-search"></i></button>
             </div>
@@ -26,9 +26,9 @@
               Attention: Pour les grandes villes, vous devez renseigner un code postal avec l'arrondissement (exemple: pour Lyon, mettre 69007 si vous êtes dans le 7eme arrondissement, 69000 n'est pas autorisé)
             </small>
           </div>
-          {% if request.session.distance %}
-            <input class="form-range" type="range" name="distance" min="1" max="400" value="{{ request.session.distance }}" oninput="this.nextElementSibling.value = this.value">
-            <output>{{ request.session.distance }}</output> km
+          {% if distance %}
+            <input class="form-range" type="range" name="distance" min="1" max="400" value="{{ distance }}" oninput="this.nextElementSibling.value = this.value">
+            <output>{{ distance }}</output> km
           {% else %}
             <input class="form-range" type="range" name="distance" min="1" max="400" value="50" oninput="this.nextElementSibling.value = this.value">
             <output>50</output> km

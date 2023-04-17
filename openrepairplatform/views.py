@@ -44,11 +44,12 @@ class HomeView(TemplateView, FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context["postcode"] = self.request.session.get('postcode', "")
+        context["distance"] = self.request.session.get('distance', '50')
         context["event_count"] = Event.objects.all().count()
         context["user_count"] = CustomUser.objects.all().count()
         context["organization_count"] = Organization.objects.all().count()
         return context
-
 
 class OrganizationPageView(PermissionOrgaContextMixin, DetailView):
     model = Organization

@@ -177,3 +177,4 @@ DJANGO_TABLES2_TEMPLATE = "django_tables2/bootstrap4.html"
 KM_DISTANCE = 50
 
 LOCATION = os.getenv("LOCATION", "False").lower() in ('true', '1', 'y')
+SESSION_COOKIE_AGE =2419200

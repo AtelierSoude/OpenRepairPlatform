@@ -1,5 +1,8 @@
 {
     "restructuredtext.confPath": "",
-    "python.pythonPath": "/usr/bin/python3",
-    "git.ignoreLimitWarning": true
-}
+    "python.pythonPath": "/usr/lib/python3.10",
+    "git.ignoreLimitWarning": true,
+    "html.format.enable": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+
+  }

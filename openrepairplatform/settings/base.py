@@ -4,14 +4,16 @@ import os
 from bootstrap5 import forms
 from django.contrib import messages
 
-
-
-STATIC_ROOT = "/srv/static/"
-ASSETS_ROOT = STATIC_ROOT
-
-
 PROJECT_DIR = dirname(dirname(abspath(__file__)))
 BASE_DIR = dirname(PROJECT_DIR)
+STATIC_ROOT = "/srv/app/openrepairplatform/static"
+ASSETS_ROOT = STATIC_ROOT
+STATICFILES_DIRS = ["/srv/static/"]
+STATIC_URL = "/static/"
+ASSETS_ROOT = STATICFILES_DIRS[0]
+ASSETS_DEBUG = True
+
+
 
 SECRET_KEY = "H/hXAUnb1ZKNGpToim2cg38dxiyHM6b+zB9zozhpTzkP"
 
@@ -141,10 +143,7 @@ USE_TZ = True
 USE_THOUSAND_SEPARATOR = True
 
 
-STATICFILES_DIRS = [join(PROJECT_DIR, "static")]
 
-#STATIC_ROOT = join(BASE_DIR, "static")
-STATIC_URL = "/static/"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = "/srv/media/"
@@ -162,7 +161,6 @@ AUTHENTICATION_BACKENDS = ("django.contrib.auth.backends.ModelBackend",)
 
 # Config django-assets
 ASSETS_MODULES = ["openrepairplatform.assets"]
-ASSETS_ROOT = STATICFILES_DIRS[0]
 
 # Add class to field wrapper in django-bootstrap5
 forms.FORM_GROUP_CLASS += " p-2"

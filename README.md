@@ -38,31 +38,35 @@ touch .env
 # Activate the location search on home page
 LOCATION=1
 
-# POSTGRES settings
-POSTGRES_USER=CHANGE_ME
-POSTGRES_PASSWORD=CHANGE_ME
-POSTGRES_DBNAME=CHANGE_ME
-
-#DJANGO settings
-DJANGO_SETTINGS_MODULE=openrepairplatform.settings.prod
+#DJANGO settings for configuration dev or production
+DJANGO_SETTINGS_MODULE=openrepairplatform.settings.dev
 SECRET_KEY=CHANGE_ME
 
-#Emailing settings
+# To activate the debug mode, set the environment variable to True
+DEBUG=true
+
+#Emailing settings only used in production mode
 EMAIL_PASSWORD=CHANGE_ME
 EMAIL_HOST_USER=CHANGE_ME
 EMAIL_HOST=CHANGE_ME
-DEFAULT_FROM_EMAIL=CHANGE_ME
+DEFAULT_FROM_EMAIL=no-reply@reparons.org
 
 #Let's encrypt and nginx settings
-DOMAINS=yourdomain.org
-EMAIL=CHANGE_ME
+#The principal domain that django will use
+DOMAINDNS=dev.reparons.org
+#Some autorised hosts and vars are added for docker implementation
+DOMAINS=localhost 127.0.0.1 [::1]
+EMAIL=contact@atelier-soude.fr
 SERVER_CONTAINER=openrepairplatform_nginx
-WEBROOT_PATH=/var/www/certbot
-CERTS_PATH=/etc/letsencrypt
-CHECK_FREQ=7
+
+
+# POSTGRES settings
+POSTGRES_USER=openrepairplatform
+POSTGRES_DBNAME=openrepairplatform
+POSTGRES_PASSWORD=mangerdespommes
 ```
 
-3 - launch the application
+3 - launch the application in dev mode
 
 ```bash
 docker-compose up -d
@@ -77,28 +81,32 @@ docker-compose up -d
 # Activate the location search on home page
 LOCATION=1
 
-# POSTGRES settings
-POSTGRES_USER=CHANGE_ME
-POSTGRES_PASSWORD=CHANGE_ME
-POSTGRES_DBNAME=CHANGE_ME
-
-#DJANGO settings
-DJANGO_SETTINGS_MODULE=openrepairplatform.settings.prod
+#DJANGO settings for configuration dev or production
+DJANGO_SETTINGS_MODULE=openrepairplatform.settings.dev
 SECRET_KEY=CHANGE_ME
 
-#Emailing settings
+# To activate the debug mode, set the environment variable to True
+DEBUG=true
+
+#Emailing settings only used in production mode
 EMAIL_PASSWORD=CHANGE_ME
 EMAIL_HOST_USER=CHANGE_ME
 EMAIL_HOST=CHANGE_ME
-DEFAULT_FROM_EMAIL=CHANGE_ME
+DEFAULT_FROM_EMAIL=no-reply@reparons.org
 
 #Let's encrypt and nginx settings
-DOMAINS=yourdomain.org
-EMAIL=CHANGE_ME
+#The principal domain that django will use
+DOMAINDNS=dev.reparons.org
+#Some autorised hosts and vars are added for docker implementation
+DOMAINS=localhost 127.0.0.1 [::1]
+EMAIL=contact@atelier-soude.fr
 SERVER_CONTAINER=openrepairplatform_nginx
-WEBROOT_PATH=/var/www/certbot
-CERTS_PATH=/etc/letsencrypt
-CHECK_FREQ=7
+
+
+# POSTGRES settings
+POSTGRES_USER=openrepairplatform
+POSTGRES_DBNAME=openrepairplatform
+POSTGRES_PASSWORD=mangerdespommes
 ```
 
 2.Run the following command:
@@ -108,25 +116,24 @@ cd [git checkout directory]/
 docker-compose up
 ```
 
-The website is now deployed and accessible on htt://localhost:8000
+The website is now deployed and accessible on http://[DOMAINDNS]
 
 Then in the docker terminal, run the following command for livereload.
 
-```bash
-python manage.py livereload --host=0.0.0.0
-```
+By default the dev app will start with a livereload server, the auto watch for django files, and the automatic compilation of vue.js files.
+
 
 3 - Create an organization within the `http://localhost:8000/admin` path and you can start everythings else (further documentation will come).
 
 ## Build the application from a branch to a docker image
 
-### build from github branch
+### build dev app from github branch
 
 You can directly build an image by running the following command. This command will build the image from the selected branch localy. That way you will not have to clone the project localy and just use the image builded from github.
 
 ```bash
 # Replace the BRANCHNAME with the branch name you want to build
-docker build --file /django/Dockerfile-build-prod https://github.com/AtelierSoude/OpenRepairPlatform.git\#BRANCHNAME:deployment
+docker build --file /django/Dockerfile https://github.com/AtelierSoude/OpenRepairPlatform.git\#BRANCHNAME:deployment
 ```
 
 ### build from local repository
@@ -150,7 +157,7 @@ cd OpenRepairPlatform
 
 # Build the image
 # The -t option allows you to specify the name of the container it has to match the name in your docker-compose file for production
- docker build --file deployment/django/Dockerfile-build-prod -t openrepairplateform-prod .
+ docker build --file deployment/django/Dockerfile -t openrepairplateform-prod .
  ```
 
 ### Debug with Visual Studio Code
@@ -175,7 +182,7 @@ You can click on any step of the call stack, and browser the variables, test som
 ### Run unit tests
 
 First, start the containers with `docker-compose up`
-Then, run the tests with `docker exec openrepairplatform_django_1 pytest --disable-pytest-warnings --cov=openrepairplatform --cov-report term-missing`
+Then, run the tests with `docker exec openrepairplatform pytest --disable-pytest-warnings --cov=openrepairplatform --cov-report term-missing`
 
 
 ### Run integration tests

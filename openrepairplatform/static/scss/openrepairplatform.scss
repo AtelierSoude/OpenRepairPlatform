@@ -1,13 +1,12 @@
-@import "variables.scss";
+@import "variables";
 @import "../node_modules/vue-multiselect/dist/vue-multiselect.css";
 @import url("https://fonts.googleapis.com/css?family=Inconsolata&display=swap");
-@import "../node_modules/bootstrap/scss/_functions.scss";
-@import "../node_modules/bootstrap/scss/_variables.scss";
-
+@import "../node_modules/bootstrap/scss/_functions";
+@import "../node_modules/bootstrap/scss/_variables";
 /* Css apps vuejs */
 @import "../js/vue.apps.bundle.css";
 
-$link-decoration: none;
+$link-decoration: none; 
 $link-hover-decoration: underline;
 $breadcrumb-font-size: 0.8em;
 $breadcrumb-padding-y: 1rem;
@@ -32,7 +31,7 @@ div[class^="col-"] {
   padding-left: 15px;
 }
 
-@import "../node_modules/bootstrap/scss/bootstrap.scss";
+@import "../node_modules/bootstrap/scss/bootstrap";
 
 /* others resets */
 $theme-colors: (
@@ -166,7 +165,7 @@ td {
   max-width: 120px;
 }
 
-@import "./includes/_forms.scss";
+@import "./includes/_forms";
 
 /* Custom auto-complete */
 .autocomplete-suggestions {
@@ -266,10 +265,13 @@ btn-secondary:hover {
   color: #fff;
 }
 
-@import "./includes/_breadcrumb.scss";
+@import "./includes/_breadcrumb";
 
-@import "./includes/_modals.scss";
+@import "./includes/_modals";
 
-@import "./includes/_menu.scss";
 
-@import "./includes/_search-bar.scss";
+@import "./includes/_search-bar";
+
+
+
+@import "./includes/menu";

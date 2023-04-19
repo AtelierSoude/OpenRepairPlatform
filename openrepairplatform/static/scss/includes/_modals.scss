@@ -168,43 +168,6 @@
 
 // Menu hack for mobile slide left up //
 
-@media (min-width: 992px) {
-  .main-container {
-    padding-left: 75px;
-  }
-
-  .vertical-nav {
-    position: fixed;
-    top: 65px;
-    left: 0;
-    width: 75px;
-    height: 100%;
-    overflow-y: auto;
-    padding-top: 30px;
-  }
-}
-
-@media (max-width: 992px) {
-  .navbar-collapse {
-    position: fixed;
-    top: 65px;
-    left: -400px;
-    height: 800px;
-    transition: all 0.3s ease;
-    display: block;
-  }
-  .navbar-collapse.collapsing {
-    height: auto !important;
-    margin-right: 50%;
-    transition: all 0.3s ease;
-    display: block;
-  }
-  .navbar-collapse.show {
-    right: 20%;
-    left: 0px;
-  }
-}
-
 .menu-localisation input {
   width: 0%;
   background-color: $primary;

@@ -69,8 +69,6 @@ input.toggle-modal:checked ~ div .menu-localisation input {
   right: 0px;
 }
 .navbar ul li {
-  padding-top: 10px;
-  padding-bottom: 10px;
   a {
     color: $secondary !important;
     small {
@@ -104,4 +102,8 @@ input.toggle-modal:checked ~ div .menu-localisation input {
   :hover {
     color: $primary;
   }
+}
+
+.navbar {
+  background-color: green !important;  
 }

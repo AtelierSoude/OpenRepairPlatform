@@ -3,24 +3,25 @@ from django_assets import Bundle, register
 # SCSS
 
 scss_openrepairplatform = Bundle(
-    "css/openrepairplatform.scss",
+    "scss/openrepairplatform.scss",
     filters="scss",
     output="css/openrepairplatform.css",
+    depends =("./scss/includes/*.scss")
 )
 scss_places = Bundle(
-    "css/lib/leaflet.scss",
-    "css/places/leaflet_custom.scss",
+    "scss/lib/leaflet.scss",
+    "scss/places/leaflet_custom.scss",
     filters="scss",
     output="css/leaflet_custom.css",
 )
 scss_detail_place = Bundle(
-    "css/lib/leaflet.scss",
-    "css/places/leaflet_custom.scss",
+    "scss/lib/leaflet.scss",
+    "scss/places/leaflet_custom.scss",
     filters="scss",
     output="css/detail_place.css",
 )
 scss_detail_event = Bundle(
-    "css/lib/leaflet.scss",
+    "scss/lib/leaflet.scss",
     filters="scss",
     output="css/detail_event.css",
 )

@@ -3,6 +3,8 @@
     "python.pythonPath": "/usr/lib/python3.10",
     "git.ignoreLimitWarning": true,
     "html.format.enable": true,
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "[python]": {
+      "editor.defaultFormatter": "ms-python.python"
+    },
 
   }

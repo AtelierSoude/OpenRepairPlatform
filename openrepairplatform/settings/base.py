@@ -7,17 +7,15 @@ from django.contrib import messages
 PROJECT_DIR = dirname(dirname(abspath(__file__)))
 BASE_DIR = dirname(PROJECT_DIR)
 STATIC_ROOT = "/srv/static"
-ASSETS_ROOT = STATIC_ROOT
+
 STATICFILES_DIRS = ["/srv/app/openrepairplatform/static"]
+
 STATIC_URL = "/static/"
 ASSETS_ROOT = STATICFILES_DIRS[0]
-ASSETS_DEBUG = True
-
-
+ASSETS_DEBUG = False
 
 SECRET_KEY = "H/hXAUnb1ZKNGpToim2cg38dxiyHM6b+zB9zozhpTzkP"
 
-DEBUG = True
 
 #Set domains
 domainOS = str(os.environ.get("DOMAINDNS")) + " " + str(os.environ.get("DOMAINS")) 
@@ -143,10 +141,8 @@ USE_TZ = True
 USE_THOUSAND_SEPARATOR = True
 
 
-
-
 MEDIA_URL = "/media/"
-MEDIA_ROOT = "/srv/media/"
+MEDIA_ROOT = join(BASE_DIR, "media")
 
 FILE_UPLOAD_HANDLERS = [
     "django.core.files.uploadhandler.TemporaryFileUploadHandler",

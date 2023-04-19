@@ -71,6 +71,8 @@ FROM base AS developpement
 
 WORKDIR /srv/app
 
+RUN pip install ptvsd
+
 
 RUN chmod 0644 /etc/cron.d/openrepairplatform
 RUN cron

@@ -1,5 +1,8 @@
 from .base import *  
 
+DEBUG = True
+
+
 #pourquoi ? ... parceque...
 MEDIA_ROOT = "/srv/media/"
 

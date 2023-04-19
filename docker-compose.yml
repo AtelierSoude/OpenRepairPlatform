@@ -22,17 +22,18 @@ services:
     env_file:
       - .env
     volumes:
-      - ./openrepairplatform/static:/srv/static
       - ../OpenRepairPlatform:/srv/app
       - ./deployment/saves-bdd:/srv/saves-bdd
       - ./deployment/openrepairplatform_data/openrepairplatform_media/:/srv/media
       - ./deployment/openrepairplatform_data/openrepairplatform_static/:/srv/static
-    command: bash -c "cd /srv/app/openrepairplatform/static/ && npm i ; cd /srv/app/deployment/django && ./start-dev.sh" # uncomment for dev env
+    command: bash -c "cd /srv/app/openrepairplatform/static/ ; npm i ; cd /srv/app/deployment/django ; ./start-dev.sh" # uncomment for dev env
     ports: 
       - 80:80 
       - 5678:5678 
       - 5679:5679 
-      - 35729:35729 
+      - 35729:35729
+    stdin_open: true 
+    tty: true
     depends_on:
       - db
     networks:

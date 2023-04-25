@@ -1,13 +1,14 @@
-@import "variables";
-@import "../node_modules/vue-multiselect/dist/vue-multiselect.css";
-@import url("https://fonts.googleapis.com/css?family=Inconsolata&display=swap");
-@import "../node_modules/bootstrap/scss/_functions";
-@import "../node_modules/bootstrap/scss/_variables";
-/* Css apps vuejs */
-@import "../js/vue.apps.bundle.css";
+
+$primary: #083342;
+$secondary: #fee56e;
+$success: #2be6ab; 
+$link: #49d3be;
+$bg-light: #f8f9fa;
+$danger: #ff2241;
+$black:#000;
 
 $link-decoration: none; 
-$link-hover-decoration: underline;
+$link-hover-decoration: underline; 
 $breadcrumb-font-size: 0.8em;
 $breadcrumb-padding-y: 1rem;
 $breadcrumb-padding-x: 0.75rem;
@@ -25,21 +26,14 @@ $card-border-width: 1px;
 $card-border-radius: 5px;
 $card-border-color: rgba($black, 0.125);
 
+
 div[class^="col-"] {
   position: relative;
   padding-right: 15px;
   padding-left: 15px;
 }
 
-@import "../node_modules/bootstrap/scss/bootstrap";
 
-/* others resets */
-$theme-colors: (
-  "primary": $primary,
-  "secondary": $secondary,
-  "success": $success,
-  "danger": $danger,
-) !default;
 
 :root {
   --table-bg-hover: rgba(0, 0, 0, 0.015);
@@ -165,7 +159,6 @@ td {
   max-width: 120px;
 }
 
-@import "./includes/_forms";
 
 /* Custom auto-complete */
 .autocomplete-suggestions {
@@ -265,13 +258,21 @@ btn-secondary:hover {
   color: #fff;
 }
 
+@import "./fontawesome-free-6.4.0-web/css/all.css";
+
+@import "../node_modules/bootstrap/scss/bootstrap";
+
+@import "./includes/_forms";
+
 @import "./includes/_breadcrumb";
 
 @import "./includes/_modals";
 
-
 @import "./includes/_search-bar";
 
-
-
 @import "./includes/menu";
+
+@import "../node_modules/vue-multiselect/dist/vue-multiselect.css";
+
+/* Css apps vuejs */
+@import "../js/vue.apps.bundle.css";

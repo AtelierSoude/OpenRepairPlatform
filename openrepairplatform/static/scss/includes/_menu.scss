@@ -1,109 +1,20 @@
 /* Menu */
 
-.menu-localisation input {
-  width: 0%;
-  background-color: $primary;
-  border-color: $primary;
-  transition: all 0.3s ease;
-}
-
-input.toggle-modal {
-  visibility: hidden;
-  position: absolute;
-}
-
-input.toggle-modal:checked ~ .modal {
-  display: block;
-  opacity: 1;
-  padding-top: 2rem;
-  background-color: rgba(0, 0, 0, 0.3);
-}
-
-input.toggle-modal:checked ~ div .menu-localisation input {
-  width: 100%;
-  background-color: white;
-  border-color: #ced4da;
-  max-width: 80px;
-}
-
-.header {
-  z-index: 1250 !important;
-  width: 100%;
-  position: fixed;
-  height: 65px;
-}
-.main-container {
-  padding-top: 65px;
-}
-.brand-logo img {
-  max-width: 220px;
-  height: auto;
-  padding-top: 0px;
-}
-.navbar-collapse {
-  width: 75px;
-}
-.header_detail_page,
-#h_nav,
-#breadcrumb,
-#jumbotron,
-#search_tab,
-#event_title,
-#event_about,
-.jumbotron {
-  position: relative;
-}
 .navbar {
-  background-color: $primary;
-  padding: 0.3em;
-  position: relative;
-}
-.navbar ul li a:hover,
-.navbar .fa:hover,
-.avatar a:hover,
-.dropdown-toggle:hover {
-  color: gray;
-  text-decoration: none;
-}
-.dropdown-menu {
-  right: 0px;
-}
-.navbar ul li {
-  a {
-    color: $secondary !important;
-    small {
-      font-size: 75%;
+    li {
+        a{
+            font-size: 1.3em;
+            i{
+                font-size: 1.5em;
+            }
+        }
+        :hover {
+            color: $secondary;
+        }
+        span{
+            padding-top: -15px;
+        }
     }
-  }
-}
-.navbar ul li.active {
-  background-color: $secondary;
-  a {
-    color: $primary !important;
-  }
-}
-.navbar-brand.avatar {
-  margin: 0px !important;
-  .nav-link {
-    color: #fff;
-  }
-}
 
-.nav-pills .nav-link.active,
-.nav-pills .show > .nav-link {
-  border-bottom: 3px solid $link;
-  background: inherit !important;
-  color: $primary;
-  border-radius: 0px !important;
-}
 
-.nav-link {
-  color: #484848;
-  :hover {
-    color: $primary;
-  }
-}
-
-.navbar {
-  background-color: green !important;  
 }

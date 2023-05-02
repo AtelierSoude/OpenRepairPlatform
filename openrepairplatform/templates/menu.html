@@ -1,126 +1,128 @@
 {% load thumbnail %}
 {% load initialavatar %}
 {% load static %}
-<nav class="navbar navbar-expand-lg bg-primary navbar-dark">
-  <div class="container-fluid">
-    <a href="{% url "homepage" %}"
-       class="navbar-brand me-0 float-start d-block d-sm-none"
-       style="width:50px;
-              z-index: 150">
-      <img height="50" src="{% static 'img/reparons-logov2.png' %}" />
-    </a>
-    <a href="{% url "homepage" %}" class="brand-logo d-none d-sm-block">
-      <img height="80"  src="{% static 'img/reparons-logov2.png' %}" />
-    </a>
-    <button class="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent"
-            aria-expanded="false"
-            aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item text-center {{ event_menu }}">
-          <a class="nav-link " href="{% url "event:list" %}">
-            <i class="fa-solid fa-user fa-xl text-secondary"></i>
-            <span class="text-success">Évenements</span>
-          </a>
-        </li>
-        <li class="nav-item text-center {{ activity_menu }}">
-          <a class="nav-link" href="{% url "event:activity_list" %}">
-            <i class="fa-solid fa-hand-fist fa-xl text-secondary"></i>
-            <span class="text-success">Activités</span>
-          </a>
-        </li>
-        <li class="nav-item text-center {{ organization_menu }}">
-          <a class="nav-link" href="{% url "user:organization_list" %}">
-            <i class="fa-solid fa-network-wired fa-xl text-secondary"></i>
-            <span class="text-success">Organisations</span>
-          </a>
-        </li>
-        <li class="nav-item text-center {{ stock_menu }}">
-          <a class="nav-link" href="{% url "inventory:stock_list" %}">
-            <i class="fa-solid fa-box-open fa-xl text-secondary"></i>
-            <span class="text-success">Stocks</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          {% if LOCATION %}
-              <label for="current-localisation">
-                <input type="checkbox" id="current-localisation" class="toggle-modal" />
-                <div class="d-flex align-items-center">
-                  <form class="menu-localisation me-2"
-                        action="{% url 'where' %}"
-                        method="get">
-                    {% csrf_token %}
-                    <input type="text"
-                           pattern="[0-9]*"
-                           value="{{ request.session.postcode }}"
-                           required
-                           class="form-control"
-                           placeholder="Code postal"
-                           name="postcode" />
-                  </form>
-                  <a title="Cliquez pour modifier la localité">
-                    <i class="fa-solid fa-map-location-dot text-secondary"></i>
-                    <span class="ps-2 text-success">{{ request.session.postcode }}</span>
-                </a>
-              </div>
-            </label>
-        {% endif %}
-      </li>
-      <li class="nav-item dropdown" data-bs-theme="dark">
-        {% if not user.is_authenticated %}
-          <a class="nav-link p-2 text-secondary" href="{% url "login" %}">
-            Se connecter <i class="fas fa-sign-in-alt"></i>
-          </a>
-        {% else %}
-          <a class="nav-link dropdown-toggle"
-             href="#"
-             role="button"
-             data-bs-toggle="dropdown">
-            {% if user.avatar_img %}
-              {% thumbnail user.avatar_img "35x35" crop="center" format="PNG" as im %}
-              <img src="{{ im.url }}" class="rounded-circle" />
-            {% endthumbnail %}
-          {% else %}
-            {% if user.first_name %}
-              {% get_initial_avatar user 35 'circle' %}
-            {% endif %}
-          {% endif %}
-          <small>{{ user.first_name }}</small>
+<div class="bg-primary">
+  <div class="container ">
+    <nav class="navbar navbar-expand-lg  navbar-dark sticky-top">
+      <div class="container-fluid">
+        <a href="{% url "homepage" %}"
+           class="navbar-brand me-0 float-start d-block d-sm-none"
+           style="width:50px;
+                  z-index: 150">
+          <img height="50" src="{% static 'img/reparons-logov2.png' %}" />
         </a>
-        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButtonDark">
-          <li>
-            <a class="dropdown-item"  href="{{ user.get_absolute_url }}">Mon compte</a>
-          </li>
-          <li>
-            <a class="dropdown-item" href="{{ user.get_absolute_url }}">Voir profil</a>
-          </li>
-          <li>
-            <a class="dropdown-item" href="{{ user.get_absolute_url }}">Mes rendez-vous</a>
-          </li>
-          <li>
-            {% if user.admin_organizations.all %}
-              {% for organization in user.admin_organizations.all %}
-                <a class="dropdown-item"
-                   href="{% url "organization_page" organization.slug %}">Gérer {{ organization.name }}
-                  </a>
-              {% endfor %}
+        <a href="{% url "homepage" %}" class="brand-logo d-none d-sm-block">
+          <img height="80"  src="{% static 'img/reparons-logov2.png' %}" />
+        </a>
+        <button class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item text-center {{ event_menu }}">
+              <a class="nav-link " href="{% url "event:list" %}">
+                <i class="fa-solid fa-user fa-xl "></i>
+                <span class="text-success">Évenements</span>
+              </a>
+            </li>
+            <li class="nav-item text-center {{ activity_menu }}">
+              <a class="nav-link" href="{% url "event:activity_list" %}">
+                <i class="fa-solid fa-hand-fist fa-xl "></i>
+                <span class="text-success">Activités</span>
+              </a>
+            </li>
+            <li class="nav-item text-center {{ organization_menu }}">
+              <a class="nav-link" href="{% url "user:organization_list" %}">
+                <i class="fa-solid fa-network-wired fa-xl "></i>
+                <span class="text-success">Organisations</span>
+              </a>
+            </li>
+            <li class="nav-item text-center {{ stock_menu }}">
+              <a class="nav-link" href="{% url "inventory:stock_list" %}">
+                <i class="fa-solid fa-box-open fa-xl "></i>
+                <span class="text-success">Stocks</span>
+              </a>
+            </li>
+            <li class="nav-item text-center">
+              <a class="nav-link" title="Cliquez pour modifier la localité">
+                <i class="fa-solid fa-map-location-dot "></i>
+                <span class="text-success">Localisation</span>
+              </a>
+              {% if LOCATION %}
+                <label for="current-localisation">
+                  <input type="checkbox" id="current-localisation" class="toggle-modal" />
+                  <div class="d-flex align-items-center">
+                    <form class="menu-localisation me-2"
+                          action="{% url 'where' %}"
+                          method="get">
+                      {% csrf_token %}
+                      <input type="text"
+                             pattern="[0-9]*"
+                             value="{{ request.session.postcode }}"
+                             required
+                             class="form-control"
+                             placeholder="Code postal"
+                             name="postcode" />
+                    </form>
+                    
+                  </div>
+                </label>
+              {% endif %}
+            </li>
+            <li class="nav-item dropdown" data-bs-theme="dark">
+              {% if not user.is_authenticated %}
+                <a class="nav-link p-2 text-secondary" href="{% url "login" %}">
+                  Se connecter <i class="fas fa-sign-in-alt"></i>
+                </a>
+              {% else %}
+                <a class="nav-link dropdown-toggle"
+                   href="#"
+                   role="button"
+                   data-bs-toggle="dropdown">
+                  {% if user.avatar_img %}
+                    {% thumbnail user.avatar_img "35x35" crop="center" format="PNG" as im %}
+                    <img src="{{ im.url }}" class="rounded-circle" />
+                  {% endthumbnail %}
+                {% else %}
+                  {% if user.first_name %}
+                    {% get_initial_avatar user 35 'circle' %}
+                  {% endif %}
+                {% endif %}
+                <small>{{ user.first_name }}</small>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenuButtonDark">
+                <li>
+                  <a class="dropdown-item"  href="{{ user.get_absolute_url }}">Mon compte</a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="{{ user.get_absolute_url }}">Voir profil</a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="{{ user.get_absolute_url }}">Mes rendez-vous</a>
+                </li>
+                <li>
+                  {% if user.admin_organizations.all %}
+                    {% for organization in user.admin_organizations.all %}
+                      <a class="dropdown-item"
+                         href="{% url "organization_page" organization.slug %}">Gérer {{ organization.name }}</a>
+                    {% endfor %}
+                  {% endif %}
+                </li>
+                <li>
+                  <a class="dropdown-item" href="{% url 'logout' %}" title="Logout">Déconnexion</a>
+                </li>
+              </ul>
             {% endif %}
-          </li>
-          <li>
-            <a class="dropdown-item"
-               href="{% url 'logout' %}"
-               title="Logout">Déconnexion</a>
           </li>
         </ul>
-      {% endif %}
-    </li>
-  </ul>
+      </div>
+    </div>
+  </nav>
 </div>
 </div>
-</nav>

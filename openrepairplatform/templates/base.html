@@ -99,7 +99,12 @@
         {% block content %}
         {% endblock content %}
       </main>
+      {% block footer %}
+      {% include "footer.html" %} 
+      {% endblock footer %}
+      
     </div>
+  
     <script>
     $(document).ready(function(){
       $(".jumbotron").sticky({topSpacing:0});

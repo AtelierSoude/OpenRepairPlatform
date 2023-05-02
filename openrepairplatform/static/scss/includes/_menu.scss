@@ -2,19 +2,34 @@
 
 .navbar {
     li {
+        padding-top: 15px;
+
+        .active i{
+            color: $secondary;
+        }
         a{
             font-size: 1.3em;
             i{
                 font-size: 1.5em;
+                color: $success;
+                display: block;
+                margin: 10px 0 20px 0;
             }
         }
-        :hover {
+        :hover i, :hover span {
             color: $secondary;
         }
         span{
-            padding-top: -15px;
         }
     }
+
+    .navbar-toggler, .navbar-toggler span{
+        color: $secondary;
+    }
+    .navbar-toggler-icon {
+        color: $secondary;
+    }
+    
 
 
 }

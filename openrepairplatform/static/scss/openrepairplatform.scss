@@ -26,6 +26,8 @@ $card-border-width: 1px;
 $card-border-radius: 5px;
 $card-border-color: rgba($black, 0.125);
 
+$navbar-light-toggler-border-color:$secondary !important;
+
 
 div[class^="col-"] {
   position: relative;
@@ -269,8 +271,10 @@ btn-secondary:hover {
 @import "./includes/_modals";
 
 @import "./includes/_search-bar";
+@import "./includes/_home";
 
 @import "./includes/menu";
+@import "./includes/footer";
 
 @import "../node_modules/vue-multiselect/dist/vue-multiselect.css";
 

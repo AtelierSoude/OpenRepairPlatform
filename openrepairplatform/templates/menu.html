@@ -49,52 +49,61 @@
                 <span class="text-success">Stocks</span>
               </a>
             </li>
-            <li class="nav-item text-center">
-              <a class="nav-link" title="Cliquez pour modifier la localité">
-                <i class="fa-solid fa-map-location-dot "></i>
-                <span class="text-success">Localisation</span>
-              </a>
-              {% if LOCATION %}
-                <label for="current-localisation">
-                  <input type="checkbox" id="current-localisation" class="toggle-modal" />
-                  <div class="d-flex align-items-center">
-                    <form class="menu-localisation me-2"
-                          action="{% url 'where' %}"
-                          method="get">
-                      {% csrf_token %}
-                      <input type="text"
-                             pattern="[0-9]*"
-                             value="{{ request.session.postcode }}"
-                             required
-                             class="form-control"
-                             placeholder="Code postal"
-                             name="postcode" />
-                    </form>
-                    
-                  </div>
-                </label>
-              {% endif %}
-            </li>
-            <li class="nav-item dropdown" data-bs-theme="dark">
-              {% if not user.is_authenticated %}
-                <a class="nav-link p-2 text-secondary" href="{% url "login" %}">
-                  Se connecter <i class="fas fa-sign-in-alt"></i>
-                </a>
-              {% else %}
+            {% if LOCATION %}
+              <li class="nav-item dropdown text-center">
                 <a class="nav-link dropdown-toggle"
                    href="#"
                    role="button"
                    data-bs-toggle="dropdown">
-                  {% if user.avatar_img %}
-                    {% thumbnail user.avatar_img "35x35" crop="center" format="PNG" as im %}
-                    <img src="{{ im.url }}" class="rounded-circle" />
-                  {% endthumbnail %}
-                {% else %}
-                  {% if user.first_name %}
-                    {% get_initial_avatar user 35 'circle' %}
-                  {% endif %}
-                {% endif %}
-                <small>{{ user.first_name }}</small>
+                  <i class="fa-solid fa-location-dot fa-xl"></i>
+                  <span class="text-success">Localisation</span>
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <label for="current-localisation ">
+                    <input type="checkbox" id="current-localisation" class="toggle-modal" />
+                    <div class="d-flex align-items-center">
+                      <form class="menu-localisation me-2"
+                            action="{% url 'where' %}"
+                            method="get">
+                        {% csrf_token %}
+                        <input type="text"
+                               pattern="[0-9]*"
+                               value="{{ request.session.postcode }}"
+                               required
+                               class="form-control"
+                               placeholder="Code postal"
+                               name="postcode" />
+                      </form>
+                    </div>
+                  </label>
+                </div>
+              </li>
+            {% endif %}
+            <li class="nav-item dropdown text-center" data-bs-theme="dark">
+              {% if not user.is_authenticated %}
+                <a class="nav-link p-2" href="{% url "login" %}">
+                  <i class="fas fa-sign-in-alt fa-xl"></i>
+                  <span class="text-success">Se connecter</span>
+                </a>
+              {% else %}
+                <a class="nav-link dropdown-toggle mt-0 pt-0 avatar"
+                   href="#"
+                   role="button"
+                   data-bs-toggle="dropdown">
+                  <div class="row">
+                    <div class="col">
+                      {% if user.avatar_img %}
+                        {% thumbnail user.avatar_img "35x35" crop="center" format="PNG" as im %}
+                        <img src="{{ im.url }}" width="35" class="rounded-circle mb-1" />
+                      {% endthumbnail %}
+                    {% else %}
+                      {% if user.first_name %}
+                        {% get_initial_avatar user 35 'circle' %}
+                      {% endif %}
+                    {% endif %}
+                  </div>
+                </div>
+                <span class="text-success">{{ user.first_name }}</span>
               </a>
               <ul class="dropdown-menu" aria-labelledby="dropdownMenuButtonDark">
                 <li>

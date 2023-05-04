@@ -1,7 +1,7 @@
 {% load thumbnail %}
 
 {% for organization in organizations %}
-<div class="col">
+<div class="col-4">
   <div class="card text-center h-100">  
     <a class="card-link text-center" href="{% url 'organization_page' organization.slug %}">
       {% if organization.picture %}

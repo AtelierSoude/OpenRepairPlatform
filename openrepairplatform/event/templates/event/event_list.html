@@ -41,9 +41,7 @@
         {% include "event/event_cards.html" with event_list=event_list card_size='col-md-12' %}
       </div>
       <div class="col-4" id="map">
-        <div class="affix">
-          {% include "location/place_list.html" with places=places %}
-        </div>
+        <div class="affix">{% include "location/place_list.html" with places=places %}</div>
       </div>
     </div>
   </section>
@@ -57,10 +55,10 @@
               width:100%">
     <a class="btn btn-success" id="map_show" onclick="display_map()">Afficher la carte</a>
   </div>
-  {% block extra_js %}
-    {% assets "js_event_list" %}
-      <script src="{{ ASSET_URL }}"></script>
-    {% endassets %}
-    {{ search_form.media }}
-  {% endblock %}
 {% endblock %}
+{% block extra_js %}
+  {% assets "js_event_list" %}
+    <script src="{{ ASSET_URL }}"></script>
+  {% endassets %}
+  {{ search_form.media }}
+{% endblock extra_js %}

@@ -5,12 +5,13 @@
 {% load initialavatar %}
 
 {% block admin %}
-<div class="d-md-flex p-4">
+<div class="container">
+<div class="d-md-flex pt-4">
     <div class="pe-4 pt-2" id="event_about">
       <h5 class="text-danger">
         <i class="fa fa-calendar-alt"></i> {{ event.date|date:"l j F Y " }} de {{ event.starts_at }} à {{ event.ends_at }}
       </h5>
-      <h3 class="">
+      <h1 >
         {% if event.activity.category %} {{ event.activity.category }} - {% endif %} {{ event.activity }}
           {% if is_active %}
             <a href="{% url 'event:edit' event.pk %}" class="me-1 btn btn-secondary rounded-circle"><i class="fa fa-pencil-alt"></i></a>
@@ -18,7 +19,7 @@
           {% if is_admin %}
             <a href="{% url 'event:delete' event.pk %}" class="btn btn-danger rounded-circle"><i class="fa fa-trash"></i></a>
           {% endif %}
-      </h3>
+      </h1>
       <p class="lead mb-1">
         {% if event.collaborator %}
           <small>en partenariat avec {{ event.collaborator }}</small>
@@ -112,6 +113,7 @@
       {% include "event/detail/registered_users.html" with users=event.registered.all event_control=True %}
       </div>
     </div>
+</div>
 </div>
 
 {% assets "js_groups_organization" %}

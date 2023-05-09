@@ -58,18 +58,15 @@
     <meta name="theme-color" content="#ffffff">
     <!-- FONT -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
-
-     <!-- for leaflet -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap"
+          rel="stylesheet">
+    <!-- for leaflet -->
     <link rel="stylesheet"
           href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
           integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
           crossorigin="" />
     <!-- Custom & bootstrap -->
-    
-
-    
     {% assets "css_openrepairplatform" %}
       <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet" />
     {% endassets %}
@@ -77,9 +74,8 @@
     <script src="{% static 'js/jquery.bootstrap.modal.forms.js' %}"></script>
     <script src="{% static 'node_modules/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'js/lib/sticky_polyfill.js' %}"></script>
-    <script type="text/javascript" src="{% static 'django_tables2_column_shifter/js/django_tables2_column_shifter.min.js' %}">
-    </script>
-    {% assets "js_base" %}
+    <script type="text/javascript" src="{% static 'django_tables2_column_shifter/js/django_tables2_column_shifter.min.js' %}"></script>
+     {% assets "js_base" %}
       <script src="{{ ASSET_URL }}"></script>
     {% endassets %}
   </head>
@@ -104,16 +100,12 @@
         {% endblock content %}
       </main>
       {% block footer %}
-      {% include "footer.html" %} 
+        {% include "footer.html" %}
       {% endblock footer %}
-      
     </div>
-  
-    <script>
-    $(document).ready(function(){
-      $(".jumbotron").sticky({topSpacing:0});
-    });
-    </script>
+
+    {% block extra_js %}
+    {% endblock extra_js %}
     <script>
   jQuery(document).ready(function(){
     jQuery("#toggler").click(function() {
@@ -130,6 +122,5 @@
     });
   });
     </script>
-    {% block extra_js %}{% endblock %}
   </body>
 </html>

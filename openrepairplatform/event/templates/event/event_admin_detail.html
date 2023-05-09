@@ -11,7 +11,7 @@
         <i class="fa fa-calendar-alt"></i> {{ event.date|date:"l j F Y " }} de {{ event.starts_at }} à {{ event.ends_at }}
       </h5>
       <h3 class="">
-        {% if event.activity.category %} {{event.activity.category}} - {% endif %} {{ event.activity }}
+        {% if event.activity.category %} {{ event.activity.category }} - {% endif %} {{ event.activity }}
           {% if is_active %}
             <a href="{% url 'event:edit' event.pk %}" class="me-1 btn btn-secondary rounded-circle"><i class="fa fa-pencil-alt"></i></a>
           {% endif %}

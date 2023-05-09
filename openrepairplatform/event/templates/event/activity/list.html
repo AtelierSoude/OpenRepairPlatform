@@ -2,7 +2,6 @@
 {% block title %}Listes des activités disponibles sur {{site_title}}{% endblock %}
 
 {% block content %}
-  {% include "breadcrumb.html" with current="Activités" %}
 
   <div class="jumbotron jumbotron-fluid parallax" id="jumbotron">
     <div class="container text-center">
@@ -19,10 +18,5 @@
       </div>
     </div>
   </section>
-{% endblock %}
+{% endblock content %}
 
-<script>
-  $(document).ready(function(){
-    $("#breadcrumb").sticky({topSpacing:65});
-  });
-</script>

@@ -29,12 +29,6 @@ $card-border-color: rgba($black, 0.125);
 $navbar-light-toggler-border-color:$secondary !important;
 
 
-div[class^="col-"] {
-  position: relative;
-  padding-right: 15px;
-  padding-left: 15px;
-}
-
 
 
 :root {
@@ -64,19 +58,7 @@ html {
   z-index: 0;
   overflow: hidden;
 }
-h1,
-h2,
-h3,
-h4,
-h5 {
-  color: $primary;
-}
-h4 {
-  z-index: 0;
-}
-h5 {
-  line-height: 1 !important;
-}
+
 .bordered {
   border: 1px solid #cecece;
 }
@@ -261,6 +243,7 @@ btn-secondary:hover {
 }
 
 @import "./fontawesome-free-6.4.0-web/css/all.css";
+@import "./includes/typo";
 
 @import "../node_modules/bootstrap/scss/bootstrap";
 

@@ -169,9 +169,7 @@
 // Menu hack for mobile slide left up //
 
 .menu-localisation input {
-  width: 0%;
-  background-color: $primary;
-  border-color: $primary;
+  width: 100%;
   transition: all 0.3s ease;
 }
 

@@ -3,7 +3,7 @@
 
 {% for event in event_list %}
   {% with registereds=event.registered.all organizers=event.organizers.all %}
-    <div class="bg-white infinite-item mb-4 d-flex flex-wrap bordered
+    <div class="row bg-white infinite-item mb-4  bordered
     {% if request.user in registereds or request.user in organizers %}
     border-success {% endif %}
     event shadow-sm p-2" data-location="{{event.location.pk|escape}}">

@@ -10,9 +10,6 @@
 }
 .breadcrumb {
   margin-bottom: 0px !important;
-  padding: 0.75rem 2rem;
-  border-width: 0px;
-  z-index: 2;
 }
 
 /* cards */
@@ -99,18 +96,19 @@
   background-repeat: no-repeat;
   background-size: cover;
 }
-#map {
-  position: fixed;
-  right: 0px;
-  top: 150px;
-  bottom: 0px;
+
+#map{
+  overflow: hidden;
+  .affix{
+    width: 100%;
+  }
+  #place_map {
+    top: 20px;
+    z-index: 0 !important;
+  }
 }
 
-#place_map {
-  right: 0px;
-  top: 40px;
-  z-index: 0 !important;
-}
+
 .leaflet-left {
   top: 150px !important;
 }

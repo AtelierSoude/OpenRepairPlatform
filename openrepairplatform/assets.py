@@ -33,6 +33,7 @@ css_openrepairplatform = Bundle(
     filters="cssrewrite,cssmin",
     output="css/openrepairplatform.min.css",
 )
+
 css_places = Bundle(
     scss_places,
     filters="cssrewrite,cssmin",
@@ -48,6 +49,7 @@ css_detail_event = Bundle(
     filters="cssrewrite,cssmin",
     output="css/detail_event.min.css",
 )
+
 
 # JS minify
 js_base = Bundle(

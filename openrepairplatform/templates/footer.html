@@ -6,13 +6,31 @@
                 <img src="{% static 'img/logo-simple.png' %}" class="mb-2" width="120" />
                 <p>
                     Reparons.org, la plateforme libre de réservation d'ateliers de réparation. Ici, vous pouvez facilement trouver et réserver des ateliers de réparation dans votre région, que ce soit pour votre vélo, votre électroménager, votre smartphone ou tout autre objet nécessitant une réparation.
-                    <br/>
+                    <br />
                     <br />
                     Réparons.org est une platforme open source créée et maintenue principalement par l'<a target ="_blanck" href="https://atelier-soude.fr/">Atelier Soudé</a>.
                 </p>
             </div>
             <div class="col">
                 <h4 class="text-success">Plan du site</h4>
+                <div class="row">
+                    <div class="col">
+                        <ul class="">
+                            <li>
+                                <a href="">Accueil</a>
+                            </li>
+                            <li>
+                                <a href="{% url "event:activity_list" %}">Activités</a>
+                            </li>
+                            <li>
+                                <a href="{% url "user:organization_list" %}">Organisations</a>
+                            </li>
+                            <li>
+                                <a href="{% url "inventory:stock_list" %}">Inventaires</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
             <div class="col">
                 <h4 class="text-success">Nous rejoindre</h4>

@@ -50,6 +50,9 @@ class HomeView(TemplateView, FormView):
         context["user_count"] = CustomUser.objects.all().count()
         context["organization_count"] = Organization.objects.all().count()
         return context
+    
+class MentionsView(TemplateView):
+    template_name = "mentions-legales.html"
 
 class OrganizationPageView(PermissionOrgaContextMixin, DetailView):
     model = Organization

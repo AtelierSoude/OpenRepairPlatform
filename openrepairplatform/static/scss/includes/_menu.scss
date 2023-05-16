@@ -4,7 +4,7 @@
     li {
         padding-top: 15px;
 
-        .active i{
+        &.active i{
             color: $secondary;
         }
         a{

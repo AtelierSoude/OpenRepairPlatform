@@ -60,19 +60,28 @@
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                   <label for="current-localisation ">
                     <input type="checkbox" id="current-localisation" class="toggle-modal" />
-                    <div class="d-flex align-items-center">
-                      <form class="menu-localisation me-2"
-                            action="{% url 'where' %}"
-                            method="get">
-                        {% csrf_token %}
-                        <input type="text"
-                               pattern="[0-9]*"
-                               value="{{ request.session.postcode }}"
-                               required
-                               class="form-control"
-                               placeholder="Code postal"
-                               name="postcode" />
-                      </form>
+                    <div class="p-2">
+                      <div class="row">
+                        <div class="col">
+                          Pour changer la localisation de votre recherche entrez un autre code postal ci-dessous ou <a href="/">retournez à l'accueil</a>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col">
+                          <form class="menu-localisation"
+                          action="{% url 'where' %}"
+                          method="get">
+                      {% csrf_token %}
+                      <input type="text"
+                             pattern="[0-9]*"
+                             value="{{ request.session.postcode }}"
+                             required
+                             class="form-control"
+                             placeholder="Code postal"
+                             name="postcode" />
+                    </form>                        </div>
+                      </div>
+                      
                     </div>
                   </label>
                 </div>

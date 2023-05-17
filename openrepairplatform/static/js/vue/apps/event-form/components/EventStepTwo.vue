@@ -2,7 +2,7 @@
     <section class="section mt-4">
       <form class="mb-4" @submit.prevent="onSubmit">
         <section class="mb-4">
-          <label><b>Lévénement est en collaboration avec un autre organisme ?</b></label>
+          <label><b>L'événement est en collaboration avec un autre organisme ?</b></label>
           <input class="form-control mb-2" type="text" v-model="collaborator" placeholder="Collaborateur.."/>
           <label><b>Quel est l'activité de l'événement ?</b></label>
           <VueMultiselect v-model="activity" :options="optionActivities" label="name" track-by="name"/>

@@ -6,7 +6,7 @@
       <h4 class="mt-4 text-left">A venir</h4>
       <div class="table-responsive">
         <table class="table">
-          <tbody class="">
+          <tbody>
             {% for event, status in future_rendezvous reversed %}
               {% ifchanged %}
                 <tr>
@@ -29,7 +29,7 @@
                   </a>
                 </td>
                 <td>
-                  <small>{{ event.location }}</sm`ll>
+                  <small>{{ event.location }}</small>
                   </td>
                   <td>
                     {% if status == "organizer" %}
@@ -38,7 +38,7 @@
                       {% if object.pk == request.user.pk %}
                         {% tokenize user=object event=event action='cancel' as tok %}
                         <button class="btn btn-sm btn-danger">
-                          <a class="" href="{% url 'event:cancel_reservation' tok %}">
+                          <a href="{% url 'event:cancel_reservation' tok %}">
                             <i class="fa fa-times"></i>
                           </a>
                         </button>
@@ -59,7 +59,7 @@
         <h4 class="mt-4 text-left">Passés</h4>
         <div class="table-responsive">
           <table class="table">
-            <tbody class="">
+            <tbody>
               {% for event, status in passed_rendezvous %}
                 {% ifchanged %}
                   <tr>
@@ -97,6 +97,7 @@
               {% empty %}
                 Pas d'évènements
               {% endfor %}
+              </tbody>
             </table>
           </div>
         </div>

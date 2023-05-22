@@ -83,7 +83,7 @@
       {% include "menu.html" %}
     {% endblock menu %}
     <div class="main-container">
-      <div class="container-fluid">
+      <div class="container" id="alerts">
         {% for message in messages %}
           <div class="alert alert-{{ message.level_tag }} alert-dismissible fade show mb-0"
                role="alert">
@@ -105,21 +105,6 @@
 
     {% block extra_js %}
     {% endblock extra_js %}
-    <script>
-  jQuery(document).ready(function(){
-    jQuery("#toggler").click(function() {
-      if (jQuery(this).hasClass("fa-times-circle")){
-        jQuery(this).addClass("fa-bars");
-        jQuery(this).removeClass("fa-times-circle");
-        jQuery(".header").removeClass("position-fixed").removeClass("w-100");
-      }
-      else {
-        jQuery(".header").addClass("position-fixed").addClass("w-100");
-        jQuery(this).addClass("fa-times-circle");
-        jQuery(this).removeClass("fa-bars");
-      }
-    });
-  });
-    </script>
+
   </body>
 </html>

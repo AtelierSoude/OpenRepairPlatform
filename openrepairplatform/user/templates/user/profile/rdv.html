@@ -1,0 +1,106 @@
+{% load assets app_filters thumbnail initialavatar bootstrap5 %}
+<h4 class="mt-4">Rendez-vous</h4>
+{% if passed_rendezvous or future_rendezvous %}
+  {% if future_rendezvous %}
+    <div class="card p-2">
+      <h4 class="mt-4 text-left">A venir</h4>
+      <div class="table-responsive">
+        <table class="table">
+          <tbody class="">
+            {% for event, status in future_rendezvous reversed %}
+              {% ifchanged %}
+                <tr>
+                  <td colspan="4" class="bg-light">
+                    <b>{{ event.date|date:"F" }} {{ event.date|date:"Y" }}</b>
+                  </td>
+                </tr>
+              {% endifchanged %}
+              <tr class="{% if event.date <= today %}bg-light text-muted{% else %}bg-white{% endif %}">
+                <td>{% include "extra_column_data.html" with column="date" record=event %}</td>
+                <td>
+                  <a href="{% url 'event:detail' event.pk event.slug %}">
+                    <b>
+                      {% if event.activity %}
+                        {{ event.activity }}
+                      {% else %}
+                        Type d'activité supprimé
+                      {% endif %}
+                    </b>
+                  </a>
+                </td>
+                <td>
+                  <small>{{ event.location }}</sm`ll>
+                  </td>
+                  <td>
+                    {% if status == "organizer" %}
+                      <span class="badge badge-pill bg-success">Animateur</span>
+                    {% else %}
+                      {% if object.pk == request.user.pk %}
+                        {% tokenize user=object event=event action='cancel' as tok %}
+                        <button class="btn btn-sm btn-danger">
+                          <a class="" href="{% url 'event:cancel_reservation' tok %}">
+                            <i class="fa fa-times"></i>
+                          </a>
+                        </button>
+                      {% endif %}
+                    {% endif %}
+                  </td>
+                </tr>
+              {% empty %}
+                Pas d'évènements
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    {% endif %}
+    {% if passed_rendezvous %}
+      <div class="card p-2 mt-5">
+        <h4 class="mt-4 text-left">Passés</h4>
+        <div class="table-responsive">
+          <table class="table">
+            <tbody class="">
+              {% for event, status in passed_rendezvous %}
+                {% ifchanged %}
+                  <tr>
+                    <td colspan="4" class="bg-light">
+                      <b>{{ event.date|date:"F" }} {{ event.date|date:"Y" }}</b>
+                    </td>
+                  </tr>
+                {% endifchanged %}
+                <tr class="bg-light text-muted">
+                  <td>{% include "extra_column_data.html" with column="date" record=event %}</td>
+                  <td>
+                    <a href="{% url 'event:detail' event.pk event.slug %}">
+                      <b>
+                        {% if event.activity %}
+                          {{ event.activity }}
+                        {% else %}
+                          Type d'activité supprimé
+                        {% endif %}
+                      </b>
+                    </a>
+                  </td>
+                  <td>
+                    <small>{{ event.location }}</small>
+                  </td>
+                  <td>
+                    {% if status == "organizer" %}
+                      <span class="badge badge-pill bg-success">Animateur</span>
+                    {% elif status == "absent" %}
+                      <span class="badge badge-pill bg-secondary">Absent</span>
+                    {% elif status == "present" %}
+                      <span class="badge badge-pill bg-info">A participé</span>
+                    {% endif %}
+                  </td>
+                </tr>
+              {% empty %}
+                Pas d'évènements
+              {% endfor %}
+            </table>
+          </div>
+        </div>
+      {% endif %}
+    {% else %}
+      Cet utilisateur n'a pas de réservations
+    {% endif %}

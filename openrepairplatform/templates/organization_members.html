@@ -55,11 +55,4 @@
 {% assets "js_groups_organization" %}
 <script src="{{ ASSET_URL }}"></script>
 {% endassets %}
-<script>
-  $(document).ready(function(){
-    $.fn.modal.Constructor.prototype.enforceFocus = function () {};
-    $("#h_nav").sticky({topSpacing:105});
-    $("#breadcrumb").sticky({topSpacing:65});
-  });
-</script>
 {% endblock extra_js %}

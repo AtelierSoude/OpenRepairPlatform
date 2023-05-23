@@ -116,12 +116,7 @@ de {{organization.name}}: contrôles des préférences{% endblock %}
   </div>
   {% endif %}
 </div>
-{% endif %} {% endblock menu_content %} {% block extra_js %}
+{% endif %} {% endblock menu_content %} 
 
-<script>
-  $(document).ready(function () {
-    $("#h_nav").sticky({ topSpacing: 105 });
-    $("#breadcrumb").sticky({ topSpacing: 65 });
-  });
-</script>
+{% block extra_js %}
 {% endblock extra_js %}

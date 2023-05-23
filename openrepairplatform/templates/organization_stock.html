@@ -64,11 +64,4 @@ $(document).ready(function(){
      });
  });
  </script>
- <script>
-  $(document).ready(function(){
-    $.fn.modal.Constructor.prototype._enforceFocus = function() {};
-    $("#h_nav").sticky({topSpacing:105});
-    $("#breadcrumb").sticky({topSpacing:65});
-  });
-</script>
-{% endblock %}
+{% endblock extra_js %}

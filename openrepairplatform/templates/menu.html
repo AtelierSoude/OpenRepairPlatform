@@ -115,13 +115,10 @@
               </a>
               <ul class="dropdown-menu" aria-labelledby="dropdownMenuButtonDark">
                 <li>
-                  <a class="dropdown-item"  href="{{ user.get_absolute_url }}">Mon compte</a>
+                  <a class="dropdown-item"  href="{{ user.get_absolute_url }}#nav-home">Mon compte</a>
                 </li>
                 <li>
-                  <a class="dropdown-item" href="{{ user.get_absolute_url }}">Voir profil</a>
-                </li>
-                <li>
-                  <a class="dropdown-item" href="{{ user.get_absolute_url }}">Mes rendez-vous</a>
+                  <a class="dropdown-item" href="{{ user.get_absolute_url }}#nav-profile">Mes rendez-vous</a>
                 </li>
                 <li>
                   {% if user.admin_organizations.all %}

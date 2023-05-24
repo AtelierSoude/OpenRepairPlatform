@@ -2,109 +2,110 @@
 {% load assets %}
 <!DOCTYPE html>
 <html lang="fr">
-  <head>
-    <meta charset="UTF-8">
-    <title>
-      {% block title %}{% endblock %}
-    </title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="apple-touch-icon"
-          sizes="57x57"
-          href="{% static 'img/favicon/apple-icon-57x57.png' %}">
-    <link rel="apple-touch-icon"
-          sizes="60x60"
-          href="{% static 'img/favicon/apple-icon-60x60.png' %}">
-    <link rel="apple-touch-icon"
-          sizes="72x72"
-          href="{% static 'img/favicon/apple-icon-72x72.png' %}">
-    <link rel="apple-touch-icon"
-          sizes="76x76"
-          href="{% static 'img/favicon/apple-icon-76x76.png' %}">
-    <link rel="apple-touch-icon"
-          sizes="114x114"
-          href="{% static 'img/favicon/apple-icon-114x114.png' %}">
-    <link rel="apple-touch-icon"
-          sizes="120x120"
-          href="{% static 'img/favicon/apple-icon-120x120.png' %}">
-    <link rel="apple-touch-icon"
-          sizes="144x144"
-          href="{% static 'img/favicon/apple-icon-144x144.png' %}">
-    <link rel="apple-touch-icon"
-          sizes="152x152"
-          href="{% static 'img/favicon/apple-icon-152x152.png' %}">
-    <link rel="apple-touch-icon"
-          sizes="180x180"
-          href="{% static 'img/favicon/apple-icon-180x180.png' %}">
-    <link rel="icon"
-          type="image/png"
-          sizes="192x192"
-          href="{% static 'img/favicon/android-icon-192x192.png' %}">
-    <link rel="icon"
-          type="image/png"
-          sizes="32x32"
-          href="{% static 'img/favicon/favicon-32x32.png' %}">
-    <link rel="icon"
-          type="image/png"
-          sizes="96x96"
-          href="{% static 'img/favicon/favicon-96x96.png' %}">
-    <link rel="icon"
-          type="image/png"
-          sizes="16x16"
-          href="{% static 'img/favicon/favicon-16x16.png' %}">
-    <link rel="manifest" href="{% static 'img/favicon/manifest.json' %}">
-    <meta name="msapplication-TileColor" content="#ffffff">
-    <meta name="msapplication-TileImage"
-          content="{% static 'img/favicon/ms-icon-144x144.png' %}">
-    <meta name="theme-color" content="#ffffff">
-    <!-- FONT -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap"
-          rel="stylesheet">
-    <!-- for leaflet -->
-    <link rel="stylesheet"
-          href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
-          integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
-          crossorigin="" />
-    <!-- Custom & bootstrap -->
-    {% assets "css_openrepairplatform" %}
-      <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet" />
-    {% endassets %}
-    <script src="{% static 'node_modules/jquery/dist/jquery.min.js' %}"></script>
-    <script src="{% static 'js/jquery.bootstrap.modal.forms.js' %}"></script>
-    <script src="{% static 'node_modules/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'django_tables2_column_shifter/js/django_tables2_column_shifter.min.js' %}"></script>
-     {% assets "js_base" %}
-      <script src="{{ ASSET_URL }}"></script>
-    {% endassets %}
-  </head>
-  <body class="bg-light">
-    {% block menu %}
-      {% include "menu.html" %}
-    {% endblock menu %}
-    <div class="main-container">
-      <div class="container" id="alerts">
-        {% for message in messages %}
-          <div class="alert alert-{{ message.level_tag }} alert-dismissible fade show mb-0"
-               role="alert">
-            {{ message }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-        {% endfor %}
-      </div>
-      <main class="content-page">
-        {% block content %}
-        {% endblock content %}
-      </main>
-      {% block footer %}
-        {% include "footer.html" %}
-      {% endblock footer %}
-    </div>
-
-    {% block extra_js %}
-    {% endblock extra_js %}
-
-  </body>
+      <head>
+            <meta charset="UTF-8">
+            <title>
+                  {% block title %}{% endblock title %}
+            </title>
+            <meta name="description"
+                  content="{% block meta-description %} Découvrez Reparons.org, la plateforme libre de réservation d'ateliers de réparation. Trouvez et réservez facilement des ateliers de réparation pour vos objets du quotidien. Contribuez à une consommation responsable et réduisez les déchets électroniques. Rejoignez-nous dès maintenant ! {% endblock meta-description %}">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <link rel="apple-touch-icon"
+                  sizes="57x57"
+                  href="{% static 'img/favicon/apple-icon-57x57.png' %}">
+            <link rel="apple-touch-icon"
+                  sizes="60x60"
+                  href="{% static 'img/favicon/apple-icon-60x60.png' %}">
+            <link rel="apple-touch-icon"
+                  sizes="72x72"
+                  href="{% static 'img/favicon/apple-icon-72x72.png' %}">
+            <link rel="apple-touch-icon"
+                  sizes="76x76"
+                  href="{% static 'img/favicon/apple-icon-76x76.png' %}">
+            <link rel="apple-touch-icon"
+                  sizes="114x114"
+                  href="{% static 'img/favicon/apple-icon-114x114.png' %}">
+            <link rel="apple-touch-icon"
+                  sizes="120x120"
+                  href="{% static 'img/favicon/apple-icon-120x120.png' %}">
+            <link rel="apple-touch-icon"
+                  sizes="144x144"
+                  href="{% static 'img/favicon/apple-icon-144x144.png' %}">
+            <link rel="apple-touch-icon"
+                  sizes="152x152"
+                  href="{% static 'img/favicon/apple-icon-152x152.png' %}">
+            <link rel="apple-touch-icon"
+                  sizes="180x180"
+                  href="{% static 'img/favicon/apple-icon-180x180.png' %}">
+            <link rel="icon"
+                  type="image/png"
+                  sizes="192x192"
+                  href="{% static 'img/favicon/android-icon-192x192.png' %}">
+            <link rel="icon"
+                  type="image/png"
+                  sizes="32x32"
+                  href="{% static 'img/favicon/favicon-32x32.png' %}">
+            <link rel="icon"
+                  type="image/png"
+                  sizes="96x96"
+                  href="{% static 'img/favicon/favicon-96x96.png' %}">
+            <link rel="icon"
+                  type="image/png"
+                  sizes="16x16"
+                  href="{% static 'img/favicon/favicon-16x16.png' %}">
+            <link rel="manifest" href="{% static 'img/favicon/manifest.json' %}">
+            <meta name="msapplication-TileColor" content="#ffffff">
+            <meta name="msapplication-TileImage"
+                  content="{% static 'img/favicon/ms-icon-144x144.png' %}">
+            <meta name="theme-color" content="#ffffff">
+            <!-- FONT -->
+            <link rel="preconnect" href="https://fonts.googleapis.com">
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+            <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap"
+                  rel="stylesheet">
+            <!-- for leaflet -->
+            <link rel="stylesheet"
+                  href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
+                  integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+                  crossorigin="" />
+            <!-- Custom & bootstrap -->
+            {% assets "css_openrepairplatform" %}
+                  <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet" />
+            {% endassets %}
+            <script src="{% static 'node_modules/jquery/dist/jquery.min.js' %}"></script>
+            <script src="{% static 'js/jquery.bootstrap.modal.forms.js' %}"></script>
+            <script src="{% static 'node_modules/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
+            <script type="text/javascript"
+                    src="{% static 'django_tables2_column_shifter/js/django_tables2_column_shifter.min.js' %}"></script>
+            {% assets "js_base" %}
+                  <script src="{{ ASSET_URL }}"></script>
+            {% endassets %}
+      </head>
+      <body class="bg-light">
+            {% block menu %}
+                  {% include "menu.html" %}
+            {% endblock menu %}
+            <div class="main-container">
+                  <div class="container" id="alerts">
+                        {% for message in messages %}
+                              <div class="alert alert-{{ message.level_tag }} alert-dismissible fade show mb-0"
+                                   role="alert">
+                                    {{ message }}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                          <span aria-hidden="true">&times;</span>
+                                    </button>
+                              </div>
+                        {% endfor %}
+                  </div>
+                  <main class="content-page">
+                        {% block content %}
+                        {% endblock content %}
+                  </main>
+                  {% block footer %}
+                        {% include "footer.html" %}
+                  {% endblock footer %}
+            </div>
+            {% block extra_js %}
+            {% endblock extra_js %}
+      </body>
 </html>

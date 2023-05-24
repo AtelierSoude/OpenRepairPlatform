@@ -169,13 +169,43 @@ cd OpenRepairPlatform
  docker build --file deployment/django/Dockerfile -t openrepairplateform-prod .
  ```
 
-### Dump the database
+### Dump the database & restore on local environment
 
 After being connected to your server, you can dump the database with the following command
 
 ```bash
-docker exec -t postgres pg_dump -c -U ateliersoude > dump_`date +%d-%m-%Y"_"%H_%M_%S`.sql
- ```
+# This guide shows you how to use gzip when pulling down a production database to your local environment
+#
+# A production database dump can be very large, like 1.5GB
+# But database dumps contains a lot of empty space
+# Gzipping the database can take the size from 1.5GB down to as low as 50MB
+# But you are left zipping and unzipping all the time
+#
+# Follow these steps to avoid ever creating a large .sql file in the first place
+# exporting and importing directly with the gzipped version
+# For this example, the production server is named "production"
+
+# On the production server:
+# Navigate to your home directory. 
+# If this next command fails, it is because you don't have permission to switch to the postgres user
+# If so, you will need to login as root before you can run this next command
+docker exec -ti postgres pg_dump -U ateliersoude ateliersoude | gzip -9 > dump_reparons.sql.gz
+
+# Log out of the production server and go back to your local machine
+# Use scp to download (-C uses compression for faster downloads)
+scp -C user@IP:./deployement/saves-bdd/dump_reparons.sql.gz
+
+# If you already have a local database, the .sql file might complain if you try to import it.
+# This can be due to duplicate keys, or if the SQL import attempts to create the table that already exists, etc.
+# Only delete the database i f you are sure, but I do this all the time
+# On OSX, run these commands
+docker exec -t postgres dropdb -U openrepairplatform openrepairplatform  
+docker exec -t postgres createdb -U openrepairplatform openrepairplatform
+
+# Now re-import the database directly from the gzipped file:
+
+docker exec -t postgres gunzip < dump_reparons.sql.gz | psql -U openrepairplatform openrepairplatform
+```
 
 ### Debug with Visual Studio Code
 

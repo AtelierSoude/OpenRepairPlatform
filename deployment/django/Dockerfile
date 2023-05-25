@@ -93,7 +93,7 @@ RUN  npm install
 RUN  node build.prod.js
 
 WORKDIR /srv/app
-RUN python3 manage.py collectstatic --noinput
+RUN python3 manage.py collectstatic --noinput --clear
 
 COPY deployment/django/uwsgi.ini .
 

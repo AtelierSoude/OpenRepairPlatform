@@ -1,11 +1,9 @@
 import os
 from .base import *  # noqa
 
-
-
 SECRET_KEY = os.getenv("SECRET_KEY")
 
-DEBUG = True
+DEBUG = False
 
 raven = os.getenv("RAVEN_DNS")
 

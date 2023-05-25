@@ -2,13 +2,10 @@ import os
 from .base import *  # noqa
 
 
-ASSETS_AUTO_BUILD=False
-ASSETS_CACHE=False
-
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 
-DEBUG = False
+DEBUG = True
 
 raven = os.getenv("RAVEN_DNS")
 

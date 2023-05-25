@@ -8,7 +8,11 @@ PROJECT_DIR = dirname(dirname(abspath(__file__)))
 BASE_DIR = dirname(PROJECT_DIR)
 STATIC_ROOT = "/srv/static"
 
-STATICFILES_DIRS = ["/srv/app/openrepairplatform/static"]
+STATICFILES_DIRS = [
+    "/srv/app/openrepairplatform/static",
+    "/srv/app/openrepairplatform/static/css",
+    "/srv/app/openrepairplatform/static/js"
+    ]
 
 STATIC_URL = "/static/"
 ASSETS_ROOT = STATICFILES_DIRS[0]

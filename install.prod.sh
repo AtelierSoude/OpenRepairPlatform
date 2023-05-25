@@ -21,6 +21,6 @@ curl -L --create-dirs -o ./deployment/nginx/options-ssl-nginx.conf https://raw.g
 #crontab /etc/crontab
 docker compose -f ./docker-compose.prod.yml up postgres
 
-docker exec -t postgres psql -U openrepairplatform -c "CREATE USER postgres SUPERUSER;"
+docker exec -t postgres psql -U openrepairplatform -c "CREATE USER postgres SUPERUSER; ALTER USER postgres PASSWORD 'myPassword';"
 
 docker compose -f ./docker-compose.prod.yml up 

@@ -18,6 +18,10 @@ urlpatterns = [
         views.MentionsView.as_view(),
         name="mentions-legales",
     ),
+    path(
+        "robots.txt",
+        TemplateView.as_view(template_name="robots.txt", content_type="text/plain"),
+    ),
     path("where/", views.LocaliseRedirect.as_view(), name="where"),
     path("user/", include("openrepairplatform.user.urls", namespace="user")),
     path("avatar/", include("initial_avatars.urls")),

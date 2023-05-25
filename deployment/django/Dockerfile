@@ -90,15 +90,15 @@ COPY ../../openrepairplatform ./openrepairplatform
 
 WORKDIR /srv/app/openrepairplatform/static
 RUN  npm install
-RUN  node build.prod.js
+RUN  npm run buildprod
 
-WORKDIR /srv/app
-RUN python3 manage.py collectstatic --noinput
+WORKDIR /srv/app/
+RUN python3 manage.py collectstatic --noinput --clear
 
 COPY deployment/django/uwsgi.ini .
 
 
-COPY ../../openrepairplatform/static /srv/static
+#COPY ../../openrepairplatform/static /srv/static
 
 #RUN mkdir /srv/app/uwsig
 #RUN chown -R www-data:www-data /srv/app/uwsig/

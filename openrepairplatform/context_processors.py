@@ -6,4 +6,7 @@ def site_title(request):
 
 
 def settings_variables(request):
-    return {'LOCATION': settings.LOCATION}
+    return {
+        'PREPROD':settings.PREPROD,
+        'LOCATION': settings.LOCATION,
+            }

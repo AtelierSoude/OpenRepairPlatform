@@ -17,7 +17,7 @@ ASSETS_ROOT = STATICFILES_DIRS[0]
 ASSETS_DEBUG = False
 
 SECRET_KEY = "H/hXAUnb1ZKNGpToim2cg38dxiyHM6b+zB9zozhpTzkP"
-
+PREPROD=os.environ.get("PREPROD")
 
 #Set domains
 domainOS = str(os.environ.get("DOMAINDNS")) + " " + str(os.environ.get("DOMAINS")) 

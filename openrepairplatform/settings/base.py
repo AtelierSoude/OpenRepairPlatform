@@ -9,9 +9,7 @@ BASE_DIR = dirname(PROJECT_DIR)
 STATIC_ROOT = "/srv/static"
 
 STATICFILES_DIRS = [
-    "/srv/app/openrepairplatform/static",
-    "/srv/app/openrepairplatform/static/css",
-    "/srv/app/openrepairplatform/static/js"
+    "/srv/app/openrepairplatform/static"
     ]
 
 STATIC_URL = "/static/"

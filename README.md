@@ -114,11 +114,14 @@ SERVER_CONTAINER=openrepairplatform_nginx
 POSTGRES_USER=openrepairplatform
 POSTGRES_DBNAME=openrepairplatform
 POSTGRES_PASSWORD=mangerdespommes
+# For PG admin loggin
 PGADMIN_DEFAULT_EMAIL=admin@admin.com
 PGADMIN_DEFAULT_PASSWORD=root
 ```
 
-2.Run the following command:
+2.Add the DOMAINDNS value to your host configuration
+
+3.Run the following command:
 
 ```bash
 cd [git checkout directory]/

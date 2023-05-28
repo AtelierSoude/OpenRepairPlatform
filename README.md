@@ -44,6 +44,7 @@ SECRET_KEY=CHANGE_ME
 
 # To activate the debug mode, set the environment variable to True
 DEBUG=true
+PREPROD=True # !!! to keep robots from indexing preprod pages. Change to False on Production server
 
 #Emailing settings only used in production mode
 EMAIL_PASSWORD=CHANGE_ME
@@ -94,6 +95,7 @@ SECRET_KEY=CHANGE_ME
 
 # To activate the debug mode, set the environment variable to True
 DEBUG=true
+PREPROD=False # !!! to keep robots from indexing preprod pages. Change to False on Production server
 
 #Emailing settings only used in production mode
 EMAIL_PASSWORD=CHANGE_ME

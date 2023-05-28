@@ -4,6 +4,10 @@
 <html lang="fr">
       <head>
             <meta charset="UTF-8">
+            {% if 'PREPROD' %}
+                  <meta name="robots" content="noindex">
+                  <meta name="googlebot" content="noindex">
+            {% endif %}
             <title>
                   {% block title %}{% endblock title %}
             </title>

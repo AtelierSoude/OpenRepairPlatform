@@ -53,6 +53,9 @@ class HomeView(TemplateView, FormView):
     
 class MentionsView(TemplateView):
     template_name = "mentions-legales.html"
+    
+class AboutView(TemplateView):
+    template_name = "about.html"
 
 class OrganizationPageView(PermissionOrgaContextMixin, DetailView):
     model = Organization

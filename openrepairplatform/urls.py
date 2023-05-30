@@ -19,6 +19,11 @@ urlpatterns = [
         name="mentions-legales",
     ),
     path(
+        "a-propos/",
+        views.AboutView.as_view(),
+        name="a-propos",
+    ),
+    path(
         "robots.txt",
         TemplateView.as_view(template_name="robots.txt", content_type="text/plain"),
     ),

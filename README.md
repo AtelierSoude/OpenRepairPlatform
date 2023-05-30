@@ -174,6 +174,15 @@ cd OpenRepairPlatform
  docker build --file deployment/django/Dockerfile -t openrepairplateform-prod .
  ```
 
+ ### Acces to Database administration
+ The dev env provide a postgresqlAdmin interface which allows you to connect to the database.
+
+ You can access it from the following url :
+ http://localhost:5050/
+
+ With the identity in the .env file
+
+
 ### Dump the database & restore on local environment
 
 After being connected to your server, you can dump the database with the following command

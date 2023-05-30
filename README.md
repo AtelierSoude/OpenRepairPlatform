@@ -207,7 +207,7 @@ docker exec -ti postgres pg_dump -U ateliersoude ateliersoude | gzip -9 > dump_r
 
 # Log out of the production server and go back to your local machine
 # Use scp to download (-C uses compression for faster downloads)
-scp -C user@IP:./deployement/saves-bdd/dump_reparons.sql.gz
+scp -C user@IP:./deployement/saves-bdd/dump_reparons.sql.gz ./deployment/saves-bdd/
 
 # If you already have a local database, the .sql file might complain if you try to import it.
 # This can be due to duplicate keys, or if the SQL import attempts to create the table that already exists, etc.
@@ -217,8 +217,10 @@ docker exec -t postgres dropdb -U openrepairplatform openrepairplatform
 docker exec -t postgres createdb -U openrepairplatform openrepairplatform
 
 # Now re-import the database directly from the gzipped file:
-
-docker exec -t postgres gunzip < dump_reparons.sql.gz | psql -U openrepairplatform openrepairplatform
+#loggin into the container
+docker exec -ti postgres /bin/bash
+#in container run
+gunzip < /srv/saves-bdd/dump_reparons.sql.gz | psql -U openrepairplatform openrepairplatform
 ```
 
 ### Debug with Visual Studio Code

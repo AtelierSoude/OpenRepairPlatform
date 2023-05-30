@@ -13,10 +13,8 @@
         <div class="modal-content"></div>
       </div>
     </div>
-
-    <h2 class="text-center mt-4">Stock de {{ organization }}</h2>
     {% if is_active %}
-    <button class="btn btn-success btn-absolute bs-modal" id="add-stuff">
+    <button id="add-object" class="btn btn-success btn-absolute bs-modal" id="add-stuff">
       <i class="fa fa-plus"></i><i class="fas fa-box-open"></i>
       <span class="btn-label d-none ps-1">Ajouter un objet</span>
     </button>
@@ -51,7 +49,7 @@
     $( this ).css( "width", "200px" );
   }, function() {
     $( ".btn-label" ).addClass( "d-none" );
-    $( this ).css( "width", "63px" );
+    $( this ).css( "width", "73px" );
   }
   );
   });

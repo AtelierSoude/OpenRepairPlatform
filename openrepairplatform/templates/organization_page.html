@@ -24,7 +24,7 @@
             {% endif %}
           </div>
           <div class="col-8  align-self-center">
-            <h2 >{{ organization.name }}</h2>
+            <h2 >Stock de {{ organization.name }}</h2>
           </div>
         </div>
       </div>
@@ -32,7 +32,7 @@
   </div>
   {% include "organization_menu.html" with organization=organization %}
 </div>
-<div class="container">
+<div class="container pt-2">
   {% block menu_content %}
     <section class="p-2 row">
       <div class="d-flex flex-column col-md-4">

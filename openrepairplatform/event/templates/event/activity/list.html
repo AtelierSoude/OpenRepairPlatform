@@ -1,18 +1,17 @@
 {% extends 'base.html' %}
-{% block title %}Listes des activités disponibles sur {{site_title}}{% endblock %}
+{% block title %}Listes des activités disponibles sur {{site_title}} {% endblock title %}
 
 {% block content %}
 
-  <div class="jumbotron jumbotron-fluid parallax" id="jumbotron">
+  <div class="pt-5 pb-5 bg-secondary">
     <div class="container text-center">
       <h2>Activités</h2>
-      <hr>
       <span>Retrouvez ici les différentes activités proposées sur cette plateforme</span>
     </div>
   </div>
 
   <section class="container pt-3">
-    <div class="">
+    <div>
       <div class="event_list_cards">
         {% include "event/activity/cards.html" with activities=activity_list.all %}
       </div>

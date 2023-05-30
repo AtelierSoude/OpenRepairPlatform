@@ -109,15 +109,6 @@
             {% endif %}
             {% if minimal != True %}
             <hr>
-            <small class="text-muted">
-              <i>
-              {% if event.description %}
-                {{ event.description | safe | truncatewords_html:15 }}
-              {% else %}
-                {{ event.activity.description | safe | truncatewords_html:8 }}
-              {% endif %}
-              </i>
-            </small>
             {% endif %}
         </div>
         </a>

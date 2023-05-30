@@ -15,6 +15,17 @@
         }
     }
 
+    // Small devices (landscape phones, less than 768px)
+    @media (max-width: 767.98px) {
+        h1 {
+            font-size: 2em;
+        }
+
+        h3 {
+            font-size: 1em !important;
+        }
+    }
+
     h4 {
         color: #FFF;
     }
@@ -37,17 +48,18 @@
 
 }
 
-.how-to{
+.how-to {
 
-    i{
+    i {
         font-size: 4em;
         margin-bottom: 20px;
     }
+
     h2 {
         font-weight: 700;
         text-transform: uppercase;
     }
-    
+
 }
 
 .key-number-home {

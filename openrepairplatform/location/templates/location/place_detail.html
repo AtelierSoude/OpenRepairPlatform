@@ -15,7 +15,7 @@
 
   <div class="container">
     <div class="row no-gutters">
-      <section class="header_detail_page p-0 text-center col-md-3">
+           <section class="header_detail_page p-0 text-center col-md-3">
         <div class="bg-light" id="side_nav">
             <div class="pt-5 header_detail_page_picture d-md-block d-sm-none d-xs-none">
               {% if place.picture %}
@@ -130,12 +130,6 @@
 {% endblock %}
 
 {% block extra_js %}
-<script>
-  $(document).ready(function(){
-    $("#side_nav").sticky({topSpacing:40});
-    $("#breadcrumb").sticky({topSpacing:0});
-  });
-</script>
 <script>
   let latitude = {{ place.latitude|unlocalize }};
   let longitude = {{ place.longitude|unlocalize }};

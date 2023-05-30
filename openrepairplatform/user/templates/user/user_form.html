@@ -31,12 +31,6 @@
 {% endblock %}
 
 {% block extra_js %}
-<script>
-    $(document).ready(function(){
-      $("#breadcrumb").sticky({topSpacing:0});
-      $("h1").sticky({topSpacing:40});
-    });
-</script>
   {{ form.media }}
   {% assets "js_create_edit_user" %}
     <script src="{{ ASSET_URL }}"></script>

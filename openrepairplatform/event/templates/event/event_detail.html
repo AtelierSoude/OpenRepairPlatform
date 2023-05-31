@@ -21,31 +21,29 @@
   <!-- Event header -->
   <div id="header-event-detail"
        style="background-image:url('{% if event.activity.picture and event.activity.picture.url %}{{ event.activity.picture.url }}{% endif %}')">
-    <div class="container d-flex" style="height:200px;" >
-
-          <div class="d-flex align-items-end">
-            {% url 'event:detail_admin' slug=event.slug pk=event.pk as the_url %}
-            {% if is_active %}
-              {% if request.get_full_path == the_url %}
-                <a href="{{ event.get_absolute_url }}"
-                   class="btn btn-large btn-light me-2 mb-2 ">Ne plus administrer</a>
-                {% include "event/invitation.html" %}
-              {% else %}
-                <a href="admin" class="btn btn-large btn-light me-2 mb-2 ">
-                  <i class="fas fa-cog"></i>   Administrer
-                </a>
-              {% endif %}
-            {% endif %}
-          </div>
-          <div class="d-flex align-items-end">
-            {% if request.get_full_path != the_url %}
-              <a class="btn btn-light me-2 mb-2 "
-                 href="{% url 'event:ical_event' event.pk %}">
-                <i class="far fa-calendar-plus"></i> ajouter à mon agenda
-              </a>
-            {% endif %}
-          </div>
-
+    <div class="container d-flex" style="height:200px;">
+      <div class="d-flex align-items-end">
+        {% url 'event:detail_admin' slug=event.slug pk=event.pk as the_url %}
+        {% if is_active %}
+          {% if request.get_full_path == the_url %}
+            <a href="{{ event.get_absolute_url }}"
+               class="btn btn-large btn-light me-2 mb-2 ">Ne plus administrer</a>
+            {% include "event/invitation.html" %}
+          {% else %}
+            <a href="admin" class="btn btn-large btn-light me-2 mb-2 ">
+              <i class="fas fa-cog"></i>   Administrer
+            </a>
+          {% endif %}
+        {% endif %}
+      </div>
+      <div class="d-flex align-items-end">
+        {% if request.get_full_path != the_url %}
+          <a class="btn btn-light me-2 mb-2 "
+             href="{% url 'event:ical_event' event.pk %}">
+            <i class="far fa-calendar-plus"></i> ajouter à mon agenda
+          </a>
+        {% endif %}
+      </div>
     </div>
   </div>
   {% if is_active %}
@@ -60,6 +58,7 @@
     {% include "event/detail/event_detail_visitor.html" %}
   {% endif %}
 {% endblock %}
+
 {% block extra_js %}
   <script type="text/javascript">
   $(function () {
@@ -91,4 +90,4 @@
     };
   }
   </script>
-{% endblock %}
+{% endblock extra_js %}

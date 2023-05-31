@@ -2,13 +2,11 @@ import os
 from .base import *  # noqa
 
 SECRET_KEY = os.getenv("SECRET_KEY")
+STATIC_ROOT = "/srv/static/"
 
 STATICFILES_DIRS = [
-    "/srv/app/openrepairplatform/openrepairplatform/static/",
-    "/srv/app/openrepairplatform/openrepairplatform/static/css/",
-    "/srv/app/openrepairplatform/openrepairplatform/static/js/",
+    "/srv/app/static/",
     ]
-ASSETS_ROOT = STATICFILES_DIRS[0]
 
 
 DEBUG = False

@@ -2,12 +2,11 @@ from .base import *
 
 DEBUG = True
 
+STATIC_ROOT = "/srv/static/"
+
 STATICFILES_DIRS = [
-    "/srv/app/openrepairplatform/static",
-    "/srv/app/openrepairplatform/static/js",
-    "/srv/app/openrepairplatform/static/css"
     ]
-ASSETS_ROOT = STATICFILES_DIRS[0]
+
 
 
 #pourquoi ? ... parceque...

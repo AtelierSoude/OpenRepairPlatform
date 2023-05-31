@@ -6,7 +6,6 @@ from django.contrib import messages
 
 PROJECT_DIR = dirname(dirname(abspath(__file__)))
 BASE_DIR = dirname(PROJECT_DIR)
-STATIC_ROOT = "/srv/static"
 
 STATIC_URL = "/static/"
 ASSETS_DEBUG = False

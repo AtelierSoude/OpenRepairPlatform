@@ -1,19 +1,12 @@
+{% extends './parts/modal.html' %}
 {% load app_filters bootstrap5 %}
-
-<!-- Button trigger modal -->
-<button type="button" class="btn btn-success btn-large m-2" data-bs-toggle="modal" data-bs-target="#add_organizer{{ event_to_organize.pk | slugify }}">
-    <i class="fa fa-plus"></i>
-  </button>
-  
-  <!-- Modal -->
-  <div class="modal fade" id="add_organizer{{ event_to_organize.pk | slugify }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="staticBackdropLabel">Ajouter un animateur</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <form action="{% url 'user:organizer_book' event_to_organize.pk %}?event={{ event_to_organize.pk | slugify }}" method="post">
+{% block idBtnModal %}add_organizer{{ event_to_organize.pk | slugify }}{% endblock idBtnModal %}
+{% block idModal %}add_organizer{{ event_to_organize.pk | slugify }}{% endblock idModal %}
+{% block titleModal %}
+Ajouter un animateur
+{% endblock titleModal %}
+{% block contentModal %}
+    <form action="{% url 'user:organizer_book' event_to_organize.pk %}?event={{ event_to_organize.pk | slugify }}" method="post">
 
         <div class="modal-body">
             {% csrf_token %}
@@ -24,7 +17,4 @@
           <input type="submit" class="btn btn-secondary" value="Réserver" />
         </div>
     </form>
-
-      </div>
-    </div>
-  </div>
+{% endblock %}

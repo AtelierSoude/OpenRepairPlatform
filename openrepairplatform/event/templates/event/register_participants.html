@@ -1,39 +1,20 @@
+{% extends './parts/modal.html' %}
 {% load app_filters bootstrap5 %}
-<button type="button"
-        class="btn btn-success btn-large m-2"
-        data-bs-toggle="modal"
-        data-bs-target="#add_participant{{ event_to_organize.pk | slugify }}">
-    <i class="fa fa-plus">
-    </button>
-    <!-- Button trigger modal -->
-    <!-- Modal -->
-    <div class="modal fade"
-         id="add_participant{{ event_to_organize.pk | slugify }}"
-         data-bs-backdrop="static"
-         data-bs-keyboard="false"
-         tabindex="-1"
-         aria-labelledby="staticBackdropLabel"
-         aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Ajouter un participant</h1>
-                    <button type="button"
-                            class="btn-close"
-                            data-bs-dismiss="modal"
-                            aria-label="Close"></button>
-                </div>
-                <form action="{% url 'user:create_and_book' %}?event={{ event_to_organize.pk | slugify }}"
-                      method="post">
-                    <div class="modal-body">
-                        {% csrf_token %}
-                        {% bootstrap_form form=register_form %}
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fermer</button>
-                        <input type="submit" class="btn btn-secondary" value="Réserver" />
-                    </div>
-                </form>
-            </div>
+{% block idBtnModal %}add_participant{{ event_to_organize.pk | slugify }}{% endblock idBtnModal %}
+{% block idModal %}add_participant{{ event_to_organize.pk | slugify }}{% endblock idModal %}
+{% block titleModal %}
+    Ajouter un participant
+{% endblock titleModal %}
+{% block contentModal %}
+    <form action="{% url 'user:create_and_book' %}?event={{ event_to_organize.pk | slugify }}"
+          method="post">
+        <div class="modal-body">
+            {% csrf_token %}
+            {% bootstrap_form form=register_form %}
         </div>
-    </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fermer</button>
+            <input type="submit" class="btn btn-secondary" value="Réserver" />
+        </div>
+    </form>
+{% endblock %}

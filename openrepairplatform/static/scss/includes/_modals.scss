@@ -15,17 +15,8 @@
   bottom: 0px;
 }
 
-.modal-body {
-  padding: 0px;
-}
 
-.modal-content {
-  border-radius: 0;
-  margin-top: 10%;
-  padding: 1em;
-  z-index: 10000 !important;
-  position: relative !important;
-}
+
 
 /* autocomplete */
 .select2-selection__clear {
@@ -199,10 +190,6 @@ input.toggle-modal:checked ~ div .menu-localisation input {
   }
 }
 
-.modal-dialog {
-  width: 700px !important;
-  margin: 1.75rem auto;
-}
 
 
 #add-stuff{

@@ -21,7 +21,7 @@
     <div class="mt-2 mb-2 text-center">
       <span class="m-2"><b>Optionnel</b> Dites-nous quel objet vous apportez.</span><br>
       <small> Sélectionner un objet dans votre inventaire ci-dessous, ou 
-        <a class="bs-modal" href="#" data-form-url="{% url 'event:create_user_event_stuff' event.pk user_success_booking.pk %}">
+        <a class="bs-gobal-modal" href="#" data-form-url="{% url 'event:create_user_event_stuff' event.pk user_success_booking.pk %}">
           créez-en un nouveau 
         </a> puis selectionnez-le 
       </small>
@@ -41,7 +41,7 @@
                   <tbody>
                     <tr>
                     <td colspan="3" class="text-center">
-                      <a class="bs-modal" href="#" data-form-url="{% url 'event:create_user_event_stuff' event.pk user_success_booking.pk %}">
+                      <a class="bs-gobal-modal" href="#" data-form-url="{% url 'event:create_user_event_stuff' event.pk user_success_booking.pk %}">
                         créer un autre objet
                       </a>
                     </td>
@@ -86,11 +86,7 @@
       $("#submitStuff").removeAttr("disabled");
     }
     })
-    $(".bs-modal").each(function () {
-      $(this).modalForm({
-          formURL: $(this).data('form-url')
-      });
-    });
+  
     window.onload = function() {
     {% if not event.allow_stuffs %}
     setTimeout(function() {

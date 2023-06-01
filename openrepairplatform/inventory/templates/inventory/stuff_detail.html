@@ -28,7 +28,7 @@
         <div class="col-md-8">
             <h4 class="pt-2 pb-2">{{ stuff }}
               {% if can_edit %}
-              <a class="btn btn-success rounded-circle btn-sm bs-modal" data-form-url="{% url 'inventory:update_stuff' stuff.pk %}">
+              <a class="btn btn-success rounded-circle btn-sm bs-gobal-modal" data-form-url="{% url 'inventory:update_stuff' stuff.pk %}">
                 <i class="fa fa-pencil-alt"></i>
               </a>
               {% endif %}
@@ -54,7 +54,7 @@
                   Non visible du public
                 {% endif %}
                 {% if can_edit %}
-                <a class="btn btn-default rounded-circle btn-sm bs-modal float-end" data-form-url="{% url 'inventory:update_visibility_stuff' stuff.pk %}">
+                <a class="btn btn-default rounded-circle btn-sm bs-gobal-modal float-end" data-form-url="{% url 'inventory:update_visibility_stuff' stuff.pk %}">
                   <i class="fa fa-pencil-alt"></i>
                 </a>
               {% endif %}
@@ -77,7 +77,7 @@
                     Utilisateur non connu sur ce site
                   {% endif %}
                   {% if can_edit %}
-                    <a class="btn btn-default rounded-circle btn-sm bs-modal float-end" data-form-url="{% url 'inventory:update_owner_stuff' stuff.pk %}">
+                    <a class="btn btn-default rounded-circle btn-sm bs-gobal-modal float-end" data-form-url="{% url 'inventory:update_owner_stuff' stuff.pk %}">
                       <i class="fa fa-pencil-alt"></i>
                     </a>
                   {% endif %}
@@ -97,7 +97,7 @@
                 Chez l'utilisateur
               {% endif %}
               {% if can_edit %}
-                <a class="btn btn-default rounded-circle btn-sm bs-modal float-end" data-form-url="{% url 'inventory:update_place_stuff' stuff.pk %}">
+                <a class="btn btn-default rounded-circle btn-sm bs-gobal-modal float-end" data-form-url="{% url 'inventory:update_place_stuff' stuff.pk %}">
                   <i class="fa fa-pencil-alt"></i>
                 </a>
               {% endif %}
@@ -108,7 +108,7 @@
                 <b class="pe-2">Etat</b> 
                 {% include "inventory/stuff_state_display.html" with stuff_state=stuff.get_state_display %}
                 {% if can_edit %}
-                  <a class="btn btn-default rounded-circle btn-sm bs-modal float-end" data-form-url="{% url 'inventory:update_state_stuff' stuff.pk %}">
+                  <a class="btn btn-default rounded-circle btn-sm bs-gobal-modal float-end" data-form-url="{% url 'inventory:update_state_stuff' stuff.pk %}">
                     <i class="fa fa-pencil-alt"></i>
                   </a>
                 {% endif %}
@@ -126,7 +126,7 @@
       <div class="col-md-8 p-4">
         <h4 class="">Dossiers de réparation  
           {% if can_edit %}
-            <a class="btn btn-success btn-sm rounded-circle bs-modal" data-form-url="{% url 'inventory:create_folder' stuff.pk %}">
+            <a class="btn btn-success btn-sm rounded-circle bs-gobal-modal" data-form-url="{% url 'inventory:create_folder' stuff.pk %}">
               <i class="fa fa-plus"></i>
             </a>
           {% endif %}
@@ -143,15 +143,6 @@
 {% endblock %}
 
 {% block extra_js %}
-<script type="text/javascript">
-  $(function () {
-   $.fn.modal.Constructor.prototype._enforceFocus = function() {};
-   $(".bs-modal").each(function () {
-     $(this).modalForm({
-         formURL: $(this).data('form-url')
-     });
-   });
- });
- </script>
+
 {% endblock %}
 

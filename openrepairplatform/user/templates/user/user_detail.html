@@ -115,14 +115,5 @@
 </div>
 {% endblock content %}
 {% block extra_js %}
-  <script type="text/javascript">
-  $(function () {
-   $.fn.modal.Constructor.prototype._enforceFocus = function() {};
-   $(".bs-modal").each(function () {
-     $(this).modalForm({
-         formURL: $(this).data('form-url')
-     });
-   });
- });
-  </script>
+
 {% endblock extra_js %}

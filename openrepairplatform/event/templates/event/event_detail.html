@@ -10,12 +10,11 @@
 {% endblock %}
 {% block content %}
   <!-- Modals -->
-  <div id="modal" class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" >
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-      </div>
-    </div>
+  <div class="modal fade" tabindex="-1" role="dialog" id="modal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content"></div>
   </div>
+</div>
   <!-- Breadcrumb -->
   {% url "event:list" as event_list_url %}
   {% include "breadcrumb.html" with current=event first_parent_url=event_list_url first_parent_text="Évènements" %}
@@ -59,19 +58,8 @@
     {% include "event/detail/event_detail_visitor.html" %}
   {% endif %}
 {% endblock %}
-
 {% block extra_js %}
-  <script type="text/javascript">
-  $(function () {
-   $.fn.modal.Constructor.prototype._enforceFocus = function() {};
-   $(".bs-modal").each(function () {
-     $(this).modalForm({
-         formURL: $(this).data('form-url')
-     });
-   });
- });
-  </script>
-  <script>
+   <script>
   if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
 
     $("#event-book").unstick()

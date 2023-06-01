@@ -109,7 +109,8 @@
           {% if event.allow_stuffs %}
             <div class="col-6 mb-2">
               <p><b>Objets en réparation</b><br>
-                <button class="btn btn-light btn-sm bs-modal"  href="#" data-form-url="{% url 'event:create_user_event_stuff_orga' event.pk user.pk %}">
+
+                <button class="btn btn-light btn-sm bs-gobal-modal"  href="#" data-modal-id="modal-stuff" data-form-url="{% url 'event:create_user_event_stuff_orga' event.pk user.pk %}" >
                   <i class="fas fa-tools"></i> ajouter
                 </button>
               {% for stuff in user.user_stuffs.all %}

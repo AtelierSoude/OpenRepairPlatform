@@ -11,7 +11,7 @@
             <small><a href="{{folder.stuff.get_absolute_url}}">{{ folder.stuff }}</a></small><br>
             <small>Etat innitial : <b>{{folder.interventions.first.observation}}</b> / dernier état : <b>{{folder.interventions.last.status}}</b></small>
             {% if can_edit or is_active %}
-                <button class="btn btn-sm bs-modal text-success float-end" data-form-url="{% url 'inventory:create_intervention' folder.pk %}">
+                <button class="btn btn-sm bs-gobal-modal text-success float-end" data-form-url="{% url 'inventory:create_intervention' folder.pk %}">
                     <i class="fa fa-plus"></i> Ajouter une intervention 
                 </button>
             {% endif %}
@@ -65,7 +65,7 @@
                 </td>
                 <td class="text-center">
                 {% if can_edit %}
-                <a class="btn btn-default rounded-circle btn-sm bs-modal" data-form-url="{% url 'inventory:update_intervention' intervention.pk %}">
+                <a class="btn btn-default rounded-circle btn-sm bs-gobal-modal" data-form-url="{% url 'inventory:update_intervention' intervention.pk %}">
                     <i class="fa fa-pencil-alt"></i>
                 </a>
                 {% endif %}

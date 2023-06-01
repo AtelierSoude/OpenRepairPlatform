@@ -5,7 +5,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 STATIC_ROOT = "/srv/static/"
 
 STATICFILES_DIRS = [
-    "/srv/app/static/",
+    "/srv/app/openrepairplatform/static/",
     ]
 
 

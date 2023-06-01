@@ -55,6 +55,7 @@ css_detail_event = Bundle(
 js_base = Bundle(
     "js/lib/sticky_polyfill.js",
     "js/lib/auto-dissmiss-alerts.js",
+    "js/lib/modal.js",
     filters="jsmin",
     output="js/base.min.js",
 )

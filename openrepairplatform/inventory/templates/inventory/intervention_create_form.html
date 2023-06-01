@@ -41,7 +41,6 @@
     </div>
 <script>
 $(document).ready(function(){
-    $.fn.modal.Constructor.prototype._enforceFocus = function() {};
       $("#id_change_stuff_state").change(function () {
       if($(this).is(":checked")) {
           $('#changestate').show();

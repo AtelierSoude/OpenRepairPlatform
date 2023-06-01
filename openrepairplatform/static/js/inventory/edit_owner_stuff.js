@@ -1,6 +1,4 @@
-$(document).ready(function(){
-    $.fn.modal.Constructor.prototype._enforceFocus = function() {};
-});
+
 $(document).ready(function(){
     owner = document.querySelector("#ownerchoice");
       owner.onchange=function () {

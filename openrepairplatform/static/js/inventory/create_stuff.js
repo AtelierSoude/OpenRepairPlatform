@@ -1,7 +1,4 @@
 $(document).ready(function(){
-  $.fn.modal.Constructor.prototype._enforceFocus = function() {};
-});
-$(document).ready(function(){
   category = document.querySelector("#id_category");
   if (category) {
     category.onchange=function() {  

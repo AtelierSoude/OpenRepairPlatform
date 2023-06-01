@@ -14,7 +14,7 @@
       </div>
     </div>
     {% if is_active %}
-    <button id="add-object" class="btn btn-success btn-absolute bs-gobal-modal" id="add-stuff">
+    <button id="add-object" class="btn btn-success btn-absolute bs-gobal-modal" data-form-url="{% url 'inventory:create_organization_stuff' organization.slug %}">
       <i class="fa fa-plus"></i><i class="fas fa-box-open"></i>
       <span class="btn-label d-none ps-1">Ajouter un objet</span>
     </button>
@@ -54,12 +54,4 @@
   );
   });
 </script>
-<script type="text/javascript">
-$(document).ready(function(){
-   $.fn.modal.Constructor.prototype._enforceFocus = function() {};
-     $("#add-stuff").modalForm({
-         formURL: "{% url 'inventory:create_organization_stuff' organization.slug %}"
-     });
- });
- </script>
 {% endblock extra_js %}

@@ -10,6 +10,7 @@ STATICFILES_DIRS = [
     "/srv/app/openrepairplatform/static/scss",
     "/srv/app/openrepairplatform/static/css",
     ]
+ASSETS_ROOT = STATICFILES_DIRS[0]
 
 
 DEBUG = False

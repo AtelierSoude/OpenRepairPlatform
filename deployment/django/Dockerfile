@@ -86,7 +86,7 @@ WORKDIR /srv/app
 ARG DOMAINDNS
 ARG DOMAINS
 
-#COPY ../../openrepairplatform ./openrepairplatform
+COPY ../../openrepairplatform /srv/app/openrepairplatform
 
 WORKDIR /srv/app/openrepairplatform/static
 RUN  npm install
@@ -98,7 +98,7 @@ RUN python3 manage.py collectstatic --noinput --clear
 COPY deployment/django/uwsgi.ini .
 
 
-#COPY ../../openrepairplatform/static /srv/static
+COPY ../../openrepairplatform/static /srv/static
 
 #RUN mkdir /srv/app/uwsig
 #RUN chown -R www-data:www-data /srv/app/uwsig/

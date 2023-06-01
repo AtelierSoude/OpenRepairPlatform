@@ -24,7 +24,6 @@ services:
     env_file:
       - .env
     volumes:
-      - ../OpenRepairPlatform:/srv/app
       - openrepairplatform_static:/srv/static
       - openrepairplatform_media:/srv/media
     depends_on:

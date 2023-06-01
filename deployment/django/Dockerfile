@@ -86,7 +86,7 @@ WORKDIR /srv/app
 ARG DOMAINDNS
 ARG DOMAINS
 
-COPY ../../openrepairplatform ./openrepairplatform
+#COPY ../../openrepairplatform ./openrepairplatform
 
 WORKDIR /srv/app/openrepairplatform/static
 RUN  npm install

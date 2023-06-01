@@ -7,7 +7,7 @@ STATIC_ROOT = "/srv/static/"
 STATICFILES_DIRS = [
     "/srv/app/openrepairplatform/static/",
     ]
-ASSETS_ROOT = "/srv/static/"
+ASSETS_ROOT = "/srv/app/openrepairplatform/static/"
 
 
 DEBUG = True

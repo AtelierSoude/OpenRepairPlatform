@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     "django.contrib.gis",
     "simple_history",
     "rest_framework",
-    "bootstrap",
     "fontawesome",
     "django_assets",
     "bootstrap5",
@@ -86,7 +85,6 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                "django.template.context_processors.request",
             ]
         },
     }
@@ -164,7 +162,7 @@ MESSAGE_TAGS = {messages.ERROR: "danger"}
 AVATAR_COLORS = ((254, 229, 110), (8, 51, 66), (43, 230, 171),)
 
 # Django tables2
-DJANGO_TABLES2_TEMPLATE = "django_tables2/bootstrap4.html"
+DJANGO_TABLES2_TEMPLATE = "django_tables2/bootstrap5.html"
 
 KM_DISTANCE = 50
 

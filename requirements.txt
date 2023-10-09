@@ -82,7 +82,7 @@ django-recaptcha==2.0.6
     # via openrepairplatform (setup.py)
 django-simple-history==3.0.0
     # via openrepairplatform (setup.py)
-django-tables2==2.3.4
+django-tables2==2.6.0
     # via
     #   django-tables2-column-shifter
     #   openrepairplatform (setup.py)

@@ -126,7 +126,7 @@ class MemberTable(ColumnShiftTable):
 
 
 class FeeTable(tables.Table):
-    membership = tables.Column(linkify=True, verbose_name="Membre")
+    membership = tables.Column(verbose_name="Membre")
     participation = tables.RelatedLinkColumn(
         verbose_name="Evénement", attrs={"td": {"class": "small"}}
     )
@@ -139,6 +139,6 @@ class FeeTable(tables.Table):
 
     class Meta:
         model = Fee
-        attrs = {"class": "table table-fixed table-hover"}
         sequence = ("date", "membership", "participation", "payment", "amount")
         exclude = ("organization", "id")
+        template_name = 'django_tables2/bootstrap5.html'

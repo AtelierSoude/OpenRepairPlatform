@@ -1,39 +1,56 @@
-
 <nav class="nav nav-pills justify-content-center bg-secondary" id="h_nav">
-  <a class="nav-link text-center {{ page_tab }}" 
-  href="{% url 'organization_page' organization.slug %}">
-  <i style="font-size: 22px" class="fas fa-address-card"></i>
+  <a
+    class="nav-link text-center {{ page_tab }}"
+    href="{% url 'organization_page' organization.slug %}"
+  >
+    <i style="font-size: 22px" class="fas fa-address-card"></i>
     <span class="d-none d-sm-none d-md-block">Page</span>
-  </a> <!-- change this -->
-  <a class="text-center nav-link {{ events_tab }}" 
-  href="{% url 'organization_events' organization.slug %}">
-    <i style="font-size: 22px" class="fas fa-calendar-alt "></i>    
-    <span class="d-none d-sm-none d-md-block">Evenements <span class="badge bg-light">{{future_event.all.count}}</span></span>
   </a>
-  <a class="text-center nav-link {{ groups_tab }}" 
-  href="{% url 'organization_groups' organization.slug %}">
-    <i style="font-size: 22px" class="fas fa-users "></i>    
+  <!-- change this -->
+  <a
+    class="text-center nav-link {{ events_tab }}"
+    href="{% url 'organization_events' organization.slug %}"
+  >
+    <i style="font-size: 22px" class="fas fa-calendar-alt"></i>
+    <span class="d-none d-sm-none d-md-block"
+      >Evenements
+      <span class="badge bg-light">{{future_event.all.count}}</span></span
+    >
+  </a>
+  <a
+    class="text-center nav-link {{ groups_tab }}"
+    href="{% url 'organization_groups' organization.slug %}"
+  >
+    <i style="font-size: 22px" class="fas fa-users"></i>
     <span class="d-none d-sm-none d-md-block">Groupes</span>
   </a>
   {% if is_active %}
-  <a class="text-center nav-link {{ members_tab }}"
-  href="{% url 'organization_members' organization.slug %}">
-  <i style="font-size: 22px" class="fas fa-user "></i>    
+  <a
+    class="text-center nav-link {{ members_tab }}"
+    href="{% url 'organization_members' organization.slug %}"
+  >
+    <i style="font-size: 22px" class="fas fa-user"></i>
     <span class="d-none d-sm-none d-md-block">Membres</span>
   </a>
-  <a class="text-center nav-link {{ stock_tab }}"
-  href="{% url 'organization_stock' organization.slug %}">
-  <i style="font-size: 22px" class="fas fa-box "></i>    
+  <a
+    class="text-center nav-link {{ stock_tab }}"
+    href="{% url 'organization_stock' organization.slug %}"
+  >
+    <i style="font-size: 22px" class="fas fa-box"></i>
     <span class="d-none d-sm-none d-md-block">Stock</span>
   </a>
-  <a class="text-center nav-link {{ accounting_tab }}"
-  href="{% url 'organization_fees' organization.slug %}">
-  <i style="font-size: 22px" class="fas fa-euro-sign "></i>    
+  <a
+    class="text-center nav-link {{ accounting_tab }}"
+    href="{% url 'organization_fees' organization.slug %}"
+  >
+    <i style="font-size: 22px" class="fas fa-euro-sign"></i>
     <span class="d-none d-sm-none d-md-block">Comptabilité</span>
   </a>
-  <a class="text-center nav-link {{ controls_tab }}"
-  href="{% url 'organization_controls' organization.slug %}">
-    <i style="font-size: 22px" class="fas fa-cog "></i>    
+  <a
+    class="text-center nav-link {{ controls_tab }}"
+    href="{% url 'organization_controls' organization.slug %}"
+  >
+    <i style="font-size: 22px" class="fas fa-cog"></i>
     <span class="d-none d-sm-none d-md-block">Gérer</span>
   </a>
   {% endif %}

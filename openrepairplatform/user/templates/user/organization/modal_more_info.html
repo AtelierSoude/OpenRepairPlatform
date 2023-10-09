@@ -1,9 +1,9 @@
 
-{% load bootstrap5 app_filters static %}
+{% load static bootstrap5 app_filters static %}
 
-<div class="modal" id="more-info-{{ anonymous_user.pk }}" role="dialog">
+<div class="modal fade" id="more-info-{{ anonymous_user.pk }}" tabindex="-1"  role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
 
-  <div class="modal-dialog modal-lg" role="document">
+  <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">
@@ -13,9 +13,8 @@
         Ajouter un membre à l'organisation
         {% endif %}
         </h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
       </div>
       <div class="modal-body">
         {% if anonymous_user %}
@@ -23,7 +22,6 @@
         {% bootstrap_form search_form %}
           {{search_form.media}}
         {% endif %}
-        Veuillez compléter ces info s'il vous plait.
         <form
             {% if anonymous_user %}
             action="{% url 'user:organization_update_member' object.pk anonymous_user.pk %}"

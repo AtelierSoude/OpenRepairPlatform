@@ -1,7 +1,9 @@
 {% extends './parts/modal.html' %}
 {% load app_filters bootstrap5 %}
-{% block idBtnModal %}add_participant{{ event_to_organize.pk | slugify }}{% endblock idBtnModal %}
-{% block idModal %}add_participant{{ event_to_organize.pk | slugify }}{% endblock idModal %}
+{% block idBtnModal %}add_participant{{ event_to_organize.pk | slugify }}{% endblock %}
+{% block idModal %}add_participant{{ event_to_organize.pk | slugify }}{% endblock %}
+{% block idbsModal %}add_participant{{ event_to_organize.pk | slugify }}{% endblock %}
+
 {% block titleModal %}
     Ajouter un participant
 {% endblock titleModal %}

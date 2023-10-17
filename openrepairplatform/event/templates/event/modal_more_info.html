@@ -9,6 +9,7 @@
   Ajouter/modifier membre
 {% endblock titleModal %}
 {% block contentModal %}
+<div class="modal-body">
   <br>
   <b>
     {% filter_orga queryset=user.memberships organization=event.organization as membership %}
@@ -42,16 +43,16 @@
     <form action="{% if membership %}{% url 'event:update_member' event.organization.pk membership.user.pk event.pk %}{% else %}{% url 'event:add_member' event.organization.pk event.pk %}{% endif %}"
           method="post"
           class="text-left">
-      <div class="modal-body">
         {% csrf_token %}
-        <div class="row m-2">
+        <div class="row ">
           {% for field in form %}
             {% bootstrap_field field form_group_class="col-md-6 p-2" %}
           {% endfor %}
         </div>
-      </div>
+      
       <div class="modal-footer">
         <input type="submit" value="Enregistrer" class="btn btn-success btn-block">
       </div>
     </form>
+  </div>
   {% endblock contentModal %}

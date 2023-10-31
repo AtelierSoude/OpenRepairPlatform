@@ -2,7 +2,6 @@
 <div class="modal-header">
     Vous allez ajouter un objet à cet inventaire
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-
 </div>
 <form method="post">
   {% bootstrap_form_errors form %}
@@ -62,7 +61,3 @@
 </div>
 </form>
 
-{% assets "js_create_stuff" %}
-{{ form.media }}
-<script src="{{ ASSET_URL }}"></script>
-{% endassets %}

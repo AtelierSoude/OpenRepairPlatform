@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static bootstrap5 thumbnail %}
+{% load static bootstrap5 thumbnail  %}
 {% block title %}
   Page de {{ organization.name }} sur {{ site_title }}
 {% endblock title %}
@@ -169,4 +169,11 @@
   {% assets "js_detail_organization" %}
     <script src="{{ ASSET_URL }}"></script>
   {% endassets %}
+  {% assets "js_groups_organization" %}
+  <script src="{{ ASSET_URL }}"></script>
+  {% endassets %}
+  
+
 {% endblock extra_js %}
+
+

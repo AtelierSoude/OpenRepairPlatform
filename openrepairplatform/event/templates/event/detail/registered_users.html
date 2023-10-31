@@ -1,4 +1,4 @@
-{% load app_filters thumbnail initialavatar %}
+{% load static assets app_filters thumbnail initialavatar %}
     <section class="row ">
     {% for user in users %}
       {% filter_orga queryset=user.memberships organization=event.organization as membership %}
@@ -149,5 +149,3 @@
     {% endfor %}
     </section>
 
-  {% block extra_js %}
-{% endblock %}

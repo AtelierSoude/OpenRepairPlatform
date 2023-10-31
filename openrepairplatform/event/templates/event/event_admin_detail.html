@@ -1,10 +1,11 @@
 {% extends 'event/event_detail.html' %}
 
-{% load assets l10n app_filters static %}
+{% load assets l10n app_filters static admin_modify %}
 {% load thumbnail %}
 {% load initialavatar %}
 
 {% block admin %}
+
 <div class="container">
 <div class="d-md-flex pt-4">
     <div class="pe-4 pt-2" id="event_about">
@@ -111,6 +112,21 @@
     </div>
 </div>
 </div>
+{% endblock %}
+
+
+{% block extra_js %}
+
+<link href="/static/vendor/select2/dist/css/select2.css" media="screen" rel="stylesheet" type="text/css">
+<link href="/static/admin/css/autocomplete.css" media="screen" rel="stylesheet" type="text/css">
+<link href="/static/autocomplete_light/select2.css" media="screen" rel="stylesheet" type="text/css">
+<script src="/static/autocomplete_light/jquery.init.js"></script>
+<script src="/static/vendor/select2/dist/js/select2.full.js"></script>
+<script src="/static/vendor/select2/dist/js/i18n/fr.js"></script>
+<script src="/static/autocomplete_light/autocomplete.init.js"></script>
+<script src="/static/autocomplete_light/forward.js"></script>
+<script src="/static/autocomplete_light/select2.js"></script>
+<script src="/static/autocomplete_light/jquery.post-setup.js"></script>
 
 {% assets "js_groups_organization" %}
 <script src="{{ ASSET_URL }}"></script>
@@ -119,5 +135,10 @@
 {% if is_active %}
 {{ emails|json_script:"emails-data" }}
 {% endif %}
+
+{% assets "js_create_stuff" %}
+<script src="{{ ASSET_URL }}"></script>
+{% endassets %}
+
 
 {% endblock %}

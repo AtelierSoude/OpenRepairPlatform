@@ -18,7 +18,7 @@ $(document).ready(function () {
       device.onchange = function () {
         if ($(this).val()) {
           $("#stuffcreate").show()
-          $("#submit").show()
+          $("#btnsubmit").show()
         }
       };
     }
@@ -34,7 +34,7 @@ $(document).ready(function () {
       if ($("#id_create_device").is(":checked")) {
         $("#adddevice").show()
         $("#stuffcreate").show()
-        $("#submit").show()
+        $("#btnsubmit").show()
         $(".device-search-form").hide()
         $("#id_device").val("")
         $("#select2-id_device-container").html('')
@@ -42,7 +42,7 @@ $(document).ready(function () {
       else {
         $("#adddevice").hide()
         $("#stuffcreate").hide()
-        $("#submit").hide()
+        $("#btnsubmit").hide()
         $(".device-search-form").show()
       }
     });

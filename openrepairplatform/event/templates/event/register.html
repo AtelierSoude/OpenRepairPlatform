@@ -9,7 +9,7 @@
       </button>
       {{ admin_text }}
     {% else %}
-      {% if event.remaining_seats > 0 %}
+      {% if event.remaining_seats > 0 or event.is_free %}
         <form action="{% url 'user:create_and_book' %}?event={{ event.pk | slugify }}"
               method="post">
           {% csrf_token %}

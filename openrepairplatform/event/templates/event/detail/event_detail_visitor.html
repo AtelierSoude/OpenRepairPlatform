@@ -344,6 +344,13 @@
                       ou une fois sur place
                     {% endif %}
                   </p>
+                  <p>
+                    {% if event.external_url and event.external == False %}
+                      <a class="btn btn-block btn-light"
+                      target="_blank"
+                      href="{{ event.external_url }}">Lien externe vers + d'infos</a>
+                    {% endif %} 
+                  </p>
                 </div>
               {% endif %}
               {% if event.external == True %}

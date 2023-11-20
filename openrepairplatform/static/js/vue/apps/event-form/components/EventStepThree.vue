@@ -12,18 +12,18 @@
           </div>
           <div class="form-check mb-4">
             <input class="form-check-input" type="checkbox" v-model="booking">
-            <label class="form-check-label"><b>L'évenement necessite une réservation</b></label>
+            <label class="form-check-label"><b>L'évenement nécessite une réservation</b></label>
           </div>
           <template v-if="booking">
             <div class="form-check mb-4" v-if="booking">
               <input class="form-check-input" type="checkbox" v-model="external">
               <label class="form-check-label"><b>La réservation est externe</b></label>
             </div>
-            <div class="mb-4">
-              <input type="url" v-model="external_url" v-if="external" class="form-control" required placeholder="Ajouter un lien vers la réservation externe."/>
-              <input type="url" v-model="external_url" v-else class="form-control" placeholder="Ajouter un lien pour avoir des informations supplémentaires."/>
-            </div>
           </template>
+          <div class="mb-4">
+            <input type="url" v-model="external_url" v-if="external" class="form-control" required placeholder="Ajouter un lien vers la réservation externe."/>
+            <input type="url" v-model="external_url" v-else class="form-control" placeholder="Ajouter un lien pour avoir des informations supplémentaires."/>
+          </div>
           <div class="form-check mb-4">
             <input class="form-check-input" type="checkbox" v-model="members_only">
             <label class="form-check-label"><b>L'évenement est réservé aux membres</b></label>

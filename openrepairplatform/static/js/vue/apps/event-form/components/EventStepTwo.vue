@@ -25,7 +25,7 @@
           <p><b>
             Si vous souhaitez une description différente de celle proposée par l'ativité sélectionnée, veuillez remplir ce champ.
           </b></p>
-          <QuillEditor v-model:content="description" theme="snow" placeholder="Description de l'événement ..."/>
+          <QuillEditor v-model:content="description" contentType="html" theme="snow" placeholder="Description de l'événement ..."/>
         </section>
         <section class="mb-4" v-if="activity">
           <p><b>Quel est le lieu ?</b></p>
@@ -53,9 +53,9 @@
                 <label class="form-check-label">
                   <b>
                     Nous proposons le recensement des appareils électroniques sur la plateforme
-                    afin d'avoir un meilleur suivit et nous permettre d'accumuler des informations
-                    sur les pannes récurrentes de certains appareil. Si vous cohez cette case,
-                    vous vous engagez à bien noter chaque appareil amené durant l'atelier.
+                    afin d'avoir un meilleur suivi et nous permettre d'accumuler des informations
+                    sur les pannes récurrentes de certains appareil. Si vous cochez cette case,
+                    vous vous engagez à renseigner correctement les informations.
                   </b>
                 </label>
               </div>

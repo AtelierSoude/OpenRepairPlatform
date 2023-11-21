@@ -3,7 +3,7 @@
 <button
   type="button"
   class="btn btn-primary"
-  data-bs-toggle="modal"
+  data-bs-toggle="modal" 
   data-bs-target="#{% block idBtnModal %}{% endblock %}"
 >
   {% block titleModal %}{% endblock %}
@@ -16,6 +16,7 @@
   tabindex="-1"
   aria-bs-labelledby="{% block idbsModal %}{% endblock %}"
   aria-bs-hidden="true"
+  data-bs-focus="false"
 >
   <div class="modal-dialog">
     <div class="modal-content">

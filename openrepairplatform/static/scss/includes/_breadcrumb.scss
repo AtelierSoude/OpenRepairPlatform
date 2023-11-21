@@ -1,7 +1,7 @@
 /* jumbotron & breadcrumb */
 
 .jumbotron {
-  background-color: $secondary;
+  background-color: lighten($secondary, 90%);
   padding: 2rem 1rem;
 }
 .no-padding-jumbotron {

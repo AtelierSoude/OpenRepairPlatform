@@ -1,4 +1,4 @@
-{% load assets app_filters thumbnail initialavatar bootstrap5 %}
+{% load assets static app_filters thumbnail initialavatar bootstrap5 %}
 {% if can_create %}
     <button type="button"
             class="btn btn-primary bs-gobal-modal"
@@ -39,3 +39,11 @@
         </table>
     </div>
 </div>
+
+{% block extra_js %}
+
+{% assets "js_create_stuff" %}
+<script src="{{ ASSET_URL }}"></script>
+{% endassets %}
+
+{% endblock extra_js %}

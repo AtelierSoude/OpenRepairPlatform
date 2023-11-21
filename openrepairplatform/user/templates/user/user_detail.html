@@ -1,11 +1,11 @@
 {% extends "base.html" %}
-{% load assets app_filters thumbnail initialavatar bootstrap5 %}
+{% load static assets app_filters thumbnail initialavatar bootstrap5 %}
 {% block title %}
   Profil de {{ object }} sur {{ site_title }}
 {% endblock title %}
 {% block content %}
   <!-- modals -->
-  <div class="modal fade" tabindex="-1" role="dialog" id="modal">
+  <div class="modal fade" tabindex="-1" data-bs-focus="false" role="dialog" id="modal">
     <div class="modal-dialog" role="document">
       <div class="modal-content"></div>
     </div>
@@ -115,5 +115,7 @@
 </div>
 {% endblock content %}
 {% block extra_js %}
-
-{% endblock extra_js %}
+  {% assets "js_django_autocomplete" %}
+  <script src="{{ ASSET_URL }}"></script>
+  {% endassets %}
+{% endblock %}

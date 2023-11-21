@@ -33,7 +33,6 @@ css_openrepairplatform = Bundle(
     filters="cssrewrite,cssmin",
     output="css/openrepairplatform.min.css",
 )
-
 css_places = Bundle(
     scss_places,
     filters="cssrewrite,cssmin",
@@ -50,7 +49,6 @@ css_detail_event = Bundle(
     output="css/detail_event.min.css",
 )
 
-
 # JS minify
 js_base = Bundle(
     "js/lib/sticky_polyfill.js",
@@ -59,19 +57,16 @@ js_base = Bundle(
     filters="jsmin",
     output="js/base.min.js",
 )
-js_create_stuff_autocomplete = Bundle(
-    "/usr/local/lib/python3.9/site-packages/dal_select2/static/autocomplete_light/vendor/select2/dist/js/select2.full.js",
-    "/usr/local/lib/python3.9/site-packages/dal_select2/static/autocomplete_light/vendor/select2/dist/css/select2.css",
-    "/usr/local/lib/python3.9/site-packages/django/contrib/admin/static/admin/css/autocomplete.css",
-    "/usr/local/lib/python3.9/site-packages/dal_select2/static/autocomplete_light/select2.css",
-    "/usr/local/lib/python3.9/site-packages/dal/static/autocomplete_light/jquery.init.js",
-    "/usr/local/lib/python3.9/site-packages/dal_select2/static/autocomplete_light/vendor/select2/dist/js/i18n/fr.js",
-    "/usr/local/lib/python3.9/site-packages/dal/static/autocomplete_light/autocomplete.init.js",
-    "/usr/local/lib/python3.9/site-packages/dal/static/autocomplete_light/forward.js",
-    "/usr/local/lib/python3.9/site-packages/dal_select2/static/autocomplete_light/select2.js",
-    "/usr/local/lib/python3.9/site-packages/dal/static/autocomplete_light/jquery.post-setup.js",  
+js_django_autocomplete = Bundle(
+    "/srv/static/vendor/select2/dist/js/select2.full.js",
+    "/srv/static/autocomplete_light/jquery.init.js",
+    "/srv/static//vendor/select2/dist/js/i18n/fr.js",
+    "/srv/static/autocomplete_light/autocomplete.init.js",
+    "/srv/static/autocomplete_light/forward.js",
+    "/srv/static/autocomplete_light/select2.js",
+    "/srv/static/autocomplete_light/jquery.post-setup.js",  
     filters="jsmin",
-    output="js/create_stuff_autocomplete.min.js",
+    output="js/django_autocomplete.min.js",
 )
 js_places = Bundle(
     "js/lib/leaflet.js",
@@ -158,7 +153,7 @@ register("css_detail_place", css_detail_place)
 register("css_detail_event", css_detail_event)
 
 register("js_base", js_base)
-register("js_create_stuff_autocomplete", js_create_stuff_autocomplete)
+register("js_django_autocomplete", js_django_autocomplete)
 register("js_places", js_places)
 register("js_create_edit_place", js_create_edit_place)
 register("js_create_edit_user", js_create_edit_user)

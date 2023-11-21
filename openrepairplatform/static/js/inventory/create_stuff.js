@@ -1,6 +1,4 @@
 $(document).ready(function () {
-
-
   var myModalEl = document.getElementById('modal')
   myModalEl.addEventListener('show.bs.modal', function (event) {
 

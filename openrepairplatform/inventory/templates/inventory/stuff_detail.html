@@ -1,9 +1,8 @@
 {% extends 'base.html' %}
-{% load assets app_filters thumbnail initialavatar static %}
+{% load assets app_filters thumbnail initialavatar static bootstrap5 %}
 {% block title %}Page de {{stuff}} {% endblock %}
 
 {% block content %}
-<script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>
 
 <div class="container-fluid">
   {% include "breadcrumb.html" with current=stuff first_parent_url="" first_parent_text="Objets" %}
@@ -143,6 +142,16 @@
 {% endblock %}
 
 {% block extra_js %}
+{% assets "js_create_stuff" %}
+<script src="{{ ASSET_URL }}"></script>
+{% endassets %}
 
-{% endblock %}
+{% assets "js_django_autocomplete" %}
+<script src="{{ ASSET_URL }}"></script>
+{% endassets %}
+
+{% assets "js_edit_owner_stuff" %}
+<script src="{{ ASSET_URL }}"></script>
+{% endassets %}
+{% endblock extra_js %}
 

@@ -1,5 +1,6 @@
-
-$(document).ready(function(){
+$(document).ready(function () {
+    var myModalEl = document.getElementById('modal')
+    myModalEl.addEventListener('show.bs.modal', function (event) {
     owner = document.querySelector("#ownerchoice");
       owner.onchange=function () {
         if($(this).val() == 'orga') {
@@ -21,4 +22,5 @@ $(document).ready(function(){
             $('#finduser').hide()
         }
       }
-  });
+  }); 
+});

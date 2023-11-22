@@ -2,7 +2,7 @@
 {% load initialavatar %}
 {% load static %}
 <div class="bg-primary">
-  <div class="container ">
+  <div class="container">
     <nav class="navbar sticky-top navbar-expand-lg navbar-dark">
         <a href="{% url "homepage" %}"
            class="navbar-brand me-0 float-start d-block d-sm-none"
@@ -11,7 +11,7 @@
           <img height="50" src="{% static 'img/reparons-logov2.png' %}" />
         </a>
         <a href="{% url "homepage" %}" class="brand-logo d-none d-sm-block">
-          <img height="80"  src="{% static 'img/reparons-logov2.png' %}" />
+          <img height="60"  src="{% static 'img/reparons-logov2.png' %}" />
         </a>
         <button class="navbar-toggler"
                 type="button"
@@ -22,38 +22,42 @@
                 aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+        <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
           <ul class="navbar-nav ">
             <li class="nav-item text-center {{ about_menu }}">
               <a class="nav-link " href="{% url 'a-propos' %}">
                 <i class="fa-solid fa-question fa-lg"></i>
-                <span class="text-success">A propos</span>
+                <span>A propos</span>
               </a>
             </li>
             <li class="nav-item text-center {{ event_menu }}">
               <a class="nav-link " href="{% url 'event:list' %}">
                 <i class="fa-solid fa-calendar-days fa-lg"></i>
-                <span class="text-success">Évenements</span>
+                <span>Évenements</span>
               </a>
             </li>
             <li class="nav-item text-center {{ activity_menu }}">
               <a class="nav-link" href="{% url 'event:activity_list' %}">
                 <i class="fa-solid fa-magnifying-glass fa-lg"></i>
-                <span class="text-success">Activités</span>
+                <span>Activités</span>
               </a>
             </li>
             <li class="nav-item text-center {{ organization_menu }}">
               <a class="nav-link" href="{% url 'user:organization_list' %}">
                 <i class="fa-solid fa-users fa-lg"></i>
-                <span class="text-success">Organismes</span>
+                <span>Organismes</span>
               </a>
             </li>
             <li class="nav-item text-center {{ stock_menu }}">
               <a class="nav-link" href="{% url 'inventory:stock_list' %}">
                 <i class="fa-solid fa-box-open fa-lg"></i>
-                <span class="text-success">Stocks</span>
+                <span>Stocks</span>
               </a>
             </li>
+          </ul>
+        </div>
+        <div class="collapse navbar-collapse justify-content-end"  id="navbarSupportedContent">
+          <ul class="navbar-nav ">
             {% if LOCATION %}
               <li class="nav-item dropdown text-center">
                 <a class="nav-link dropdown-toggle"
@@ -61,7 +65,7 @@
                    role="button"
                    data-bs-toggle="dropdown">
                   <i class="fa-solid fa-location-dot fa-lg"></i>
-                  <span class="text-success">Localisation</span>
+                  <span>Localisation</span>
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                   <label for="current-localisation ">
@@ -97,15 +101,13 @@
               {% if not user.is_authenticated %}
                 <a class="nav-link p-2" href="{% url "login" %}">
                   <i class="fas fa-sign-in-alt fa-lg"></i>
-                  <span class="text-success">Se connecter</span>
+                  <span>Se connecter</span>
                 </a>
               {% else %}
                 <a class="nav-link dropdown-toggle mt-0 pt-0 avatar"
                    href="#"
                    role="button"
                    data-bs-toggle="dropdown">
-                  <div class="row">
-                    <div class="col">
                       {% if user.avatar_img %}
                         {% thumbnail user.avatar_img "35x35" crop="center" format="PNG" as im %}
                         <img src="{{ im.url }}" width="35" class="rounded-circle mb-1" />
@@ -115,9 +117,7 @@
                         {% get_initial_avatar user 35 'circle' %}
                       {% endif %}
                     {% endif %}
-                  </div>
-                </div>
-                <span class="text-success">{{ user.first_name }}</span>
+                <span>{{ user.first_name }}</span>
               </a>
               <ul class="dropdown-menu" aria-labelledby="dropdownMenuButtonDark">
                 <li>
@@ -142,6 +142,6 @@
           </li>
         </ul>
       </div>
-  </nav>
-</div>
+    </nav>
+  </div>
 </div>

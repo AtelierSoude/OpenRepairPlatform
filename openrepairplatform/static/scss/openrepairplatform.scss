@@ -1,5 +1,5 @@
 
-$primary: #083342;
+$primary: #04171f;
 $secondary: #fee56e;
 $success: #2be6ab; 
 $link: #49d3be;
@@ -23,7 +23,7 @@ $font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas,
   "Liberation Mono", "Courier New", monospace;
 $table-bg: #fff;
 $card-border-width: 1px;
-$card-border-radius: 5px;
+$card-border-radius: 0px;
 $card-border-color: rgba($black, 0.125);
 
 $navbar-light-toggler-border-color:$secondary !important;
@@ -240,6 +240,15 @@ btn-secondary:hover {
 .btn-success:hover,
 .btn:hover {
   color: #fff;
+}
+
+/* card extend */ 
+
+.card {
+  @extend .box-shadow;
+  .card {
+    box-shadow: none !important;
+  }
 }
 
 @import "./fontawesome-free-6.4.0-web/css/all.css";

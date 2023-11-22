@@ -119,3 +119,15 @@
 .awesome-marker_hover {
   background-position: -36px 0px !important;
 }
+
+/* navs pills */
+
+.nav-tabs {
+  .nav-link {
+    color: #969696;
+    &.active{
+    background-color: $bg-light;
+    color: $primary;
+    }
+  }
+}

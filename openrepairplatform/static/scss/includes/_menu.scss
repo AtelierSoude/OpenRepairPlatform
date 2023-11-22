@@ -1,18 +1,25 @@
 /* Menu */
 
 .navbar {
+    padding-bottom:0px;
     li {
         padding-top: 15px;
 
         &.active i{
             color: $secondary;
         }
+        &.active a > span{
+            color: $secondary;
+        }
+        &.active {
+            border-bottom: 2px solid $secondary;
+        }
         a{
-            font-size: 1.3em;
+            font-size: 1.1em;
             i{
                 font-size: 1.2em;
-                color: $success;
-                display: block;
+                color: white;
+               /* display: block; */
                 margin: 10px 0 20px 0;
             }
         }
@@ -20,6 +27,7 @@
             color: $secondary;
         }
         span{
+            color: white;
         }
     }
 
@@ -32,7 +40,4 @@
     .avatar img {
         margin-bottom: 0.1em;
     }
-    
-
-
 }

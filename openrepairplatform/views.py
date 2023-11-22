@@ -57,6 +57,11 @@ class MentionsView(TemplateView):
 class AboutView(TemplateView):
     template_name = "about.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["about_menu"] = "active"
+        return context
+
 class OrganizationPageView(PermissionOrgaContextMixin, DetailView):
     model = Organization
     template_name = "organization_page.html"

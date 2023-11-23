@@ -1,8 +1,8 @@
 
 $primary: #04171f;
-$secondary: #fee56e;
-$success: #2be6ab; 
-$link: #49d3be;
+$secondary: rgb(110, 254, 129);
+$success: rgb(67, 252, 166); 
+$link: #009975;
 $bg-light: #f8f9fa;
 $danger: #ff2241;
 $black:#000;
@@ -28,6 +28,7 @@ $card-border-color: rgba($black, 0.125);
 
 $navbar-light-toggler-border-color:$secondary !important;
 
+@import "../node_modules/bootstrap/scss/bootstrap";
 
 
 
@@ -62,7 +63,11 @@ html {
 .bordered {
   border: 1px solid #cecece;
 }
-.btn-danger,
+
+.btn-danger {
+  color : white !important;
+}
+
 .badge.bg-danger,
 .badge.bg-primary {
   color: #fff;
@@ -253,8 +258,6 @@ btn-secondary:hover {
 
 @import "./fontawesome-free-6.4.0-web/css/all.css";
 @import "./includes/typo";
-
-@import "../node_modules/bootstrap/scss/bootstrap";
 
 @import "./includes/_forms";
 

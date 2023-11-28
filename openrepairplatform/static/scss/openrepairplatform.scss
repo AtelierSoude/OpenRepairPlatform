@@ -1,7 +1,7 @@
 
 $primary: #04171f;
-$secondary: rgb(110, 254, 129);
-$success: rgb(67, 252, 166); 
+$secondary: rgb(110, 254, 206);
+$success: rgb(114, 2, 95); 
 $link: #009975;
 $bg-light: #f8f9fa;
 $danger: #ff2241;
@@ -69,7 +69,8 @@ html {
 }
 
 .badge.bg-danger,
-.badge.bg-primary {
+.badge.bg-primary,
+.badge.bg-success {
   color: #fff;
 }
 .un-z-index {

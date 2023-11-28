@@ -27,7 +27,6 @@ RUN sed -i -e 's/# fr_FR.UTF-8 UTF-8/fr_FR.UTF-8 UTF-8/' /etc/locale.gen && \
 ENV LC_ALL fr_FR
 ENV LANG fr_FR
 ENV LANGUAGE fr_FR
-
 RUN mkdir -p /srv/app /srv/static /srv/media
 
 COPY deployment/django/openrepairplatform.cron /etc/cron.d/openrepairplatform
@@ -38,11 +37,11 @@ RUN useradd -ms /bin/bash -r -g openrepairplatform openrepairplatform
 RUN usermod -G openrepairplatform,www-data openrepairplatform
 RUN chown -R openrepairplatform:openrepairplatform /srv/*
 
-#RUN mkdir /var/uwsgi
-#RUN touch /var/uwsgi/openrepairplatform.sock
-#RUN chown openrepairplatform:www-data /var/uwsgi
-#RUN chown openrepairplatform:www-data /var/uwsgi/openrepairplatform.sock
-#RUN chmod 660 /var/uwsgi/openrepairplatform.sock
+RUN mkdir /var/uwsgi
+RUN touch /var/uwsgi/openrepairplatform.sock
+RUN chown openrepairplatform:www-data /var/uwsgi
+RUN chown openrepairplatform:www-data /var/uwsgi/openrepairplatform.sock
+RUN chmod 660 /var/uwsgi/openrepairplatform.sock
 
 
 
@@ -63,7 +62,6 @@ RUN pip install uwsgi
 #RUN ln /usr/bin/sassc /usr/bin/sass
 COPY manage.py . 
 
-COPY deployment/django/start.sh .
 
 
 ################ BUILDER #########################
@@ -80,9 +78,10 @@ WORKDIR /srv/app
 
 RUN pip install ptvsd
 
-
-RUN chmod 0644 /etc/cron.d/openrepairplatform
+RUN crontab /etc/cron.d/openrepairplatform
 RUN cron
+
+ENTRYPOINT deployment/django/./start-dev.sh
 
 ################ PRODUCTION #########################
 

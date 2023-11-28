@@ -27,7 +27,6 @@ services:
       - ./deployment/saves-bdd:/srv/saves-bdd
       - ./deployment/openrepairplatform_data/openrepairplatform_media/:/srv/media
       - ./deployment/openrepairplatform_data/openrepairplatform_static/:/srv/static
-    command: bash -c "cd /srv/app/openrepairplatform/static/ ; npm i ; cd /srv/app/deployment/django ; ./start-dev.sh" # uncomment for dev env
     ports: 
       - 80:80 
       - 5678:5678 

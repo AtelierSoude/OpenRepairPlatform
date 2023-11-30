@@ -1,12 +1,35 @@
 {% extends 'base.html' %}
-{% load assets app_filters thumbnail initialavatar %}
+{% load assets app_filters thumbnail initialavatar static bootstrap5 %}
 {% block title %}Page de {{device}} {% endblock %}
 
 {% block content %}
-<div class="container">
-  Page dédiée aux contenus d'une device
-  <h2>{{device}}</h2>
-    {{device.category}} 
-    {{device.picture}}
+<div class="container-fluid">
+  {% include "breadcrumb.html" with current=device first_parent_url="" first_parent_text="Objets" %}
+    <div class="container">
+      <div class="card m-2 p-2 text-center"> 
+        {% if .device.picture %}
+        <img class="img-responsive w-100" src="{{ device.picture.url }}" alt="image_device">
+        {% else %}
+          <div class="w-100">
+            <h3 class="text-center text-muted">Pas d'apercu</h3>
+          </div>
+        {% endif %}
+        <h1>{{device}}</h1>
+        <h3 class="text-muted">{{device.category}} </h3>
+        {{device.picture}}
+      </div>
+      <div class="card m-2 p-2"> 
+        <p class="text-center">Ce modèle d'appareil a été référencé {{ device.stuffs.all.count }} fois</p>
+        <p class="text-center">Retrouvez ici la liste des dossiers de réparations ouverts, afin de trouver des pistes de réparations.</p>
+        {% for stuff in device.stuffs.all %}
+        <h4 class="mt-3 text-center">{{stuff}}  {% include "inventory/stuff_state_display.html" with stuff_state=stuff.get_state_display %}</h4> 
+          {% for folder in stuff.folders.all %}
+            {% include "inventory/repair_folder.html" %}
+          {% empty %}
+          <p class="text-center"> Pas de dossiers pour l'instant. </p>
+          {% endfor %}
+        {% endfor %}
+      </div>
+    </div>
 </div>
 {% endblock %}

@@ -41,7 +41,7 @@
         {% include "event/event_cards.html" with event_list=event_list card_size='col-md-12' %}
       </div>
       <div class="col-4" id="map">
-        <div class="affix">{% include "location/place_list.html" with places=places %}</div>
+        <div class="affix" id="sticky_map">{% include "location/place_list.html" with places=places %}</div>
       </div>
     </div>
   </section>
@@ -50,10 +50,10 @@
     <a class="infinite-more-link"
        href="?page={{ page_obj.next_page_number }}">Affichage en cours...</a>
   {% endif %}
-  <div class="position-fixed bg-white text-center d-block d-md-none d-lg-none d-xl-none"
-       style="bottom: 0px;
+  <div class="position-fixed bg-white text-center d-block d-md-none d-lg-none d-xl-none d-grid"
+       style="bottom: 0px; height: 50px; z-index: 10001;
               width:100%">
-    <a class="btn btn-success" id="map_show" onclick="display_map()">Afficher la carte</a>
+    <a class="btn btn-primary" id="map_show" onclick="display_map()">Afficher la carte</a>
   </div>
 {% endblock %}
 {% block extra_js %}

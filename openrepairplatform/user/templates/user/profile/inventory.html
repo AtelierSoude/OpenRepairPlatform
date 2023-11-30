@@ -1,11 +1,13 @@
 {% load assets static app_filters thumbnail initialavatar bootstrap5 %}
-{% if can_create %}
-    <button type="button"
-            class="btn btn-primary bs-gobal-modal"
-            data-form-url="{% url 'inventory:create_user_stuff' object.pk %}">Ajouter un objet à l'inventaire</button>
-{% endif %}
 <h4 class="mt-4">{{ stock.all.count }} Objets inventoriés</h4>
 <div class="card p-2 pt-2">
+    {% if can_create %}
+        <div class=m-2>
+            <button type="button"
+                class="btn btn-primary bs-gobal-modal"
+                data-form-url="{% url 'inventory:create_user_stuff' object.pk %}">Ajouter un objet à l'inventaire</button>
+        </div>
+    {% endif %}
     <div class="table-responsive">
         <table class="table table-striped table-hover">
             <thead>

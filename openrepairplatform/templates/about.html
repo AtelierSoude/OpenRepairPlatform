@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}
     A propos de {{ site_title }}
 {% endblock title %}
@@ -16,15 +17,13 @@
         <section class="mt-5">
             <div class="row">
                 <div class="col-2 text-center">
-                    <i class="fa-solid fa-screwdriver-wrench fa-2xl"
-                       style="font-size:7em;
-                              line-height:1em"></i>
+                    <img class="w-100" src="{% static 'img/fusee.png' %}">
                 </div>
                 <div class=" col-10">
                     <h2>Vous en avez assez de jeter des objets qui pourraient encore être réparés ?</h2>
                     Vous cherchez un moyen pratique de <strong>prolonger leur durée de vie et de réduire votre empreinte écologique</strong> ? Ne cherchez plus ! Reparons.org est là pour vous.
                     <br />
-                    Notre mission est de <strong>faciliter la réparation d'objets du quotidien</strong> en mettant en relation les utilisateurs avec des ateliers de réparation compétents et disponibles. Que ce soit pour votre vélo, votre électroménager, votre smartphone ou tout autre objet nécessitant une réparation, nous avons sélectionné avec soin des ateliers partenaires prêts à vous offrir leurs services.
+                    Notre mission est de <strong>faciliter la réparation d'objets du quotidien</strong> en mettant en relation les utilisateurs avec des ateliers de réparation participatifs. Que ce soit pour votre vélo, votre électroménager, votre smartphone ou tout autre objet nécessitant une réparation, nous avons sélectionné avec soin des structures partenaires.
                 </div>
             </div>
         </section>
@@ -32,7 +31,7 @@
             Chaque année, des tonnes d'objets fonctionnels finissent à la poubelle simplement parce que leurs propriétaires ne savent pas où les faire réparer. Cette culture du "jeter-remplacer" a un impact dévastateur sur notre environnement, contribuant à l'accumulation de déchets électroniques et à la surconsommation des ressources naturelles. Il est temps d'adopter une approche plus responsable.
         </section>
         <section class="mt-5">
-            Reparons.org est la solution pratique à ce problème. Notre plateforme vous permet de trouver facilement et rapidement des ateliers de réparation qualifiés près de chez vous. Plus besoin de passer des heures à chercher sur Internet ou de multiplier les appels pour trouver un atelier disponible. Avec Reparons.org, vous pouvez accéder à une liste d'ateliers partenaires triés sur le volet, prêts à vous aider à remettre vos objets en état de fonctionnement.
+            Reparons.org est la solution pratique à ce problème. Notre plateforme vous permet de trouver facilement et rapidement des ateliers près de chez vous. Plus besoin de passer des heures à chercher sur Internet ou de multiplier les appels pour trouver un atelier disponible. Avec Reparons.org, vous pouvez accéder à une liste d'ateliers partenaires triés sur le volet, prêts à vous aider à remettre vos objets en état de fonctionnement.
         </section>
         <section class="mt-5">
             Notre système de réservation est simple et efficace. Il vous suffit de sélectionner votre emplacement. Vous obtiendrez une liste d'ateliers de réparation à proximité, avec leurs disponibilités et leurs spécialités. Vous pourrez choisir celui qui convient le mieux à vos besoins et réserver votre créneau de réparation en ligne. Plus besoin de jongler avec les horaires et les contraintes, Reparons.org vous facilite la réparation.

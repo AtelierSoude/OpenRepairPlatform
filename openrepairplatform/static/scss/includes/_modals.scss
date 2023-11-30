@@ -41,14 +41,14 @@
   z-index: 10000;
   font-size: 1rem;
   padding: 10px;
-  box-shadow: 0px 10px 100px black;
+  box-shadow: 0px 05px 50px black;
   right: -1000px;
   transition: all;
   transition-duration: 0.5s;
 }
 
 .alert-success {
-  color: $primary;
+  color: white;
   background-color: $success;
   border: 0px;
 }

@@ -140,6 +140,11 @@ js_edit_owner_stuff = Bundle(
     filters="jsmin",
     output="js/inventory/edit_owner_stuff.min.js",
 )
+js_stuff_folder = Bundle(
+    "js/inventory/stuff_folder.js",
+    filters="jsmin",
+    output="js/inventory/stuff_folder.min.js",
+)
 js_waypoints = Bundle(
     "js/lib/jquery.waypoints.js", filters="jsmin", output="js/user/waypoints.min.js"
 )
@@ -165,5 +170,6 @@ register("js_detail_organization", js_detail_organization)
 register("js_groups_organization", js_groups_organization)
 register("js_create_stuff", js_create_stuff)
 register("js_edit_owner_stuff", js_edit_owner_stuff)
+register("js_stuff_folder", js_stuff_folder)
 register("js_waypoints", js_waypoints)
 register("js_infinite", js_infinite)

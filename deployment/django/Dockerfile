@@ -103,20 +103,15 @@ RUN python3 manage.py collectstatic --noinput --clear
 
 COPY deployment/django/uwsgi.ini .
 
-
 COPY ../../openrepairplatform/static /srv/static
-
-#RUN mkdir /srv/app/uwsig
-#RUN chown -R www-data:www-data /srv/app/uwsig/
-#USER openrepairplatform
-#COPY ../../openrepairplatform/static/ /srv/app/static/
-#COPY ../../openrepairplatform/static/ /srv/static/
-
 
 RUN chown -R openrepairplatform:openrepairplatform /srv/*
 EXPOSE 8000
 
 USER openrepairplatform
 
-CMD ./start.sh
+RUN crontab /etc/cron.d/openrepairplatform
+RUN cron
+
+ENTRYPOINT deployment/django/./start-dev.sh
 

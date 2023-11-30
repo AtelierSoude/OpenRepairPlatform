@@ -5,7 +5,7 @@
   <div id="home_location">
     <div id="home_cover">
       <div class="container text-center">
-        <h4 class="pt-2 text-success">Bienvenue sur Réparons.org !</h4>
+        <h4 class="pt-2 text-white">Bienvenue sur Réparons.org !</h4>
         <h1>
           Plateforme libre
           <br />
@@ -38,7 +38,7 @@
                      pattern="^(?:0[1-9]|[1-8]\d|9[0-8])\d{3}$"
                      value="{{ postcode }}" />
               <div class="input-group-append">
-                <button class="btn btn-outline-primary bg-secondary" type="submit">
+                <button class="btn btn-outline-primary bg-success" type="submit">
                   <i class="fa fa-search"></i>
                 </button>
               </div>
@@ -101,23 +101,23 @@
     <div class="bg-success p-4 mt-5">
       <div class="d-flex justify-content-around container">
         <div class="m-2">
-          <h3 class="text-center text-secondary key-number-home">{{ event_count }}</h3>
-          <p class="text-secondary">Evenements en ligne</p>
+          <h3 class="text-center text-white key-number-home">{{ event_count }}</h3>
+          <p class="text-white">Evenements en ligne</p>
         </div>
         <div class="m-2">
-          <h3 class="text-center text-secondary key-number-home">{{ user_count }}</h3>
-          <p class="text-secondary">Utilisateurs enregistrés</p>
+          <h3 class="text-center text-white key-number-home">{{ user_count }}</h3>
+          <p class="text-white">Utilisateurs enregistrés</p>
         </div>
         <div class="m-2">
-          <h3 class="text-center text-secondary key-number-home">{{ organization_count }}</h3>
-          <p class="text-secondary">Organisations inscrites</p>
+          <h3 class="text-center text-white key-number-home">{{ organization_count }}</h3>
+          <p class="text-white">Organisations inscrites</p>
         </div>
       </div>
     </div>
     <div class="container mt-5 mb-5 how-to">
       <h2 class="mb-5 text-center text-success">Comment ça marche ?</h2>
       <div class="row text-center">
-        <div class="col-3">
+        <div class="col-sm">
           <i class="fa-solid fa-magnifying-glass"></i>
           <h3>Je recherche un atelier</h3>
           <p>Parmis des ateliers organisés par {{ organization_count }} organisations dans toute la France.</p>
@@ -125,7 +125,7 @@
         <div class="col-1">
           <i class="fa-solid fa-arrow-right"></i>
         </div>
-        <div class="col-3">
+        <div class="col-sm">
           <i class="fa-solid fa-question "></i>
           <h3>Je vérifie les conditions de la structure qui m'acceuille</h3>
           <p>Horraires, adhésion ou non, participation, fonctionnement, etc...</p>
@@ -133,7 +133,7 @@
         <div class="col-1">
           <i class="fa-solid fa-arrow-right"></i>
         </div>
-        <div class="col-3">
+        <div class="col-sm">
           <i class="fa-solid fa-screwdriver-wrench"></i>
           <h3>Je me rends à l'atelier</h3>
           <p>J'apprends, je crée, je répare, je lutte contre les déchets</p>

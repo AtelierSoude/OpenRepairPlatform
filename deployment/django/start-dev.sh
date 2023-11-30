@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-## ugly but this is the only way i found to make cron working 
+## for cron
 printenv > /etc/default/locale
 
 python3 manage.py migrate

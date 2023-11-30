@@ -22,10 +22,10 @@
         {% if request.user in organizers %}
           <span class="bg-success badge-pill badge">J'anime</span><br>
         {% endif %}
-        {% if booking == False %}
-          {% if external == True %}
+        {% if event.booking == False %}
+          {% if event.external == True %}
             <span class="text-success">Réservation externe</span>
-          {% else %}
+          {% elif event.external == False %}
             <span class="text-success">Sans réservation</span>
           {% endif %}
         {% endif %}

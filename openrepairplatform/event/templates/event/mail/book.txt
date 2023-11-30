@@ -17,6 +17,11 @@ Informations pratiques:
     La participation est libre / pas de condition d'accès
 {% endfor %}
 
+{% if event.members_only %}
+    Vous devez être adhérent à {{ event.organization }}
+    Vous pouvez adhérer en ligne {{ event.organization.membership_url }} ou une fois sur place
+{% endif %}
+
 Nos ateliers ont une capacité de places limitée:
 Si vous ne pouvez finalement pas venir à la date prévue, nous vous serions reconnaissant de nous
 en faire part en cliquant sur le lien suivant : {{ cancel_url }},

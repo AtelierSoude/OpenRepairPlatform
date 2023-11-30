@@ -15,7 +15,7 @@
       </div>
     </div>
     <section class="h-100 row">
-        <div class="col-md-4 p-4 d-flex flex-wrap align-items-center bg-light">
+        <div class="col-md-4 p-4 d-flex flex-wrap align-items-center bg-light">{{ stuff.device.picture }}
           {% if stuff.device.picture %}
             <img class="img-responsive w-100" src="{{ stuff.device.picture.url }}" alt="image_device">
           {% else %}
@@ -122,8 +122,8 @@
           {% include "inventory/stuff_history.html" %}
         </div>
       </div>
-      <div class="col-md-8 p-4">
-        <h4 class="">Dossiers de réparation  
+      <div class="col-md-8">
+        <h4 class="pt-2 pb-2">Dossiers de réparation  
           {% if can_edit %}
             <a class="btn btn-success btn-sm rounded-circle bs-gobal-modal" data-form-url="{% url 'inventory:create_folder' stuff.pk %}">
               <i class="fa fa-plus"></i>
@@ -153,5 +153,10 @@
 {% assets "js_edit_owner_stuff" %}
 <script src="{{ ASSET_URL }}"></script>
 {% endassets %}
+
+{% assets "js_stuff_folder" %}
+<script src="{{ ASSET_URL }}"></script>
+{% endassets %}
+
 {% endblock extra_js %}
 

@@ -6,13 +6,13 @@
         padding-top: 15px;
 
         &.active i{
-            color: $secondary;
+            color: $success;
         }
         &.active a > span{
-            color: $secondary;
+            color: $success;
         }
         &.active {
-            border-bottom: 2px solid $secondary;
+            border-bottom: 2px solid $success;
         }
         a{
             font-size: 1.1em;
@@ -24,7 +24,7 @@
             }
         }
         :hover i, :hover span {
-            color: $secondary;
+            color: $success;
         }
         span{
             color: white;

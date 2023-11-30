@@ -31,7 +31,7 @@
   {% elif event.booking == True and event.remaining_seats > 0 or event.is_free %}
     {% if request.user not in event.registered.all and request.user not in event.organizers.all %}
       {% tokenize user=request.user event=event action='book' as tok %}
-      <a href="{% url 'event:book' tok %}" class="btn btn-block btn-success">Je participe !</a>
+      <a href="{% url 'event:book' tok %}" class="btn btn-block btn-secondary">Je participe !</a>
     {% elif request.user in event.organizers.all %}
       <a class="btn btn-outine-danger">J'anime cet évènement</a>
     {% endif %}

@@ -1,7 +1,7 @@
 
 $primary: #04171f;
-$secondary: rgb(110, 254, 206);
-$success: rgb(114, 2, 95); 
+$secondary: #2be6ab;
+$success: #2be6ab;
 $link: #009975;
 $bg-light: #f8f9fa;
 $danger: #ff2241;
@@ -55,6 +55,7 @@ html {
 .px-2 {
   padding-right: 0.5rem !important;
 }
+
 #event_map {
   z-index: 0;
   overflow: hidden;
@@ -69,8 +70,7 @@ html {
 }
 
 .badge.bg-danger,
-.badge.bg-primary,
-.badge.bg-success {
+.badge.bg-primary {
   color: #fff;
 }
 .un-z-index {
@@ -256,6 +256,24 @@ btn-secondary:hover {
     box-shadow: none !important;
   }
 }
+
+
+@media screen and (max-width: 768px) {
+
+  #map_show{
+    z-index: 10001;
+  }
+
+  #map{
+    position: fixed;
+    right: 0px;
+    top: 50px;
+    bottom: 0px;
+    visibility: hidden;
+    z-index: 10000;
+    }
+}
+
 
 @import "./fontawesome-free-6.4.0-web/css/all.css";
 @import "./includes/typo";

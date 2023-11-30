@@ -46,3 +46,18 @@ var infinite = new Waypoint.Infinite({
       $('.loading').hide();
     }
   });
+
+function display_map(){
+      if($("#map_show").html() == "Afficher la carte" ){
+        $("#map_show").html("Cacher la carte")
+        $("#map").css("visibility",'visible')
+      }
+      else {
+        $("#map_show").html("Afficher la carte")
+        $("#map").css("visibility",'hidden')
+      }
+  };
+
+$(document).ready(function(){
+  $("#sticky_map").sticky({topSpacing:20});
+});

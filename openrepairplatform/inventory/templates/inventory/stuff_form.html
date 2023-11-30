@@ -3,7 +3,7 @@
     Vous allez ajouter un objet à cet inventaire
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
-<form method="post">
+<form class="p-2" method="post">
   {% bootstrap_form_errors form %}
   {% csrf_token %}
     {% bootstrap_field form.category %}

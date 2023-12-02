@@ -1,11 +1,11 @@
 ################ BASE #########################
-FROM python:3.9.6-slim-buster AS base
+FROM python:3.9.17-slim-buster AS base
 
 # set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-RUN apt-get update
+RUN apt-get update --fix-missing
 RUN set -uex; \
     apt-get install -y ca-certificates curl gnupg; \
     mkdir -p /etc/apt/keyrings; \
@@ -92,6 +92,7 @@ WORKDIR /srv/app
 ARG DOMAINDNS
 ARG DOMAINS
 
+
 COPY ../../openrepairplatform /srv/app/openrepairplatform
 
 WORKDIR /srv/app/openrepairplatform/static
@@ -99,8 +100,8 @@ RUN  npm install
 RUN  npm run buildprod
 
 WORKDIR /srv/app/
-RUN python3 manage.py collectstatic --noinput --clear
 
+COPY deployment/django/start.sh .
 COPY deployment/django/uwsgi.ini .
 
 COPY ../../openrepairplatform/static /srv/static
@@ -108,10 +109,10 @@ COPY ../../openrepairplatform/static /srv/static
 RUN chown -R openrepairplatform:openrepairplatform /srv/*
 EXPOSE 8000
 
-USER openrepairplatform
-
 RUN crontab /etc/cron.d/openrepairplatform
 RUN cron
 
-ENTRYPOINT deployment/django/./start-dev.sh
+USER openrepairplatform
+
+ENTRYPOINT ./start.sh
 

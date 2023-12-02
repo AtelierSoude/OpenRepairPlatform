@@ -5,12 +5,12 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 STATIC_ROOT = "/srv/static/"
 
 STATICFILES_DIRS = [
-    "/srv/app/openrepairplatform/static/",
-    "/srv/app/openrepairplatform/static/js",
-    "/srv/app/openrepairplatform/static/css",
-    "/srv/app/openrepairplatform/static/scss",
+    "/srv/static/",
+    "/srv/static/js",
+    "/srv/static/css",
+    "/srv/static/scss",
     ]
-ASSETS_ROOT = "/srv/app/openrepairplatform/static/"
+ASSETS_ROOT = "/srv/static/"
 
 
 DEBUG = True
@@ -22,7 +22,16 @@ if raven:
     INSTALLED_APPS += ["raven.contrib.django.raven_compat"]  # noqa
 
 # Email Settings
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+
+if os.getenv("MAILJET") == True :
+    ANYMAIL = {
+        # (exact settings here depend on your ESP...)
+        "MAILJET_API_KEY": os.getenv("MAILJET_API_KEY"),
+        "MAILJET_SECRET_KEY": os.getenv("MAILJET_SECRET_KEY"),
+    }
+    EMAIL_BACKEND = "anymail.backends.mailjet.EmailBackend"
+else:
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = os.getenv("EMAIL_HOST")
 EMAIL_PORT = 25
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")

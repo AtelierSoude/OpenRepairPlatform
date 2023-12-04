@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+env > /etc/default/locale
+
 echo "Start cron"
 cron
 echo "cron started"

@@ -57,7 +57,7 @@ RUN pip install uwsgi
 # for cron
 COPY deployment/django/openrepairplatform.cron /etc/cron.d/openrepairplatform
 RUN chmod 0644 /etc/cron.d/openrepairplatform
-RUN printenv > /etc/default/locale
+RUN chown openrepairplatform:openrepairplatform /etc/default/locale
 RUN crontab /etc/cron.d/openrepairplatform
 RUN chmod u+s /usr/sbin/cron
 

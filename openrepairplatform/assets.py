@@ -58,13 +58,13 @@ js_base = Bundle(
     output="js/base.min.js",
 )
 js_django_autocomplete = Bundle(
-    "/srv/static/vendor/select2/dist/js/select2.full.js",
-    "/srv/static/autocomplete_light/jquery.init.js",
-    "/srv/static/vendor/select2/dist/js/i18n/fr.js",
-    "/srv/static/autocomplete_light/autocomplete.init.js",
-    "/srv/static/autocomplete_light/forward.js",
-    "/srv/static/autocomplete_light/select2.js",
-    "/srv/static/autocomplete_light/jquery.post-setup.js",  
+    "/usr/local/lib/python3.9/site-packages/dal_select2/static/autocomplete_light/vendor/select2/dist/js/select2.full.js",
+    "/usr/local/lib/python3.9/site-packages/dal/static/autocomplete_light/jquery.init.js",
+    "/usr/local/lib/python3.9/site-packages/dal_select2/static/autocomplete_light/vendor/select2/dist/js/i18n/fr.js",
+    "/usr/local/lib/python3.9/site-packages/dal/static/autocomplete_light/autocomplete.init.js",
+    "/usr/local/lib/python3.9/site-packages/dal/static/autocomplete_light/forward.js",
+    "/usr/local/lib/python3.9/site-packages/dal_select2/static/autocomplete_light/select2.js",
+    "/usr/local/lib/python3.9/site-packages/dal/static/autocomplete_light/jquery.post-setup.js",  
     filters="jsmin",
     output="js/django_autocomplete.min.js",
 )

@@ -93,7 +93,7 @@ COPY ../../openrepairplatform /srv/app/openrepairplatform
 
 WORKDIR /srv/app/openrepairplatform/static
 RUN  npm install --unsafe-perm=true
-RUN  npm buildprod
+RUN  npm run buildprod
 
 WORKDIR /srv/app/
 

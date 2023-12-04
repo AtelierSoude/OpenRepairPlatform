@@ -96,6 +96,8 @@ RUN  npm install --unsafe-perm=true
 RUN  npm run buildprod
 
 WORKDIR /srv/app/
+RUN python3 manage.py assets build
+RUN python3 ./manage.py collectstatic --noinput --clear
 
 COPY deployment/django/start.sh .
 COPY deployment/django/uwsgi.ini .

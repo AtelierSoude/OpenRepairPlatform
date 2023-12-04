@@ -92,8 +92,8 @@ ARG DOMAINS
 COPY ../../openrepairplatform /srv/app/openrepairplatform
 
 WORKDIR /srv/app/openrepairplatform/static
-RUN  npm install
-RUN  npm run buildprod
+RUN  npm install --unsafe-perm=true
+RUN  npm run buildprod --unsafe-perm=true
 
 WORKDIR /srv/app/
 

@@ -60,7 +60,7 @@ js_base = Bundle(
 js_django_autocomplete = Bundle(
     "/srv/static/vendor/select2/dist/js/select2.full.js",
     "/srv/static/autocomplete_light/jquery.init.js",
-    "/srv/static//vendor/select2/dist/js/i18n/fr.js",
+    "/srv/static/vendor/select2/dist/js/i18n/fr.js",
     "/srv/static/autocomplete_light/autocomplete.init.js",
     "/srv/static/autocomplete_light/forward.js",
     "/srv/static/autocomplete_light/select2.js",

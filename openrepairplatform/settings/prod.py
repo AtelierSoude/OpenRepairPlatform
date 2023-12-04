@@ -5,10 +5,10 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 STATIC_ROOT = "/srv/static/"
 
 STATICFILES_DIRS = [
-    "/srv/app/openrepairplatform/static/",
-    "/srv/app/openrepairplatform/static/js",
-    "/srv/app/openrepairplatform/static/css",
-    "/srv/app/openrepairplatform/static/scss",
+    "/srv/static/",
+    "/srv/static/js",
+    "/srv/static/css",
+    "/srv/static/scss",
     ]
     
 ASSETS_ROOT = "/srv/static/"

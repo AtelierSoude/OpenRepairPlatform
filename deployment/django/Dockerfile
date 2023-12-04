@@ -93,11 +93,9 @@ COPY ../../openrepairplatform /srv/app/openrepairplatform
 
 WORKDIR /srv/app/openrepairplatform/static
 RUN  npm install --unsafe-perm=true
-RUN  node build.prod.js
+RUN  npm buildprod
 
 WORKDIR /srv/app/
-RUN python3 manage.py collectstatic --noinput --clear
-RUN python3 manage.py assets build
 
 COPY deployment/django/start.sh .
 COPY deployment/django/uwsgi.ini .

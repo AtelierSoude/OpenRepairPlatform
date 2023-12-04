@@ -1,4 +1,4 @@
-* * * * * cd /srv/app && /usr/local/bin/python3 manage.py publish_events > /tmp/log_publish_events 2>&1
-0 16 * * * cd /srv/app && /usr/local/bin/python3 manage.py notify_next_day_events $DOMAINDNS > /tmp/log_nextday_events 2>&1
+* * * * * openrepairplatform cd /srv/app && /usr/local/bin/python3 manage.py publish_events > /tmp/log_publish_events 2>&1
+0 16 * * * openrepairplatform cd /srv/app && /usr/local/bin/python3 manage.py notify_next_day_events $DOMAINDNS > /tmp/log_nextday_events 2>&1
 # 0 22 * * * cd /srv/app && /usr/local/bin/python3  manage.py clean_inactive_users > /tmp/clean_users 2>&1
 # empty line

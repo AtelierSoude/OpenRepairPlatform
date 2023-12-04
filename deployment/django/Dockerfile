@@ -17,6 +17,7 @@ RUN set -uex; \
     apt-get update; \
     apt-get install nodejs -y;
 RUN apt-get install -y libproj-dev locales locales-all cron gdal-bin build-essential sassc
+
 RUN ln /usr/bin/sassc /usr/bin/sass
 
 RUN pip install --upgrade pip
@@ -29,21 +30,18 @@ ENV LANG fr_FR
 ENV LANGUAGE fr_FR
 RUN mkdir -p /srv/app /srv/static /srv/media
 
-COPY deployment/django/openrepairplatform.cron /etc/cron.d/openrepairplatform
-RUN chmod 0644 /etc/cron.d/openrepairplatform
-
+# add user 
 RUN groupadd -r openrepairplatform 
 RUN useradd -ms /bin/bash -r -g openrepairplatform openrepairplatform
 RUN usermod -G openrepairplatform,www-data openrepairplatform
 RUN chown -R openrepairplatform:openrepairplatform /srv/*
 
+#uwisgi
 RUN mkdir /var/uwsgi
 RUN touch /var/uwsgi/openrepairplatform.sock
 RUN chown openrepairplatform:www-data /var/uwsgi
 RUN chown openrepairplatform:www-data /var/uwsgi/openrepairplatform.sock
 RUN chmod 660 /var/uwsgi/openrepairplatform.sock
-
-
 
 # set work directory
 WORKDIR /srv/app
@@ -56,42 +54,40 @@ COPY ../../requirements_dev.txt /srv/app/requirements_dev.txt
 RUN pip install -r requirements_dev.txt
 RUN pip install uwsgi 
 
-#RUN apt-get install -y yarn python3-pip make sassc binutils 
-
+# for cron
+COPY deployment/django/openrepairplatform.cron /etc/cron.d/openrepairplatform
+RUN chmod 0644 /etc/cron.d/openrepairplatform
+RUN printenv > /etc/default/locale
+RUN crontab /etc/cron.d/openrepairplatform
+RUN chmod u+s /usr/sbin/cron
 
 #RUN ln /usr/bin/sassc /usr/bin/sass
 COPY manage.py . 
-
-
 
 ################ BUILDER #########################
 FROM base AS builder
 
 WORKDIR /srv/app
 
-
 ################ DEVEVOPPEMENT #########################
 
 FROM base AS developpement
 
-WORKDIR /srv/app
+WORKDIR /srv/app/
 
 RUN pip install ptvsd
 
-RUN crontab /etc/cron.d/openrepairplatform
-RUN cron
+WORKDIR /srv/app/
 
-ENTRYPOINT deployment/django/./start-dev.sh
+CMD deployment/django/start-dev.sh 
 
 ################ PRODUCTION #########################
 
 FROM base AS production
 
-USER root
 WORKDIR /srv/app
 ARG DOMAINDNS
 ARG DOMAINS
-
 
 COPY ../../openrepairplatform /srv/app/openrepairplatform
 
@@ -107,12 +103,9 @@ COPY deployment/django/uwsgi.ini .
 COPY ../../openrepairplatform/static /srv/static
 
 RUN chown -R openrepairplatform:openrepairplatform /srv/*
-EXPOSE 8000
-
-RUN crontab /etc/cron.d/openrepairplatform
-RUN cron
 
 USER openrepairplatform
+EXPOSE 8000
 
 ENTRYPOINT ./start.sh
 

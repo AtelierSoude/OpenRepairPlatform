@@ -189,6 +189,7 @@ xlwt==1.3.0
     # via tablib
 zipp==3.7.0
     # via importlib-metadata
-
+django-anymail
+    # manually
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools

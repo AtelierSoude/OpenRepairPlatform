@@ -5,11 +5,12 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 STATIC_ROOT = "/srv/static/"
 
 STATICFILES_DIRS = [
-    "/srv/static/",
-    "/srv/static/js",
-    "/srv/static/css",
-    "/srv/static/scss",
+    "/srv/app/openrepairplatform/static/",
+    "/srv/app/openrepairplatform/static/js",
+    "/srv/app/openrepairplatform/static/css",
+    "/srv/app/openrepairplatform/static/scss",
     ]
+    
 ASSETS_ROOT = "/srv/static/"
 
 
@@ -22,8 +23,9 @@ if raven:
     INSTALLED_APPS += ["raven.contrib.django.raven_compat"]  # noqa
 
 # Email Settings
+MAILJET = os.getenv("MAILJET", "False").lower() in ('true', '1', 'y')
 
-if os.getenv("MAILJET") == True :
+if MAILJET :
     ANYMAIL = {
         # (exact settings here depend on your ESP...)
         "MAILJET_API_KEY": os.getenv("MAILJET_API_KEY"),

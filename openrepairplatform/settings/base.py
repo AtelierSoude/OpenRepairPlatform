@@ -135,8 +135,9 @@ USE_TZ = True
 USE_THOUSAND_SEPARATOR = True
 
 
-MEDIA_URL = "/media/"
-MEDIA_ROOT = join(BASE_DIR, "media")
+MEDIA_URL = "/srv/media/"
+MEDIA_ROOT = "/srv/media/"
+# MEDIA_ROOT = join(BASE_DIR, "/media") 
 
 FILE_UPLOAD_HANDLERS = [
     "django.core.files.uploadhandler.TemporaryFileUploadHandler",

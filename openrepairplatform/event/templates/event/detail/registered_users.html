@@ -56,15 +56,8 @@
                       {% endif %}
                 </div>
                   <div class="col">
-                      {% if membership %}
-                        <b>Cotisations</b>
+                      <b>Cotisations</b>
                         {% include "event/modal_more_info.html" with user=user membership=membership form=present_form|initial:user %}
-
-                      {% else %}
-                        <button class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#more-info-{{ user.pk|escape }}">
-                          <i class="fa fa-plus"></i><i class="fa fa-user"></i> ajouter membre
-                        </button>
-                      {% endif %}
                       {% if fees %}
                         {% for fee in fees %}
                         <span class="badge badge-pill badge-light pe-2 m-2">
@@ -92,12 +85,12 @@
                         / {{condition_prices }}€
                       </p>
                       {% if participation %}
-                        <button class="btn btn-light btn-sm" data-toggle="modal" data-target="#participation-{{ user.pk }}">
+                        <button class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#participation-{{ user.pk|escape }}">
                           Mettre à jour la participation
                         </button>
                         {% include "event/participation_form.html" with user=user event=event form=participation_form|initial:participation %}
                       {% else %}
-                        <button class="btn btn-light btn-sm" data-toggle="modal" data-target="#participation-{{ user.pk }}">
+                        <button class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#participation-{{ user.pk|escape }}">
                           Ajouter une participation
                         </button>
                         {% include "event/participation_form.html" with user=user event=event form=participation_form %}

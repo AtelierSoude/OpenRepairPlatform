@@ -2,75 +2,67 @@
 {% load assets l10n app_filters static %}
 {% load thumbnail %}
 {% load initialavatar %}
-{% block title %} {{event}} {% endblock %}
-
+{% block title %}{{ event }}{% endblock %}
 {% block extra_css %}
   {% assets "css_detail_event" %}
-  <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet"/>
+    <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet" />
   {% endassets %}
 {% endblock %}
-
 {% block content %}
-
-<!-- Modals -->
-<div class="modal fade" tabindex="-1" role="dialog" id="modal">
+  <!-- Modals -->
+  <div class="modal fade" tabindex="-1" role="dialog" data-bs-focus="false" id="modal">
   <div class="modal-dialog" role="document">
     <div class="modal-content"></div>
   </div>
 </div>
-
-
-<!-- Breadcrumb -->
-{% url "event:list" as event_list_url %}
-{% include "breadcrumb.html" with current=event first_parent_url=event_list_url first_parent_text="Évènements" %}
-
-
-<!-- Jumbotron -->
-<div class="jumbotron jumbotron-fluid no-padding-jumbotron parallax d-flex align-items-end"
-     style="background-image:url('{% if event.activity.picture and event.activity.picture.url %}{{event.activity.picture.url}}{% endif %}');background-size:cover; min-height: 200px;background-position: center;">
-    <div class="m-4 d-flex">
-    {% url 'event:detail_admin' slug=event.slug pk=event.pk as the_url %}
-     {% if is_active %}
-      {% if request.get_full_path == the_url %}
-        <a href="{{event.get_absolute_url}}" class="btn btn-large btn-light m-2">Ne plus administrer</a>
-        {% include "event/invitation.html" %}
-      {% else %}
-        <a href="admin" class="btn btn-large btn-light m-2">
-          <i class="fas fa-cog"></i>   Administrer
-        </a>
-      {% endif %}
-    {% endif %}
-    {% if request.get_full_path != the_url %}
-      <a class="btn btn-light m-2" href="{% url 'event:ical_event' event.pk %}">
-        <i class="far fa-calendar-plus"></i> ajouter à mon agenda
-      </a>
-    {% endif %}
+  <!-- Breadcrumb -->
+  {% url "event:list" as event_list_url %}
+  {% include "breadcrumb.html" with current=event first_parent_url=event_list_url first_parent_text="Évènements" %}
+  <!-- Event header -->
+  <div id="header-event-detail"
+       style="background-image:url('{% if event.activity.picture and event.activity.picture.url %}{{ event.activity.picture.url }}{% endif %}')">
+    <div class="container d-flex" style="height:200px;">
+      <div class="d-flex align-items-end">
+        {% url 'event:detail_admin' slug=event.slug pk=event.pk as the_url %}
+        {% if is_active %}
+          {% if request.get_full_path == the_url %}
+            <a href="{{ event.get_absolute_url }}"
+               class="btn btn-large btn-light me-2 mb-2 ">Ne plus administrer</a>
+            {% include "event/invitation.html" %}
+          {% else %}
+            <a href="admin" class="btn btn-large btn-light me-2 mb-2 ">
+              <i class="fas fa-cog"></i>   Administrer
+            </a>
+          {% endif %}
+        {% endif %}
+      </div>
+      <div class="d-flex align-items-end">
+        {% if request.get_full_path != the_url %}
+          <a class="btn btn-light me-2 mb-2 "
+             href="{% url 'event:ical_event' event.pk %}">
+            <i class="far fa-calendar-plus"></i> ajouter à mon agenda
+          </a>
+        {% endif %}
+      </div>
     </div>
-</div>
-{% if is_active %}
-  {% url 'event:detail_admin' slug=event.slug pk=event.pk as the_url %}
-  {% if request.get_full_path == the_url %}
-    {% block admin %}{% endblock %}
+  </div>
+  {% if is_active %}
+    {% url 'event:detail_admin' slug=event.slug pk=event.pk as the_url %}
+    {% if request.get_full_path == the_url %}
+      {% block admin %}
+      {% endblock admin %}
+    {% else %}
+      {% include "event/detail/event_detail_visitor.html" %}
+    {% endif %}
   {% else %}
     {% include "event/detail/event_detail_visitor.html" %}
   {% endif %}
-{% else %}
-  {% include "event/detail/event_detail_visitor.html" %}
-{% endif %}
 {% endblock %}
-
 {% block extra_js %}
-<script type="text/javascript">
-  $(function () {
-   $.fn.modal.Constructor.prototype._enforceFocus = function() {};
-   $(".bs-modal").each(function () {
-     $(this).modalForm({
-         formURL: $(this).data('form-url')
-     });
-   });
- });
- </script>
-<script>
+  {% assets "js_django_autocomplete" %}
+  <script src="{{ ASSET_URL }}"></script>
+  {% endassets %}
+   <script>
   if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
 
     $("#event-book").unstick()
@@ -90,12 +82,4 @@
     };
   }
   </script>
-<script>
-    $(document).ready(function(){
-      $(".booking_form").sticky({topSpacing:105});
-      $("#event-book").sticky({topSpacing:155});
-      $("#breadcrumb").sticky({topSpacing:65});
-    });
-</script>
-
-{% endblock %}
+{% endblock extra_js %}

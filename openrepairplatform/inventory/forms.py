@@ -419,6 +419,7 @@ class StuffForm(BSModalModelForm):
                 device["category"] = self.cleaned_data["category"]
                 device["brand"] = self.cleaned_data["brand"]
                 device["model"] = self.cleaned_data["model"]
+                device["picture"] = self.cleaned_data["picture"]
                 if not device["category"]:
                     self.add_error("category", "Ce champ ne peut pas être vide")
                 device = Device.objects.create(**device)
@@ -546,6 +547,7 @@ class StuffUpdateForm(BSModalModelForm):
                 device["category"] = self.cleaned_data["category"]
                 device["brand"] = self.cleaned_data["brand"]
                 device["model"] = self.cleaned_data["model"]
+                device["picture"] = self.cleaned_data["picture"]
                 if not device["category"]:
                     self.add_error("category", "Ce champ ne peut pas être vide")
                 device = Device.objects.create(**device)

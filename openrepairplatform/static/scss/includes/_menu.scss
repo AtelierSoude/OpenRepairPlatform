@@ -1,0 +1,43 @@
+/* Menu */
+
+.navbar {
+    padding-bottom:0px;
+    li {
+        padding-top: 15px;
+
+        &.active i{
+            color: $success;
+        }
+        &.active a > span{
+            color: $success;
+        }
+        &.active {
+            border-bottom: 2px solid $success;
+        }
+        a{
+            font-size: 1.1em;
+            i{
+                font-size: 1.2em;
+                color: white;
+               /* display: block; */
+                margin: 10px 0 20px 0;
+            }
+        }
+        :hover i, :hover span {
+            color: $success;
+        }
+        span{
+            color: white;
+        }
+    }
+
+    .navbar-toggler, .navbar-toggler span{
+        color: $secondary;
+    }
+    .navbar-toggler-icon {
+        color: $secondary;
+    }
+    .avatar img {
+        margin-bottom: 0.1em;
+    }
+}

@@ -1,2 +1,3 @@
 -r requirements.txt
 django-debug-toolbar
+django-livereload-server

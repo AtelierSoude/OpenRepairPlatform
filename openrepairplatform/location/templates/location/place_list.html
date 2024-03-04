@@ -1,18 +1,17 @@
 
 {% load assets %}
-{% block title %}{% endblock %}
+{% block title %}
+{% endblock title %}
 
 {% block extra_css %}
   {% assets "css_places" %}
     <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet"/>
   {% endassets %}
-{% endblock %}
+{% endblock extra_css %}
 
 {% block content %}
-  <section class="container-fluid h-100">
     <div id="place_map"></div>
-  </section>
-{% endblock %}
+{% endblock content %}
 
 {{ places|json_script:"places" }}
 
@@ -23,4 +22,4 @@
   {% assets "js_places" %}
     <script src="{{ ASSET_URL }}"></script>
   {% endassets %}
-{% endblock %}
+{% endblock extra_js %}

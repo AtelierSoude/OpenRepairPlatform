@@ -9,8 +9,10 @@
   <section class="container">
     <h2 class="text-center mt-4">Membres adhérents de {{organization}}</h2>
     <div class="col-lg">
+
+
       <div class="mb-4 text-center">
-        <button onclick="autocompleteUserInfo()" class="btn btn-success btn-absolute" data-toggle="modal" data-target="#more-info-{{ anonymous_user.pk }}">
+        <button onclick="autocompleteUserInfo()" class="btn btn-success btn-absolute" data-bs-toggle="modal" data-bs-target="#more-info-{{ anonymous_user.pk }}">
           <i class="fa fa-plus"></i><i class="fas fa-user"></i>
           <span class="btn-label d-none ps-1">Ajouter un membre</span>
         </button>
@@ -55,11 +57,4 @@
 {% assets "js_groups_organization" %}
 <script src="{{ ASSET_URL }}"></script>
 {% endassets %}
-<script>
-  $(document).ready(function(){
-    $.fn.modal.Constructor.prototype.enforceFocus = function () {};
-    $("#h_nav").sticky({topSpacing:105});
-    $("#breadcrumb").sticky({topSpacing:65});
-  });
-</script>
 {% endblock extra_js %}

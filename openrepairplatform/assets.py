@@ -6,6 +6,7 @@ scss_openrepairplatform = Bundle(
     "scss/openrepairplatform.scss",
     filters="scss",
     output="css/openrepairplatform.css",
+    depends=("./scss/includes/*.scss")
 )
 scss_places = Bundle(
     "scss/lib/leaflet.scss",
@@ -52,8 +53,20 @@ css_detail_event = Bundle(
 js_base = Bundle(
     "js/lib/sticky_polyfill.js",
     "js/lib/auto-dissmiss-alerts.js",
+    "js/lib/modal.js",
     filters="jsmin",
     output="js/base.min.js",
+)
+js_django_autocomplete = Bundle(
+    "/usr/local/lib/python3.9/site-packages/dal_select2/static/autocomplete_light/vendor/select2/dist/js/select2.full.js",
+    "/usr/local/lib/python3.9/site-packages/dal/static/autocomplete_light/jquery.init.js",
+    "/usr/local/lib/python3.9/site-packages/dal_select2/static/autocomplete_light/vendor/select2/dist/js/i18n/fr.js",
+    "/usr/local/lib/python3.9/site-packages/dal/static/autocomplete_light/autocomplete.init.js",
+    "/usr/local/lib/python3.9/site-packages/dal/static/autocomplete_light/forward.js",
+    "/usr/local/lib/python3.9/site-packages/dal_select2/static/autocomplete_light/select2.js",
+    "/usr/local/lib/python3.9/site-packages/dal/static/autocomplete_light/jquery.post-setup.js",  
+    filters="jsmin",
+    output="js/django_autocomplete.min.js",
 )
 js_places = Bundle(
     "js/lib/leaflet.js",
@@ -127,6 +140,11 @@ js_edit_owner_stuff = Bundle(
     filters="jsmin",
     output="js/inventory/edit_owner_stuff.min.js",
 )
+js_stuff_folder = Bundle(
+    "js/inventory/stuff_folder.js",
+    filters="jsmin",
+    output="js/inventory/stuff_folder.min.js",
+)
 js_waypoints = Bundle(
     "js/lib/jquery.waypoints.js", filters="jsmin", output="js/user/waypoints.min.js"
 )
@@ -140,6 +158,7 @@ register("css_detail_place", css_detail_place)
 register("css_detail_event", css_detail_event)
 
 register("js_base", js_base)
+register("js_django_autocomplete", js_django_autocomplete)
 register("js_places", js_places)
 register("js_create_edit_place", js_create_edit_place)
 register("js_create_edit_user", js_create_edit_user)
@@ -151,5 +170,6 @@ register("js_detail_organization", js_detail_organization)
 register("js_groups_organization", js_groups_organization)
 register("js_create_stuff", js_create_stuff)
 register("js_edit_owner_stuff", js_edit_owner_stuff)
+register("js_stuff_folder", js_stuff_folder)
 register("js_waypoints", js_waypoints)
 register("js_infinite", js_infinite)

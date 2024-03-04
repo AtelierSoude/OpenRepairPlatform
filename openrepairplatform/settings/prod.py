@@ -1,31 +1,20 @@
 import os
 from .base import *  # noqa
 
-from dotenv import load_dotenv
-
-load_dotenv()
-
 SECRET_KEY = os.getenv("SECRET_KEY")
+STATIC_ROOT = "/srv/static/"
+
+STATICFILES_DIRS = [
+    "/srv/app/openrepairplatform/static/",
+    "/srv/app/openrepairplatform/static/js",
+    "/srv/app/openrepairplatform/static/css",
+    "/srv/app/openrepairplatform/static/scss",
+    ]
+    
+ASSETS_ROOT = "/srv/static/"
+
 
 DEBUG = True
-
-ALLOWED_HOSTS = [
-    os.getenv("DOMAINS"),
-]
-
-STATIC_ROOT = "/srv/static/"
-MEDIA_ROOT = "/srv/media/"
-ASSETS_ROOT = STATIC_ROOT
-
-DATABASES = {
-    "default": {
-        "ENGINE": "django.contrib.gis.db.backends.postgis",
-        "NAME": os.getenv("POSTGRES_DBNAME"),
-        "USER": os.getenv("POSTGRES_USER"),
-        "HOST": "db",
-        "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
-    }
-}
 
 raven = os.getenv("RAVEN_DNS")
 
@@ -34,7 +23,17 @@ if raven:
     INSTALLED_APPS += ["raven.contrib.django.raven_compat"]  # noqa
 
 # Email Settings
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+MAILJET = os.getenv("MAILJET", "False").lower() in ('true', '1', 'y')
+
+if MAILJET :
+    ANYMAIL = {
+        # (exact settings here depend on your ESP...)
+        "MAILJET_API_KEY": os.getenv("MAILJET_API_KEY"),
+        "MAILJET_SECRET_KEY": os.getenv("MAILJET_SECRET_KEY"),
+    }
+    EMAIL_BACKEND = "anymail.backends.mailjet.EmailBackend"
+else:
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = os.getenv("EMAIL_HOST")
 EMAIL_PORT = 25
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")

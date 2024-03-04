@@ -20,3 +20,8 @@ class CustomUserAPIView(RetrieveAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
     permission_classes = [OrganizationOwner]
+
+class MembershipAPIView(RetrieveAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = CustomUserSerializer
+

@@ -1,0 +1,56 @@
+version: '3'
+
+services:
+  db:
+    image: postgis/postgis
+    container_name: postgres
+    env_file:
+      - .env
+    volumes:
+      - openrepairplatform-db:/var/lib/postgresql/data
+      - ./deployment/saves-bdd:/saves-bdd
+      - ./deployment/saves-bdd:/srv/saves-bdd 
+    ports: # uncomment for dev env
+      - 5432:5432 # uncomment for dev env
+    networks:
+      - openrepairplatform
+    restart: always
+  openrepairplatform: 
+    build:
+      dockerfile: ./deployment/django/Dockerfile
+      target: developpement 
+    container_name: openrepairplatform
+    env_file:
+      - .env
+    volumes:
+      - ../OpenRepairPlatform:/srv/app
+      - ./deployment/saves-bdd:/srv/saves-bdd
+      - ./deployment/openrepairplatform_data/openrepairplatform_media/:/srv/media
+      - ./deployment/openrepairplatform_data/openrepairplatform_static/:/srv/static
+    ports: 
+      - 80:80 
+      - 5678:5678 
+      - 5679:5679 
+      - 35729:35729
+    stdin_open: true 
+    tty: true
+    depends_on:
+      - db
+    networks:
+      - openrepairplatform
+    restart: always
+  pgadmin:
+    container_name: pgadmin4_container
+    image: dpage/pgadmin4
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "5050:80"
+    networks:
+      - openrepairplatform
+networks:
+  openrepairplatform:
+volumes:
+  certs:
+  openrepairplatform-db: 

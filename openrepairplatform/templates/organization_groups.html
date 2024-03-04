@@ -69,10 +69,4 @@
 {{ emails|json_script:"emails-data" }}
 {% endif %}
 
-<script>
-  $(document).ready(function(){
-    $("#h_nav").sticky({topSpacing:105});
-    $("#breadcrumb").sticky({topSpacing:65});
-  });
-</script>
-{% endblock %}
+{% endblock extra_js %}

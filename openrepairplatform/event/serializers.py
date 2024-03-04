@@ -26,6 +26,7 @@ class EventUpdateSerializer(serializers.ModelSerializer):
           "publish_at",
           "needed_organizers",
           "organizers",
+          "organization",
           "conditions",
         ]
 

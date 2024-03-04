@@ -2,6 +2,9 @@ from django.conf import settings
 from django.urls import path, include
 from django.contrib import admin
 from django.conf.urls.static import static
+from django.views.generic.base import TemplateView
+
+import debug_toolbar
 
 from . import views
 from openrepairplatform.inventory.views import OrganizationStockView
@@ -10,6 +13,20 @@ from openrepairplatform.inventory.views import OrganizationStockView
 urlpatterns = [
     # View test vuejs
     path("", views.HomeView.as_view(), name="homepage"),
+    path(
+        "mentions-legales/",
+        views.MentionsView.as_view(),
+        name="mentions-legales",
+    ),
+    path(
+        "a-propos/",
+        views.AboutView.as_view(),
+        name="a-propos",
+    ),
+    path(
+        "robots.txt",
+        TemplateView.as_view(template_name="robots.txt", content_type="text/plain"),
+    ),
     path("where/", views.LocaliseRedirect.as_view(), name="where"),
     path("user/", include("openrepairplatform.user.urls", namespace="user")),
     path("avatar/", include("initial_avatars.urls")),
@@ -28,6 +45,7 @@ urlpatterns = [
         "api/location/",
         include("openrepairplatform.location.api_urls", namespace="api_location"),
     ),
+    
     path(
         "api/user/",
         include("openrepairplatform.user.api_urls", namespace="api_user"),
@@ -96,12 +114,12 @@ urlpatterns = [
         views.OrganizationFeesView.as_view(),
         name="organization_fees",
     ),
+    
     path(r"tinymce/", include("tinymce.urls")),
 ]
 
 if settings.DEBUG:
-    import debug_toolbar  # noqa
 
-    urlpatterns = [path("__debug__/", include(debug_toolbar.urls))] + urlpatterns
+    urlpatterns += [path("__debug__/", include(debug_toolbar.urls))] 
 
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

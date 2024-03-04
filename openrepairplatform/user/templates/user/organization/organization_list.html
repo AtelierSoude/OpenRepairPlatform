@@ -1,5 +1,6 @@
-{% extends 'base.html' %}
-{% block title %}Découvrez les organisations présentes sur {{site_title}}{% endblock %}
+{% extends "base.html" %}
+{% block title %}Découvrez les organisations présentes sur {{ site_title }}
+{% endblock title %}
 
 
 {% block content %}
@@ -19,9 +20,9 @@
   </div>
 
   <section class="container">
-    <div class="row col-md-12 mt-5">
-      <div class="row row-cols-1 row-cols-md-2 g-4 ms-0">
-        {% include 'user/organization/organization_card.html' with organizations=object_list %}
+    <div class="row col-md-12 mt-5 mb-5">
+      <div class="row g-4 ms-0">
+        {% include "user/organization/organization_card.html" with organizations=object_list %}
       </div>
     </div>
   </section>
@@ -29,9 +30,5 @@
 {% endblock %}
 
 {% block extra_js %}
-<script>
-  $(document).ready(function(){
-    $("#breadcrumb").sticky({topSpacing:65});
-  });
-</script>
+
 {% endblock %}

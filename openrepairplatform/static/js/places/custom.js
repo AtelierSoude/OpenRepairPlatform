@@ -9,7 +9,7 @@ function htmlEscape(str) {
 }
 
 function popup_message(place){
-    message = "<h5><u><a href=\"" + place.get_absolute_url + "\">" ;
+    message = '<h5><u><a href="'+ place.absolute_url + '\">' ;
     message += htmlEscape(place.name) + "</a></u></h5> <br> ";
     message += "<h6>" + htmlEscape(place.address) + "</h6>";
     message += place.future_events + " événéments à venir";

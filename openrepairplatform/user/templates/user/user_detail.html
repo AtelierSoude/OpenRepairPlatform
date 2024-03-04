@@ -1,449 +1,121 @@
-{% extends 'base.html' %}
-{% load assets app_filters thumbnail initialavatar bootstrap5 %}
-{% block title %}Profil de {{object}} sur {{site_title}}{% endblock %}
-
+{% extends "base.html" %}
+{% load static assets app_filters thumbnail initialavatar bootstrap5 %}
+{% block title %}
+  Profil de {{ object }} sur {{ site_title }}
+{% endblock title %}
 {% block content %}
-<!-- modals -->
-<div class="modal fade" tabindex="-1" role="dialog" id="modal">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content"></div>
+  <!-- modals -->
+  <div class="modal fade" tabindex="-1" data-bs-focus="false" role="dialog" id="modal">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content"></div>
+    </div>
   </div>
-</div>
-
-<div class="container-fluid">
-
   {% if request.user.pk == object.pk and not object.first_name or not object.last_name or not object.street_address %}
     <div class="alert alert-warning" role="alert">
       Pour devenir membre d'une organisation, vous devez renseigner votre Nom, Prénom
       et Adresse postale.
     </div>
   {% endif %}
-
   {% include "breadcrumb.html" with current=object first_parent_url=user_detail_url first_parent_text="Communauté" %}
-
   <div class="jumbotron jumbotron-fluid no-padding-jumbotron" id="jumbotron">
-    <div class="container text-center d-flex justify-content-center align-items-center flex-md-column">
+    <div class="text-center d-flex justify-content-center align-items-center flex-md-column">
       <div class="header_detail_page_picture">
         <div class="mt-2 header_detail_page_picture rounded">
           {% if object.avatar_img %}
             {% thumbnail object.avatar_img "150x150" crop="center" format="PNG" as im %}
-              <img src="{{ im.url }}" class="m-2 rounded-circle"/>
-            {% endthumbnail %}
-          {% else %}
-            {% if object.first_name %}
-              {% get_initial_avatar object 150 'circle' %}
-            {% endif %}
+            <img src="{{ im.url }}"
+                 width="150"
+                 height="150"
+                 alt="{{ object }}"
+                 class="m-2 rounded-circle" />
+          {% endthumbnail %}
+        {% else %}
+          {% if object.first_name %}
+            {% get_initial_avatar object 150 'circle' %}
           {% endif %}
-       </div>
+        {% endif %}
       </div>
-      <h2 class="header_detail_page_title">{{ object }}</h2>
-      {% if object.pk == request.user.pk %}
-      <a class="btn ms-2 btn-success btn rounded-circle" href="{% url "user:user_update" object.pk %}">
-          <i class="fa fa-pencil-alt"></i>
+    </div>
+    <h2 class="header_detail_page_title">{{ object }}</h2>
+    {% if object.pk == request.user.pk %}
+      <a class="btn ms-2 btn-success btn rounded-circle"
+         href="{% url "user:user_update" object.pk %}">
+        <i class="fa fa-pencil-alt"></i>
       </a>
-      {% endif %}
-    </div>
-
-    <div class="text-center d-flex justify-content-center align-items-center flex-md-column" id="v-pills-tab" role="tablist" aria-orientation="horizontal">
-      <nav class="nav nav-pills justify-content-center bg-secondary w-100" id="h_nav">
-        <a class="nav-link active" id="v-pills-info-tab" data-toggle="pill" href="#v-pills-info" role="tab" aria-controls="v-pills-info" aria-selected="false">Informations</a>
-        <a class="nav-link" id="v-pills-rdv-tab" data-toggle="pill" href="#v-pills-rdv" role="tab" aria-controls="v-pills-rdv" aria-selected="true">Rendez-vous  <span class="badge bg-light">
-          {{future_rendezvous|length}}</span>
-        </a>
-        <a class="nav-link" id="v-pills-membership-tab" data-toggle="pill" href="#v-pills-membership" role="tab" aria-controls="v-pills-membership" aria-selected="false">Adhésions
-          <span class="badge bg-light">
-            {{object.memberships.all.count}}</span>
-        </a>
-        <a class="nav-link" id="v-pills-stock-tab" data-toggle="pill" href="#v-pills-stock" role="tab" aria-controls="v-pills-stock" aria-selected="false">Inventaire
-          <span class="badge bg-light">
-            {{stock.all.count}}</span>
-        </a>
-      </nav>
-    </div>
+    {% endif %}
   </div>
-
-  <div class="container">
-    <div class="row no-gutters">
-    <section class="h-100 col-md-12 p-4">
-      <div class="tab-content" id="v-pills-tabContent">
-        <div class="tab-pane fade show active" id="v-pills-info" role="tabpanel" aria-labelledby="v-pills-info-tab">
-          <div class="text-center user-title">
-            {% for organization in object.visitor_organizations.all %}
-              <small class="badge bg-light">
-                Visiteur de
-                <a href="{% url 'organization_page' organization.slug %}">
-                    {{ organization.name }}
-                </a>
-              {% endfor %}
-              {% for organization in object.member_organizations.all %}
-              <small class="badge bg-light">
-                Membre de
-                <a href="{% url 'organization_page' organization.slug %}">
-                    {{ organization.name }}
-                </a>
-              </small>
-              {% endfor %}
-              {% for organization in object.volunteer_organizations.all %}
-              <small class="badge bg-light">
-                  Membre volontaire de
-                  <a href="{% url 'organization_page' organization.slug %}">
-                      {{ organization.name }}
-                  </a>
-              </small>
-              {% endfor %}
-              {% for organization in object.active_organizations.all %}
-              <small class="badge bg-light">
-                  Membre actif de
-                  <a href="{% url 'organization_page' organization.slug %}">
-                      {{ organization.name }}
-                  </a>
-              </small>
-              {% endfor %}
-              {% for organization in object.admin_organizations.all %}
-              <small class="badge bg-light">
-                  Administrateur de
-                  <a href="{% url 'organization_page' organization.slug %}">
-                      {{ organization.name }}
-                  </a>
-              </small>
-            {% endfor %}
-            {% if not object.get_organizations %}
-              <small>Ce profil n'est rattaché à aucune organisation</small>
-            {% endif %}
-          </div>
-          <div class="mt-2">
-            <small><i>{{object.bio | safe}}</i></small>
-          </div>
-          <h4 class="mt-4">Informations
-          </h4>
-          <div class="card p-4">
-            <div class="row">
-              <div class="col-md-6 p-1">
-                <i class="fa fa-phone pe-2"></i>Téléphone
-              </div>
-              <div class="col-md-6 p-1">
-                {% if object.phone_number %}
-                  {{ object.phone_number }}
-                {% else %}
-                  Non renseigné
-                {% endif %}
-              </div>
-              <div class="col-md-6 p-1">
-                <i class="fa fa-envelope pe-2"></i>Adresse mail
-              </div>
-              <div class="col-md-6 p-1">
-                {% if object.email %}
-                <a href="{{organization.email}}">{{ object.email }}</a>
-                {% else %}
-                  Non renseigné
-                {% endif %}
-              </div>
-              <div class="col-md-6 p-1">
-                <i class="fa fa-map pe-2"></i>Adresse physique
-              </div>
-              <div class="col-md-6 p-1">
-                {% if object.street_address %}
-                  {{ object.street_address }}
-                {% else %}
-                    Non renseigné
-                {% endif %}
-              </div>
-              <div class="col-md-6 p-1">
-                  <i class="fa fa-birthday-cake pe-2"></i>Date d'anniversaire
-              </div>
-              <div class="col-md-6 p-1">
-                  <p class="mt-1">
-                    {% if object.birth_date %}
-                      {{ object.birth_date }}
-                    {% else %}
-                      Non renseigné
-                    {% endif %}
-                  </p>
-              </div>
-              <div class="col-md-6 p-1">
-                <span>Membre depuis</span>
-              </div>
-              <div class="col-md-6 p-1">
-                <p class="mt-1">
-                  le {{ object.date_joined|date:"d F Y" }}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="tab-pane fade show" id="v-pills-rdv" role="tabpanel" aria-labelledby="v-pills-rdv-tab">
-          <h4 class="mt-4"> Rendez-vous</h4>
-          {% if passed_rendezvous or future_rendezvous %}
-            {% if future_rendezvous %}
-              <div class="card p-2">
-                <h4 class="mt-4 text-left">A venir</h4>
-                <div class="table-responsive">
-                  <table class="table">
-                      <tbody class="">
-                        {% for event, status in future_rendezvous reversed %}
-                          {% ifchanged %}
-                            <tr>
-                              <td colspan="4" class="bg-light">
-                                <b>{{ event.date|date:"F" }} {{event.date|date:"Y" }}</b>
-                              </td>
-                            </tr>
-                          {% endifchanged %}
-                          <tr class="{% if event.date <= today %}bg-light text-muted{% else %}bg-white{% endif %}">
-                            <td>
-                              {% include "extra_column_data.html" with column="date" record=event %}
-                            </td>
-                            <td>
-                              <a href="{% url 'event:detail' event.pk event.slug %}">
-                                <b>
-                                  {% if event.activity %}
-                                    {{ event.activity }}
-                                  {% else %}
-                                    Type d'activité supprimé
-                                  {% endif %}
-                                </b>
-                              </a>
-                            </td>
-                            <td>
-                              <small>{{ event.location }}</sm`ll>
-                            </td>
-                            <td>
-                            {% if status == "organizer" %}
-                              <span class="badge badge-pill bg-success">Animateur</span>
-                            {% else %}
-                              {% if object.pk == request.user.pk %}
-                                {% tokenize user=object event=event action='cancel' as tok %}
-                                  <button class="btn btn-sm btn-danger">
-                                    <a class="" href="{% url 'event:cancel_reservation' tok %}">
-                                      <i class="fa fa-times"></i>
-                                    </a>
-                                  </button>
-                              {% endif %}
-                            {% endif %}
-                            </td>
-                          </tr>
-                        {% empty %}
-                        Pas d'évènements
-                        {% endfor %}
-                      </tbody>
-                  </table>
-                </div>
-              </div>
-            {% endif %}
-            {% if passed_rendezvous %}
-              <div class="card p-2 mt-5">
-                <h4 class="mt-4 text-left">Passés</h4>
-                  <div class="table-responsive">
-                    <table class="table">
-                      <tbody class="">
-                        {% for event, status in passed_rendezvous %}
-                          {% ifchanged %}
-                            <tr>
-                              <td colspan="4" class="bg-light">
-                                <b>{{ event.date|date:"F" }} {{event.date|date:"Y" }}</b>
-                              </td>
-                            </tr>
-                          {% endifchanged %}
-                          <tr class="bg-light text-muted">
-                            <td>
-                              {% include "extra_column_data.html" with column="date" record=event %}
-                            </td>
-                            <td>
-                              <a href="{% url 'event:detail' event.pk event.slug %}">
-                                <b>
-                                  {% if event.activity %}
-                                    {{ event.activity }}
-                                  {% else %}
-                                    Type d'activité supprimé
-                                  {% endif %}
-                                </b>
-                              </a>
-                            </td>
-                            <td>
-                              <small>{{ event.location }}</small>
-                            </td>
-                            <td>
-                              {% if status == "organizer" %}
-                                  <span class="badge badge-pill bg-success">Animateur</span>
-                                {% elif status == "absent" %}
-                                  <span class="badge badge-pill bg-secondary">Absent</span>
-                                {% elif status == "present" %}
-                                  <span class="badge badge-pill bg-info">A participé</span>
-                              {% endif %}
-                            </td>
-                          </tr>
-                      {% empty %}
-                        Pas d'évènements
-                      {% endfor %}
-                  </table>
-                </div>
-              </div>
-            {% endif %}
-            {% else %}
-              Cet utilisateur n'a pas de réservations
-          {% endif %}
-        </div>
-        <div class="tab-pane fade" id="v-pills-membership" role="tabpanel" aria-labelledby="v-pills-membership-tab">
-          <h4 class="mt-4">Etat des adhésions</h4>
-          {% for membership in object.memberships.all %}
-            <div class="card p-4 mb-4">
-              <h5 class="pb-2">{{ membership.organization }}
-            {% if membership.organization in user.admin_organizations.all or user.volunteer_organizations.all or user.active_organizations.all or object == user %}
-              <small>depuis le {{ membership.first_payment|date:"d F Y" }}</small>
-              {% if membership.current_contribution == 0 %}
-                <small class="text-danger">Pas à jour</small>
-              {% elif membership.current_contribution >= membership.organization.advised_fee %}
-                <small class="text-success">A jour </small>
-              {% else %}
-                <small class="text-warning">Incomplet </small>
-              {% endif %}
-              <span class="badge badge-pill badge-success float-right">{{ membership.current_contribution }}€</span></h5>
-
-              <div>
-                <label class="btn btn-success btn-sm" for="modal_fee_{{ membership.organization.name }}">Ajouter une cotisation</label>
-                <input class="toggle-modal" id="modal_fee_{{ membership.organization.name }}" type="checkbox">
-                <section class="modal fade" tabindex="-1" role="dialog">
-                  <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title">Ajout d'une cotisation</h5>
-                        <label class="close" for="modal_fee_{{ membership.organization.name }}">×</label>
-                      </div>
-                      <div class="modal-body">
-                        <form method="post" action="{% url 'user:fee_create' %}">
-                          {% csrf_token %}
-                          {% for field in add_fee_form %}
-                            {% if field.name == 'organization' %}
-                              <input type="hidden" name="{{ field.name }}" value="{{ membership.organization.pk|escape }}"/>
-                            {% elif field.name == 'membership' %}
-                              <input type="hidden" name="{{ field.name }}" value="{{ membership.pk|escape }}"/>
-                            {% else %}
-                              {% bootstrap_field field %}
-                            {% endif %}
-                          {% endfor %}
-                          <button type="submit" class="btn btn-primary">Enregistrer</button>
-                        </form>
-                      </div>
-                    </div>
-                  </div>
-                </section>
-              </div>
-
-              <table class="table table-striped table-hover">
-                {% for fee in membership.fees.all %}
-                  <tr>
-                    <td>
-                    le {{ fee.date|date:"d F Y" }}
-                    {% if fee.membership and fee.date == membership.first_payment %}
-                      <span class="badge badge-pill bg-warning">référence</span></h5>
-                    {% endif %}
-                    </td>
-                    <td>
-                      {% if fee.participation %}
-                        <a href="{% url 'event:detail' fee.participation.event.pk fee.participation.event.slug %}">{{fee.participation.event}}</a>
-                      {% else %}
-                        Cotisation manuelle
-                      {% endif %}
-                    </td>
-                    <td class="text-right">
-                      <b>{{ fee.amount }}€</b><br>
-                      <small>{{ fee.get_payment_display }}</small>
-                   </td>
-                    <td>
-                    {% if membership.organization in user.admin_organizations.all or user.volunteer_organizations.all or user.active_organizations.all %}
-                    <form action="{% url 'user:fee_delete' fee.pk %}" method="post">
-                      {% csrf_token %}
-                      <button type="submit" class="btn btn-danger btn-sm">
-                        <i class="fa fa-trash-alt"></i>
-                      </button>
-                    </form>
-                    {% endif %}
-                    </td>
-                  </tr>
-                {% endfor %}
-                </table>
-              {% else %}
-              </h5>
-              <div class="bg-light p-2 text-warning">
-                Vous ne pouvez pas visualiser les cotisations concernant une organisation dont vous n'êtes membre
-              </div>
-              {% endif %}
-            </div>
-            {% empty %}
-              <div class="bg-light p-2 m-2 text-warning">
-              Cet utilisateur n'a pas de cotisation en cours
-              </div>
-          {% endfor %}
-        </div>
-    <div class="tab-pane fade" id="v-pills-stock" role="tabpanel" aria-labelledby="v-pills-stock-tab">
-      {% if can_create %}
-        <button type="button" class="btn btn-primary bs-modal" data-form-url="{% url 'inventory:create_user_stuff' object.pk %}">
-          Ajouter un objet à l'inventaire
+  <div class="text-center d-flex justify-content-center align-items-center flex-md-column"
+       id="v-pills-tab"
+       role="tablist"
+       aria-orientation="horizontal">
+    <nav class="mt-2">
+      <div class="nav nav-tabs" id="nav-tab" role="tablist">
+        <button class="nav-link active"
+                id="nav-home-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#nav-home"
+                type="button"
+                role="tab"
+                aria-controls="nav-home"
+                aria-selected="true">Informations</button>
+        <button class="nav-link"
+                id="nav-profile-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#nav-profile"
+                href="#nav-profile"
+                type="button"
+                role="tab"
+                aria-controls="nav-profile"
+                aria-selected="false">
+          Rendez-vous  <span class="badge bg-light">{{ future_rendezvous|length }}</span>
         </button>
-      {% endif %}
-      <h4 class="mt-4"> {{ stock.all.count}} Objets inventoriés </h4>
-      <div class="card p-2 pt-4">
-          <div class="table-responsive">
-            <table class="table table-striped table-hover">
-              <thead>
-                <tr>
-                  <th>Objet</th>
-                  <th>Localisation</th>
-                  <th>Etat</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for stuff in stock %}
-                  <tr>
-                    <td scope="row"><a href="{{stuff.get_absolute_url}}"> {{ stuff }}</a></td>
-                    <td>
-                      {% if stuff.place %}
-                        <a href="{% url 'location:detail' stuff.place.id stuff.place.slug %}">
-                            {{ stuff.place.name }}
-                        </a>
-                      {% else %}
-                        Chez l'utilisateur
-                      {% endif %}
-                    </td>
-                    <td>
-                      {% include "inventory/stuff_state_display.html" with stuff_state=stuff.get_state_display %}
-                    </td>
-                  </tr>
-                {% empty %}
-                <tr>
-                  <td colspan="3">
-                  Cet utilisateur n'a pas d'objet dans son inventaire
-                  </td>
-                </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-          </div>
-        </div>
+        <button class="nav-link"
+                id="nav-contact-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#nav-contact"
+                type="button"
+                role="tab"
+                aria-controls="nav-contact"
+                aria-selected="false">Adhésions</button>
+        <button class="nav-link"
+                id="nav-inventaire-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#nav-inventaire"
+                type="button"
+                role="tab"
+                aria-controls="nav-inventaire"
+                aria-selected="false">Inventaire</button>
       </div>
-    </div>
-    </div>
-    </section>
+    </nav>
   </div>
 </div>
-{% endblock %}
-
-
+<div class="container mb-5 mt-5">
+  <div class="tab-content" id="nav-tabContent">
+    <div class="tab-pane fade show active"
+         id="nav-home"
+         role="tabpanel"
+         aria-labelledby="nav-home-tab"
+         tabindex="0">{% include "user/profile/info.html" %}</div>
+    <div class="tab-pane fade"
+         id="nav-profile"
+         role="tabpanel"
+         aria-labelledby="nav-profile-tab"
+         tabindex="0">{% include "user/profile/rdv.html" %}</div>
+    <div class="tab-pane fade"
+         id="nav-contact"
+         role="tabpanel"
+         aria-labelledby="nav-contact-tab"
+         tabindex="0">{% include "user/profile/account.html" %}</div>
+    <div class="tab-pane fade"
+         id="nav-inventaire"
+         role="tabpanel"
+         aria-labelledby="nav-inventaire-tab"
+         tabindex="0">{% include "user/profile/inventory.html" %}</div>
+  </div>
+</div>
+{% endblock content %}
 {% block extra_js %}
-<script type="text/javascript">
-  $(function () {
-   $.fn.modal.Constructor.prototype._enforceFocus = function() {};
-   $(".bs-modal").each(function () {
-     $(this).modalForm({
-         formURL: $(this).data('form-url')
-     });
-   });
- });
- </script>
-<script>
-  $(document).ready(function(){
-    $("#v-pills-tab").sticky({topSpacing:105});
-    $("#breadcrumb").sticky({topSpacing:65});
-  });
-</script>
+  {% assets "js_django_autocomplete" %}
+  <script src="{{ ASSET_URL }}"></script>
+  {% endassets %}
 {% endblock %}
-

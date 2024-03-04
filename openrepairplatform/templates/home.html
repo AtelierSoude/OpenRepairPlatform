@@ -28,15 +28,15 @@
     </div>
     <div class="d-flex flex-sm-row flex-column mt-2">
       <div class="text-center">
-        <img class="p-5 img-responsive w-50" src="https://atelier-soude.fr/images/50.png">
+        <img class="p-5 img-responsive w-50" src="{% static 'img/fusee.png' %}">
         <h5 class="fw-bolder">Transmettre les savoirs</h4>
       </div>
       <div class="text-center">
-        <img class="p-5 img-responsive w-50" src="https://atelier-soude.fr/images/5.png">
+        <img class="p-5 img-responsive w-50" src="{% static 'img/soudure.png' %}">
         <h5 class="fw-bolder">Réparer ensemble</h4>
       </div>
       <div class="text-center">
-        <img class="p-5 img-responsive w-50" src="https://atelier-soude.fr/images/200.png">
+        <img class="p-5 img-responsive w-50" src="{% static 'img/communaute.png' %}">
         <h5 class="fw-bolder">Faire communauté</h4>
       </div>
     </div>
@@ -48,19 +48,19 @@
         <h3 class="text-center text-secondary" style="font-size: 3rem;">
           {{event_count}}
         </h3>
-        <p>Evenements en ligne</p>
+        <p class="text-secondary">Evénements en ligne</p>
       </div>
       <div class="m-2">
         <h3 class="text-center text-secondary" style="font-size: 3rem;">
           {{user_count}}
         </h3>
-        <p>Utilisateurs enregistrés</p>
+        <p class="text-secondary">Utilisateurs enregistrés</p>
       </div>
       <div class="m-2">
         <h3 class="text-center text-secondary" style="font-size: 3rem;">
           {{organization_count}}
         </h3>
-        <p>Organisations inscrites</p>
+        <p class="text-secondary">Organisations inscrites</p>
       </div>
     </div>
   </div>

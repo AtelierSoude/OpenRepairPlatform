@@ -1,5 +1,5 @@
 {% extends 'organization_page.html' %}
-{% load static thumbnail bootstrap5 initialavatar django_tables2 %}
+{% load static assets thumbnail bootstrap5 initialavatar django_tables2 %}
 {% load querystring from django_tables2 %}
 
 {% block title %}Page de {{organization.name}}: gestion des stocks{% endblock %}
@@ -8,15 +8,13 @@
   <section class="container">
 
      <!-- modals -->
-     <div class="modal fade" tabindex="-1" role="dialog" id="modal">
+     <div class="modal fade" tabindex="-1" data-bs-focus="false" role="dialog" id="modal">
       <div class="modal-dialog" role="document">
         <div class="modal-content"></div>
       </div>
     </div>
-
-    <h2 class="text-center mt-4">Stock de {{ organization }}</h2>
     {% if is_active %}
-    <button class="btn btn-success btn-absolute bs-modal" id="add-stuff">
+    <button id="add-object" class="btn btn-success btn-absolute bs-gobal-modal" data-form-url="{% url 'inventory:create_organization_stuff' organization.slug %}">
       <i class="fa fa-plus"></i><i class="fas fa-box-open"></i>
       <span class="btn-label d-none ps-1">Ajouter un objet</span>
     </button>
@@ -51,24 +49,17 @@
     $( this ).css( "width", "200px" );
   }, function() {
     $( ".btn-label" ).addClass( "d-none" );
-    $( this ).css( "width", "63px" );
+    $( this ).css( "width", "73px" );
   }
   );
   });
 </script>
-<script type="text/javascript">
-$(document).ready(function(){
-   $.fn.modal.Constructor.prototype._enforceFocus = function() {};
-     $("#add-stuff").modalForm({
-         formURL: "{% url 'inventory:create_organization_stuff' organization.slug %}"
-     });
- });
- </script>
- <script>
-  $(document).ready(function(){
-    $.fn.modal.Constructor.prototype._enforceFocus = function() {};
-    $("#h_nav").sticky({topSpacing:105});
-    $("#breadcrumb").sticky({topSpacing:65});
-  });
-</script>
-{% endblock %}
+
+{% assets "js_create_stuff" %}
+<script src="{{ ASSET_URL }}"></script>
+{% endassets %}
+
+
+{% endblock extra_js %}
+
+

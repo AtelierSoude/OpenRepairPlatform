@@ -164,15 +164,16 @@ export default {
       const data = {...this.dataOne, ...this.dataTwo, ...this.dataThree}
       delete data.recurrent
       delete data.updated
-      data["organization"] = this.organization.pk
       const url = this.event ? `/api/event/${this.event.pk}/` : "/api/event/"
       if (this.event) {
+        data["organization"] = this.event.fields.organization
         put(url, data).then(res => {
-          window.location = `/event/${this.event.pk}/rencontre-benevoles/admin/`
+          window.location = `/event/${this.event.pk}/${this.event.fields.slug}/admin/`
         }).catch(error => {
           console.log(error)
         })
       } else {
+        data["organization"] = this.organization.pk
         post(url, data).then(res => {
           window.location = `/${this.organization.fields.slug}/events/`
         }).catch(error => {

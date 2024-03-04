@@ -1,88 +1,122 @@
-{% extends 'organization_page.html' %}
-{% load static %}
-{% block title %}Page de {{organization.name}}: contrôles des préférences{% endblock %}
+{% extends 'organization_page.html' %} {% load static %} {% block title %}Page
+de {{organization.name}}: contrôles des préférences{% endblock %} 
+{% block menu_content %} {% if is_active %}
+<div class="container">
+  {% if is_admin %}
+  <h4 class="mt-4">Informations</h4>
+  <div class="card p-4">
+    <div class="row row-cols-12">
+      <div class="col">
+    <a
+      class="btn btn-success btn-sm"
+      href="{% url 'user:organization_update' organization.pk %}"
+    >
+      <i class="fa fa-pencil-alt"></i> Editer
+    </a>
+  </div>
+</div>
+  </div>
 
-
-{% block menu_content %}
-  {% if is_active %}
-    <div class="container">
-      {% if is_admin %}
-        <h4 class="mt-4">Informations</h4>
-        <div class="card p-4">
-        <a class="btn btn-success btn-sm" href="{% url 'user:organization_update' organization.pk %}">
-            <i class="fa fa-pencil-alt"></i> Editer
-        </a>
-        </div>
-        <h4 class="mt-4">Activités</h4>
-        <div class="card p-4">
-        <a class="btn btn-primary btn mb-2" href="{% url 'event:activity_create' organization.pk %}" title="activity place">
+  <h4 class="mt-4">Activités</h4>
+  <div class="card p-4">
+    <div class="row row-cols-12">
+      <div class="col">
+        <a
+          class="btn btn-primary btn mb-2"
+          href="{% url 'event:activity_create' organization.pk %}"
+          title="activity place"
+        >
           <i class="fa fa-plus-circle"></i> Ajouter une activité
         </a>
-        </div>
-        <h4 class="mt-4">Conditions d'accès</h4>
-        <div class="card p-4">
-          <a class="btn btn-primary btn float-end" href="{% url 'event:condition_create' organization.pk %}" title="create condition">
-              <i class="fa fa-plus-circle"></i> Ajouter
-          </a>
-          <div class="row row-cols-1 row-cols-md-3 g-4 ms-0">
-            {% include 'event/condition/list.html' with conditions=organization.conditions.all %}
-          </div>
-        </div>
-        <h4 class="mt-4">Lieux</h4>
-        <div class="card p-4">
-        <a href="{% url 'location:create' organization.pk %}" class="btn btn-primary btn">
-          <i class="fa fa-plus-circle"></i> Ajouter un lieu
-        </a>
-          {% if organization.places.all %}
-          <div class="row row-cols-1 row-cols-md-3 g-4 ms-0">
-            {% for place in organization.places.all %}
-            <div class="col">
-              <div class="card">  
-                <a class="card-link" href="{% url 'location:detail' place.pk place.slug %}">
-                  <div class="card-body">
-                    <h4 class="card-title">{{ place.name }}</h4>
-                    <h6 class="card-subtitle mb-2 text-muted">{{ place.address }}</h6>
-                    <span class="badge bg-secondary">{{ place.category }}</span>
-                    {{ place.description | safe | truncatewords_html:10 }}
-                  </div>
-                  {% if is_admin %}
-                    <div class="card-footer">
-                      <a class="btn btn-success btn-sm" href="{% url 'location:edit' place.id %}">
-                        <i class="fa fa-pencil-alt"></i>
-                        Editer ce lieu
-                      </a>
-                      <a class="btn btn-danger btn-sm" href="{% url 'location:delete' place.id %}">
-                        <i class="fa fa-trash-alt"></i>
-                        Supprimer ce lieu
-                      </a>
-                    </div>
-                  {% endif %}
-                </a>
-              </div>
-            </div>
-            {% endfor %}
-          </div>
-        {% else %}
-          <div>Il n'y a pas de local associé à cette organisation.</div>
-        {% endif %}
       </div>
-      <h4 class="mt-4">Supprimer</h4>
-      <div class="card p-4">
-        <a class="btn btn-danger col-lg" href="{% url 'user:organization_delete' organization.pk %}">
-            <i class="fa fa-trash"></i> Supprimer l'organisation
-        </a>
-      </div>
-      {% endif %}
     </div>
+  </div>
+
+  <h4 class="mt-4">Conditions d'accès</h4>
+  <div class="card p-4">
+    <div class="row row-cols-12">
+      <div class="col">
+        <a
+          class="btn btn-primary btn mb-2"
+          href="{% url 'event:condition_create' organization.pk %}"
+          title="create condition"
+        >
+          <i class="fa fa-plus-circle"></i> Ajouter
+        </a>
+      </div>
+    </div>
+    <div class="row row-cols-1 row-cols-md-3">
+      {% include 'event/condition/list.html' with conditions=organization.conditions.all %}
+    </div>
+  </div>
+
+  <h4 class="mt-4">Lieux</h4>
+  <div class="card p-4">
+    <div class="row row-cols-12">
+      <div class="col">
+        <a
+          href="{% url 'location:create' organization.pk %}"
+          class="btn btn-primary btn mb-2"
+        >
+          <i class="fa fa-plus-circle"></i> <span>Ajouter un lieu</span>
+        </a>
+      </div>
+    </div>
+
+    {% if organization.places.all %}
+    <div class="row row-cols-1 row-cols-md-3">
+      {% for place in organization.places.all %}
+      <div class="col">
+        <div class="card mb-20">
+          <a
+            class="card-link"
+            href="{% url 'location:detail' place.pk place.slug %}"
+          >
+            <div class="card-body">
+              <h4 class="card-title">{{ place.name }}</h4>
+              <h6 class="card-subtitle mb-2 text-muted">{{ place.address }}</h6>
+              <span class="badge bg-secondary">{{ place.category }}</span>
+              {{ place.description | safe | truncatewords_html:10 }}
+            </div>
+            {% if is_admin %}
+            <div class="card-footer">
+              <a
+                class="btn btn-success btn-sm"
+                href="{% url 'location:edit' place.id %}"
+              >
+                <i class="fa fa-pencil-alt"></i>
+                Editer ce lieu
+              </a>
+              <a
+                class="btn btn-danger btn-sm"
+                href="{% url 'location:delete' place.id %}"
+              >
+                <i class="fa fa-trash-alt"></i>
+                Supprimer ce lieu
+              </a>
+            </div>
+            {% endif %}
+          </a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div>Il n'y a pas de local associé à cette organisation.</div>
+    {% endif %}
+  </div>
+  <h4 class="mt-4">Supprimer</h4>
+  <div class="card p-4">
+    <a
+      class="btn btn-danger col-lg"
+      href="{% url 'user:organization_delete' organization.pk %}"
+    >
+      <i class="fa fa-trash"></i> Supprimer l'organisation
+    </a>
+  </div>
   {% endif %}
-{% endblock menu_content %}
+</div>
+{% endif %} {% endblock menu_content %} 
 
 {% block extra_js %}
-
-<script>
-  $(document).ready(function(){
-    $("#h_nav").sticky({topSpacing:105});
-    $("#breadcrumb").sticky({topSpacing:65});
-  });
-</script>
 {% endblock extra_js %}

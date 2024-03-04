@@ -1,88 +1,144 @@
-{% extends 'base_home.html' %}
+{% extends 'base.html' %}
 {% load static i18n l10n bootstrap5 app_filters %}
-
-{% block title %}Bienvenue sur l'application {{site_title}}{% endblock %}
-
+{% block title %}Bienvenue sur l'application {{ site_title }}{% endblock %}
 {% block content %}
-<div class="d-flex flex-column justify-content-between" style="height: calc(100vh - 65px);">
-  <div class="container">
-    <div class="d-flex justify-content-center">
-      <img src="{% static 'img/logo-simple.png' %}" class="mt-5" width="120">
-    </div>
-    <h4 class="pt-2 text-center text-success">Bienvenue sur Réparons !</h4>
-    <h4 class="text-center">Vous avez envie de réparer ou de créer ? Prenez rendez-vous et nous le faisons ensemble !</h4>
-    <div class="d-flex flex-column align-items-center">
-      <section class="w-75">
-        <h6 class="pt-2 text-center">
-          Entrez votre code postal pour trouver les événements à proximité
-        </h6>
-        <form method="get" class="form-row" action="{% url 'event:list' %}">
-          <div class="input-group mb-3">
-            <input required type="text" class="form-control" placeholder="Code postal" name="postcode" pattern="[0-9]*" value="{{ request.session.postcode }}"/>
-            <div class="input-group-append">
-              <button class="btn btn-outline-primary bg-secondary" type="submit"><i class="fa fa-search"></i></button>
-            </div>
-            <small class="form-text">
-              Attention: Pour les grandes villes, vous devez renseigner un code postal avec l'arrondissement (exemple: pour Lyon, mettre 69007 si vous êtes dans le 7eme arrondissement, 69000 n'est pas autorisé)
-            </small>
-          </div>
-          {% if request.session.distance %}
-            <input class="form-range" type="range" name="distance" min="1" max="400" value="{{ request.session.distance }}" oninput="this.nextElementSibling.value = this.value">
-            <output>{{ request.session.distance }}</output> km
-          {% else %}
-            <input class="form-range" type="range" name="distance" min="1" max="400" value="50" oninput="this.nextElementSibling.value = this.value">
-            <output>50</output> km
-          {% endif %}
-        </form>
-      </section>
-
-      {% for message in messages %}
-        <div class="card" role="alert" aria-live="assertive" aria-atomic="true">
-          <div class="card-body">
-            {{ message|safe }}
-          </div>
+  <div id="home_location">
+    <div id="home_cover">
+      <div class="container text-center">
+        <h4 class="pt-2 text-white">Bienvenue sur Reparons.org !</h4>
+        <h1>
+          Plateforme libre
+          <br />
+          de réservation d'ateliers de
+          <br />
+          <span>réparation</span>
+        </h1>
+        <h3 >
+          Vous avez envie de réparer ou de créer ?
+          <br />
+          Prenez rendez-vous et nous le faisons ensemble !
+        </h4>
+        <br />
+        <br />
+        <i class="fa-solid fa-arrow-down fa-bounce fa-xl "></i>    
         </div>
-      {% endfor %}
-
     </div>
-    <div class="d-flex flex-sm-row flex-column mt-2">
-      <div class="text-center">
-        <img class="p-5 img-responsive w-50" src="http://atelier-soude.fr/images/50.png">
-        <h5 class="fw-bolder">Transmettre les savoirs</h4>
+    <div class="container">
+      <div class="d-flex flex-column align-items-center">
+        <section class="w-75">
+          <form method="get"
+                class="form-row form-home"
+                action="{% url 'event:list' %}">
+            <div class="input-group mb-3">
+              <input required
+                     type="text"
+                     class="form-control postal-home w-50"
+                     placeholder="Entrez votre code postal pour trouver les événements à proximité"
+                     name="postcode"
+                     pattern="^(?:0[1-9]|[1-8]\d|9[0-8])\d{3}$"
+                     value="{{ postcode }}" />
+              <div class="input-group-append">
+                <button class="btn btn-outline-primary bg-success" type="submit">
+                  <i class="fa fa-search"></i>
+                </button>
+              </div>
+              <small class="form-text">
+                Attention: Pour les grandes villes, vous devez renseigner un code postal avec l'arrondissement (exemple: pour Lyon, mettre 69007 si vous êtes dans le 7eme arrondissement, 69000 n'est pas autorisé)
+              </small>
+            </div>
+            {% if distance %}
+              <input class="form-range"
+                     type="range"
+                     name="distance"
+                     min="1"
+                     max="400"
+                     value="{{ distance }}"
+                     oninput="this.nextElementSibling.value = this.value">
+              <output>{{ distance }}</output> km
+            {% else %}
+              <input class="form-range"
+                     type="range"
+                     name="distance"
+                     min="1"
+                     max="400"
+                     value="50"
+                     oninput="this.nextElementSibling.value = this.value">
+              <output>50</output> km
+            {% endif %}
+          </form>
+        </section>
+        {% for message in messages %}
+          <div class="card" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="card-body">{{ message|safe }}</div>
+          </div>
+        {% endfor %}
       </div>
-      <div class="text-center">
-        <img class="p-5 img-responsive w-50" src="http://atelier-soude.fr/images/5.png">
-        <h5 class="fw-bolder">Réparer ensemble</h4>
+      <div class="row">
+        <div class="col-sm text-center">
+          <img class="p-5 img-responsive w-50" src="{% static 'img/fusee.png' %}" />
+          <h4 class="fw-bolder">Transmettre les savoirs</h4>
+          <p>
+            Reparons.org c'est la transmission des savoirs au plus grand nombre, quel que soit votre niveau de compétence, nous voulons rendre la réparation accessible facilement.
+          </p>
+        </div>
+        <div class="col-sm text-center">
+          <img class="p-5 img-responsive w-50" src="{% static 'img/soudure.png' %}">
+          <h4 class="fw-bolder">Réparer ensemble</h4>
+          <p>
+            Ici nous voulons que vous vous réapropriez vos apareils pour redevenir acteur de la transition écoloque, ne plus avoir peur d'ouvrir et de réparer.
+          </p>
+        </div>
+        <div class="col-sm text-center">
+          <img class="p-5 img-responsive w-50"
+               src="{% static 'img/communaute.png' %}">
+          <h4 class="fw-bolder">Faire communauté</h4>
+          <p>
+            Reparons.org veut agrèger toutes les initiatives associatives, d'artisants, et de techniciens pour que le plus grand nombre puisse accèder à la réparation. Notre vision : un monde sans déchets.
+          </p>
+        </div>
       </div>
-      <div class="text-center">
-        <img class="p-5 img-responsive w-50" src="http://atelier-soude.fr/images/200.png">
-        <h5 class="fw-bolder">Faire communauté</h4>
+    </div>
+    <div class="bg-success p-4 mt-5">
+      <div class="d-flex justify-content-around container">
+        <div class="m-2">
+          <h3 class="text-center text-white key-number-home">{{ event_count }}</h3>
+          <p class="text-white">Evenements en ligne</p>
+        </div>
+        <div class="m-2">
+          <h3 class="text-center text-white key-number-home">{{ user_count }}</h3>
+          <p class="text-white">Utilisateurs enregistrés</p>
+        </div>
+        <div class="m-2">
+          <h3 class="text-center text-white key-number-home">{{ organization_count }}</h3>
+          <p class="text-white">Organisations inscrites</p>
+        </div>
+      </div>
+    </div>
+    <div class="container mt-5 mb-5 how-to">
+      <h2 class="mb-5 text-center text-success">Comment ça marche ?</h2>
+      <div class="row text-center">
+        <div class="col-sm">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <h3>Je recherche un atelier</h3>
+          <p>Parmis des ateliers organisés par {{ organization_count }} organisations dans toute la France.</p>
+        </div>
+        <div class="col-1">
+          <i class="fa-solid fa-arrow-right"></i>
+        </div>
+        <div class="col-sm">
+          <i class="fa-solid fa-question "></i>
+          <h3>Je vérifie les conditions de la structure qui m'acceuille</h3>
+          <p>Horraires, adhésion ou non, participation, fonctionnement, etc...</p>
+        </div>
+        <div class="col-1">
+          <i class="fa-solid fa-arrow-right"></i>
+        </div>
+        <div class="col-sm">
+          <i class="fa-solid fa-screwdriver-wrench"></i>
+          <h3>Je me rends à l'atelier</h3>
+          <p>J'apprends, je crée, je répare, je lutte contre les déchets</p>
+        </div>
       </div>
     </div>
   </div>
-
-  <div class="bg-success p-4 mt-5">
-    <div class="d-flex justify-content-around container">
-      <div class="m-2">
-        <h3 class="text-center text-secondary" style="font-size: 3rem;">
-          {{event_count}}
-        </h3>
-        <p>Evenements en ligne</p>
-      </div>
-      <div class="m-2">
-        <h3 class="text-center text-secondary" style="font-size: 3rem;">
-          {{user_count}}
-        </h3>
-        <p>Utilisateurs enregistrés</p>
-      </div>
-      <div class="m-2">
-        <h3 class="text-center text-secondary" style="font-size: 3rem;">
-          {{organization_count}}
-        </h3>
-        <p>Organisations inscrites</p>
-      </div>
-    </div>
-  </div>
-
-</div>
 {% endblock %}

@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+  nginx:
+    image: nginx:latest
+    container_name: openrepairplatform_nginx
+    ports:
+      - 80:80
+    env_file:
+      - .env
+    volumes:
+      - ./deployment/nginx/templates/openrepairplatform-initiate.conf:/etc/nginx/templates/default.conf.template:ro
+      - ./deployment/certbot/data/:/var/www/certbot/ 
+      - ./deployment/certbot/letsencrypt/:/etc/letsencrypt/
+      - ./deployment/openrepairplatform_data/openrepairplatform_static:/srv/static:ro
+      - ./deployment/openrepairplatform_data/openrepairplatform_media:/srv/media:ro
+    networks:
+      - openrepairplatform
+    restart: unless-stopped
+  certbot:
+    image: certbot/certbot:latest
+    volumes: 
+      - ./deployment/certbot/data/:/var/www/certbot/ 
+      - ./deployment/certbot/letsencrypt/:/etc/letsencrypt/
+    command: >- 
+            certonly --reinstall --webroot --webroot-path=/var/www/certbot
+             --email ${EMAIL} --agree-tos --no-eff-email
+             -d ${DOMAINDNS}
+    depends_on:
+      - nginx
+    env_file:
+      - .env
+    networks:
+      - openrepairplatform
+networks:
+  openrepairplatform:
+

@@ -20,12 +20,12 @@
         {% bootstrap_field form.repair_date %}
             <div class="bordered p-2 m-2">
                 <div class="row">
-                    {% bootstrap_field form.observation form_group_class="col-md-6" %}
-                    {% bootstrap_field form.reasoning form_group_class="col-md-6" %}
+                    {% bootstrap_field form.observation form_group_class="col" %}
+                    {% bootstrap_field form.reasoning form_group_class="col" %}
                 </div>
                 <div class="row">
-                    {% bootstrap_field form.action form_group_class="col-md-6" %}
-                    {% bootstrap_field form.status form_group_class="col-md-6" %}
+                    {% bootstrap_field form.action form_group_class="col" %}
+                    {% bootstrap_field form.status form_group_class="col" %}
                 </div>
             </div>
             {% bootstrap_field form.close_folder %}
@@ -34,21 +34,11 @@
             {% bootstrap_field form.stuff_state %} 
             </div>
             <div class="form-group p-2">
-            <button type="submit" id="submit" class="btn btn-success w-100 p-3">Créer</button>
+            <button type="submit" id="btnsubmit" class="btn btn-success w-100 p-3">Créer</button>
             </div>
         {{ form.media }}
         </form>
     </div>
 <script>
-$(document).ready(function(){
-    $.fn.modal.Constructor.prototype._enforceFocus = function() {};
-      $("#id_change_stuff_state").change(function () {
-      if($(this).is(":checked")) {
-          $('#changestate').show();
-      }
-      else {
-          $('#changestate').hide();
-      }
-      })
-  });
+
 </script>

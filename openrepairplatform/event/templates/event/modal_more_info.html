@@ -1,66 +1,58 @@
-{% load bootstrap5 app_filters %}
-<div class="modal" id="more-info-{{ user.pk|escape }}" tabindex="-1" role="dialog">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">
-          Ajouter/modifier membre
-        </h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+{% extends "./parts/modal.html" %}
+{% load app_filters bootstrap5 %}
+{% block idBtnModal %}more-info-{{ user.pk|escape }}{% endblock idBtnModal %}
+{% block idModal %}more-info-{{ user.pk|escape }}{% endblock idModal %}
+{% block contentBtnModal %}
+<i class="fa fa-plus"></i> ajouter
+{% endblock contentBtnModal %}
+{% block titleModal %}
+  Ajouter/modifier membre
+{% endblock titleModal %}
+{% block contentModal %}
+<div class="modal-body">
+  <br>
+  <b>
+    {% filter_orga queryset=user.memberships organization=event.organization as membership %}
+      {% if membership %}
+        <p>
+          statut
+          {% if membership.current_contribution == 0 %}
+            <span class="text-danger">Pas à jour</span>
+            <span class="badge badge-pill bg-danger">{{ membership.current_contribution }}€</span>
+          {% elif membership.current_contribution >= event.organization.advised_fee %}
+            <span class="text-success">A jour</span>
+            <span class="badge badge-pill bg-success">{{ membership.current_contribution }}€</span>
+          {% else %}
+            <span class="text-warning">Incomplet</span>
+            <span class="badge badge-pill bg-warning">{{ membership.current_contribution }}€</span>
+          {% endif %}
+        </p>
+      {% else %}
+        {{ user }} n'a pas encore contribué pour
+        <span class="badge badge-pill bg-primary">{{ event.organization }}</span>
+      {% endif %}
+      <p>
+        {{ event.organization.get_membership_system_display }} Elle
+        {% if event.organization.advised_fee == event.organization.min_fee %}
+          est de {{ event.organization.min_fee }}€
+        {% else %}
+          va de {{ event.organization.min_fee }}€ à {{ event.organization.advised_fee }}€
+        {% endif %}
+      </p>
+    </b>
+    <form action="{% if membership %}{% url 'event:update_member' event.organization.pk membership.user.pk event.pk %}{% else %}{% url 'event:add_member' event.organization.pk event.pk %}{% endif %}"
+          method="post"
+          class="text-left">
+        {% csrf_token %}
+        <div class="row ">
+          {% for field in form %}
+            {% bootstrap_field field form_group_class="col-md-6 p-2" %}
+          {% endfor %}
+        </div>
+      
+      <div class="modal-footer">
+        <input type="submit" value="Enregistrer" class="btn btn-success btn-block">
       </div>
-      <div class="modal-body text-center">
-        <br>
-          <b>
-            {% filter_orga queryset=user.memberships organization=event.organization as membership %}
-              {% if membership %}
-              <p>
-                statut
-                  {% if membership.current_contribution == 0 %}
-                      <span class="text-danger" >Pas à jour</span>
-                      <span class="badge badge-pill bg-danger" >{{membership.current_contribution}}€</span>
-                  {% elif membership.current_contribution >= event.organization.advised_fee %}
-                      <span class="text-success" >A jour </span>
-                      <span class="badge badge-pill bg-success" >{{membership.current_contribution}}€</span>
-                  {% else %}
-                      <span class="text-warning" >Incomplet </span>
-                      <span class="badge badge-pill bg-warning" >{{membership.current_contribution}}€</span>
-                  {% endif %}
-              </p>
-              {% else %}
-              {{ user }} n'a pas encore contribué pour
-                  <span class="badge badge-pill bg-primary">{{ event.organization }}</span>
-              {% endif %}
-          <p>{{ event.organization.get_membership_system_display }} Elle
-            {% if event.organization.advised_fee == event.organization.min_fee %}
-            est de {{event.organization.min_fee}}€
-            {% else %}
-            va de {{event.organization.min_fee}}€ à {{event.organization.advised_fee}}€
-            {% endif %}
-          </p>
-        </b>
-
-        <form action="{% if membership %}{% url 'event:update_member' event.organization.pk membership.user.pk event.pk %}{% else %}{% url 'event:add_member' event.organization.pk event.pk %}{% endif %}"
-              method="post"
-              class="text-left">
-          <div class="modal-body">
-              {% csrf_token %}
-              <div class="row m-2">
-                {% for field in form %}
-                  {% if field.name == "date" %}
-                    <input type="hidden" name="{{ field.name }}" value="{{ event.date|date:"Y-m-d" }}"/>
-                  {% else %}
-                    {% bootstrap_field field form_group_class="col-md-6 p-2" %}
-                  {% endif %}
-                {% endfor %}
-              </div>
-          </div>
-          <div class="modal-footer">
-            <input type="submit" value="Enregistrer" class="btn btn-success btn-block">
-          </div>
-        </form>
-      </div>
-    </div>
+    </form>
   </div>
-</div>
+  {% endblock contentModal %}

@@ -1,0 +1,89 @@
+<div class="text-center user-title">
+  {% for organization in object.visitor_organizations.all %}
+    <small class="badge bg-light">
+      Visiteur de
+      <a href="{% url 'organization_page' organization.slug %}">{{ organization.name }}</a>
+    </small>
+  {% endfor %}
+  {% for organization in object.member_organizations.all %}
+    <small class="badge bg-light">
+      Membre de
+      <a href="{% url 'organization_page' organization.slug %}">{{ organization.name }}</a>
+    </small>
+  {% endfor %}
+  {% for organization in object.volunteer_organizations.all %}
+    <small class="badge bg-light">
+      Membre volontaire de
+      <a href="{% url 'organization_page' organization.slug %}">{{ organization.name }}</a>
+    </small>
+  {% endfor %}
+  {% for organization in object.active_organizations.all %}
+    <small class="badge bg-light">
+      Membre actif de
+      <a href="{% url 'organization_page' organization.slug %}">{{ organization.name }}</a>
+    </small>
+  {% endfor %}
+  {% for organization in object.admin_organizations.all %}
+    <small class="badge bg-light">
+      Administrateur de
+      <a href="{% url 'organization_page' organization.slug %}">{{ organization.name }}</a>
+    </small>
+  {% endfor %}
+  {% if not object.get_organizations %}<small>Ce profil n'est rattaché à aucune organisation</small>{% endif %}
+</div>
+<div class="mt-2">
+  <small><i>{{ object.bio | safe }}</i></small>
+</div>
+<h4 class="mt-4">Informations</h4>
+<div class="card p-4">
+  <div class="row">
+    <div class="col-md-6 p-1">
+      <i class="fa fa-phone pe-2"></i>Téléphone
+    </div>
+    <div class="col-md-6 p-1">
+      {% if object.phone_number %}
+        {{ object.phone_number }}
+      {% else %}
+        Non renseigné
+      {% endif %}
+    </div>
+    <div class="col-md-6 p-1">
+      <i class="fa fa-envelope pe-2"></i>Adresse mail
+    </div>
+    <div class="col-md-6 p-1">
+      {% if object.email %}
+        <a href="{{ organization.email }}">{{ object.email }}</a>
+      {% else %}
+        Non renseigné
+      {% endif %}
+    </div>
+    <div class="col-md-6 p-1">
+      <i class="fa fa-map pe-2"></i>Adresse physique
+    </div>
+    <div class="col-md-6 p-1">
+      {% if object.street_address %}
+        {{ object.street_address }}
+      {% else %}
+        Non renseigné
+      {% endif %}
+    </div>
+    <div class="col-md-6 p-1">
+      <i class="fa fa-birthday-cake pe-2"></i>Date d'anniversaire
+    </div>
+    <div class="col-md-6 p-1">
+      <p class="mt-1">
+        {% if object.birth_date %}
+          {{ object.birth_date }}
+        {% else %}
+          Non renseigné
+        {% endif %}
+      </p>
+    </div>
+    <div class="col-md-6 p-1">
+      <span>Membre depuis</span>
+    </div>
+    <div class="col-md-6 p-1">
+      <p class="mt-1">le {{ object.date_joined|date:"d F Y" }}</p>
+    </div>
+  </div>
+</div>

@@ -1,28 +1,31 @@
 {% load bootstrap5 assets static %}
-<h5 class="modal-title">Editer l'objet</h5>
+<div class="modal-header">
+  Editer l'objet
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
 <form method="post" action="" enctype="multipart/form-data">
   {% bootstrap_form_errors form %}
   {% csrf_token %}
     {% if form.is_visible %}
       {% bootstrap_field form.is_visible %}
     {% endif %}
-    {% bootstrap_field form.device form_group_class="device-search-form" %}
-    {% bootstrap_field form.create_device %}
-      <div class="row bordered p-2 m-2" id="adddevice" style="display: none;">
-        {% bootstrap_field form.category form_group_class="col-md-12 "%}
-        <small><i>Vous allez créer un type d'appareil appartenant à la catégorie sélectionnée</i></small>
-        {% bootstrap_field form.brand form_group_class="col-md-6" %}
-        {% bootstrap_field form.model form_group_class="col-md-6" %}
-        <small>Vous pouvez rajouter une image</small>
-        {% bootstrap_field form.picture %}
-      </div>
+    <div id="devicesearch">
+        {% bootstrap_field form.device form_group_class="device-search-form" %}
+        {% bootstrap_field form.create_device %}
+    </div>
+    <div id="adddevice" style="display:none">
+        <div class="row bordered p-2 m-2">
+          {% bootstrap_field form.category form_group_class="col-md-12 "%}
+            <small><i>Vous allez créer un type d'appareil appartenant à la catégorie précédemment sélectionnée</i></small>
+            {% bootstrap_field form.brand form_group_class="col-md-6 model_edit_stuff" %}
+            {% bootstrap_field form.model form_group_class="col-md-6" %}
+            <small>Vous pouvez ajouter une photo si vous le souhaitez</small>
+            {% bootstrap_field form.picture %}
+        </div>
+    </div>
         {% bootstrap_field form.information %}
 <div class="form-group p-2">
-<button type="submit" id="submit" class="btn btn-success w-100 p-3">Valider</button>
+<button type="submit" id="btnsubmit" class="btn btn-success w-100 p-3">Valider</button>
 </div>
 {{ form.media }}
 </form>
-
-{% assets "js_create_stuff" %}
-<script src="{{ ASSET_URL }}"></script>
-{% endassets %}

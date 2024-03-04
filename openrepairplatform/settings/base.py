@@ -3,18 +3,21 @@ import os
 
 from bootstrap5 import forms
 from django.contrib import messages
-from dotenv import load_dotenv
-
-load_dotenv()
 
 PROJECT_DIR = dirname(dirname(abspath(__file__)))
 BASE_DIR = dirname(PROJECT_DIR)
 
+STATIC_URL = "/static/"
+ASSETS_DEBUG = False
+
 SECRET_KEY = "H/hXAUnb1ZKNGpToim2cg38dxiyHM6b+zB9zozhpTzkP"
+PREPROD=os.environ.get("PREPROD")
 
-DEBUG = True
-
-ALLOWED_HOSTS = []
+#Set domains
+domainOS = str(os.environ.get("DOMAINDNS")) + " " + str(os.environ.get("DOMAINS")) 
+domains = []
+domains.append(domainOS.split(" "))
+ALLOWED_HOSTS = domains[0]
 
 SITE_ID = 1
 
@@ -37,7 +40,6 @@ INSTALLED_APPS = [
     "django.contrib.gis",
     "simple_history",
     "rest_framework",
-    "bootstrap",
     "fontawesome",
     "django_assets",
     "bootstrap5",
@@ -83,7 +85,6 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                "django.template.context_processors.request",
             ]
         },
     }
@@ -94,9 +95,13 @@ WSGI_APPLICATION = "openrepairplatform.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.contrib.gis.db.backends.postgis",
-        "NAME": os.getenv("POSTGRES_DBNAME", "ateliersoude"),
+        "NAME": os.getenv("POSTGRES_DBNAME"),
+        "USER": os.getenv("POSTGRES_USER"),
+        "HOST": "db",
+        "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
     }
 }
+
 
 # custom User model
 AUTH_USER_MODEL = "user.CustomUser"
@@ -120,6 +125,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 LANGUAGE_CODE = "fr-fr"
 
+INTERNAL_IPS = ["127.0.0.1", "0.0.0.0"]
+
 TIME_ZONE = "Europe/Paris"
 
 USE_I18N = True
@@ -128,13 +135,9 @@ USE_TZ = True
 USE_THOUSAND_SEPARATOR = True
 
 
-STATICFILES_DIRS = [join(PROJECT_DIR, "static")]
-
-STATIC_ROOT = join(BASE_DIR, "static")
-STATIC_URL = "/static/"
-
-MEDIA_URL = "/media/"
-MEDIA_ROOT = join(BASE_DIR, "media")
+MEDIA_URL = "/srv/media/"
+MEDIA_ROOT = "/srv/media/"
+# MEDIA_ROOT = join(BASE_DIR, "/media") 
 
 FILE_UPLOAD_HANDLERS = [
     "django.core.files.uploadhandler.TemporaryFileUploadHandler",
@@ -149,7 +152,6 @@ AUTHENTICATION_BACKENDS = ("django.contrib.auth.backends.ModelBackend",)
 
 # Config django-assets
 ASSETS_MODULES = ["openrepairplatform.assets"]
-ASSETS_ROOT = STATICFILES_DIRS[0]
 
 # Add class to field wrapper in django-bootstrap5
 forms.FORM_GROUP_CLASS += " p-2"
@@ -161,8 +163,9 @@ MESSAGE_TAGS = {messages.ERROR: "danger"}
 AVATAR_COLORS = ((254, 229, 110), (8, 51, 66), (43, 230, 171),)
 
 # Django tables2
-DJANGO_TABLES2_TEMPLATE = "django_tables2/bootstrap4.html"
+DJANGO_TABLES2_TEMPLATE = "django_tables2/bootstrap5.html"
 
 KM_DISTANCE = 50
 
 LOCATION = os.getenv("LOCATION", "False").lower() in ('true', '1', 'y')
+SESSION_COOKIE_AGE =2419200

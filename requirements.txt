@@ -24,7 +24,7 @@ django-initial-avatars==0.9.1
 django-simple-history==2.7.0
 django-tinymce==3.1.0
 django==2.2.20
-djangorestframework==3.11.2
+djangorestframework==3.15.2
 entrypoints==0.3          # via flake8
 factory-boy==2.11.1
 faker==1.0.5              # via factory-boy

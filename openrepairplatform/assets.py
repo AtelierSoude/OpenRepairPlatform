@@ -60,7 +60,7 @@ js_base = Bundle(
 js_django_autocomplete = Bundle(
     "/usr/local/lib/python3.12/site-packages/dal_legacy_static/static/admin/js/vendor/select2/i18n/fr.js",
     "/usr/local/lib/python3.12/site-packages/dal_select2/static/autocomplete_light/select2.js",
-    "/usr/local/lib/python3.12/site-packages/dal/static/autocomplete_light/autocomplete_light.js", 
+    "/usr/local/lib/python3.12/site-packages/dal/static/autocomplete_light/autocomplete_light.js",
     filters="jsmin",
     output="js/django_autocomplete.min.js",
 )

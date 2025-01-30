@@ -1,8 +1,9 @@
-{% load bootstrap4 assets static %}
+{% load bootstrap5 assets static %}
 <div class="modal-header">
     Vous allez ajouter un objet à cet inventaire
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
-<form method="post">
+<form class="p-2" method="post">
   {% bootstrap_form_errors form %}
   {% csrf_token %}
     {% bootstrap_field form.category %}
@@ -13,7 +14,7 @@
     <div id="adddevice" style="display:none">
         <div class="row bordered p-2 m-2">
             <small><i>Vous allez créer un type d'appareil appartenant à la catégorie précédemment sélectionnée</i></small>
-            {% bootstrap_field form.brand form_group_class="col-md-6" %}
+            {% bootstrap_field form.brand form_group_class="col-md-6 model_edit_stuff" %}
             {% bootstrap_field form.model form_group_class="col-md-6" %}
             <small>Vous pouvez ajouter une photo si vous le souhaitez</small>
             {% bootstrap_field form.picture %}
@@ -56,11 +57,6 @@
         </div>
     </div>
 <div class="form-group p-2">
-<button role="button" type="submit" id="submit" style="display:none" class="btn submit-btn btn-success w-100 p-3">Valider</button>
+<button role="button" type="submit" id="btnsubmit" style="display:none" class="btn submit-btn btn-success w-100 p-3">Valider</button>
 </div>
 </form>
-
-{% assets "js_create_stuff" %}
-{{ form.media }}
-<script src="{{ ASSET_URL }}"></script>
-{% endassets %}

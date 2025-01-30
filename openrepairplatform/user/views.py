@@ -5,11 +5,6 @@ from django.db.models import Q
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
-from django.utils import timezone
-import datetime
-from django import forms
-import datetime
-from django.core.exceptions import ObjectDoesNotExist
 from django.utils.decorators import method_decorator
 from django.views.generic import (
     CreateView,
@@ -19,19 +14,17 @@ from django.views.generic import (
     DeleteView,
     RedirectView,
 )
-from datetime import timedelta
-from openrepairplatform import utils
 from openrepairplatform.event.models import Event, Participation
+from openrepairplatform.location.models import Place
 from openrepairplatform.event.templatetags.app_filters import tokenize
-from openrepairplatform.event.views import add_present
 from openrepairplatform.mixins import (
     HasAdminPermissionMixin,
     HasActivePermissionMixin,
     HasVolunteerPermissionMixin,
-    RedirectQueryParamView
+    LocationOrganization,
 )
 from openrepairplatform.inventory.mixins import PermissionCreateUserStuffMixin
-from openrepairplatform.user.models import CustomUser, Organization, Membership, Fee
+from openrepairplatform.user.models import CustomUser, Organization, Fee
 from openrepairplatform.inventory.models import Stuff
 from openrepairplatform.inventory.forms import StuffForm
 
@@ -40,7 +33,7 @@ from .forms import (
     UserCreateForm,
     OrganizationForm,
     CustomUserEmailForm,
-    MoreInfoCustomUserForm,
+    AddFeeForm,
 )
 
 EVENTS_PER_PAGE = 6
@@ -86,16 +79,16 @@ class UserCreateAndBookView(CreateView):
             organizers = event.organizers.all()
             if self.object in organizers:
                 messages.error(
-                    self.request,
-                    "Vous existez déjà comme animateur de cet événement"
+                    self.request, "Vous existez déjà comme animateur de cet événement"
                 )
                 return redirect(
                     reverse(
-                        'event:detail',
+                        "event:detail",
                         kwargs={
                             "pk": request.GET["event"],
                             "slug": event.slug,
-                        })
+                        },
+                    )
                 )
             return redirect(self.get_success_url())
         return super().post(request, *args, **kwargs)
@@ -106,8 +99,7 @@ class UserCreateAndBookView(CreateView):
         event = get_object_or_404(Event, pk=event_id)
         token = tokenize(self.object, event, "book")
         return (
-            reverse("event:book", kwargs={"token": token})
-            + f"?redirect={redirect_url}"
+            reverse("event:book", kwargs={"token": token}) + f"?redirect={redirect_url}"
         )
 
 
@@ -129,172 +121,19 @@ class OrganizerBookView(HasVolunteerPermissionMixin, RedirectView):
             if new_organizer in event.organizers.all():
                 messages.error(
                     request,
-                    str(new_organizer) +
-                    " est déjà animateur.trice de cet événement"
+                    str(new_organizer) + " est déjà animateur.trice de cet événement",
                 )
             else:
                 messages.success(
                     request,
-                    str(new_organizer) +
-                    " rajouté.e comme animateur.trice de cet événement"
+                    str(new_organizer)
+                    + " rajouté.e comme animateur.trice de cet événement",
                 )
             event.organizers.add(new_organizer)
             event.save()
-            return redirect(event.get_absolute_url())
+            return redirect(event.get_absolute_url() + "admin/")
         messages.error(self.request, "Impossible de rajouter cette personne")
         return redirect(event.get_absolute_url())
-
-
-class PresentMoreInfoView(UserPassesTestMixin, UpdateView):
-    model = CustomUser
-    form_class = MoreInfoCustomUserForm
-    http_methods = ["post"]
-
-    def form_valid(self, form):
-        user = form.save()
-        add_present(self.event, user, form.cleaned_data["amount_paid"], form.cleaned_data["payment"])
-        return super().form_valid(form)
-
-    def get_success_url(self, *args, **kwargs):
-        next_url = self.request.GET.get("redirect")
-        if utils.is_valid_path(next_url):
-            return next_url
-        return (
-            reverse("event:detail", args=[self.event.id, self.event.slug])
-            + "#manage"
-        )
-
-    def test_func(self):
-        self.event = get_object_or_404(Event, pk=self.kwargs.get("event_pk"))
-        return self.request.user in self.event.organization.actives_or_more
-
-
-class PresentCreateUserView(HasActivePermissionMixin, RedirectView):
-    model = Event
-    form_class = MoreInfoCustomUserForm
-    http_methods = ["post"]
-
-    def get_redirect_url(self, *args, **kwargs):
-        event = get_object_or_404(Event, pk=kwargs.get("pk"))
-        user = CustomUser.objects.filter(
-            email=self.request.POST["email"]
-        ).first()
-        if user:
-            form = MoreInfoCustomUserForm(self.request.POST, instance=user)
-        else:
-            form = MoreInfoCustomUserForm(self.request.POST)
-        user = form.save()
-        add_present(event, user, form.cleaned_data["amount_paid"])
-        next_url = self.request.GET.get("redirect")
-        if utils.is_valid_path(next_url):
-            return next_url
-        return reverse("event:detail", args=[event.id, event.slug]) + "#manage"
-
-### in future : change or mix AddMemberToOrganization and UpdateMembre Views 
-class AddMemberToOrganization(HasActivePermissionMixin, RedirectView):
-    model = Organization
-    form_class = MoreInfoCustomUserForm
-    http_methods = ["post"]
-
-    def get_redirect_url(self, *args, **kwargs):
-        user = CustomUser.objects.filter(
-            email=self.request.POST["email"]
-        ).first()
-        url = reverse(
-            "organization_members", kwargs={"orga_slug": self.organization.slug},
-        )
-        if user:
-            form = MoreInfoCustomUserForm(self.request.POST, instance=user)
-        else:
-            form = MoreInfoCustomUserForm(self.request.POST)
-        user = form.save()
-        amount = form.cleaned_data["amount_paid"]
-        date = form.cleaned_data["date"]
-        if user in self.organization.members.all():
-            fees = Fee.objects.filter(organization=self.organization, user=user)
-            up_date_fees = fees.filter(date__gte=date)
-            membership = Membership.objects.get(
-                organization=self.organization, user=user
-            )
-            if amount != 0 or form.cleaned_data["first_fee"]:
-                fee = Fee.objects.create(
-                    amount=amount,
-                    user=user,
-                    organization=self.organization,
-                    date=date,
-                    payment=form.cleaned_data["payment"]
-                )
-                if form.cleaned_data["first_fee"] or membership.first_payment < timezone.now() - timedelta(days=365) or not fees :
-                    membership.first_payment = date
-                    membership.amount = 0
-                    membership.fee = fee
-                    for fee in up_date_fees:
-                        membership.amount += fee.amount
-                elif date < membership.first_payment.date():
-                    pass
-                elif date > membership.first_payment.date():
-                    membership.amount += amount
-                membership.save()
-            messages.success(self.request, f"Vous avez modifié {user} avec succes.")
-        else:
-            fee = Fee.objects.create(
-                    amount=amount,
-                    user=user,
-                    organization=self.organization,
-                    date=date,
-                    payment=form.cleaned_data["payment"]
-                )
-            Membership.objects.create(
-            organization=self.organization, user=user,
-            amount=amount, first_payment=date, fee=fee
-            )
-            messages.success(self.request, f"Vous avez ajouté ou {user} avec succes.")
-        return url
-
-
-class UpdateMemberView(HasActivePermissionMixin, UpdateView):
-    model = CustomUser
-    form_class = MoreInfoCustomUserForm
-    http_methods = ["post"]
-
-    def form_valid(self, form):
-        user = form.save()
-        date = form.cleaned_data["date"]
-        amount = form.cleaned_data["amount_paid"]
-        fees = Fee.objects.filter(organization=self.organization, user=user)
-        up_date_fees = fees.filter(date__gte=date)
-        membership = Membership.objects.get(
-            organization=self.organization, user=user
-        )
-        if amount != 0 or form.cleaned_data["first_fee"]:
-            fee = Fee.objects.create(
-                amount=amount,
-                user=user,
-                organization=self.organization,
-                date=date,
-                payment=form.cleaned_data["payment"]
-            )
-            if form.cleaned_data["first_fee"] or membership.first_payment < timezone.now() - timedelta(days=365) or not fees :
-                membership.first_payment = date
-                membership.amount = 0
-                membership.fee = fee
-                for fee in up_date_fees:
-                    membership.amount += fee.amount
-            elif date < membership.first_payment.date():
-                pass
-            elif date > membership.first_payment.date():
-                membership.amount += amount
-        membership.save()
-        return super().form_valid(form)
-
-    def get_success_url(self, *args, **kwargs):
-        messages.success(
-            self.request, f"Vous avez mis à jour {self.object} avec succès."
-        )
-        return reverse(
-            "organization_members",
-            kwargs={"orga_slug": self.organization.slug},
-        )
 
 
 class UserDetailView(PermissionCreateUserStuffMixin, DetailView):
@@ -338,16 +177,13 @@ class UserDetailView(PermissionCreateUserStuffMixin, DetailView):
         user = context["object"]
         registered = list(user.registered_events.all())
         participations = list(Participation.objects.filter(user=user))
-        context["fees"] = list(Fee.objects.filter(user=user))
-        context["passed_participations"] = (
-            [
-                (participation.event, participation.amount)
-                for participation in participations
-            ]
-        )
+        context["passed_participations"] = [
+            (participation.event, participation.amount)
+            for participation in participations
+        ]
         context["passed_rendezvous"] = (
             [(event, "present") for event in user.presents_events.all()]
-            + [(event, "absent") for event in registered if event.has_ended]
+            + [(event, "absent") for event in registered if event.has_ended and event not in user.presents_events.all()]
             + [
                 (event, "organizer")
                 for event in user.organizers_events.all()
@@ -361,12 +197,11 @@ class UserDetailView(PermissionCreateUserStuffMixin, DetailView):
             for event in user.organizers_events.all()
             if not event.has_ended
         ]
-        context["passed_rendezvous"].sort(
-            key=lambda evt: evt[0].date, reverse=True
-        )
+        context["passed_rendezvous"].sort(key=lambda evt: evt[0].date, reverse=True)
         context["future_rendezvous"].sort(key=lambda evt: evt[0].date)
         context["stock"] = Stuff.objects.filter(member_owner=self.get_object())
         context["add_member_stuff"] = StuffForm
+        context["add_fee_form"] = AddFeeForm
         return context
 
 
@@ -375,11 +210,8 @@ class UserListView(ListView):
     context_object_name = "users"
     template_name = "user/user_list.html"
     paginate_by = 9
-    queryset = (
-        CustomUser
-        .objects
-        .filter(is_superuser=False, is_visible=True)
-        .order_by("last_name")
+    queryset = CustomUser.objects.filter(is_superuser=False, is_visible=True).order_by(
+        "last_name"
     )
 
 
@@ -400,14 +232,40 @@ class OrganizationEventsListView(HasVolunteerPermissionMixin, ListView):
         return organization.events.order_by("date")
 
 
-class OrganizationListView(ListView):
+class OrganizationListView(LocationOrganization, ListView):
     model = Organization
     template_name = "user/organization/organization_list.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["organization_menu"] = 'active'
+        context["organization_menu"] = "active"
         return context
+
+    def get_queryset(self):
+        queryset = self.filter_queryset_location(super().get_queryset())
+        return queryset
+
+    def get(self, request, *args, **kwargs):
+        res = super().get(request, *args, **kwargs)
+        places = Place.objects.all()
+        if not self.object_list:
+            zipcodes = "<br/>".join({
+                f"- {place.zipcode}" for place in places if place.address
+            })
+            message = f"""
+                <p>
+                    <b>
+                    Il n'y a pas d'organisation dans la zone selectionnée.
+                    Vous pouvez retrouver nos organisations de réparation dans les zones
+                    suivantes :
+                    </b>
+                </p>
+                {zipcodes}
+            """
+            messages.info(request, message, extra_tags="safe")
+            return HttpResponseRedirect(reverse("homepage"))
+        return res
+
 
 @method_decorator(staff_member_required, name="dispatch")
 class OrganizationCreateView(CreateView):
@@ -423,8 +281,9 @@ class OrganizationCreateView(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["organization_menu"] = 'active'
+        context["organization_menu"] = "active"
         return context
+
 
 class OrganizationUpdateView(HasAdminPermissionMixin, UpdateView):
     template_name = "user/organization/organization_form.html"
@@ -433,15 +292,14 @@ class OrganizationUpdateView(HasAdminPermissionMixin, UpdateView):
 
     def form_valid(self, form):
         res = super().form_valid(form)
-        messages.success(
-            self.request, "L'organisation a bien été mise à jour."
-        )
+        messages.success(self.request, "L'organisation a bien été mise à jour.")
         return res
-        
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["organization_menu"] = 'active'
+        context["organization_menu"] = "active"
         return context
+
 
 class OrganizationDeleteView(HasAdminPermissionMixin, DeleteView):
     template_name = "user/organization/confirmation_delete.html"
@@ -459,13 +317,10 @@ class AddUserToOrganization(HasAdminPermissionMixin, RedirectView):
 
     def get_redirect_url(self, *args, **kwargs):
         email = self.request.POST.get("email", "")
-        user = (
-            CustomUser.objects.filter(email=email)
-            .exclude(first_name="")
-            .first()
-        )
+        user = CustomUser.objects.filter(email=email).exclude(first_name="").first()
         redirect_url = reverse(
-            "organization_page", kwargs={"orga_slug": self.organization.slug},
+            "organization_page",
+            kwargs={"orga_slug": self.organization.slug},
         )
 
         if not user:
@@ -503,9 +358,7 @@ class AddActiveToOrganization(HasActivePermissionMixin, AddUserToOrganization):
         orga.actives.add(user)
 
 
-class AddVolunteerToOrganization(
-    HasActivePermissionMixin, AddUserToOrganization
-):
+class AddVolunteerToOrganization(HasActivePermissionMixin, AddUserToOrganization):
     @staticmethod
     def add_user_to_orga(orga, user):
         orga.actives.remove(user)
@@ -521,56 +374,25 @@ class RemoveUserFromOrganization(HasAdminPermissionMixin, RedirectView):
         self.remove_user_from_orga(self.organization, user)
         messages.success(
             self.request,
-            f"L'utilisateur {user.first_name} " "a bien été retiré !",
+            f"L'utilisateur {user.first_name} a bien été retiré !",
         )
 
         return reverse(
-            "organization_page", kwargs={"orga_slug": self.organization.slug},
+            "organization_page",
+            kwargs={"orga_slug": self.organization.slug},
         )
 
 
-class FeeDeleteView(
-    HasActivePermissionMixin, RedirectQueryParamView, DeleteView
-):
+class FeeDeleteView(HasActivePermissionMixin, DeleteView):
     model = Fee
 
-    def get(self, request, *args, **kwargs):
-        return self.post(request, *args, **kwargs)
+    def get_success_url(self):
+        return self.request.META["HTTP_REFERER"]
 
     def delete(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        fee = self.object
-        membership = Membership.objects.get(user=fee.user, organization=fee.organization)
-        fees = Fee.objects.filter(user=membership.user, organization=membership.organization)
-        try:    
-            fee.participation.amount = 0
-            fee.participation.save()
-        except ObjectDoesNotExist:
-            pass
-        if fee.date >= membership.first_payment.date():
-            membership.amount -= fee.amount
-        try:
-            has_membership = (fee.membership is not None)
-            if has_membership:
-                next_fee = fees.filter(date__gt=fee.date).last()
-                if not next_fee:
-                    prev_fee = fees.filter(date__lt=fee.date).first()
-                    if prev_fee:
-                        membership.amount = prev_fee.amount
-                        membership.fee = prev_fee
-                        membership.first_payment = prev_fee.date
-                if next_fee:
-                    membership.fee = next_fee
-                    membership.first_payment = next_fee.date
-        except ObjectDoesNotExist:
-            pass
-        fee.delete()        
-        if not fees:
-            membership.delete()
-        else:
-            membership.save()
+        res = super().delete(request, *args, **kwargs)
         messages.success(request, "La cotisation a bien été supprimée")
-        return HttpResponseRedirect(reverse('user:user_detail', kwargs={"pk": membership.user.pk}))
+        return res
 
 
 class RemoveAdminFromOrganization(RemoveUserFromOrganization):
@@ -589,3 +411,18 @@ class RemoveVolunteerFromOrganization(RemoveUserFromOrganization):
     @staticmethod
     def remove_user_from_orga(orga, user):
         orga.volunteers.remove(user)
+
+
+class FeeCreateView(RedirectView):
+    form_class = AddFeeForm
+    http_method_names = ['post']
+
+    def post(self, request, *args, **kwargs):
+        data = {
+            key: value for key, value in request.POST.dict().items()
+            if key in self.form_class.base_fields.keys()
+        }
+        form = self.form_class(data=data)
+        if form.is_valid():
+            form.save()
+        return HttpResponseRedirect(self.request.META["HTTP_REFERER"])

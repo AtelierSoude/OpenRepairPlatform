@@ -54,13 +54,13 @@ def test_location_api_list(client_log, place_factory):
 
 def test_location_detail_context(client_log, place_factory):
     place = place_factory()
-    response = client_log.get(
-        reverse("location:detail", args=[place.pk, place.slug])
-    )
+    response = client_log.get(reverse("location:detail", args=[place.pk, place.slug]))
     assert response.status_code == 200
     assert isinstance(response.context_data["place"], Place)
     assert place.pk == response.context_data["place"].pk
-    assert place.name == str(response.context_data["place"])
+    assert (
+        f"{place.name}, {place.address}" == f"{response.context_data['place']}"
+    )
 
 
 def test_get_location_delete(client_log, place_factory):
@@ -124,6 +124,8 @@ def test_location_create(client_log, location_data, organization):
     )
     assert response_ok.status_code == 302
     assert len(places) == 1
+    assert places[0].location.x == location_data["longitude"]
+    assert places[0].location.y == location_data["latitude"]
     assert response_ok["Location"] == reverse(
         "location:detail", args=[places[0].pk, places[0].slug]
     )
@@ -155,15 +157,13 @@ def test_get_location_update(client_log, place_factory):
     response_ok = client_log.get(reverse("location:edit", args=[place.pk]))
     html = response_ok.content.decode()
     assert response_ok.status_code == 200
-    assert f"Mise à jour de '{place.name}'" in html
+    assert f"Mise à jour de '{place.name}" in html
 
 
 def test_location_update(client_log, place_factory, location_data):
     current_user = get_user(client_log)
     place = place_factory()
-    response = client_log.post(
-        reverse("location:edit", args=[place.pk]), location_data
-    )
+    response = client_log.post(reverse("location:edit", args=[place.pk]), location_data)
     assert response.status_code == 403
     place.organization.admins.add(current_user)
     assert current_user in place.organization.admins.all()

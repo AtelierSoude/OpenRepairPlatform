@@ -1,0 +1,10 @@
+Bonjour,
+
+
+{{ user.first_name }} {{ user.last_name}} vous invite à participer à l'évènement "{{ event }}" en tant {% if role == "participant" %}que participant{% else %}qu'animateur{% endif %}.
+
+
+Tu peux dès à présent voir les détails de l'évènement : {{ event_url }}
+
+
+{% include 'event/mail/footer.txt' %}

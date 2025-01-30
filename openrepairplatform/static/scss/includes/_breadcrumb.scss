@@ -1,0 +1,133 @@
+/* jumbotron & breadcrumb */
+
+.jumbotron {
+  background-color: lighten($secondary, 90%);
+  padding: 2rem 1rem;
+}
+.no-padding-jumbotron {
+  padding: 1rem 0rem 0rem 0rem;
+  margin-bottom: 0px;
+}
+.breadcrumb {
+  margin-bottom: 0px !important;
+}
+
+/* cards */
+
+.card-columns {
+  column-count: 3;
+  .card {
+    margin-bottom: 0.75rem;
+  }
+}
+
+.cards-column-1 {
+  column-count: 1;
+}
+.card {
+  a.card-link {
+    text-decoration: none;
+    color: inherit;
+  }
+  small {
+    color: initial;
+  }
+}
+.card-header {
+  padding: 0.75rem 1.25rem;
+  margin-bottom: 0;
+  border-bottom: 0 solid rgba(0, 0, 0, 0.125);
+}
+.card.overflowded {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.mini-organizers {
+  height: 25px;
+}
+
+.mini {
+  left: -05px;
+}
+
+.mini:last-child {
+  left: 0px;
+}
+
+.gravatar {
+  border-radius: 50%;
+}
+
+.card-img-crop {
+  max-height: 200px;
+  min-height: 200px;
+  overflow: hidden;
+}
+
+.card-body-crop {
+  max-height: 240px;
+  min-height: 240px;
+  overflow: hidden;
+}
+
+.event_img {
+  width: 100%;
+}
+
+.event a:hover {
+  text-decoration: none !important;
+}
+
+/* breadcrumb (chemin navigation) */
+
+#breadcrumb-sticky-wrapper,
+#search_tab-sticky-wrapper,
+#h_nav-sticky-wrapper,
+#jumbotron-sticky-wrapper,
+#v-pills-tab {
+  z-index: 3 !important;
+  position: relative;
+}
+.parallax {
+  min-height: 200px;
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+#map{
+  overflow: hidden;
+  .affix{
+    width: 100%;
+  }
+  #place_map {
+    top: 20px;
+    z-index: 0 !important;
+  }
+}
+
+
+.leaflet-left {
+  top: 150px !important;
+}
+.leaflet-container a {
+  color: $link;
+}
+
+.awesome-marker_hover {
+  background-position: -36px 0px !important;
+}
+
+/* navs pills */
+
+.nav-tabs {
+  .nav-link {
+    color: #969696;
+    &.active{
+    background-color: $bg-light;
+    color: $primary;
+    }
+  }
+}

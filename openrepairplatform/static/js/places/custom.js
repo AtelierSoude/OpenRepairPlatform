@@ -9,15 +9,10 @@ function htmlEscape(str) {
 }
 
 function popup_message(place){
-    message = "<a href=\"" + place.get_absolute_url + "\">" ;
-    if (place.picture) {
-        message += "<img src=\"" + place.picture + "\" class=\"pt-2 pb-2 w-100\">";
-    }
-    message += htmlEscape(place.name) + "</a> - ";
-    message += htmlEscape(place.category);
-    message += "<br> <a href=\"" + place.orga_url + "\">" + htmlEscape(place.orga_name) + "</a> - ";
-    message += htmlEscape(place.address);
-    message += "<hr class='mt-2 mb-2'>" + place.description;
+    message = '<h5><u><a href="'+ place.absolute_url + '\">' ;
+    message += htmlEscape(place.name) + "</a></u></h5> <br> ";
+    message += "<h6>" + htmlEscape(place.address) + "</h6>";
+    message += place.future_events + " événéments à venir";
     return message;
 }
 
@@ -33,19 +28,20 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
     reuseTiles: true,
 }).addTo(place_map);
 
-fetch('/api/location/place-list/')
-    .then(function(res){ return res.json(); })
-    .then(function(places){
-        places.forEach(function(place){
-            if (place.future_events) {
-                var blueMarker = L.AwesomeMarkers.icon({
-                    prefix: 'fa',
-                    icon: 'home',
-                    markerColor: 'darkblue',
-                    myCustomId: place.pk,
-                });
-                let marker = L.marker([place.latitude, place.longitude], {icon: blueMarker, myCustomId: place.pk}).addTo(place_map);
-                marker.bindPopup(popup_message(place));
-            }
+places.forEach(function(place){
+    index = 0
+    if (place.future_events) {
+        var blueMarker = L.AwesomeMarkers.icon({
+            prefix: 'fa',
+            icon: 'home',
+            markerColor: 'darkblue',
+            myCustomId: place.pk,
         });
-    });
+        let marker = L.marker([place.latitude, place.longitude], {icon: blueMarker, myCustomId: place.pk}).addTo(place_map);
+        marker.bindPopup(popup_message(place));
+        if (index==0) {
+            marker.openPopup()
+        }
+        index+=1
+    }
+});

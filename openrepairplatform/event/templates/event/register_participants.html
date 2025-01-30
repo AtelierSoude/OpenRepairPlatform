@@ -1,0 +1,22 @@
+{% extends './parts/modal.html' %}
+{% load app_filters bootstrap5 %}
+{% block idBtnModal %}add_participant{{ event_to_organize.pk | slugify }}{% endblock %}
+{% block idModal %}add_participant{{ event_to_organize.pk | slugify }}{% endblock %}
+{% block idbsModal %}add_participant{{ event_to_organize.pk | slugify }}{% endblock %}
+
+{% block titleModal %}
+    Ajouter un participant
+{% endblock titleModal %}
+{% block contentModal %}
+    <form action="{% url 'user:create_and_book' %}?event={{ event_to_organize.pk | slugify }}"
+          method="post">
+        <div class="modal-body">
+            {% csrf_token %}
+            {% bootstrap_form form=register_form %}
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fermer</button>
+            <input type="submit" class="btn btn-secondary" value="Réserver" />
+        </div>
+    </form>
+{% endblock %}

@@ -1,26 +1,20 @@
-{% load app_filters bootstrap4 %}
+{% extends './parts/modal.html' %}
+{% load app_filters bootstrap5 %}
+{% block idBtnModal %}add_organizer{{ event_to_organize.pk | slugify }}{% endblock idBtnModal %}
+{% block idModal %}add_organizer{{ event_to_organize.pk | slugify }}{% endblock idModal %}
+{% block titleModal %}
+Ajouter un animateur
+{% endblock titleModal %}
+{% block contentModal %}
+    <form action="{% url 'user:organizer_book' event_to_organize.pk %}?event={{ event_to_organize.pk | slugify }}" method="post">
 
-<button class="btn btn-success rounded-circle" data-toggle="modal" data-target="#add_organizer{{ event_to_organize.pk }}">
-    <i class="fa fa-plus"></i>
-</button>
-<div class="modal" id="add_organizer{{ event_to_organize.pk }}" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-    <div class="modal-content">
-        <div class="modal-header">
-        <h5 class="modal-title">Ajouter un animateur</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
+        <div class="modal-body">
+            {% csrf_token %}
+            {% bootstrap_form form=register_form %}
         </div>
-        <form action="{% url 'user:organizer_book' event_to_organize.pk %}?event={{ event_to_organize.pk }}" method="post">
-            <div class="modal-body">
-                {% csrf_token %}
-                {% bootstrap_form form=register_form %}
-            </div>
-            <div class="modal-footer">
-                <input type="submit" value="Réserver" class="btn btn-primary"/>
-            </div>
-        </form>
-    </div>
-    </div>
-</div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fermer</button>
+          <input type="submit" class="btn btn-secondary" value="Réserver" />
+        </div>
+    </form>
+{% endblock %}

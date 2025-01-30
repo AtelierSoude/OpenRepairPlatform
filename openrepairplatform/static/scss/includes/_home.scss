@@ -1,0 +1,68 @@
+#home_cover {
+    padding: 50px 0;
+    background-color: $secondary;
+
+    h1 {
+        font-size: 4em;
+        font-family: $font-family-sans-serif;
+        text-transform: uppercase;
+        text-align: center;
+        line-height: 1.2em;
+
+        span {
+            font-size: 1.2em;
+            font-weight: 700;
+        }
+    }
+
+    // Small devices (landscape phones, less than 768px)
+    @media (max-width: 767.98px) {
+        h1 {
+            font-size: 2em;
+        }
+
+        h3 {
+            font-size: 1em !important;
+        }
+    }
+
+    h4 {
+        color: #FFF;
+    }
+
+}
+
+.form-home {
+    .postal-home {
+        margin-top: -20px !important;
+        -webkit-border-radius: 10px !important;
+        -moz-border-radius: 10px !important;
+        border-radius: 10px !important;
+
+    }
+
+    button {
+        margin: -25px 0 0 20px;
+        width: 60px;
+    }
+
+}
+
+.how-to {
+
+    i {
+        font-size: 4em;
+        margin-bottom: 20px;
+    }
+
+    h2 {
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+
+}
+
+.key-number-home {
+    font-size: 3rem;
+    font-weight: 700;
+}

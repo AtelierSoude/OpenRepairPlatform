@@ -1,0 +1,43 @@
+{% load app_filters bootstrap5 %}
+
+<div class="btn-group" role="group">    
+  <button id="btnInvit" type="button" class="m-2 btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <i class="far fa-envelope"></i> Inviter
+  </button>
+  <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+    {% for field in invitation_form %}
+      <button class="dropdown-item" type="button" onclick="InvitationToggleInput('{{ field.name }}')">
+        {{ field.label }}
+      </button>
+    {% endfor %}
+  </div>
+  {% tokenize user=request.user event=event action='invitation' as token %}
+  <form id="invitation-form" action="{% url 'event:invitation' token %}" method="post" class="btn-group m-2">
+    {% csrf_token %}
+    <div class="btn-group">
+      {% for field in invitation_form %}
+        {{ field }}
+      {% endfor %}
+      <button class="d-none btn btn-block btn-success input-group-prepend" type="submit">Envoyer l'invitation</button>
+    </div>
+  </form>
+</div>
+
+<script>
+  function InvitationToggleInput (fieldName) {
+    let form = document.querySelector('#invitation-form')
+    let currentInput = form.querySelector(`input[name='${fieldName}']`)
+    let allInputs = form.querySelectorAll("input[type='email']")
+    let buttonSubmit = form.querySelector("button[type='submit']")
+
+    allInputs.forEach((input) => {
+      input.classList.add("d-none")
+      input.removeAttribute("required")
+      input.value = ""
+    })
+    buttonSubmit.classList.remove("d-none")
+    currentInput.classList.remove("d-none")
+    currentInput.focus()
+    currentInput.setAttribute("required", "")
+  }
+</script>

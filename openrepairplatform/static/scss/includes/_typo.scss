@@ -1,0 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Arvo&family=Patua+One&display=swap');
+
+body, p, span {
+  font-family: "Arvo";
+}
+h1,
+h2,
+h3,
+h4,
+h5 {
+  color: $primary;
+  font-family: "Patua One";
+}
+h4 {
+  z-index: 0;
+}
+h5 {
+  line-height: 1 !important;
+}

@@ -8,7 +8,7 @@ from django.core.management import call_command
 from django.urls import reverse, resolve
 from django.utils import timezone
 
-from openrepairplatform.event.views import _load_token
+from openrepairplatform.mixins import _load_token
 from openrepairplatform.user.factories import USER_PASSWORD
 from openrepairplatform.user.models import CustomUser
 
@@ -27,33 +27,15 @@ def test_command_superuser_without_mail():
         call_command("createsuperuser", email="", interactive=False)
 
 
-def test_user_list_not_visible(client, custom_user):
-    response = client.get(reverse("user:user_list"))
-    assert response.status_code == 200
-    assert response.context_data["object_list"].count() == 0
-
-
-def test_user_list_visible(client, custom_user):
-    custom_user.is_visible = True
-    custom_user.save()
-    response = client.get(reverse("user:user_list"))
-    assert response.status_code == 200
-    assert response.context_data["object_list"].count() == 1
-
-
 def test_user_detail_not_visible(client, custom_user):
-    response = client.get(
-        reverse("user:user_detail", kwargs={"pk": custom_user.pk})
-    )
+    response = client.get(reverse("user:user_detail", kwargs={"pk": custom_user.pk}))
     assert response.status_code == 404
 
 
 def test_user_detail_visible(client, custom_user):
     custom_user.is_visible = True
     custom_user.save()
-    response = client.get(
-        reverse("user:user_detail", kwargs={"pk": custom_user.pk})
-    )
+    response = client.get(reverse("user:user_detail", kwargs={"pk": custom_user.pk}))
     assert response.status_code == 200
 
 
@@ -69,9 +51,7 @@ def test_user_detail_not_visible_but_staff(client_log, custom_user):
 
 def test_user_detail_not_visible_but_same(client, custom_user):
     client.login(email=custom_user.email, password=USER_PASSWORD)
-    response = client.get(
-        reverse("user:user_detail", kwargs={"pk": custom_user.pk})
-    )
+    response = client.get(reverse("user:user_detail", kwargs={"pk": custom_user.pk}))
     assert response.status_code == 200
 
 
@@ -153,7 +133,7 @@ def test_anonymous_user_create_is_organizer(client, event, custom_user):
 
 def test_anonymous_get_user_create(
     client, event_factory, organization, custom_user_factory
-        ):
+):
     user = custom_user_factory()
     organization.admins.add(user)
     in_two_hours = timezone.now() + datetime.timedelta(hours=2)
@@ -166,7 +146,8 @@ def test_anonymous_get_user_create(
     )
     response = client.get(
         reverse(
-            "organization_page", kwargs={"orga_slug": organization.slug},
+            "organization_page",
+            kwargs={"orga_slug": organization.slug},
         )
     )
     assert response.status_code == 200
@@ -181,144 +162,80 @@ def test_user_update(client, custom_user_factory):
         "email": "test@test.fr",
         "street_address": "221 b Tester Street",
     }
-    response = client.post(
-        reverse("user:user_update", kwargs={"pk": user1.pk}), data
-    )
+    response = client.post(reverse("user:user_update", kwargs={"pk": user1.pk}), data)
     assert response.status_code == 302
     client.login(email=user2.email, password=USER_PASSWORD)
-    response = client.post(
-        reverse("user:user_update", kwargs={"pk": user1.pk}), data
-    )
+    response = client.post(reverse("user:user_update", kwargs={"pk": user1.pk}), data)
     assert response.status_code == 403
     client.login(email=user1.email, password=USER_PASSWORD)
-    response = client.post(
-        reverse("user:user_update", kwargs={"pk": user1.pk}), data
-    )
+    response = client.post(reverse("user:user_update", kwargs={"pk": user1.pk}), data)
     assert response.url == reverse("user:user_detail", kwargs={"pk": user1.pk})
     user1.refresh_from_db()
     assert user1.first_name == "Test"
 
 
-def test_present_with_more_info(client, event, custom_user_factory):
-    assert event.presents.count() == 0
-    user = custom_user_factory(last_name="", first_name="", street_address="")
-    active = custom_user_factory()
-    response = client.post(
-        reverse("user:present_with_more_info", args=[event.pk, user.pk]),
-        {
-            "email": user.email,
-            "last_name": "azerty",
-            "first_name": "gfdsq",
-            "street_address": "2, rue part-dieu",
-            "amount_paid": 0,
-            "date": event.date,
-        },
-    )
-
-    assert response.status_code == 302
-    client.login(email=active.email, password=USER_PASSWORD)
-    response = client.post(
-        reverse("user:present_with_more_info", args=[event.pk, user.pk]),
-        {
-            "email": user.email,
-            "last_name": "azerty",
-            "first_name": "gfdsq",
-            "street_address": "2, rue part-dieu",
-            "amount_paid": 0,
-            "date": event.date,
-        },
-    )
-    assert response.status_code == 403
-    event.organization.actives.add(active)
-    response = client.post(
-        reverse("user:present_with_more_info", args=[event.pk, user.pk]),
-        {
-            "email": user.email,
-            "last_name": "azerty",
-            "first_name": "gfdsq",
-            "street_address": "2, rue part-dieu",
-            "amount_paid": 0,
-            "date": event.date,
-        },
-    )
-    assert reverse("event:detail", args=[event.id, event.slug]) in response.url
-    assert event.presents.count() == 1
-
-
-def test_present_with_more_info_unknown_user(client, event, custom_user):
-    assert CustomUser.objects.count() == 1
-    assert event.presents.count() == 0
-    response = client.post(
-        reverse("user:present_create_user", args=[event.pk]),
-        {
-            "email": "testitest@example.com",
-            "last_name": "azerty",
-            "first_name": "gfdsq",
-            "street_address": "2, rue part-dieu",
-            "amount_paid": 0,
-            "date": event.date,
-        },
-    )
-    assert response.status_code == 302
-    assert "/accounts/login/" in response.url
-    event.organization.actives.add(custom_user)
-    client.login(email=custom_user.email, password=USER_PASSWORD)
-    response = client.post(
-        reverse("user:present_create_user", args=[event.pk]),
-        {
-            "email": "testitest@example.com",
-            "last_name": "azerty",
-            "first_name": "gfdsq",
-            "street_address": "2, rue part-dieu",
-            "amount_paid": 0,
-            "date": event.date,
-        },
-    )
-    assert response.status_code == 302
-    assert reverse("event:detail", args=[event.id, event.slug]) in response.url
-    assert CustomUser.objects.count() == 2
-    new_user = CustomUser.objects.exclude(pk=custom_user.pk).first()
-    assert new_user.first_name == "gfdsq"
-    assert new_user.last_name == "azerty"
-    assert new_user.street_address == "2, rue part-dieu"
-    assert new_user.email == "testitest@example.com"
-    assert event.presents.count() == 1
-
-
-def test_present_with_more_info_existing_user(client, event, custom_user):
-    event.organization.actives.add(custom_user)
-    event.registered.add(custom_user)
-    assert event.presents.count() == 0
-    assert event.registered.count() == 1
-    client.login(email=custom_user.email, password=USER_PASSWORD)
-    response = client.post(
-        reverse("user:present_create_user", args=[event.pk]),
-        {
-            "email": custom_user.email,
-            "last_name": "azerty",
-            "first_name": "gfdsq",
-            "street_address": "2, rue part-dieu",
-            "amount_paid": 0,
-            "date": event.date,
-        },
-    )
-    assert response.status_code == 302
-    assert reverse("event:detail", args=[event.id, event.slug]) in response.url
-    assert CustomUser.objects.count() == 1
-    new_user = CustomUser.objects.first()
-    assert new_user.first_name == "gfdsq"
-    assert new_user.last_name == "azerty"
-    assert new_user.street_address == "2, rue part-dieu"
-    assert new_user.email == custom_user.email
-    assert event.presents.count() == 1
-    assert event.registered.count() == 0
-
-
 def test_current_contribution(membership):
     membership.amount = 10
     assert membership.current_contribution == 10
-    membership.first_payment = timezone.now() - datetime.timedelta(days=400)
+    membership.first_payment = timezone.now().date() - datetime.timedelta(days=400)
     membership.save()
     assert membership.amount == 10
     assert membership.current_contribution == 0
     assert membership.amount == 0
+
+
+def test_api_user_admin(api_client_log, custom_user, organization, membership_factory):
+    membership_factory(user=custom_user, organization=organization)
+    current_user = api_client_log.request().wsgi_request.user
+    organization.admins.add(current_user)
+    organization.refresh_from_db()
+    current_user.refresh_from_db()
+    response = api_client_log.get(
+        reverse(
+            "api_user:detail",
+            kwargs={"pk": custom_user.pk},
+        )
+    )
+    assert response.json() == {
+        "first_name": custom_user.first_name,
+        "last_name": custom_user.last_name,
+        "street_address": custom_user.street_address,
+        "email": custom_user.email,
+    }
+
+
+def test_api_user_volunteer(
+    api_client_log, custom_user, organization, membership_factory
+):
+    membership_factory(user=custom_user, organization=organization)
+    current_user = api_client_log.request().wsgi_request.user
+    organization.volunteers.add(current_user)
+    organization.refresh_from_db()
+    current_user.refresh_from_db()
+    response = api_client_log.get(
+        reverse(
+            "api_user:detail",
+            kwargs={"pk": custom_user.pk},
+        )
+    )
+    assert response.json() == {
+        "first_name": custom_user.first_name,
+        "last_name": custom_user.last_name,
+        "street_address": custom_user.street_address,
+        "email": custom_user.email,
+    }
+
+
+def test_api_user_no_admin(
+    api_client_log, custom_user, organization, membership_factory
+):
+    membership_factory(user=custom_user, organization=organization)
+    response = api_client_log.get(
+        reverse(
+            "api_user:detail",
+            kwargs={"pk": custom_user.pk},
+        )
+    )
+    assert response.json() == {
+        "detail": "Vous n'avez pas la permission d'effectuer cette action."
+    }

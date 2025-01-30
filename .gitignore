@@ -18,7 +18,6 @@ downloads/
 eggs/
 .eggs/
 lib64/
-parts/
 sdist/
 var/
 wheels/
@@ -81,16 +80,11 @@ celerybeat-schedule
 *.sage.py
 
 # dotenv
-deployment/django/django.env
-/openrepairplatform/.env
-deployment/postgres/postgres.env
-deployment/nginx/nginx.env
-.env
+openrepairplatform/.env
 
-# virtualenv
-.venv
-venv/
-ENV/
+.env
+.env.prod
+
 
 # Spyder project settings
 .spyderproject
@@ -150,7 +144,7 @@ media
 tmp
 *.min.js
 *.min.css
-openrepairplatform/static/css
+openrepairplatform/static/css/*.css
 openrepairplatform_static/
 !openrepairplatform_static/img/*
 openrepairplatform_media/
@@ -173,3 +167,13 @@ openrepairplatform/static/node_modules/
 openrepairplatform/static/js/vue/app.js
 openrepairplatform/static/css/vue-app.css
 
+openrepairplatform/static/js/vue.apps.bundle.js
+openrepairplatform/static/js/vue.apps.bundle.css
+
+
+# Dumps de bases
+*dump_*.sql
+*dump_*.sql.gzip
+*dump_*.sql.zip
+*dump_*.sql.gz
+deployment/nginx/shared/*

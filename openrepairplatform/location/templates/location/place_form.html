@@ -1,18 +1,12 @@
 {% extends 'base.html' %}
 {% load assets %}
-{% load bootstrap4 %}
+{% load bootstrap5 %}
 {% block title %}        
   {% if place %}
     Mise à jour de '{{ place }}'
   {% else %}
     Création d'un nouveau lieu sur {{site_title}}
   {% endif %}
-{% endblock %}
-
-{% block extra_css %}
-  {% assets "css_autocomplete" %}
-    <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet"/>
-  {% endassets %}
 {% endblock %}
 
 {% block content %}

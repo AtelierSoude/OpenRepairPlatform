@@ -1,100 +1,140 @@
-/* éléments généraux */
-@import url('https://fonts.googleapis.com/css?family=Inconsolata&display=swap');
-@import 'variables.scss';
 
-.container-fluid{
-  padding: 0;
-  margin: 0;
+$primary: #04171f;
+$secondary: #2be6ab;
+$success: #2be6ab;
+$link: #009975;
+$bg-light: #f8f9fa;
+$danger: #ff2241;
+$black:#000;
+
+$link-decoration: none; 
+$link-hover-decoration: underline; 
+$breadcrumb-font-size: 0.8em;
+$breadcrumb-padding-y: 1rem;
+$breadcrumb-padding-x: 0.75rem;
+$breadcrumb-bg: white;
+$link-color: $link;
+$badge-color: $primary;
+$btn-default-color: #cccccc;
+$font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+  "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji",
+  "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+$font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas,
+  "Liberation Mono", "Courier New", monospace;
+$table-bg: #fff;
+$card-border-width: 1px;
+$card-border-radius: 0px;
+$card-border-color: rgba($black, 0.125);
+
+$navbar-light-toggler-border-color:$secondary !important;
+
+@import "../node_modules/bootstrap/scss/bootstrap";
+
+
+
+:root {
+  --table-bg-hover: rgba(0, 0, 0, 0.015);
+}
+
+label {
+  cursor: pointer;
+}
+
+html {
+  font-size: 0.9rem;
+}
+.container-fluid {
+  padding: 0px;
+  margin: 0px;
 }
 .content-page {
   min-height: 500px;
-  overflow-x:hidden;
+  overflow-x: hidden;
 }
-html{
-  font-size:.938em;
+.pr-2,
+.px-2 {
+  padding-right: 0.5rem !important;
 }
 
-a {
-  color : $link;
-}
-header{
-  z-index:1250 !important;
-}
 #event_map {
   z-index: 0;
   overflow: hidden;
 }
-h1, h2, h3, h4, h5 {
-  color : $primary;
-}
-h4 {
-  z-index: 0;
-}
-h5{
-  line-height: 1 !important;
-}
-.brand-logo img{
-  max-width: 220px;
-  height: auto;
-  padding-top: 0px;
+
+.bordered {
+  border: 1px solid #cecece;
 }
 
-.bg-grey { 
-  background-color: #fff !important;
+.btn-danger {
+  color : white !important;
 }
 
-/* tables */ 
+.badge.bg-danger,
+.badge.bg-primary {
+  color: #fff;
+}
+.un-z-index {
+  z-index: 1 !important;
+}
+/* shadows */
+
+.shadow-xxl {
+  box-shadow: 0 1rem 20rem rgba(0, 0, 0, 0.35) !important;
+}
+.box-shadow {
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 0 0 0 rgba(0, 0, 0, 0.12);
+  border: 1px solid #cecece;
+}
+
+/* tables */
+
+.table > :not(:first-child) {
+  border-top: none;
+}
 
 thead {
   background-color: rgb(249, 249, 249);
-  a{
+  a {
     color: #838282;
   }
 }
 
-tbody {
-  tr {
-    background-color: #fff;
+.table-fixed {
+  tbody {
+    display: block;
+    max-height: 400px;
+    overflow: auto;
+  }
+  thead,
+  tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
   }
 }
-.box-shadow {
-  box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16),0 0 0 0 rgba(0,0,0,0.12);
-  border: 1px solid #cecece;
-}
 
-.table-fixed{
-  tbody {
-    display:block;
-    max-height:400px;
-    overflow:auto;
+.small-column {
+  width: 70px;
 }
-  thead, tbody tr {
-    display:table;
-    width:100%;
-    table-layout:fixed;
-}
-}
-.small-column{
-  width:70px;
-}  
 .form-xs {
   input {
-    height: calc(1em + .375rem + 2px) !important;
-    padding: .5rem .5rem !important;
-    font-size: .75rem !important;
+    height: calc(1em + 0.375rem + 2px) !important;
+    padding: 0.5rem 0.5rem !important;
+    font-size: 0.75rem !important;
     line-height: 1.5;
   }
   label {
-    margin-right: .5rem;
+    margin-right: 0.5rem;
   }
 }
-.table td, .table th {
+.table td,
+.table th {
   vertical-align: middle;
 }
 
 td {
-  white-space: normal !important; 
-  word-wrap: break-word;  
+  white-space: normal !important;
+  word-wrap: break-word;
 }
 
 .column-shifter-container .dropdown-toggle {
@@ -102,49 +142,56 @@ td {
 }
 
 .table-hover tbody tr:hover {
-  background-color: rgba(0,0,0,0.02);
+  background-color: rgba(0, 0, 0, 0.02);
 }
 
-.calendar{
-  max-width:120px
+.calendar {
+  max-width: 120px;
 }
 
-/* forms */ 
 
-.select2-container .select2-selection--single{
-  height:40px !important;
+/* Custom auto-complete */
+.autocomplete-suggestions {
+  text-align: left;
+  cursor: default;
+  border: 1px solid #ccc;
+  border-top: 0;
+  background: #fff;
+  box-shadow: -1px 1px 3px rgba(0, 0, 0, 0.1);
+  position: absolute;
+  display: none;
+  z-index: 9999;
+  max-height: 254px;
+  overflow: hidden;
+  overflow-y: auto;
+  box-sizing: border-box;
 }
-.select2-container{
-  display: block !important ;
-}
-.select2-container{
-  min-width: 200px !important;
-}
-.search-bar{
-  .form-group{
-    padding: 0px !important ;
-    margin-bottom: 0px !important;
-    width:45%;
+
+.autocomplete-suggestion {
+  position: relative;
+  padding: 0.6em;
+  line-height: 23px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 1.02em;
+  color: #333;
+  b {
+    font-weight: normal; 
+    color: $success;
   }
-  .input-group-text{
-    border: 0px !important ;
-    background-color: #fff !important;
+  .selected {
+    background: #f0f0f0;
   }
 }
 
-.select2-container--default .select2-results__option--highlighted[aria-selected] {
-  background-color: $primary !important;
-
-}
-
-
-/* pagination fix */ 
+/* pagination fix */
 .pagination {
   justify-content: center !important;
   li {
     position: relative;
     display: block;
-    padding: .5rem .75rem;
+    padding: 0.5rem 0.75rem;
     margin-left: -1px;
     line-height: 1.25;
     color: $link;
@@ -159,87 +206,27 @@ td {
   }
 }
 
-/* Menu */
+/* buttons */
 
-.main-container {
-  padding-top: 65px;
+.btn-light:hover,
+btn-secondary:hover {
+  color: $primary !important;
 }
-
-.header {
+.btn-block {
+  display: block;
   width: 100%;
-  position: fixed;
-  height: 65px;
-}
-
-.navbar-collapse {
-  width: 75px;
-}
-
-.header_detail_page, #h_nav, #breadcrumb, #jumbotron, #search_tab, #event_title, #event_about, .jumbotron {
- /* z-index: 2 !important; */
-  position: relative;
-}
-
-.navbar {
-  background-color: $primary;
-  padding: 0.3em;
-  position: relative;
-  z-index: 4 !important;
-}
-
-.navbar .fa, .avatar a, .dropdown-toggle  {
-  color: white;
-}
-.navbar ul li a:hover, .navbar .fa:hover, .avatar a:hover, .dropdown-toggle:hover{
-  color: gray;
-  text-decoration: none;
-}
-
-.navbar ul li{
-  padding-top: 10px;
-  padding-bottom: 10px;
-  a {
-    color : $secondary !important;
-    small{
-      font-size: 75%;
-    }
-  }
-} 
-
-.navbar ul li.active{
-  background-color: $secondary;
-  a{
-    color: $primary !important;
-  }
-} 
-.navbar-brand.avatar{
-  margin: 0px !important;
-}
-
-.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
-  border-bottom: 3px solid $link;
-  background: inherit !important;
-  color: #484848;
-}
-
-.nav-link {
-  color: #828282;
-}
-
-/* buttons */ 
-
-.btn-default {
-  background-color: #eaeaea;
 }
 .btn-absolute {
   font-size: 1.2rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 0 4px rgba(0,0,0,0.14),0 4px 8px rgba(0,0,0,0.28);
-  transition: right 0.5s, bottom 0.5s, border-radius 0.5s, text-indent 0.2s, visibility 1s, width 0.2s ease, height 0.5s ease 0.4s, color 0.5s, background-color 2s, transform 0.5s;
-  padding: 0;
-  margin: 0;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.28);
+  transition: right 0.5s, bottom 0.5s, border-radius 0.5s, text-indent 0.2s,
+    visibility 1s, width 0.2s ease, height 0.5s ease 0.4s, color 0.5s,
+    background-color 2s, transform 0.5s;
+  padding: 0px;
+  margin: 0px;
   width: 63px;
   height: 63px;
   border-radius: 40px;
@@ -250,267 +237,62 @@ td {
   color: #fff;
   white-space: nowrap;
   overflow: hidden;
-  a{
-    color:#FFF;
+  a {
+    color: #fff;
     text-decoration: none;
     line-height: 63px;
   }
 }
-
-/* jumbotron */ 
-
-.no-padding-jumbotron {
-  padding: 1rem 0rem 0rem 0rem;
-  margin-bottom: 0px;
+.btn-success:hover,
+.btn:hover {
+  color: #fff;
 }
 
-.bordered {
-  border: 1px solid #cecece;
-}
-/* cards */
-.cards-column-1{
-  column-count: 1;
-}
+/* card extend */ 
+
 .card {
-  border: 1px solid #cecece;
-  border-radius: 5px;
-  a.card-link {
-    text-decoration: none;
-    color: inherit;
-  }
-  small {
-    color:initial;
+  @extend .box-shadow;
+  .card {
+    box-shadow: none !important;
   }
 }
 
-.card.overflowded{
-  max-height: 300px;
-  overflow-y: auto;
-}
-
-.mini-organizers {
-  height:25px;
-}
-
-.mini{
-  left: -05px;
-}
-
-.mini:last-child {
-  left:0px;
-}
-
-
-
-.gravatar{
-  border-radius: 50%;
-}
-
-.card-img-crop{
-  max-height: 200px;
-  min-height: 200px;
-  overflow: hidden;
-}
-
-.card-body-crop {
-  max-height: 240px;
-  min-height: 240px;
-  overflow: hidden;
-}
-
-.event_img {
- /* object-fit: none; 
-  object-position: center; */
-  width: 100%;
-}
-
-/* breadcrumb (chemin navigation) */
-
-#breadcrumb-sticky-wrapper, #search_tab-sticky-wrapper, #h_nav-sticky-wrapper, #jumbotron-sticky-wrapper, #v-pills-tab {
-z-index: 3 !important;
-position: relative;
-
-}
-
-.breadcrumb{
-  font-size: .8em;
-  margin-bottom: 0 !important;
-  border-width: 0;
-  background-color: white !important;
-  z-index: 2;
-}
-
-/* leaflet reset style */
-
-#place_map {
-  right:0px; 
-  top:40px; 
-  z-index: 0 !important;
-}
-.leaflet-left{
-  top:150px !important;
-}
-.leaflet-container a {
-  color: $link;
-}
-
-.awesome-marker_hover {
-  background-position: -36px 0px !important;
-}
-
-/* Modals */
-
-.modal-content {
-  border-radius: 0;
-  margin-top: 10%;
-  padding: 1em;
-  z-index:10000 !important;
-  position:relative !important;
-}
-
-/* autocomplete */
-.select2-selection__clear{
-  font-size: 20px;
-  color:#ff2241; 
-}
-
-.tox-tinymce{
-  max-height: 250px;
-}
-
-/* sizes */
-
-.square-2 {
-  width: 2em;
-  height: 2em;
-}
-
-.alert{
-  position: fixed !important;
-  top: 100px;
-  z-index: 10000;
-  box-shadow: 0px 10px 100px black;
-  right: 20px;
-  left: 20px;
-}
-@media screen and (max-width: 1024px) {
-  h3{
-      font-size:1rem;
-  }
-}
 
 @media screen and (max-width: 768px) {
-  h3, h4, h5{
-    font-size:1.2rem;
+
+  #map_show{
+    z-index: 10001;
   }
-  p, .lead, b {
-    font-size: 0.9rem;
-  }
-  .fixed_sidedar{
-    position: initial !important;
-  }
-  .header_detail_page{
-    /* height: 200px; */
-     z-index: 2;
-   }
-   #side_nav{
-     width:100%;
-   }
-   .header_detail_page_picture{
-     padding-top: 10px !important;
-     img{
-       width: 75px;
-       height: auto;
-       margin: 0px !important;
-     }
-   }
-   .user-title{
-     text-align: left !important;
-   }
-   .header_detail_page_title{
-     padding-top: 10px !important;
-     line-height: 75px;
-   }
-   #side_nav .badge{
-     margin-top: 37px !important;
-   } 
-  #v-pills-tab{
-    width:100%;
-    padding: 0px !important;
-    a{
-      font-size: 12px;
-      color: #828282;
+
+  #map{
+    position: fixed;
+    right: 0px;
+    top: 50px;
+    bottom: 0px;
+    visibility: hidden;
+    z-index: 10000;
     }
-    a.active{
-      color : #484848;
-    }
-  }
-  .event_list_cards{
-    column-count: 1;
-   }
-  #event_about {
-    padding:25px !important;
-    padding-bottom: 0px !important;
-  }
-  #event_map {
-    z-index: 1;
-  }
-
-  .header_detail_page, #h_nav, #breadcrumb, #jumbotron, #search_tab, #event_title, .booking_form, .jumbotron {
-     z-index: 2 !important;
-   }
-   .modal.show .modal-dialog {
-     z-index: 3 !important;
-     display: relative;
-   }
 }
 
-@media screen and (max-width: 576px) {
-  .container{
-  /*  margin: 0px !important;
-    padding: 0px !important; */
-  }
-}
 
-// Menu hack for mobile slide left up // 
+@import "./fontawesome-free-6.4.0-web/css/all.css";
+@import "./includes/typo";
+
+@import "./includes/_forms";
+
+@import "./includes/_breadcrumb";
+
+@import "./includes/_modals";
+
+@import "./includes/_search-bar";
+@import "./includes/_home";
+
+@import "./includes/menu";
+@import "./includes/footer";
+@import "./includes/event";
 
 
-@media (min-width: 992px) {
+@import "../node_modules/vue-multiselect/dist/vue-multiselect.css";
 
-  .main-container {
-    padding-left: 75px; 
-  }
-
-  .vertical-nav {
-      position: fixed;
-      top: 65px;
-      left: 0;
-      width: 75px;
-      height: 100%;
-      overflow-y: auto;
-      padding-top: 30px;
-  }
-}
-
-@media (max-width: 992px) {
-
-  .navbar-collapse {
-      position: fixed;
-      top: 65px;
-      left:-400px;
-      height: 800px;
-      transition: all 0.3s ease;
-      display: block;
-  }
-  .navbar-collapse.collapsing {
-      height: auto !important;
-      margin-right: 50%;
-      transition: all 0.3s ease;
-      display: block;
-  }
-  .navbar-collapse.show {
-      right:20%;
-      left:0px;
-  }
-}
-
+/* Css apps vuejs */
+@import "../js/vue.apps.bundle.css";

@@ -1,6 +1,6 @@
 {% extends 'organization_page.html' %}
 {% load static thumbnail%}
-{% load bootstrap4 %}
+{% load bootstrap5 %}
 {% load querystring from django_tables2 %}
 {% load django_tables2 %}
 
@@ -29,13 +29,6 @@
 {% endblock menu_content %}
 
 {% block extra_js %}
-<script>
-  $(document).ready(function(){
-    $("#h_nav").sticky({topSpacing:105});
-    $("#breadcrumb").sticky({topSpacing:65});
-  });
-</script>
-
   <script src="{% static 'js/lib/jquery.waypoints.js' %}"></script>
   <script src="{% static 'js/lib/infinite.min.js' %}"></script>
   <script>

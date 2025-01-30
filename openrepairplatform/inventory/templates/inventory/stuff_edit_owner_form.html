@@ -1,4 +1,4 @@
-{% load bootstrap4 assets static %}
+{% load bootstrap5 assets static %}
 <div class="modal-header">
     <h3 class="modal-title">Modifier la propriété</h3>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -26,11 +26,8 @@
         <div style="display: none;" id="finduser">{% bootstrap_field form.member_owner %}</div>
     </div>
     <div class="form-group p-2 mt-2">
-    <button type="submit" id="submit" class="btn btn-success w-100 p-3">Valider</button>
+    <button type="submit" id="btnsubmit" class="btn btn-success w-100 p-3">Valider</button>
     </div>
     {{ form.media }}
     </form>
 </div>
-{% assets "js_edit_owner_stuff" %}
-<script src="{{ ASSET_URL }}"></script>
-{% endassets %}

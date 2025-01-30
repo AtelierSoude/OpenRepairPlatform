@@ -1,4 +1,4 @@
-{% load bootstrap4 assets static %}
+{% load bootstrap5 assets static %}
 <div class="modal-header">
     <h3 class="modal-title">Modifier la visibilité de l'objet</h3>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -13,7 +13,7 @@
     {% csrf_token %}
     {% bootstrap_field form.is_visible %}
     <div class="form-group p-2">
-        <button type="submit" id="submit" class="btn btn-success w-100 p-3">Valider</button>
+        <button type="submit" id="btnsubmit" class="btn btn-success w-100 p-3">Valider</button>
     </div>
     {{ form.media }}
     </form>

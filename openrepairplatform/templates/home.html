@@ -1,82 +1,69 @@
 {% extends 'base.html' %}
-{% load static i18n l10n %}
-{% load bootstrap4 app_filters %}
+{% load static i18n l10n bootstrap5 app_filters %}
 
 {% block title %}Bienvenue sur l'application {{site_title}}{% endblock %}
 
 {% block content %}
-<div class="text-center">
-    <div class="container-fluid bg-secondary text-center v-align pt-5 home-picture pb-5">
-        <h3 class="text-white pt-5">Prenez rendez-vous en ligne pour tout réparer !</h3>
-        <section class="container">
-            <div class="col-lg bg-secondary">
-                <div id="search">
-                    <form method="GET" class="form-row" action="{% url 'event:list' %}">
-                        <div class="input-group search-bar">
-                            {% bootstrap_field search_form.activity show_label=False field_class='form-control' addon_before='Quoi' %}
-                            {% bootstrap_field search_form.place show_label=False field_class='form-control' addon_before='<span class="fa fa-map-marker"></span>&nbsp;Où' %}
-                        <!-- Dos it make sense to filter by dates here ? 
-                            {% bootstrap_field search_form.starts_before show_label=False field_class='form-control' addon_before='<span class="fa fa-calendar"></span> du' %}
-                            {% bootstrap_field search_form.starts_after show_label=False field_class='form-control' addon_before='au' %} 
-                        --> 
-                        <button type="submit" class="btn btn-primary">
-                        <span class=""><i class="fa fa-search"></i></span>
-                        </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </section>
+<div class="d-flex flex-column justify-content-between" style="height: calc(100vh - 65px);">
+  <div class="container">
+    <div class="d-flex justify-content-center">
+      <img src="{% static 'img/logo-simple.png' %}" class="mt-5" width="120">
     </div>
+    <h4 class="pt-2 text-center text-success">Bienvenue sur Réparons !</h4>
+    <h4 class="text-center">Vous avez envie de réparer ou de créer ? Prenez rendez-vous et nous le faisons ensemble !</h4>
+    <div class="d-flex flex-column align-items-center">
 
-    {% if request.user.is_authenticated %}
-    <div class="container text-center">
-        <h4 class="mt-4">Bonjour {{user.first_name}} :) !</h4>
-        <h4 class="mt-4 text-muted"><a href="{{ user.get_absolute_url }}"> Gérer mes rendez-vous ></a></h4>
-    </div>  
-    {% else %}
+      <section class="w-75 text-center mt-5 mb-5">
+        <a href="/event/" class="btn btn-success btn-lg"><i class="far fa-calendar-alt"></i> Voir les événements</a>
+      </section>
 
-    <div class="container pb-5">
-        <h4 class="p-5">Vous avez envie de réparer ? Prenez rendez-vous et nous réparons ensemble !</h4>
-        <div class="row">
-            <div class="col-md-4">
-                <img class="img-responsive w-25 mb-4" src="http://atelier-soude.fr/images/50.png">
-                <h6 class="">Propulsons nos talents <br>ensemble !</h6>
-            </div>
-            <div class="col-md-4">
-                <img class="img-responsive w-25 mb-4" src="http://atelier-soude.fr/images/5.png">
-                <h6 class="t">Réparez tout <br>ce que vous avez !</h6>
-            </div>
-            <div class="col-md-4">
-                <img class="img-responsive w-25 mb-4" src="http://atelier-soude.fr/images/200.png">
-                <h6 class="">Entrez dans la <br>communauté !</h6>
-            </div>
+      {% for message in messages %}
+        <div class="card" role="alert" aria-live="assertive" aria-atomic="true">
+          <div class="card-body">
+            {{ message|safe }}
+          </div>
         </div>
-    </div>
+      {% endfor %}
 
-    <div class="bg-success p-4">
-        <div class="row">
-                <div class="col-md-4">
-                    <h6 class="text-center">
-                        <span class="text-secondary" style="font-size: 48px;">{{event_count}}</span> 
-                        <br>Evenements en ligne
-                    </h6>
-                </div>
-                <div class="col-md-4">
-                    <h6 class="text-center">
-                        <span class="text-secondary" style="font-size: 48px;">{{user_count}}</span> 
-                        <br>Utilisateurs enregistrés
-                    </h6>
-                </div>
-                <div class="col-md-4">
-                    <h6 class="text-center">
-                        <span class="text-secondary" style="font-size: 48px;">{{organization_count}}</span> 
-                        <br>Organisations inscrites
-                    </h6>          
-            </div>
     </div>
-    {% endif %}
+    <div class="d-flex flex-sm-row flex-column mt-2">
+      <div class="text-center">
+        <img class="p-5 img-responsive w-50" src="{% static 'img/fusee.png' %}">
+        <h5 class="fw-bolder">Transmettre les savoirs</h4>
+      </div>
+      <div class="text-center">
+        <img class="p-5 img-responsive w-50" src="{% static 'img/soudure.png' %}">
+        <h5 class="fw-bolder">Réparer ensemble</h4>
+      </div>
+      <div class="text-center">
+        <img class="p-5 img-responsive w-50" src="{% static 'img/communaute.png' %}">
+        <h5 class="fw-bolder">Faire communauté</h4>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-success p-4 mt-5">
+    <div class="d-flex justify-content-around container">
+      <div class="m-2">
+        <h3 class="text-center text-secondary" style="font-size: 3rem;">
+          {{event_count}}
+        </h3>
+        <p class="text-secondary">Evénements en ligne</p>
+      </div>
+      <div class="m-2">
+        <h3 class="text-center text-secondary" style="font-size: 3rem;">
+          {{user_count}}
+        </h3>
+        <p class="text-secondary">Utilisateurs enregistrés</p>
+      </div>
+      <div class="m-2">
+        <h3 class="text-center text-secondary" style="font-size: 3rem;">
+          {{organization_count}}
+        </h3>
+        <p class="text-secondary">Organisations inscrites</p>
+      </div>
+    </div>
+  </div>
+
 </div>
-{{ form.media }}
-
 {% endblock %}

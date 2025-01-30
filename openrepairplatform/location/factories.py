@@ -15,8 +15,6 @@ class PlaceFactory(DjangoModelFactory):
     description = faker.text()
     category = faker.sentence()
     address = faker.address()
-    longitude = faker.longitude()
-    latitude = faker.latitude()
 
     class Meta:
         model = Place

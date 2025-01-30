@@ -1,0 +1,98 @@
+{% load assets app_filters thumbnail initialavatar bootstrap5 %}
+<h4 class="mt-4">Etat des adhésions</h4>
+{% for membership in object.memberships.all %}
+    {% if membership.organization in user.admin_organizations.all or user.volunteer_organizations.all or user.active_organizations.all or object == user %}
+        <div class="card p-2">
+            <h5 class="pb-2">
+                {{ membership.organization }}
+                <small>depuis le {{ membership.first_payment|date:"d F Y" }}</small>
+                {% if membership.current_contribution == 0 %}
+                    <small class="text-danger">Pas à jour</small>
+                {% elif membership.current_contribution >= membership.organization.advised_fee %}
+                    <small class="text-success">A jour</small>
+                {% else %}
+                    <small class="text-warning">Incomplet</small>
+                {% endif %}
+                <span class="badge badge-pill badge-success float-right">{{ membership.current_contribution }}€</span>
+            </h5>
+            {% if can_create %}
+                <div class="m-2">
+                    <label class="btn btn-primary"
+                        for="modal_fee_{{ membership.organization.name }}">Ajouter une cotisation</label>
+                    <input class="toggle-modal"
+                        id="modal_fee_{{ membership.organization.name }}"
+                        type="checkbox">
+                    <section class="modal fade" tabindex="-1" role="dialog">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Ajout d'une cotisation</h5>
+                                    <label class="close" for="modal_fee_{{ membership.organization.name }}">×</label>
+                                </div>
+                                <div class="modal-body">
+                                    <form method="post" action="{% url 'user:fee_create' %}">
+                                        {% csrf_token %}
+                                        {% for field in add_fee_form %}
+                                            {% if field.name == 'organization' %}
+                                                <input type="hidden"
+                                                    name="{{ field.name }}"
+                                                    value="{{ membership.organization.pk|escape }}" />
+                                            {% elif field.name == 'membership' %}
+                                                <input type="hidden"
+                                                    name="{{ field.name }}"
+                                                    value="{{ membership.pk|escape }}" />
+                                            {% else %}
+                                                {% bootstrap_field field %}
+                                            {% endif %}
+                                        {% endfor %}
+                                        <button type="submit" class="btn btn-primary">Enregistrer</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            {% endif %}
+            <table class="table table-striped table-hover">
+                {% for fee in membership.fees.all %}
+                    <tr>
+                        <td>
+                            le {{ fee.date|date:"d F Y" }}
+                            {% if fee.membership and fee.date == membership.first_payment %}
+                                <span class="badge badge-pill bg-warning">référence</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if fee.participation %}
+                            <a href="{% url 'event:detail' fee.participation.event.pk fee.participation.event.slug %}">{{ fee.participation.event }}</a>
+                        {% else %}
+                            Cotisation manuelle
+                        {% endif %}
+                    </td>
+                    <td class="text-right">
+                        <b>{{ fee.amount }}€</b>
+                        <br>
+                        <small>{{ fee.get_payment_display }}</small>
+                    </td>
+                    <td>
+                        {% if membership.organization in user.admin_organizations.all or user.volunteer_organizations.all or user.active_organizations.all %}
+                            <form action="{% url 'user:fee_delete' fee.pk %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger btn-sm">
+                                    <i class="fa fa-trash-alt"></i>
+                                </button>
+                            </form>
+                        {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    {% else %}
+    <div class="card p-2 text-warning">
+        Vous ne pouvez pas visualiser les cotisations concernant une organisation dont vous n'êtes membre
+    </div>
+{% endif %}
+{% empty %}
+    <div class="card p-2 m-2 text-warning">Cet utilisateur n'a pas de cotisation en cours</div>
+{% endfor %}

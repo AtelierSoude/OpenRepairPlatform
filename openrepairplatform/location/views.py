@@ -12,16 +12,17 @@ from django.views.generic import (
 from openrepairplatform.location.forms import PlaceForm
 from openrepairplatform.location.models import Place
 from openrepairplatform.user.mixins import PermissionOrgaContextMixin
-from openrepairplatform.mixins import RedirectQueryParamView, HasAdminPermissionMixin, HasActivePermissionMixin
+from openrepairplatform.mixins import (
+    RedirectQueryParamView,
+    HasAdminPermissionMixin,
+)
 
 
 class PlaceView(PermissionOrgaContextMixin, DetailView):
     model = Place
 
 
-class PlaceDeleteView(
-    HasAdminPermissionMixin, RedirectQueryParamView, DeleteView
-):
+class PlaceDeleteView(HasAdminPermissionMixin, RedirectQueryParamView, DeleteView):
     model = Place
     success_url = reverse_lazy("location:list")
 
@@ -32,6 +33,9 @@ class PlaceDeleteView(
 
 class PlaceMapView(TemplateView):
     template_name = "location/place_list.html"
+
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
 
 
 class PlaceFormView(HasAdminPermissionMixin):

@@ -15,15 +15,15 @@
 
   <div class="container">
     <div class="row no-gutters">
-      <section class="header_detail_page p-0 text-center col-md-3">
-        <div class="bg-grey" id="side_nav">
+           <section class="header_detail_page p-0 text-center col-md-3">
+        <div class="bg-light" id="side_nav">
             <div class="pt-5 header_detail_page_picture d-md-block d-sm-none d-xs-none">
               {% if place.picture %}
                 <img class="img-responsive w-100" src="{{ place.picture.url }}" alt="image_lieu">
               {% endif %}
             </div> 
             <h2 class="pt-5 header_detail_page_title">{{ place.name|title }}</h2>
-            <div class="card badge badge-pill badge-success p-2 m-1">
+            <div class="card badge badge-pill bg-success p-2 m-1">
               {{ place.category }}
             </div>
         </div>
@@ -38,7 +38,7 @@
                 </a>
               </small> 
               {% if is_admin %}
-              <p class="lead float-right">
+              <p class="lead float-end">
                 <a class="btn btn-success btn-sm" href="{% url 'location:edit' place.id %}">
                   <i class="fa fa-pencil-alt"></i>
                   Editer
@@ -54,7 +54,7 @@
               {{ place.description | safe }}
             </div>
             <h4 class="mt-4">Adresse</h4>
-              <div class="container-fluid card p-4" id="place_map" style="height: 60vh; top:0px"></div>
+            <div class="container-fluid card p-4" id="place_map" style="height: 40vh; top:0px"></div>
             <h4 class="mt-4">Prochains événements</h4>
             <div class="card p-4">
               <div class="table-responsive">
@@ -102,7 +102,7 @@
                               Accès libre
                             {% else %}
                             <span
-                            class=" float-left
+                            class=" float-start
                               {% if event.remaining_seats <= 0 %}
                                 text-danger
                               {% elif event.remaining_seats == event.available_seats %}
@@ -130,12 +130,6 @@
 {% endblock %}
 
 {% block extra_js %}
-<script>
-  $(document).ready(function(){
-    $("#side_nav").sticky({topSpacing:40});
-    $("#breadcrumb").sticky({topSpacing:0});
-  });
-</script>
 <script>
   let latitude = {{ place.latitude|unlocalize }};
   let longitude = {{ place.longitude|unlocalize }};

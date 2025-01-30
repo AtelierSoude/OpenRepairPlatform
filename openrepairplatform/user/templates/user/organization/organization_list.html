@@ -1,27 +1,28 @@
-{% extends 'base.html' %}
-{% block title %}Découvrez les organisations présentes sur {{site_title}}{% endblock %}
+{% extends "base.html" %}
+{% block title %}Découvrez les organisations présentes sur {{ site_title }}
+{% endblock title %}
 
 
 {% block content %}
   {% include "breadcrumb.html" with current="Organisations" %}
 
-  <div class="jumbotron jumbotron-fluid" id="jumbotron">
+  <div class="jumbotron jumbotron-fluid parallax" id="jumbotron">
     <div class="container text-center">
       <h2>Organisations</h2>
       <hr>
       <span>Retrouvez ici les pages des organisations inscrites sur cette plateforme</span>
       {% if user.is_staff %}
       <a class="btn btn-success btn-sm" href="{% url 'user:organization_create' %}">
-        <i class="fa fa-pencil-alt mr-1"></i>Créer une organisation
+        <i class="fa fa-pencil-alt me-1"></i>Créer une organisation
       </a>
       {% endif %}
     </div>
   </div>
 
   <section class="container">
-    <div class="row col-md-12 mt-5">
-      <div class="card-columns m-auto pt-2">
-        {% include 'user/organization/organization_card.html' with organizations=object_list %}
+    <div class="row col-md-12 mt-5 mb-5">
+      <div class="row g-4 ms-0">
+        {% include "user/organization/organization_card.html" with organizations=object_list %}
       </div>
     </div>
   </section>
@@ -29,10 +30,5 @@
 {% endblock %}
 
 {% block extra_js %}
-<script>
-  $(document).ready(function(){
-    $("#jumbotron").sticky({topSpacing:105});
-    $("#breadcrumb").sticky({topSpacing:65});
-  });
-</script>
+
 {% endblock %}

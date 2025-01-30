@@ -48,10 +48,7 @@ def test_query_transform():
     request = HttpRequest()
     request.GET["test"] = "coucou"
     request.GET["page"] = 10
-    assert (
-        query_transform(request, page=11, add="3&")
-        == "test=coucou&page=11&add=3%26"
-    )
+    assert query_transform(request, page=11, add="3&") == "test=coucou&page=11&add=3%26"
 
 
 def test_organization_fees(organization, custom_user, fee_factory):

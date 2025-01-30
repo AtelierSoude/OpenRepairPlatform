@@ -1,4 +1,11 @@
 {
     "restructuredtext.confPath": "",
-    "python.pythonPath": "/Users/clementpoudret/env/ateliersoude/bin/python"
-}
+    "python.pythonPath": "/usr/lib/python3.10",
+    "git.ignoreLimitWarning": true,
+    "html.format.enable": true,
+    "[python]": {
+      "editor.defaultFormatter": "ms-python.autopep8"
+    },
+    "python.formatting.provider": "none",
+
+  }

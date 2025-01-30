@@ -301,6 +301,17 @@
 		{% empty %}
 		<li>La participation est libre / pas de condition d'accès</li>
 		{% endfor %}
+		{% if event.members_only %}
+		<li style="font-size: 14px; line-height: 1.5; mso-line-height-alt: 21px;">
+		  <i class="far fa-check-circle fa-1x text-success"></i>
+		  <span>Vous devez être adhérent à {{ event.organization }}</span>
+		</li>
+		<li style="font-size: 14px; line-height: 1.5; mso-line-height-alt: 21px;">
+		  Vous pouvez
+		  <a class="" target="_blank" href="{{ event.organization.membership_url }}">Adhérer en ligne</a>
+		  ou une fois sur place
+		</li>
+		{% endif %}
 	</ul>
 </div>
 </div>

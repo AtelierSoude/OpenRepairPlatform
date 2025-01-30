@@ -13,9 +13,7 @@ def test_command_notify_next_day_events(published_event_factory, user_log):
         date=(timezone.now() + datetime.timedelta(days=1)).date(),
         starts_at=(timezone.now() + datetime.timedelta(days=1)).time(),
         ends_at=(
-            timezone.now()
-            + datetime.timedelta(days=1)
-            + datetime.timedelta(hours=4)
+            timezone.now() + datetime.timedelta(days=1) + datetime.timedelta(hours=4)
         ).time(),
     )
     event1.registered.add(user_log)
@@ -30,6 +28,8 @@ def test_command_publish_events(event_factory, custom_user_factory):
     )
     event1.organization.admins.add(custom_user_factory())
     event1.organization.actives.add(custom_user_factory())
+
+
 #   call_command("publish_events", "https://example.com")
 #   #event1.refresh_from_db()
 #   #assert len(mail.outbox) == 2

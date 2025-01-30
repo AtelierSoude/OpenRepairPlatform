@@ -23,14 +23,12 @@ class FeeResource(resources.ModelResource):
 
 class MembershipResource(resources.ModelResource):
     user = Field(
-        column_name="user",
-        attribute="user",
-        widget=ForeignKeyWidget(CustomUser, "id")
+        column_name="user", attribute="user", widget=ForeignKeyWidget(CustomUser, "id")
     )
     organization = Field(
         column_name="organization",
         attribute="organization",
-        widget=ForeignKeyWidget(Organization, "id")
+        widget=ForeignKeyWidget(Organization, "id"),
     )
 
     class Meta:
@@ -39,29 +37,23 @@ class MembershipResource(resources.ModelResource):
 
 class OrganizationResource(resources.ModelResource):
     members = Field(
-        column_name="members",
-        attribute="members",
-        widget=ManyToManyWidget(CustomUser)
+        column_name="members", attribute="members", widget=ManyToManyWidget(CustomUser)
     )
     volunteers = Field(
         column_name="volunteers",
         attribute="volunteers",
-        widget=ManyToManyWidget(CustomUser)
+        widget=ManyToManyWidget(CustomUser),
     )
     visitors = Field(
         column_name="visitors",
         attribute="visitors",
-        widget=ManyToManyWidget(CustomUser)
+        widget=ManyToManyWidget(CustomUser),
     )
     actives = Field(
-        column_name="actives",
-        attribute="actives",
-        widget=ManyToManyWidget(CustomUser)
+        column_name="actives", attribute="actives", widget=ManyToManyWidget(CustomUser)
     )
     admins = Field(
-        column_name="admins",
-        attribute="admins",
-        widget=ManyToManyWidget(CustomUser)
+        column_name="admins", attribute="admins", widget=ManyToManyWidget(CustomUser)
     )
 
     class Meta:
@@ -106,7 +98,7 @@ class CustomUserAdmin(UserAdmin, SimpleHistoryAdmin, ImportExportModelAdmin):
             },
         ),
     )
-    search_fields = ('first_name', 'last_name', 'email')
+    search_fields = ("first_name", "last_name", "email")
 
 
 class FeeAdmin(ImportExportModelAdmin, SimpleHistoryAdmin):
@@ -125,4 +117,3 @@ admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(Organization, OrganizationAdmin)
 admin.site.register(Membership, MembershipAdmin)
 admin.site.register(Fee, FeeAdmin)
-

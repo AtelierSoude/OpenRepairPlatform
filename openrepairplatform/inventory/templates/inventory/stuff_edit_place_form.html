@@ -1,4 +1,4 @@
-{% load bootstrap4 assets static %}
+{% load bootstrap5 assets static %}
 <div class="modal-header">
     <h3 class="modal-title">Modifier la localisation </h3>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -16,7 +16,7 @@
                 <br>Sinon, cliquez sur la croix rouge pour ne pas localiser l'objet.
             </small>
             {% bootstrap_field form.place %}
-        <button type="submit" id="submit" class="btn btn-success w-100 p-3">Valider</button>
+        <button type="submit" id="btnsubmit" class="btn btn-success w-100 p-3">Valider</button>
         </div>
         {{ form.media }}
     </form>

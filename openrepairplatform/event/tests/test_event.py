@@ -1,13 +1,13 @@
 import datetime
 import pytest
 from django.contrib.auth import get_user
-from django.core import signing
+from django.core import signing, mail
 from django.urls import reverse
 from django.utils import timezone
 
 from openrepairplatform.event.models import Event
 from openrepairplatform.user.factories import USER_PASSWORD
-from openrepairplatform.user.models import CustomUser, Membership, Fee
+from openrepairplatform.user.models import CustomUser, Membership
 
 pytestmark = pytest.mark.django_db
 
@@ -17,9 +17,7 @@ def _django_date(datetime):
 
 
 @pytest.fixture
-def event_data(
-    condition_factory, activity, custom_user_factory, place, organization
-):
+def event_data(condition_factory, activity, custom_user_factory, place, organization):
     cond1 = condition_factory(organization=organization)
     cond2 = condition_factory(organization=organization)
     user1 = custom_user_factory()
@@ -35,9 +33,7 @@ def event_data(
         "activity": activity.pk,
         "starts_at": timezone.now().time().strftime("%H:%M"),
         "ends_at": (
-            (timezone.now() + datetime.timedelta(hours=4))
-            .time()
-            .strftime("%H:%M")
+            (timezone.now() + datetime.timedelta(hours=4)).time().strftime("%H:%M")
         ),
         "date": timezone.now().date().strftime("%Y-%m-%d"),
         "available_seats": 12,
@@ -45,6 +41,7 @@ def event_data(
         "presents": [user1.pk, user2.pk],
         "organizers": [user4.pk],
         "location": place.pk,
+        "needed_organizers": 1,
     }
 
 
@@ -72,9 +69,7 @@ def test_event_list_invalid(client, published_event_factory):
     assert event2 in response.context_data["object_list"]
 
 
-def test_event_list_filter_place(
-    client, place_factory, published_event_factory
-):
+def test_event_list_filter_place(client, place_factory, published_event_factory):
     place1 = place_factory()
     place2 = place_factory()
     event1 = published_event_factory(location=place1)
@@ -84,9 +79,7 @@ def test_event_list_filter_place(
     assert event2 not in response.context_data["object_list"]
 
 
-def test_event_list_filter_orga(
-    client, organization_factory, published_event_factory
-):
+def test_event_list_filter_orga(client, organization_factory, published_event_factory):
     orga1 = organization_factory()
     orga2 = organization_factory()
     event1 = published_event_factory(organization=orga1)
@@ -96,9 +89,7 @@ def test_event_list_filter_orga(
     assert event2 not in response.context_data["object_list"]
 
 
-def test_event_list_filter_activity(
-    client, activity_factory, published_event_factory
-):
+def test_event_list_filter_activity(client, activity_factory, published_event_factory):
     activity1 = activity_factory(name="hello")
     activity2 = activity_factory(name="world")
     event1 = published_event_factory(activity=activity1)
@@ -112,12 +103,8 @@ def test_event_list_filter_start_time(client, published_event_factory):
     now = timezone.now()
     old = now - datetime.timedelta(days=3)
     future = now + datetime.timedelta(days=3)
-    starts_before = (
-        (now + datetime.timedelta(days=1)).date().strftime("%Y-%m-%d")
-    )
-    starts_after = (
-        (now - datetime.timedelta(days=1)).date().strftime("%Y-%m-%d")
-    )
+    starts_before = (now + datetime.timedelta(days=1)).date().strftime("%Y-%m-%d")
+    starts_after = (now - datetime.timedelta(days=1)).date().strftime("%Y-%m-%d")
     event1 = published_event_factory(date=now.date())
     event2 = published_event_factory(date=old.date())
     event3 = published_event_factory(date=future.date())
@@ -136,9 +123,6 @@ def test_event_detail_context(client, event, custom_user_factory, user_log):
     event.registered.add(anonymous_user)
     response = client.get(reverse("event:detail", args=[event.pk, event.slug]))
     assert response.status_code == 200
-    assert user_log.email in {
-        user[1] for user in response.context_data["users"]
-    }
     assert isinstance(response.context_data["event"], Event)
     assert event.pk == response.context_data["event"].pk
     assert event.activity.name in str(response.context_data["event"])
@@ -170,10 +154,12 @@ def test_event_delete(client, user_log, event):
     current_user = get_user(client)
     event.organization.admins.add(current_user)
     assert current_user in event.organization.admins.all()
+    event.registered.add(current_user)
     response = client.post(reverse("event:delete", args=[event.pk]))
     assert Event.objects.count() == 0
     assert response.status_code == 302
     assert response["Location"] == reverse("event:list")
+    assert len(mail.outbox) == 1
 
 
 def test_get_event_create(client, user_log, organization):
@@ -207,9 +193,7 @@ def test_event_create(client, user_log, event_data):
     client.login(email=user_log.email, password=USER_PASSWORD)
     organization.admins.add(user_log)
     assert Event.objects.count() == 0
-    response = client.post(
-        reverse("event:create", args=[organization.pk]), event_data
-    )
+    response = client.post(reverse("event:create", args=[organization.pk]), event_data)
     events = Event.objects.all()
     assert response.status_code == 302
     assert len(events) == 1
@@ -225,9 +209,7 @@ def test_event_create_invalid(client, user_log, event_data):
     assert Event.objects.count() == 0
     data = event_data
     del data["starts_at"]
-    response = client.post(
-        reverse("event:create", args=[organization.pk]), data
-    )
+    response = client.post(reverse("event:create", args=[organization.pk]), data)
     html = response.content.decode()
     assert response.status_code == 200
     assert Event.objects.count() == 0
@@ -240,7 +222,7 @@ def test_get_event_update(client, user_log, event, organization):
     response = client.get(reverse("event:edit", args=[event.pk]))
     html = response.content.decode()
     assert response.status_code == 200
-    assert f"Mise à jour de '" in html
+    assert "Mise à jour de '" in html
     assert event.activity.name in html
 
 
@@ -292,9 +274,7 @@ def test_cancel_reservation(client, event, custom_user):
     )
     resp = client.get(reverse("event:cancel_reservation", args=[token]))
     assert resp.status_code == 302
-    assert resp["Location"] == reverse(
-        "event:detail", args=[event.id, event.slug]
-    )
+    assert resp["Location"] == reverse("event:detail", args=[event.id, event.slug])
     nb_registered = Event.objects.first().registered.count()
     assert nb_registered == 0
 
@@ -310,9 +290,7 @@ def test_cancel_reservation_temp_user(client, event, custom_user):
     )
     resp = client.get(reverse("event:cancel_reservation", args=[token]))
     assert resp.status_code == 302
-    assert resp["Location"] == reverse(
-        "event:detail", args=[event.id, event.slug]
-    )
+    assert resp["Location"] == reverse("event:detail", args=[event.id, event.slug])
     assert Event.objects.first().registered.count() == 0
     assert CustomUser.objects.count() == 0
 
@@ -323,9 +301,7 @@ def test_cancel_reservation_redirect(client, event, custom_user):
         {"user_id": custom_user.id, "event_id": event.id}, salt="cancel"
     )
     query_params = "?redirect=/location/"
-    resp = client.get(
-        reverse("event:cancel_reservation", args=[token]) + query_params
-    )
+    resp = client.get(reverse("event:cancel_reservation", args=[token]) + query_params)
     assert resp.status_code == 302
     assert resp["Location"] == reverse("location:list")
 
@@ -347,15 +323,14 @@ def test_book_no_more_room_by_anonymous(client, event, custom_user):
     )
     resp = client.get(reverse("event:book", args=[token]))
     assert resp.status_code == 302
-    assert resp["Location"] == reverse(
-        "event:detail", args=[event.id, event.slug]
-    )
+    assert resp["Location"] == reverse("event:detail", args=[event.id, event.slug])
     nb_registered = Event.objects.first().registered.count()
     assert nb_registered == 0
 
 
 def test_book_no_more_room_by_active_volunteer_or_admin(
-        client, user_log_staff, event, custom_user):
+    client, user_log_staff, event, custom_user
+):
     client.login(email=user_log_staff.email, password=USER_PASSWORD)
     o = event.organization
     container = [o.actives, o.volunteers, o.admins]
@@ -373,8 +348,15 @@ def test_book_no_more_room_by_active_volunteer_or_admin(
         )
         resp = client.get(reverse("event:book", args=[token]))
         assert resp.status_code == 302
-        assert resp["Location"] == reverse(
-            "event:detail", args=[event.id, event.slug]
+        url = reverse(
+            "event:detail",
+            kwargs={
+                "pk": event.pk,
+                "slug": event.slug,
+            },
+        )
+        assert (
+            resp["Location"] == f"{url}?success_booking=True&user_pk={custom_user.pk}"
         )
         nb_registered = Event.objects.first().registered.count()
         assert nb_registered == 1
@@ -388,9 +370,14 @@ def test_book(client, event, custom_user):
     )
     resp = client.get(reverse("event:book", args=[token]))
     assert resp.status_code == 302
-    assert resp["Location"] == reverse(
-        "event:detail", args=[event.id, event.slug]
+    url = reverse(
+        "event:detail",
+        kwargs={
+            "pk": event.pk,
+            "slug": event.slug,
+        },
     )
+    assert resp["Location"] == f"{url}?success_booking=True&user_pk={custom_user.pk}"
     nb_registered = Event.objects.first().registered.count()
     assert nb_registered == 1
     resp = client.get(reverse("event:book", args=[token]))
@@ -416,14 +403,14 @@ def test_organizer_book_user_not_authorized(
     assert event.organizers.count() == 0
     resp = client.post(
         reverse("user:organizer_book", args=[event.pk]) + f"?event={event.pk}",
-        {"email": admin_user.email}
+        {"email": admin_user.email},
     )
     assert resp.status_code == 302
     assert "/accounts/login" in resp.url
     client.login(email=user.email, password=USER_PASSWORD)
     resp = client.post(
         reverse("user:organizer_book", args=[event.pk]) + f"?event={event.pk}",
-        {"email": admin_user.email}
+        {"email": admin_user.email},
     )
     assert resp.status_code == 403
     event.refresh_from_db()
@@ -434,8 +421,7 @@ def test_organizer_book_user_authorized(
     client, organization, event_factory, custom_user_factory
 ):
     logged = volunteer, active, admin = custom_user_factory.create_batch(3)
-    organizers = user1, user2, user3, nobody = \
-        custom_user_factory.create_batch(4)
+    organizers = user1, user2, user3, nobody = custom_user_factory.create_batch(4)
     organization.members.add(nobody)
     organization.volunteers.set([volunteer, user1, user2, user3])
     organization.actives.add(active)
@@ -445,19 +431,17 @@ def test_organizer_book_user_authorized(
     for allowed_user, organizer in zip(logged, organizers):
         client.login(email=allowed_user.email, password=USER_PASSWORD)
         resp = client.post(
-            reverse("user:organizer_book", args=[event.pk])
-            + f"?event={event.pk}",
-            {"email": nobody.email}
+            reverse("user:organizer_book", args=[event.pk]) + f"?event={event.pk}",
+            {"email": nobody.email},
         )
         assert resp.status_code == 302
         resp = client.post(
-            reverse("user:organizer_book", args=[event.pk])
-            + f"?event={event.pk}",
-            {"email": organizer.email}
+            reverse("user:organizer_book", args=[event.pk]) + f"?event={event.pk}",
+            {"email": organizer.email},
         )
         assert resp.status_code == 302
         assert resp["Location"] == reverse(
-            "event:detail", args=[event.pk, event.slug]
+            "event:detail_admin", args=[event.pk, event.slug]
         )
     event.refresh_from_db()
     assert event.organizers.count() == 3
@@ -472,28 +456,27 @@ def test_organizer_book_organizer_already_registered(
     assert event.organizers.count() == 0
     client.login(email=admin.email, password=USER_PASSWORD)
     resp = client.post(
-        reverse("user:organizer_book", args=[event.pk])
-        + f"?event={event.pk}",
-        {"email": organizer.email}
+        reverse("user:organizer_book", args=[event.pk]) + f"?event={event.pk}",
+        {"email": organizer.email},
     )
     assert resp.status_code == 302
     resp = client.post(
         reverse("user:organizer_book", args=[event.pk]) + f"?event={event.pk}",
-        {"email": organizer.email}
+        {"email": organizer.email},
     )
     assert resp.status_code == 302
     assert resp["Location"] == reverse(
-        "event:detail", args=[event.pk, event.slug]
+        "event:detail_admin", args=[event.pk, event.slug]
     )
     event.refresh_from_db()
     assert event.organizers.count() == 1
 
 
-def test_user_absent_wrong_token(client):
-    token = signing.dumps({"user_id": 1, "event_id": 2}, salt="unknown")
-    resp = client.get(reverse("event:user_absent", args=[token]))
+def test_user_absent_wrong_token(client, event):
+    token = signing.dumps({"user_id": 1, "event_id": event.pk}, salt="unknown")
+    resp = client.get(reverse("event:user_absent", args=[token]), HTTP_REFERER="/")
     assert resp.status_code == 302
-    assert resp["Location"] == reverse("event:list")
+    assert resp["Location"] == "/"
 
 
 def test_user_absent(client, event, custom_user):
@@ -505,20 +488,26 @@ def test_user_absent(client, event, custom_user):
     )
     resp = client.get(reverse("event:user_absent", args=[token]))
     assert resp.status_code == 302
-    assert (
-        resp["Location"]
-        == reverse("event:detail", args=[event.id, event.slug]) + "#manage"
+    assert resp["Location"] == reverse(
+        "event:detail_admin", args=[event.id, event.slug]
     )
-    nb_presents = Event.objects.first().presents.count()
+    nb_presents = event.presents.count()
     assert nb_presents == 0
 
 
 def test_user_absent_remove_contribution(
-    client, event, custom_user, participation_factory, membership_factory
+    client, event, custom_user, participation_factory, membership_factory, fee_factory
 ):
-    participation_factory(event=event, user=custom_user, amount=10, saved=True)
+    participation_factory(event=event, user=custom_user, amount=10)
     membership = membership_factory(
         organization=event.organization, user=custom_user, amount=10
+    )
+    fee_factory(
+        user=custom_user,
+        organization=event.organization,
+        payment=1,
+        amount=10,
+        membership=membership,
     )
     nb_presents = Event.objects.first().presents.count()
     assert nb_presents == 1
@@ -526,91 +515,31 @@ def test_user_absent_remove_contribution(
         {"user_id": custom_user.id, "event_id": event.id}, salt="absent"
     )
     _ = client.get(reverse("event:user_absent", args=[token]))
-    nb_presents = Event.objects.first().presents.count()
+    nb_presents = event.presents.count()
     assert nb_presents == 0
-    membership.refresh_from_db()
-    assert membership.amount == 0
+    # if an user is absent he can be a member
+    assert Membership.objects.count() == 1
 
 
-def test_user_absent_redirect(client, event, custom_user):
+def test_user_absent_redirect(
+    client, event, custom_user, participation_factory, membership_factory, fee_factory
+):
+    event.registered.add(custom_user)
+    event.presents.add(custom_user)
     token = signing.dumps(
         {"user_id": custom_user.id, "event_id": event.id}, salt="absent"
     )
-    query_params = "?redirect=/location/"
-    resp = client.get(
-        reverse("event:user_absent", args=[token]) + query_params
-    )
+    resp = client.get(reverse("event:user_absent", args=[token]))
     assert resp.status_code == 302
-    assert resp["Location"] == reverse("location:list")
-
-
-def test_close_event(
-    client,
-    organization,
-    event_factory,
-    custom_user_factory,
-    participation_factory,
-    membership_factory,
-):
-    active = custom_user_factory()
-    organization.actives.add(active)
-    event = event_factory(organization=organization)
-    member = custom_user_factory()
-    member2 = custom_user_factory()
-    visitor_present = custom_user_factory()
-    visitor_absent = custom_user_factory()
-    visitor_present.first_name = ""
-    visitor_absent.first_name = ""
-    visitor_present.save()
-    visitor_absent.save()
-    event.registered.add(visitor_absent)
-    first_participation = participation_factory(
-        event=event, user=visitor_present, amount=20
-    )
-    participation_factory(event=event, user=member, amount=10, saved=True)
-    participation_factory(event=event, user=member2, amount=10)
-    membership_member = membership_factory(
-        user=member, organization=event.organization, amount=15
-    )
-    membership_member2 = membership_factory(
-        user=member2,
-        organization=event.organization,
-        amount=50,
-        first_payment=timezone.now() - datetime.timedelta(days=400),
-    )
-    assert organization.members.count() == 2
-    assert CustomUser.objects.count() == 5
-    assert Fee.objects.count() == 0
-
-    resp = client.post(reverse("event:close", args=[event.pk]))
-    assert resp.status_code == 302
-    client.login(email=member.email, password=USER_PASSWORD)
-    resp = client.post(reverse("event:close", args=[event.pk]))
-    assert resp.status_code == 403
-    client.login(email=active.email, password=USER_PASSWORD)
-    resp = client.post(reverse("event:close", args=[event.pk]))
     assert resp["Location"] == reverse(
-        "event:detail", args=[event.id, event.slug]
+        "event:detail_admin", kwargs={"pk": event.pk, "slug": event.slug}
     )
-    organization.refresh_from_db()
-    first_participation.refresh_from_db()
-    membership_member.refresh_from_db()
-    membership_member2.refresh_from_db()
-    visitor_membership = Membership.objects.filter(
-        user=visitor_present
-    ).first()
-    assert first_participation.saved
-    assert visitor_membership.amount == 20
-    assert membership_member.amount == 15
-    assert membership_member2.amount == 10
-    assert organization.members.count() == 3
-    assert Fee.objects.count() == 3
-    assert CustomUser.objects.count() == 4
+    event.refresh_from_db()
+    custom_user not in event.presents.all()
+    custom_user in event.registered.all()
 
 
-def test_add_active_event(
-    client, organization, event_factory, custom_user_factory
-):
+def test_add_active_event(client, organization, event_factory, custom_user_factory):
     user = custom_user_factory()
     active = custom_user_factory()
     organization.actives.add(active)
@@ -623,16 +552,12 @@ def test_add_active_event(
     assert resp.status_code == 403
     client.login(email=active.email, password=USER_PASSWORD)
     resp = client.post(reverse("event:add_active", args=[event.pk]))
-    assert resp["Location"] == reverse(
-        "event:detail", args=[event.id, event.slug]
-    )
+    assert resp["Location"] == reverse("event:detail", args=[event.id, event.slug])
     event.refresh_from_db()
     assert event.organizers.count() == 1
 
 
-def test_remove_active_event(
-    client, organization, event_factory, custom_user_factory
-):
+def test_remove_active_event(client, organization, event_factory, custom_user_factory):
     user = custom_user_factory()
     active = custom_user_factory()
     organization.actives.add(active)
@@ -646,8 +571,109 @@ def test_remove_active_event(
     assert resp.status_code == 403
     client.login(email=active.email, password=USER_PASSWORD)
     resp = client.post(reverse("event:remove_active", args=[event.pk]))
-    assert resp["Location"] == reverse(
-        "event:detail", args=[event.id, event.slug]
-    )
+    assert resp["Location"] == reverse("event:detail", args=[event.id, event.slug])
     event.refresh_from_db()
     assert event.organizers.count() == 0
+
+
+def test_user_present_wrong_token(client, event, custom_user):
+    event.registered.add(custom_user)
+    nb_presents = event.presents.count()
+    assert nb_presents == 0
+    token = signing.dumps(
+        {"user_id": custom_user.id, "event_id": event.id}, salt="unknow"
+    )
+    resp = client.get(reverse("event:user_present", args=[token]), HTTP_REFERER="/")
+    assert resp.status_code == 302
+    assert resp["Location"] == "/"
+    nb_presents = event.presents.count()
+    assert nb_presents == 0
+
+
+def test_user_present(client, event, custom_user):
+    event.registered.add(custom_user)
+    nb_presents = event.presents.count()
+    assert nb_presents == 0
+    token = signing.dumps(
+        {"user_id": custom_user.id, "event_id": event.id}, salt="present"
+    )
+    resp = client.get(reverse("event:user_present", args=[token]))
+    assert resp.status_code == 302
+    assert resp["Location"] == reverse(
+        "event:detail_admin", args=[event.id, event.slug]
+    )
+    nb_presents = event.presents.count()
+    assert nb_presents == 1
+
+
+def test_events_ics_by_organization(
+    client, organization, activity, published_event_factory
+):
+    now = timezone.now()
+    old = now - datetime.timedelta(days=3)
+    future = now + datetime.timedelta(days=3)
+
+    event1 = published_event_factory(
+        date=now.date(), organization=organization, activity=activity
+    )
+    event2 = published_event_factory(
+        date=old.date(), organization=organization, activity=activity
+    )
+    event3 = published_event_factory(
+        date=future.date(), organization=organization, activity=activity
+    )
+
+    response = client.get(reverse("event:ical_events", args=[organization.pk]))
+
+    assert response.status_code == 200
+    ics = response.content.decode()
+
+    assert f"SUMMARY:{str(event1)}" in ics
+    assert f"SUMMARY:{str(event3)}" in ics
+    assert f"SUMMARY:{str(event2)}" not in ics
+
+    assert f"{event1.location.name}" in ics
+    assert f"{event2.location.name}" in ics
+
+
+def test_event_ics(client, organization, activity, published_event_factory):
+    now = timezone.now()
+    event = published_event_factory(
+        date=now.date(), organization=organization, activity=activity
+    )
+    response = client.get(reverse("event:ical_event", args=[event.pk]))
+
+    assert response.status_code == 200
+    ics = response.content.decode()
+    assert f"SUMMARY:{str(event)}" in ics
+    assert f"{event.location.name}" in ics
+
+
+def test_send_invitation_event(client, organization, event_factory, custom_user):
+    volunteer = custom_user
+    organization.volunteers.add(volunteer)
+    event = event_factory(organization=organization)
+    token = signing.dumps(
+        {"user_id": volunteer.pk, "event_id": event.pk}, salt="invitation"
+    )
+    resp = client.post(
+        reverse("event:invitation", args=[token]),
+        {"email_participant": "test@test.fr", "email_animator": ""},
+    )
+    assert resp.status_code == 302
+    assert len(mail.outbox) == 1
+
+
+def test_send_invitation_event_error(client, organization, event_factory, custom_user):
+    volunteer = custom_user
+    organization.volunteers.add(volunteer)
+    event = event_factory(organization=organization)
+    token = signing.dumps(
+        {"user_id": volunteer.pk, "event_id": event.pk}, salt="invitation"
+    )
+    resp = client.post(
+        reverse("event:invitation", args=[token]),
+        {"email_participant": "", "email_animator": ""},
+    )
+    assert resp.status_code == 302
+    assert len(mail.outbox) == 0

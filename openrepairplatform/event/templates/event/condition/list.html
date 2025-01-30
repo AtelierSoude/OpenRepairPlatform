@@ -1,9 +1,10 @@
 {% for condition in conditions %}
+<div class="col">
   <div class="card">
     <div class="card-body">
       <h5 class="card-title">{{ condition.name }}</h5>
       {{ condition.description | safe }}
-      <span class="badge badge-pill badge-secondary">
+      <span class="badge badge-pill bg-secondary">
         {% if condition.price > 0 %}
           {{ condition.price }}€
         {% else %}
@@ -12,7 +13,7 @@
       </span>
     </div>
     <div class="card-footer">
-      <a href="{% url 'event:condition_edit' condition.pk %}" class="btn btn-info btn-sm">
+      <a href="{% url 'event:condition_edit' condition.pk %}" class="btn btn-success btn-sm">
         <i class="fa fa-pencil-alt"></i>
         Éditer
       </a>
@@ -22,6 +23,7 @@
       </a>
     </div>
   </div>
+</div>
 {% empty %}
   Aucune condition pour le moment, créez-en !
 {% endfor %}

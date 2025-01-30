@@ -2,34 +2,28 @@
 {% load assets l10n app_filters %}
 {% load initialavatar %}
 
-{% block extra_css %}
-  {% assets "css_detail_user" %}
-    <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet"/>
-  {% endassets %}
-{% endblock %}
-
 {% for user in users %}
-
-  <div class="card mx-2 p-2">
+<div class="col">
+  <div class="card p-2">
     <a class="card-link" href="{{ user.get_absolute_url }}">
       <div class="row">
       {% if event_control == True %}
         {% filter_orga queryset=user.memberships organization=event.organization as membership %}
         {% if membership %}
-          {% if membership.current_contribution == 0 %} 
-            <span class="badge badge-pill badge-primary text-danger float-left" >0€</span>
+          {% if membership.current_contribution == 0 %}
+            <span class="badge badge-pill bg-primary text-danger float-start" >0€</span>
           {% elif membership.current_contribution >= event.organization.advised_fee %}
-            <spann class="badge badge-pill badge-primary text-success float-left">{{ membership.current_contribution }}€</span>
+            <span class="badge badge-pill bg-primary text-success float-start">{{ membership.current_contribution }}€</span>
           {% else %}
-            <span class="badge badge-pill badge-primary text-warning float-left" >{{ membership.current_contribution }}€</span>
+            <span class="badge badge-pill bg-primary text-warning float-start" >{{ membership.current_contribution }}€</span>
           {% endif %}
         {% else %}
-          <span class="badge badge-pill badge-primary text-danger float-left" >0€</span>
+          <span class="badge badge-pill bg-primary text-danger float-start" >0€</span>
         {% endif %}
       {% endif %}
       </div>
-      <div class="row text-center" id="square-{{ user.pk }}">
-        <div class="col-12 mb-1">
+      <div class="row" id="square-{{ user.pk }}">
+        <div class="col-2 mb-1">
           {% if user.avatar_img %}
             {% thumbnail user.avatar_img "50x50" crop="center" format="PNG" as im %}
               <img src="{{ im.url }}" class="m-2 rounded-circle"/>
@@ -40,83 +34,47 @@
             {% endif %}
           {% endif %}
         </div>
-        <div class="col-12">
-          <h5 class="mx-auto col-12">
+        <div class="col-8 text-left">
+          <h5 style="line-height: 45px !important;">
               {{ user}}
           </h5>
         </div>
+        {% if event_control == True %}
+          {% if event.has_started and is_active %}
+            {% include "event/modal_more_info.html" with user=user form=present_form|initial:user %}
+          {% endif %}
+        {% endif %}
+      
+        {% if admin_remove_controls == True %}
+          {% if is_admin %}
+            <form action="{% url 'user:remove_from_admins' organization.pk user.pk %}" class="col-2">
+              {% csrf_token %}
+              <button type="submit" class="btn badge badge-pill bg-danger float-end" onclick="return confirm('Êtes-vous sûr ?')">&times;</button>
+            </form>
+          {% endif %}
+        {% endif %}
+
+        {% if active_remove_controls == True %}
+          {% if is_admin %}
+          <form action="{% url 'user:remove_from_actives' organization.pk user.pk %}" class="col-2">
+            {% csrf_token %}
+            <button type="submit" class="btn badge badge-pill bg-danger float-end" onclick="return confirm('Êtes-vous sûr ?')">&times;</button>
+          </form>
+          {% endif %}
+        {% endif %}
+
+        {% if volunteer_remove_controls == True %}
+          {% if is_admin %}
+          <form action="{% url 'user:remove_from_volunteers' organization.pk user.pk %}" class="col-2">
+            {% csrf_token %}
+            <button type="submit" class="btn badge badge-pill bg-danger float-end" onclick="return confirm('Êtes-vous sûr ?')">&times;</button>
+          </form>
+          {% endif %}
+        {% endif %}
       </div>
     </a>
-    {% if event_control == True %}
-      {% if event.has_started and is_active %}
-      {% include "event/modal_more_info.html" with anonymous_user=user form=present_form|initial:user %}
-      {% endif %}
-    {% endif %}
-  <!--
-    <ul class="list-group">
-      {% if user.member_organizations.all %}
-        <li class="list-group-item">
-          <small> 
-          <i>
-            Membre de 
-            {{ user.member_organizations.all|join:", " }}
-          </i>
-          </small>
-        </li>
-      {% endif %}
-      {% if user.active_organizations.all %}
-        <li class="list-group-item">
-          <small> 
-          <i>
-            Volontaire à
-            {{ user.active_organizations.all|join:", " }}
-            {% if user.active_organizations.all and user.volunteer_organizations.all %}, {% endif %}
-            {{ user.volunteer_organizations.all|join:", " }}
-          </i>
-          </small>
-        </li>
-      {% endif %}
-      {% if user.admin_organizations.all %}
-        <li class="list-group-item">
-          <small> 
-          <i>
-            Administrateur de
-            {{ user.admin_organizations.all|join:", " }}
-          </i>
-          </small>
-        </li>
-      {% endif %}
-      -->
-      {% if admin_remove_controls == True %}
-        {% if is_admin %}
-          <form action="{% url 'user:remove_from_admins' organization.pk user.pk %}" class="d-inline">
-            {% csrf_token %}
-            <button type="submit" class="btn badge badge-pill badge-danger float-right" onclick="return confirm('Êtes-vous sûr ?')">&times;</button>
-          </form>
-        {% endif %}
-      {% endif %}
-
-      {% if active_remove_controls == True %}
-       {% if is_admin %}
-        <form action="{% url 'user:remove_from_actives' organization.pk user.pk %}" class="d-inline">
-          {% csrf_token %}
-          <button type="submit" class="btn badge badge-pill badge-danger float-right" onclick="return confirm('Êtes-vous sûr ?')">&times;</button>
-        </form>
-       {% endif %}
-      {% endif %}
-
-      {% if volunteer_remove_controls == True %}
-        {% if is_admin %}
-        <form action="{% url 'user:remove_from_volunteers' organization.pk user.pk %}" class="d-inline">
-          {% csrf_token %}
-          <button type="submit" class="btn badge badge-pill badge-danger float-right" onclick="return confirm('Êtes-vous sûr ?')">&times;</button>
-        </form>
-        {% endif %}
-      {% endif %}
-
-    </ul>
   </div>
-
+</div>
 {% empty %}
-  <div class="col-lg">Pas encore d'utilisateur</div>  
+  <div class="col-lg">Pas encore d'utilisateur</div>
 {% endfor %}

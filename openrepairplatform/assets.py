@@ -113,7 +113,7 @@ js_recurrent_event = Bundle(
     "js/events/recurrent_event.js",
     filters="jsmin",
     output="js/events/recurrent_event.min.js",
-)
+) openrepairplatform/assets.py 
 js_detail_organization = Bundle(
     "js/lib/auto-complete.js",
     "js/user/create_edit.js",
@@ -138,7 +138,7 @@ js_create_stuff = Bundle(
 js_edit_owner_stuff = Bundle(
     "js/inventory/edit_owner_stuff.js",
     filters="jsmin",
-    output="js/inventory/edit_owner_stuff.min.js",
+    output="js/inventory/edit_owner_stuff.min.js", openrepairplatform/assets.py 
 )
 js_stuff_folder = Bundle(
     "js/inventory/stuff_folder.js",
@@ -161,7 +161,7 @@ register("js_base", js_base)
 register("js_django_autocomplete", js_django_autocomplete)
 register("js_places", js_places)
 register("js_create_edit_place", js_create_edit_place)
-register("js_create_edit_user", js_create_edit_user)
+register("js_create_edit_user", js_create_edit_user) openrepairplatform/assets.py 
 register("js_detail_place", js_detail_place)
 register("js_detail_event", js_detail_event)
 register("js_event_list", js_event_list)

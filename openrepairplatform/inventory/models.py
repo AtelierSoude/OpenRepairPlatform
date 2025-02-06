@@ -8,7 +8,7 @@ from django_better_admin_arrayfield.models.fields import ArrayField
 from openrepairplatform.fields import CleanHTMLField
 from openrepairplatform.user.models import Organization
 from openrepairplatform.utils import validate_image
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 
 class Brand(models.Model):

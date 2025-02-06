@@ -5,9 +5,12 @@ DEBUG = True
 STATIC_ROOT = "/srv/static/"
 
 STATICFILES_DIRS = [
-    "/srv/app/openrepairplatform/static",
+    "/srv/app/openrepairplatform/static/",
+    "/srv/app/openrepairplatform/static/js",
+    "/srv/app/openrepairplatform/static/css",
+    "/srv/app/openrepairplatform/static/scss",
     ]
-ASSETS_ROOT = STATICFILES_DIRS[0]
+ASSETS_ROOT = "/srv/static/"
 
 
 

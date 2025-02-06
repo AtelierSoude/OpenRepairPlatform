@@ -24,7 +24,7 @@ services:
       - ../OpenRepairPlatform:/srv/app
       - ./deployment/saves-bdd:/srv/saves-bdd
       - ./deployment/openrepairplatform_data/openrepairplatform_media/:/srv/media
-      - ./deployment/openrepairplatform_data/openrepairplatform_static/:/srv/static
+      - ./openrepairplatform/static/:/srv/static
     ports: 
       - 80:80 
       - 5678:5678 

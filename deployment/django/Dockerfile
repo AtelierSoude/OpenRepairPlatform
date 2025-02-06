@@ -1,3 +1,4 @@
+
 ################ BASE #########################
 FROM python:3.12-slim-bullseye AS base
 
@@ -31,7 +32,7 @@ ENV LANGUAGE fr_FR
 RUN mkdir -p /srv/app /srv/static /srv/media
 
 # add user 
-RUN groupadd -r openrepairplatform 
+RUN groupadd -r openrepairplatform
 RUN useradd -ms /bin/bash -r -g openrepairplatform openrepairplatform
 RUN usermod -G openrepairplatform,www-data openrepairplatform
 RUN chown -R openrepairplatform:openrepairplatform /srv/*
@@ -46,13 +47,12 @@ RUN chmod 660 /var/uwsgi/openrepairplatform.sock
 # set work directory
 WORKDIR /srv/app
 
-
 # install dependencies
 COPY ../../requirements.txt ./
-COPY ../../requirements_dev.txt /srv/app/requirements_dev.txt 
+COPY ../../requirements_dev.txt /srv/app/requirements_dev.txt
 
 RUN pip install -r requirements_dev.txt
-RUN pip install uwsgi 
+RUN pip install uwsgi
 
 # for cron
 COPY deployment/django/openrepairplatform.cron /etc/cron.d/openrepairplatform
@@ -62,7 +62,7 @@ RUN crontab /etc/cron.d/openrepairplatform
 RUN chmod u+s /usr/sbin/cron
 
 #RUN ln /usr/bin/sassc /usr/bin/sass
-COPY manage.py . 
+COPY manage.py .
 
 ################ BUILDER #########################
 FROM base AS builder
@@ -79,7 +79,7 @@ RUN pip install ptvsd
 
 WORKDIR /srv/app/
 
-CMD deployment/django/start-dev.sh 
+CMD deployment/django/start-dev.sh
 
 ################ PRODUCTION #########################
 
@@ -110,4 +110,3 @@ USER openrepairplatform
 EXPOSE 8000
 
 ENTRYPOINT ./start.sh
-

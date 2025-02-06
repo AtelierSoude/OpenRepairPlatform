@@ -109,7 +109,7 @@ js_recurrent_event = Bundle(
     "js/events/recurrent_event.js",
     filters="jsmin",
     output="js/events/recurrent_event.min.js",
-)
+) 
 js_detail_organization = Bundle(
     "js/lib/auto-complete.js",
     "js/user/create_edit.js",
@@ -134,7 +134,7 @@ js_create_stuff = Bundle(
 js_edit_owner_stuff = Bundle(
     "js/inventory/edit_owner_stuff.js",
     filters="jsmin",
-    output="js/inventory/edit_owner_stuff.min.js",
+    output="js/inventory/edit_owner_stuff.min.js", 
 )
 js_stuff_folder = Bundle(
     "js/inventory/stuff_folder.js",

@@ -1,5 +1,6 @@
-############### BASE #########################
-FROM python:3.9.17-slim-buster AS base
+
+################ BASE #########################
+FROM python:3.12-slim-bullseye AS base
 
 # set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1

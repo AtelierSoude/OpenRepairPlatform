@@ -1,4 +1,4 @@
-{% load assets app_filters thumbnail initialavatar bootstrap5 %}
+{% load assets app_filters thumbnail bootstrap5 %}
 <h4 class="mt-4">Etat des adhésions</h4>
 {% for membership in object.memberships.all %}
     {% if membership.organization in user.admin_organizations.all or user.volunteer_organizations.all or user.active_organizations.all or object == user %}

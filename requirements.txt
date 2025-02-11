@@ -18,7 +18,7 @@ cairocffi==1.2.0
     #   weasyprint
 cairosvg==2.5.2
     # via weasyprint
-certifi==2021.10.8
+certifi==2024.7.4
     # via requests
 cffi==1.14.5
     # via

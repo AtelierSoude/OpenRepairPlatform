@@ -58,13 +58,9 @@ js_base = Bundle(
     output="js/base.min.js",
 )
 js_django_autocomplete = Bundle(
-    "/usr/local/lib/python3.9/site-packages/dal_select2/static/autocomplete_light/vendor/select2/dist/js/select2.full.js",
-    "/usr/local/lib/python3.9/site-packages/dal/static/autocomplete_light/jquery.init.js",
-    "/usr/local/lib/python3.9/site-packages/dal_select2/static/autocomplete_light/vendor/select2/dist/js/i18n/fr.js",
-    "/usr/local/lib/python3.9/site-packages/dal/static/autocomplete_light/autocomplete.init.js",
-    "/usr/local/lib/python3.9/site-packages/dal/static/autocomplete_light/forward.js",
-    "/usr/local/lib/python3.9/site-packages/dal_select2/static/autocomplete_light/select2.js",
-    "/usr/local/lib/python3.9/site-packages/dal/static/autocomplete_light/jquery.post-setup.js",  
+    "/usr/local/lib/python3.12/site-packages/dal_legacy_static/static/admin/js/vendor/select2/i18n/fr.js",
+    "/usr/local/lib/python3.12/site-packages/dal_select2/static/autocomplete_light/select2.js",
+    "/usr/local/lib/python3.12/site-packages/dal/static/autocomplete_light/autocomplete_light.js",
     filters="jsmin",
     output="js/django_autocomplete.min.js",
 )
@@ -113,7 +109,7 @@ js_recurrent_event = Bundle(
     "js/events/recurrent_event.js",
     filters="jsmin",
     output="js/events/recurrent_event.min.js",
-) openrepairplatform/assets.py 
+) 
 js_detail_organization = Bundle(
     "js/lib/auto-complete.js",
     "js/user/create_edit.js",
@@ -138,7 +134,7 @@ js_create_stuff = Bundle(
 js_edit_owner_stuff = Bundle(
     "js/inventory/edit_owner_stuff.js",
     filters="jsmin",
-    output="js/inventory/edit_owner_stuff.min.js", openrepairplatform/assets.py 
+    output="js/inventory/edit_owner_stuff.min.js", 
 )
 js_stuff_folder = Bundle(
     "js/inventory/stuff_folder.js",
@@ -161,7 +157,7 @@ register("js_base", js_base)
 register("js_django_autocomplete", js_django_autocomplete)
 register("js_places", js_places)
 register("js_create_edit_place", js_create_edit_place)
-register("js_create_edit_user", js_create_edit_user) openrepairplatform/assets.py 
+register("js_create_edit_user", js_create_edit_user)
 register("js_detail_place", js_detail_place)
 register("js_detail_event", js_detail_event)
 register("js_event_list", js_event_list)

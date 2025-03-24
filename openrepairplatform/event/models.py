@@ -206,6 +206,10 @@ class Event(models.Model):
     booking = models.BooleanField(
         default=True, verbose_name=_("Réservation interne au site ?")
     )
+    internal_notes = CleanHTMLField(
+        verbose_name= _("Notes de l'évènement visibles en interne"),
+        blank=True,
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     history = HistoricalRecords()

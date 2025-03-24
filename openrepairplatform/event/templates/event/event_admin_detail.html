@@ -99,6 +99,14 @@
                 </div>
               {% endfor %}
             </div>
+            <div class="card mb-2">
+              <div class="card-body p-2">
+                {% if event.internal_notes %}
+                  <h4>Notes internes</h4>
+                  {{ event.internal_notes | safe }}
+                {% endif %}
+              </div>
+            </div>
           </div>
         </div>
       {% endwith %}

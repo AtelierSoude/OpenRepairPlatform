@@ -28,6 +28,7 @@ class EventUpdateSerializer(serializers.ModelSerializer):
           "organizers",
           "organization",
           "conditions",
+          "internal_notes",
         ]
 
 
@@ -75,6 +76,7 @@ class EventCreateSerializer(serializers.ModelSerializer):
                 ),
                 "activity": self.validated_data["activity"],
                 "available_seats": self.validated_data["available_seats"],
+                "internal_notes": self.validated_data["internal_notes"],
             }
             event = Event.objects.create(**params)
             event.organizers.add(*list(self.validated_data["organizers"]))
@@ -135,4 +137,5 @@ class EventCreateSerializer(serializers.ModelSerializer):
             "ends_at",
             "end_date",
             "period_before_publish",
+            "internal_notes",
         ]

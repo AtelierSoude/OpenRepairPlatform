@@ -73,6 +73,7 @@ class EventForm(ModelForm):
             "needed_organizers",
             "organizers",
             "conditions",
+            "internal_notes",
         ]
         widgets = {
             "location": autocomplete.ModelSelect2(url="place_autocomplete"),
@@ -233,6 +234,7 @@ class RecurrentEventForm(forms.ModelForm):
             "ends_at",
             "end_date",
             "period_before_publish",
+            "internal_notes",
         ]
         widgets = {
             "location": autocomplete.ModelSelect2(url="place_autocomplete"),

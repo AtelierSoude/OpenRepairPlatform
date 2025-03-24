@@ -51,6 +51,13 @@
             <p><b>Animateurs :</b></p>
             <VueMultiselect v-model="organizers" :multiple="true" :options="optionOrganizers" label="name" track-by="name"/>
           </div>
+
+          <section class="mb-4">
+            <p><b>
+              Notes internes :
+            </b></p>
+            <QuillEditor v-model:content="internal_notes" contentType="html" theme="snow" value:="value" placeholder="Note internes pour les animateurs..."/>
+          </section>
         </section>
         <div>
           <button type="button" class="btn btn-primary btn-sm me-2" @click="$emit('previous')">Précedent</button>
@@ -62,10 +69,14 @@
 
 <script>
 import VueMultiselect from 'vue-multiselect'
+import { QuillEditor } from '@vueup/vue-quill'
 
 export default {
   name: 'EventStepThree',
-  components: {VueMultiselect},
+  components: {
+    VueMultiselect,
+    QuillEditor,
+  },
   props: {
     initials: Object,
     orgaConditions: Array,
@@ -91,6 +102,7 @@ export default {
     this.external_url = this.initials.external_url
     this.members_only = this.initials.members_only
     this.needed_organizers = this.initials.needed_organizers
+    this.internal_notes = this.initials.internal_notes
   },
   data () {
     return {
@@ -105,6 +117,7 @@ export default {
       conditions: [],
       needed_organizers: 0,
       organizers: [],
+      internal_notes: "",
     }
   },
   methods: {
@@ -128,6 +141,7 @@ export default {
           conditions: conditions,
           needed_organizers: this.needed_organizers,
           organizers: organizers,
+          internal_notes: this.internal_notes,
         }
       )
     },

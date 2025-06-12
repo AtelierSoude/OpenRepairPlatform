@@ -16,6 +16,7 @@ services:
 
   openrepairplatform:
     build:
+      context: .
       dockerfile: ./deployment/django/Dockerfile
       target: developpement
     container_name: openrepairplatform

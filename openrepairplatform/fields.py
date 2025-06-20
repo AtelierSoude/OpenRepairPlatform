@@ -1,4 +1,5 @@
 import bleach
+from bleach.css_sanitizer import CSSSanitizer
 from django.core.exceptions import ValidationError
 from tinymce.models import HTMLField
 
@@ -26,11 +27,12 @@ class CleanHTMLField(HTMLField):
             "text-decoration-line",
             "color",
         ]
+        css_sanitizer = CSSSanitizer(allowed_css_properties=ALLOWED_STYLES)
         cleaned_value = bleach.clean(
             value,
             tags=ALLOWED_TAGS,
             attributes=ALLOWED_ATTRS,
-            styles=ALLOWED_STYLES,
+            css_sanitizer=css_sanitizer,
             strip=True,
         )
         if cleaned_value != value:

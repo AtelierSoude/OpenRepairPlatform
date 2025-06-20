@@ -503,7 +503,6 @@ def test_user_absent_remove_contribution(
         organization=event.organization, user=custom_user, amount=10
     )
     fee_factory(
-        user=custom_user,
         organization=event.organization,
         payment=1,
         amount=10,

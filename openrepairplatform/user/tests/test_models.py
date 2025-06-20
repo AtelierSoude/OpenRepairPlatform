@@ -102,7 +102,6 @@ def test_delete_fee(user_log, client, membership, fee_factory):
     client.login(email=user_log.email, password=USER_PASSWORD)
     fee = fee_factory(
         membership=membership,
-        user=membership.user,
         organization=membership.organization,
         amount=12
     )

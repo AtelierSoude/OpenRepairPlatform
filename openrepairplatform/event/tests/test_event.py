@@ -4,12 +4,14 @@ from django.contrib.auth import get_user
 from django.core import signing, mail
 from django.urls import reverse
 from django.utils import timezone
+from django.test import override_settings
 
 from openrepairplatform.event.models import Event
 from openrepairplatform.user.factories import USER_PASSWORD
 from openrepairplatform.user.models import CustomUser, Membership
 
 pytestmark = pytest.mark.django_db
+
 
 
 def _django_date(datetime):
@@ -44,7 +46,7 @@ def event_data(condition_factory, activity, custom_user_factory, place, organiza
         "needed_organizers": 1,
     }
 
-
+@override_settings(LOCATION=False)
 def test_event_list(client, event_factory, published_event_factory):
     response = client.get(reverse("event:list"))
     assert response.status_code == 200
@@ -60,7 +62,7 @@ def test_event_list(client, event_factory, published_event_factory):
     assert event1 in response.context_data["object_list"]
     assert event2 in response.context_data["object_list"]
 
-
+@override_settings(LOCATION=False)
 def test_event_list_invalid(client, published_event_factory):
     event1 = published_event_factory()
     event2 = published_event_factory()
@@ -68,7 +70,7 @@ def test_event_list_invalid(client, published_event_factory):
     assert event1 in response.context_data["object_list"]
     assert event2 in response.context_data["object_list"]
 
-
+@override_settings(LOCATION=False)
 def test_event_list_filter_place(client, place_factory, published_event_factory):
     place1 = place_factory()
     place2 = place_factory()
@@ -78,7 +80,7 @@ def test_event_list_filter_place(client, place_factory, published_event_factory)
     assert event1 in response.context_data["object_list"]
     assert event2 not in response.context_data["object_list"]
 
-
+@override_settings(LOCATION=False)
 def test_event_list_filter_orga(client, organization_factory, published_event_factory):
     orga1 = organization_factory()
     orga2 = organization_factory()
@@ -88,7 +90,7 @@ def test_event_list_filter_orga(client, organization_factory, published_event_fa
     assert event1 in response.context_data["object_list"]
     assert event2 not in response.context_data["object_list"]
 
-
+@override_settings(LOCATION=False)
 def test_event_list_filter_activity(client, activity_factory, published_event_factory):
     activity1 = activity_factory(name="hello")
     activity2 = activity_factory(name="world")
@@ -98,7 +100,7 @@ def test_event_list_filter_activity(client, activity_factory, published_event_fa
     assert event1 in response.context_data["object_list"]
     assert event2 not in response.context_data["object_list"]
 
-
+@override_settings(LOCATION=False)
 def test_event_list_filter_start_time(client, published_event_factory):
     now = timezone.now()
     old = now - datetime.timedelta(days=3)

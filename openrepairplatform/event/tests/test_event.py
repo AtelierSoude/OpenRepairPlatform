@@ -146,13 +146,19 @@ def test_get_event_delete(client, user_log, event):
     assert event.organization.name in html
 
 
-def test_event_delete(client, user_log, event):
+def test_event_delete_unauthorised(client, user_log, event):
     assert Event.objects.count() == 1
     response = client.post(reverse("event:delete", args=[event.pk]))
     assert response.status_code == 302
     client.login(email=user_log.email, password=USER_PASSWORD)
     response = client.post(reverse("event:delete", args=[event.pk]))
     assert response.status_code == 403
+
+def test_event_delete_authorized(client, user_log, event):
+    assert Event.objects.count() == 1
+    response = client.post(reverse("event:delete", args=[event.pk]))
+    assert response.status_code == 302
+    client.login(email=user_log.email, password=USER_PASSWORD)
     current_user = get_user(client)
     event.organization.admins.add(current_user)
     assert current_user in event.organization.admins.all()

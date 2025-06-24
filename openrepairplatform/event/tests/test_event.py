@@ -640,7 +640,7 @@ def test_events_ics_by_organization(
     assert f"SUMMARY:{str(event2)}" not in ics
 
     assert f"{event1.location.name}" in ics
-    assert f"{event2.location.name}" in ics
+    assert f"{event3.location.name}" in ics
 
 
 def test_event_ics(client, organization, activity, published_event_factory):

@@ -7,16 +7,18 @@ services:
     volumes:
       - openrepairplatform-db:/var/lib/postgresql/data
       - ./deployment/saves-bdd:/saves-bdd
-      - ./deployment/saves-bdd:/srv/saves-bdd 
+      - ./deployment/saves-bdd:/srv/saves-bdd
     ports: # uncomment for dev env
       - 5432:5432 # uncomment for dev env
     networks:
       - openrepairplatform
     restart: always
-  openrepairplatform: 
+
+  openrepairplatform:
     build:
+      context: .
       dockerfile: ./deployment/django/Dockerfile
-      target: developpement 
+      target: developpement
     container_name: openrepairplatform
     env_file:
       - .env
@@ -25,28 +27,30 @@ services:
       - ./deployment/saves-bdd:/srv/saves-bdd
       - ./deployment/openrepairplatform_data/openrepairplatform_media/:/srv/media
       - ./openrepairplatform/static/:/srv/static
-    ports: 
-      - 80:80 
-      - 5678:5678 
-      - 5679:5679 
+    ports:
+      - 8005:8005
+      - 5679:5679
+      - 5678:5678
       - 35729:35729
-    stdin_open: true 
+    stdin_open: true
     tty: true
     depends_on:
       - db
     networks:
       - openrepairplatform
     restart: always
-  pgadmin:
-    container_name: pgadmin4_container
-    image: dpage/pgadmin4
-    restart: always
-    env_file:
-      - .env
-    ports:
-      - "5050:80"
-    networks:
-      - openrepairplatform
+
+#  pgadmin:
+#    container_name: pgadmin4_container
+#    image: dpage/pgadmin4
+#    restart: always
+#    env_file:
+#      - .env
+#    ports:
+#      - "5050:80"
+#    networks:
+#      - openrepairplatform
+
 networks:
   openrepairplatform:
 volumes:

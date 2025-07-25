@@ -64,6 +64,17 @@
       </section>
     </template>
 
+    <template v-if="data.internal_notes">
+      <label>Notes internes :</label>
+      <section class="mb-4">
+        <div class="card">
+          <div class="card-body">
+            <p class="card-text ms-2" v-html="data.internal_notes"></p>
+          </div>
+        </div>
+      </section>
+    </template>
+
     <label>L'évenement recense le matériel électronique :</label>
     <p><b v-if="data.allow_stuffs">Oui</b><b v-else>Non</b></p>
 

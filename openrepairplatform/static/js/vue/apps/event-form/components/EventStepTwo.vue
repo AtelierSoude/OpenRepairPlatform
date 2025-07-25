@@ -25,7 +25,7 @@
           <p><b>
             Si vous souhaitez une description différente de celle proposée par l'ativité sélectionnée, veuillez remplir ce champ.
           </b></p>
-          <QuillEditor v-model:content="description" contentType="html" theme="snow" placeholder="Description de l'événement ..."/>
+          <QuillEditor v-model:content="description" contentType="html" theme="snow" value:="value" placeholder="Description de l'événement ..."/>
         </section>
         <section class="mb-4" v-if="activity">
           <p><b>Quel est le lieu ?</b></p>

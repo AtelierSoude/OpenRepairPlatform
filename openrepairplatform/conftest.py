@@ -56,6 +56,7 @@ def client_log_staff(client, user_log_staff):
 
 
 @pytest.fixture
-def api_client_log(user_log, client=APIClient()):
+def api_client_log(user_log):
+    client = APIClient()
     client.login(email=user_log.email, password=USER_PASSWORD)
     return client

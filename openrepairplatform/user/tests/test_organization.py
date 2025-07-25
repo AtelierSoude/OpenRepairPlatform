@@ -8,14 +8,14 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
 from django.utils import timezone
 from datetime import timedelta
+from django.test import override_settings
 
 from openrepairplatform.user.factories import USER_PASSWORD
 from openrepairplatform.user.models import Organization, Fee
-
 pytestmark = pytest.mark.django_db
 FILES_DIR = join(dirname(abspath(__file__)), "files")
 
-
+@override_settings(LOCATION=False)
 def test_organization_list(client, organization):
     response = client.get(reverse("user:organization_list"))
     assert response.status_code == 200

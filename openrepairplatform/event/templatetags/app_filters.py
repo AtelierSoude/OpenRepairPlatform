@@ -63,3 +63,10 @@ def query_transform(request, **kwargs):
 @register.simple_tag
 def sum_conditions(conditions):
     return sum(condition.price for condition in conditions)
+
+@register.simple_tag
+def organization_fees(organization, user):
+    """
+    Returns the fees for a given user and organization.
+    """
+    return Fee.objects.filter(organization=organization, membership__user=user)

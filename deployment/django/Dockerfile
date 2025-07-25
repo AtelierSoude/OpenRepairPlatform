@@ -17,6 +17,7 @@ RUN set -uex; \
     apt-get update; \
     apt-get install nodejs -y;
 RUN apt-get install -y libproj-dev locales locales-all cron gdal-bin build-essential sassc
+RUN apt-get install --assume-yes git
 
 RUN ln /usr/bin/sassc /usr/bin/sass
 

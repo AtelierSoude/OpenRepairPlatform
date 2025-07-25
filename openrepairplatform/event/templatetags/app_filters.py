@@ -69,4 +69,4 @@ def organization_fees(organization, user):
     """
     Returns the fees for a given user and organization.
     """
-    return Fee.objects.filter(organization=organization, user=user)
+    return Fee.objects.filter(organization=organization, membership__user=user)

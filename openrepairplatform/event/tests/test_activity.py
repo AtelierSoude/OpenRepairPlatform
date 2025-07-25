@@ -1,6 +1,7 @@
 import pytest
 from django.contrib.auth import get_user
 from django.urls import reverse
+from django.test import override_settings
 
 from openrepairplatform.event.models import Activity
 from openrepairplatform.user.factories import USER_PASSWORD
@@ -18,6 +19,7 @@ def activity_data(organization_factory):
     }
 
 
+@override_settings(LOCATION=False)
 def test_activity_list(client, activity_factory):
     response = client.get(reverse("event:activity_list"))
     assert response.status_code == 200

@@ -50,7 +50,7 @@ class MembershipFactory(DjangoModelFactory):
 
 
 class FeeFactory(DjangoModelFactory):
-    user = factory.SubFactory(CustomUserFactory)
+    membership = factory.SubFactory(MembershipFactory)
     organization = factory.SubFactory(OrganizationFactory)
     amount = faker.random_number()
 

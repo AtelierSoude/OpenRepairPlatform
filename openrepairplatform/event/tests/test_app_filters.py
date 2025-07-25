@@ -51,7 +51,8 @@ def test_query_transform():
     assert query_transform(request, page=11, add="3&") == "test=coucou&page=11&add=3%26"
 
 
-def test_organization_fees(organization, custom_user, fee_factory):
-    fee = fee_factory(user=custom_user, organization=organization, amount=8)
+def test_organization_fees(organization, custom_user, membership_factory, fee_factory):
+    membership = membership_factory(user=custom_user, organization=organization)
+    fee = fee_factory(membership=membership, organization=organization, amount=8)
     tags = organization_fees(organization, custom_user)
     assert fee in tags

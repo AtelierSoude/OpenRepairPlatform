@@ -248,7 +248,7 @@ class OrganizationListView(LocationOrganization, ListView):
     def get(self, request, *args, **kwargs):
         res = super().get(request, *args, **kwargs)
         places = Place.objects.all()
-        if not self.object_list:
+        if not self.get_queryset().exists():
             zipcodes = "<br/>".join({
                 f"- {place.zipcode}" for place in places if place.address
             })
@@ -263,6 +263,7 @@ class OrganizationListView(LocationOrganization, ListView):
                 {zipcodes}
             """
             messages.info(request, message, extra_tags="safe")
+
             return HttpResponseRedirect(reverse("homepage"))
         return res
 

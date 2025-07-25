@@ -353,6 +353,16 @@
                   </p>
                 </div>
               {% endif %}
+              {% if user in organizers %}
+                <div class="card mb-2">
+                  <div class="card-body p-2">
+                    {% if event.internal_notes %}
+                      <h4>Notes internes</h4>
+                      {{ event.internal_notes | safe }}
+                    {% endif %}
+                  </div>
+                </div>
+              {% endif %}
               {% if event.external == True %}
                 <a class="btn btn-block btn-success"
                    target="_blank"
@@ -365,7 +375,7 @@
                       method="post"
                       class="d-inline">
                   {% csrf_token %}
-                  {% if user in organizers %}
+                  {% if user in organizers %} 
                     <button class="btn btn-secondary btn-block mt-2" type="submit">je n'anime plus</button>
                   {% else %}
                     <button class="btn btn-primary btn-block mt-2" type="submit">J'anime</button>

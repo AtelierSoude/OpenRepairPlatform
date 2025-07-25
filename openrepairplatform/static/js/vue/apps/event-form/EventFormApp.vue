@@ -76,6 +76,7 @@ export default {
         conditions: [],
         needed_organizers: 0,
         organizers: [],
+        internal_notes: "",
       },
       event: null,
       currentStep: 0,
@@ -123,6 +124,7 @@ export default {
       this.dataThree.conditions = event.fields.conditions
       this.dataThree.needed_organizers = event.fields.needed_organizers
       this.dataThree.organizers = event.fields.organizers
+      this.dataThree.internal_notes = event.fields.internal_notes
       // Validated all steps
       this.validatedSteps = [1, 2, 3]
       this.event = event

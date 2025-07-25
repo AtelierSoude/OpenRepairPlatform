@@ -678,3 +678,12 @@ def test_send_invitation_event_error(client, organization, event_factory, custom
     )
     assert resp.status_code == 302
     assert len(mail.outbox) == 0
+
+
+def test_event_internal_notes(event_factory):
+    """Test the internal_notes field on Event."""
+    notes = "Ceci est une note interne pour l'évènement."
+    event = event_factory(internal_notes=notes)
+    assert hasattr(event, "internal_notes")
+    assert event.internal_notes == notes
+

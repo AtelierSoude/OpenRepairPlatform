@@ -57,6 +57,15 @@
         </div>
     </div>
 <div class="form-group p-2">
-<button role="button" type="submit" id="btnsubmit" style="display:none" class="btn submit-btn btn-success w-100 p-3">Valider</button>
+    <button role="button" type="submit" id="btnsubmit" style="display:none" class="btn submit-btn btn-success w-100 p-3">Valider</button>
 </div>
 </form>
+{% block extra_js %}
+   
+    {{ form.media }}
+
+    {% assets "js_create_stuff" %}
+    <script src="{{ ASSET_URL }}"></script>
+    {% endassets %}
+
+{% endblock extra_js %}

@@ -58,9 +58,9 @@
   {% endif %}
 {% endblock %}
 {% block extra_js %}
-  {% assets "js_django_autocomplete" %}
-  <script src="{{ ASSET_URL }}"></script>
-  {% endassets %}
+    {% assets "js_create_stuff" %}
+        <script src="{{ ASSET_URL }}"></script>
+    {% endassets %}
    <script>
   if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
 

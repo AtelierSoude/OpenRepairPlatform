@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load assets app_filters thumbnail static bootstrap5 %}
+{% load assets app_filters thumbnail initialavatar static bootstrap5 %}
 {% block title %}Page de {{stuff}} {% endblock %}
 
 {% block content %}
@@ -143,10 +143,6 @@
 
 {% block extra_js %}
 {% assets "js_create_stuff" %}
-<script src="{{ ASSET_URL }}"></script>
-{% endassets %}
-
-{% assets "js_django_autocomplete" %}
 <script src="{{ ASSET_URL }}"></script>
 {% endassets %}
 

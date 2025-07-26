@@ -10,10 +10,11 @@ asgiref==3.8.1
     # via django
 attrs==24.2.0
     # via ics
-backports.zoneinfo;python_version<"3.9"
+backports-zoneinfo==0.2.1 ; python_version < "3.9"
     # via
     #   django
     #   djangorestframework
+    #   openrepairplatform (setup.py)
 beautifulsoup4==4.12.3
     # via django-bootstrap-v5
 bleach==6.1.0
@@ -60,7 +61,7 @@ django-autocomplete-light==3.9.7
     # via openrepairplatform (setup.py)
 django-better-admin-arrayfield==1.4.2
     # via openrepairplatform (setup.py)
-django-bootstrap-modal-forms==2.0.0
+django-bootstrap-modal-forms==3.0.5
     # via openrepairplatform (setup.py)
 django-bootstrap-static==5.3.3
     # via openrepairplatform (setup.py)

@@ -17,6 +17,7 @@ RUN set -uex; \
     apt-get update; \
     apt-get install nodejs -y;
 RUN apt-get install -y libproj-dev locales locales-all cron gdal-bin build-essential sassc
+RUN apt-get install --assume-yes git
 
 RUN ln /usr/bin/sassc /usr/bin/sass
 
@@ -95,13 +96,13 @@ RUN  npm install --unsafe-perm=true
 RUN  npm run buildprod
 
 WORKDIR /srv/app/
-RUN python3 manage.py assets build
 RUN python3 ./manage.py collectstatic --noinput --clear
+COPY ../../openrepairplatform/static /srv/static
+
+RUN python3 manage.py assets build
 
 COPY deployment/django/start.sh .
 COPY deployment/django/uwsgi.ini .
-
-COPY ../../openrepairplatform/static /srv/static
 
 RUN chown -R openrepairplatform:openrepairplatform /srv/*
 

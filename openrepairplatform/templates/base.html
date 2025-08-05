@@ -75,21 +75,27 @@
             {% assets "css_openrepairplatform" %}
                   <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet" />
             {% endassets %}
+
+            <script src="{% static 'node_modules/jquery/dist/jquery.min.js' %}"></script>
+            <script src="{% static 'node_modules/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
+            <script src="{% static 'js/bootstrap5.modal.forms.min.js' %}"></script>
+
             <!--for django autocomplete -->
             <link href="/static/vendor/select2/dist/css/select2.css" media="screen" rel="stylesheet" type="text/css">
             <link href="/static/admin/css/autocomplete.css" media="screen" rel="stylesheet" type="text/css">
             <link href="/static/autocomplete_light/select2.css" media="screen" rel="stylesheet" type="text/css">
-
-            <script src="{% static 'node_modules/jquery/dist/jquery.min.js' %}"></script>
-
-            <script src="{% static 'node_modules/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
-            <script src="{% static 'js/bootstrap5.modal.forms.min.js' %}"></script>
+            <!-- not good way to import but module in a modal don't load when statics aren't presents in the parent's page -->
+            <script src="/static/admin/js/vendor/select2/select2.full.js"></script>
+            <script src="/static/autocomplete_light/autocomplete_light.js"></script>
+            <script src="/static/autocomplete_light/select2.js"></script>
 
             <script type="text/javascript"
                     src="{% static 'django_tables2_column_shifter/js/django_tables2_column_shifter.min.js' %}"></script>
             {% assets "js_base" %}
                   <script src="{{ ASSET_URL }}"></script>
             {% endassets %}
+
+
       </head>
       <body class="bg-light">
             {% block menu %}

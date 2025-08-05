@@ -412,7 +412,7 @@ class StuffForm(BSModalModelForm):
         self.create_folder = data["create_folder"]
 
     def clean_device(self):
-        if not self.request.is_ajax():
+        if not self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
             device = self.cleaned_data["device"]
             if not device:
                 device = {}
@@ -540,7 +540,7 @@ class StuffUpdateForm(BSModalModelForm):
     picture = forms.ImageField(required=False, label="Photo")
 
     def clean_device(self):
-        if not self.request.is_ajax():
+        if not self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
             device = self.cleaned_data["device"]
             if not device:
                 device = {}

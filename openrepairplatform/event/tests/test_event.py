@@ -217,6 +217,7 @@ def test_event_create_invalid(client, user_log, event_data):
     assert Event.objects.count() == 0
     data = event_data
     del data["starts_at"]
+    del data["publish_at"]
     response = client.post(reverse("event:create", args=[organization.pk]), data)
     html = response.content.decode()
     assert response.status_code == 200

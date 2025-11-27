@@ -16,8 +16,14 @@
         {% bootstrap_form_errors form %}
         {% csrf_token %}
         <span class="p-2">Cette intervention concerne le dossier {{folder}}</span><br>
-        <small class="text-danger"> IMPORTANT : vous devez renseigner au moins une observation</small>
-        {% bootstrap_field form.repair_date %}
+        <small class="text-danger"> IMPORTANT : vous devez renseigner au moins une observation</small><br><br>
+        {% if intervention.event %}
+            <span class="text-center"> Dossier ouvert lors de l'évenement : <br>
+                <a class="text-center" href="{{intervention.event.get_absolute_url}}">{{ intervention.event }}</a><br>
+            </span>
+        {% else %}
+            {% bootstrap_field form.repair_date %}
+        {% endif %}
             <div class="bordered p-2 m-2">
                 <div class="row">
                     {% bootstrap_field form.observation form_group_class="col" %}

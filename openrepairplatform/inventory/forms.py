@@ -263,17 +263,20 @@ class InterventionForm(BSModalModelForm):
                 )
         return instance
 
-    def __init__(self, folder=None, stuff=None, *args, **kwargs):
+    def __init__(self, folder=None, stuff=None, event=None, *args, **kwargs):
         if folder:
             self.folder = folder
         if stuff:
             self.stuff = stuff
+        if event: 
+            self.event = event
         super().__init__(*args, **kwargs)
-        self.fields['repair_date'] = forms.DateField(
-            initial=dt.today,
-            widget=forms.DateInput(attrs={"type": "date"}, format="%Y-%m-%d"),
-            label="date",
-        )
+        if not event: 
+            self.fields['repair_date'] = forms.DateField(
+                    initial=dt.today,
+                    widget=forms.DateInput(attrs={"type": "date"}, format="%Y-%m-%d"),
+                    label="date",
+                )
         self.fields["observation"] = forms.ModelChoiceField(
             widget=autocomplete.ModelSelect2(url="inventory:observation_autocomplete"),
             help_text="Quel est (ou était) le problème ?",

@@ -248,10 +248,6 @@ class OrganizationListView(LocationOrganization, ListView):
     def get(self, request, *args, **kwargs):
         res = super().get(request, *args, **kwargs)
 
-        # If super return a redirection, return it
-        if isinstance(res,HttpResponseRedirect):
-            return res
-
         places = Place.objects.all()
         if not self.get_queryset().exists():
             zipcodes = "<br/>".join({

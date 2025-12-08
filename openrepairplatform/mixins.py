@@ -204,6 +204,11 @@ class LocationRedirectMixin:
     def filter_queryset_location(self, queryset):
         if not settings.LOCATION:
             return queryset
+
+        # Check if session has "location" key
+        if not self.request.session.has_key("location"):
+            return queryset
+
         location = Point(self.request.session["location"])
         return queryset.filter(
             location__location__dwithin=(
@@ -216,6 +221,11 @@ class LocationOrganization(LocationRedirectMixin):
     def filter_queryset_location(self, queryset):
         if not settings.LOCATION:
             return queryset
+
+        # Check if session has "location" key
+        if not self.request.session.has_key("location"):
+            return queryset
+
         location = Point(self.request.session["location"])
         return queryset.filter(
             places__location__dwithin=(
@@ -228,6 +238,11 @@ class LocationActivity(LocationRedirectMixin):
     def filter_queryset_location(self, queryset):
         if not settings.LOCATION:
             return queryset
+
+        # Check if session has "location" key
+        if not self.request.session.has_key("location"):
+            return queryset
+
         location = Point(self.request.session["location"])
         return queryset.filter(
             organization__places__location__dwithin=(

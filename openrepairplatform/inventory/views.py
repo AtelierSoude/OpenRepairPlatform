@@ -1,6 +1,8 @@
 from dal import autocomplete
 from django.contrib import messages
 from django.urls import reverse
+from django.db.models import Count, Q, F, Max, Sum
+from django.utils.safestring import mark_safe
 
 from bootstrap_modal_forms.generic import (
     BSModalCreateView,
@@ -14,7 +16,7 @@ from django.views.generic import (
 )
 from openrepairplatform.mixins import HasActivePermissionMixin
 from openrepairplatform.user.mixins import PermissionOrgaContextMixin
-from openrepairplatform.inventory.mixins import PermissionEditStuffMixin
+from openrepairplatform.inventory.mixins import PermissionEditStuffMixin, DeviceContextAutocompleteMixin
 
 import django_tables2 as tables
 from django_filters.views import FilterView
@@ -328,39 +330,345 @@ class BrandAutocomplete(autocomplete.Select2QuerySetView):
 
 
 class ObservationAutocomplete(autocomplete.Select2QuerySetView):
-    def get_queryset(self):
-        qs = Observation.objects.all()
 
+    def get_queryset(self, *args, **kwargs):
+        device_id = self.request.GET.get("device")
+
+        base = Observation.objects.all()
+        category = None
+        parent_category = None
+
+        if device_id:
+            try:
+                device = Device.objects.select_related("category").get(pk=device_id)
+                category = device.category
+            except Device.DoesNotExist:
+                device = None
+
+            if category:
+                try:
+                    parent_category = category.get_parent()
+                except AttributeError:
+                    parent_category = None
+
+        # Cas SANS contexte → on se base sur usage_count global
+        if not category and not parent_category:
+            qs = base.annotate(
+                usage_count=Count("intervention", distinct=True)
+            )
+            if self.q:
+                qs = qs.filter(name__icontains=self.q)
+
+            self.score_attr = "usage_count"
+            # somme des usages (on peut ignorer les 0 si on veut)
+            self.total_score = (
+                qs.aggregate(
+                    total_score=Sum(self.score_attr, filter=Q(usage_count__gt=0))
+                )["total_score"]
+                or 0
+            )
+            return qs.order_by("-usage_count", "name")
+
+        # Cas AVEC contexte device / catégorie / parent
+        direct_filter = Q()
+        parent_filter = Q()
+
+        if category:
+            direct_filter |= Q(
+                intervention__folder__stuff__device__category_id=category.id
+            )
+            direct_filter |= Q(
+                intervention__folder__stuff__device_id=device_id
+            )
+
+        if parent_category:
+            parent_filter = Q(
+                intervention__folder__stuff__device__category_id=parent_category.id
+            )
+
+        qs = base.annotate(
+            direct_count=Count(
+                "intervention",
+                filter=direct_filter,
+                distinct=True,
+            ),
+            parent_count=Count(
+                "intervention",
+                filter=parent_filter,
+                distinct=True,
+            ),
+        ).annotate(
+            score=3 * F("direct_count") + 1 * F("parent_count")
+        )
+
+        # ⚠️ on NE filtre PAS les scores nuls : toutes les obs restent
         if self.q:
             qs = qs.filter(name__icontains=self.q)
-        return qs
+
+        self.score_attr = "score"
+        # somme des scores strictement positifs = base de proba
+        self.total_score = (
+            qs.aggregate(
+                total_score=Sum(self.score_attr, filter=Q(score__gt=0))
+            )["total_score"]
+            or 0
+        )
+
+        return qs.order_by("-score", "name")
+
+    def get_result_label(self, result):
+        score_attr = getattr(self, "score_attr", None)
+        total_score = getattr(self, "total_score", 0) or 0
+
+        raw = getattr(result, score_attr, 0) if score_attr else 0
+
+        if total_score > 0 and raw > 0:
+            percent = int(round(raw * 100 / total_score))
+        else:
+            percent = 0
+
+        return mark_safe(
+            f"{result.name} "
+            f"<span class='badge rounded-pill bg-light float-end'>{percent}%</span>"
+        )
 
     def has_add_permission(self, request):
         return True
-
 
 class ActionAutocomplete(autocomplete.Select2QuerySetView):
-    def get_queryset(self):
-        qs = Action.objects.all()
+    """
+    Suggestions d'Action basées sur :
+      - catégorie du device
+      - catégorie parente si elle existe
+      - reasoning courant (forward) éventuel
+
+    On calcule un count pour chaque Action :
+      effective_count = count_cat + count_parent
+
+    Probabilité ≈ effective_count / somme(effective_count)
+    """
+
+    def get_queryset(self, *args, **kwargs):
+        device_id = self.request.GET.get("device")
+
+        # reasoning courant (forward) ou initial (GET)
+        forwarded = getattr(self, "forwarded", {})
+        reasoning_id = forwarded.get("reasoning") or self.request.GET.get("reasoning")
+
+        base = Action.objects.all()
+        category = None
+        parent_category = None
+
+        # 1) récupérer catégorie et catégorie parente
+        if device_id:
+            try:
+                device = Device.objects.select_related("category").get(pk=device_id)
+                category = device.category
+            except Device.DoesNotExist:
+                category = None
+
+            if category:
+                try:
+                    parent_category = category.get_parent()
+                except AttributeError:
+                    parent_category = None
+
+        # 2) si aucune catégorie → fallback global
+        if not category and not parent_category:
+            qs = base.annotate(
+                effective_count=Count("intervention", distinct=True),
+            ).filter(
+                effective_count__gt=0
+            )
+
+            if self.q:
+                qs = qs.filter(name__icontains=self.q)
+
+            self.total_effective = (
+                qs.aggregate(
+                    total=Sum("effective_count", filter=Q(effective_count__gt=0))
+                )["total"]
+                or 0
+            )
+
+            return qs.order_by("-effective_count", "name")
+
+        # 3) cas avec catégorie (et éventuellement parente)
+        child_filter = Q()
+        parent_filter = Q()
+
+        if category:
+            child_filter &= Q(
+                intervention__folder__stuff__device__category_id=category.id
+            )
+        if parent_category:
+            parent_filter &= Q(
+                intervention__folder__stuff__device__category_id=parent_category.id
+            )
+
+        # on applique aussi le reasoning sur les deux contextes s'il existe
+        if reasoning_id:
+            child_filter &= Q(intervention__reasoning_id=reasoning_id)
+            parent_filter &= Q(intervention__reasoning_id=reasoning_id)
+
+        qs = base.annotate(
+            child_count=Count("intervention", filter=child_filter, distinct=True),
+            parent_count=Count("intervention", filter=parent_filter, distinct=True),
+        ).annotate(
+            effective_count=F("child_count") + F("parent_count")
+        ).filter(
+            Q(child_count__gt=0) | Q(parent_count__gt=0)
+        )
 
         if self.q:
             qs = qs.filter(name__icontains=self.q)
-        return qs
+
+        agg = qs.aggregate(
+            total_child=Sum("child_count", filter=Q(child_count__gt=0)),
+            total_parent=Sum("parent_count", filter=Q(parent_count__gt=0)),
+        )
+        self.total_effective = (agg["total_child"] or 0) + (agg["total_parent"] or 0)
+
+        # TRI strict par effective_count, puis enfant, puis alpha
+        return qs.order_by("-effective_count", "-child_count", "name")
+
+    def get_result_label(self, result):
+        child = getattr(result, "child_count", 0) or 0
+        parent = getattr(result, "parent_count", 0) or 0
+        eff = child + parent
+        total = getattr(self, "total_effective", 0) or 0
+
+        if total > 0 and eff > 0:
+            percent = int(round(eff * 100 / total))
+        else:
+            percent = 0
+
+        return mark_safe(
+            f"{result.name} "
+            f"<span class='badge rounded-pill bg-light float-end'>{percent}%</span>"
+        )
 
     def has_add_permission(self, request):
         return True
-
 
 class ReasoningAutocomplete(autocomplete.Select2QuerySetView):
-    def get_queryset(self):
-        qs = Reasoning.objects.all()
+    """
+    Suggestions de Reasoning basées sur :
+      - catégorie du device
+      - catégorie parente si elle existe
+      - observation courante (forward) éventuelle
+
+    On calcule un count pour chaque Reasoning :
+      effective_count = count_cat + count_parent
+
+    Probabilité ≈ effective_count / somme(effective_count)
+    """
+
+    def get_queryset(self, *args, **kwargs):
+        device_id = self.request.GET.get("device")
+
+        # observation courante (forward) ou initiale (GET)
+        forwarded = getattr(self, "forwarded", {})
+        observation_id = forwarded.get("observation") or self.request.GET.get("observation")
+
+        base = Reasoning.objects.all()
+        category = None
+        parent_category = None
+
+        # 1) récupérer catégorie et catégorie parente
+        if device_id:
+            try:
+                device = Device.objects.select_related("category").get(pk=device_id)
+                category = device.category
+            except Device.DoesNotExist:
+                category = None
+
+            if category:
+                try:
+                    parent_category = category.get_parent()
+                except AttributeError:
+                    parent_category = None
+
+        # 2) si aucune catégorie → fallback global sur fréquence globale
+        if not category and not parent_category:
+            qs = base.annotate(
+                effective_count=Count("intervention", distinct=True),
+            ).filter(
+                effective_count__gt=0
+            )
+
+            if self.q:
+                qs = qs.filter(name__icontains=self.q)
+
+            # somme globale pour normaliser
+            self.total_effective = (
+                qs.aggregate(
+                    total=Sum("effective_count", filter=Q(effective_count__gt=0))
+                )["total"]
+                or 0
+            )
+
+            return qs.order_by("-effective_count", "name")
+
+        # 3) cas avec catégorie (et éventuellement parente)
+        child_filter = Q()
+        parent_filter = Q()
+
+        if category:
+            child_filter &= Q(
+                intervention__folder__stuff__device__category_id=category.id
+            )
+        if parent_category:
+            parent_filter &= Q(
+                intervention__folder__stuff__device__category_id=parent_category.id
+            )
+
+        # on applique aussi l'observation sur les deux contextes s'il y en a une
+        if observation_id:
+            child_filter &= Q(intervention__observation_id=observation_id)
+            parent_filter &= Q(intervention__observation_id=observation_id)
+
+        qs = base.annotate(
+            child_count=Count("intervention", filter=child_filter, distinct=True),
+            parent_count=Count("intervention", filter=parent_filter, distinct=True),
+        ).annotate(
+            effective_count=F("child_count") + F("parent_count")
+        ).filter(
+            Q(child_count__gt=0) | Q(parent_count__gt=0)
+        )
 
         if self.q:
             qs = qs.filter(name__icontains=self.q)
-        return qs
+
+        # somme des counts (enfant + parent) > 0 pour normaliser
+        agg = qs.aggregate(
+            total_child=Sum("child_count", filter=Q(child_count__gt=0)),
+            total_parent=Sum("parent_count", filter=Q(parent_count__gt=0)),
+        )
+        self.total_effective = (agg["total_child"] or 0) + (agg["total_parent"] or 0)
+
+        # TRI strict par effective_count, puis enfant, puis alpha
+        return qs.order_by("-effective_count", "-child_count", "name")
+
+    def get_result_label(self, result):
+        child = getattr(result, "child_count", 0) or 0
+        parent = getattr(result, "parent_count", 0) or 0
+        eff = child + parent
+        total = getattr(self, "total_effective", 0) or 0
+
+        if total > 0 and eff > 0:
+            percent = int(round(eff * 100 / total))
+        else:
+            percent = 0
+
+        return mark_safe(
+            f"{result.name} "
+            f"<span class='badge rounded-pill bg-light float-end'>{percent}%</span>"
+        )
 
     def has_add_permission(self, request):
         return True
+
 
 
 class StatusAutocomplete(autocomplete.Select2QuerySetView):

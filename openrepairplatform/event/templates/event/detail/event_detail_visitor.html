@@ -292,7 +292,7 @@
                   {% if event.booking == True or event.external == True %}
                     <li class="align-middle mt-1">
                       <i class="far fa-check-circle fa-1x text-success"></i>
-                      <span>Un mail de confirmation contenant un lien d'annulation vous serez envoyé</span>
+                      <span>Un mail de confirmation contenant un lien d'annulation vous sera envoyé</span>
                     </li>
                     <li class="align-middle mt-1">
                       <i class="far fa-check-circle fa-1x text-success"></i>
@@ -302,7 +302,7 @@
                   {% if event.members_only %}
                     <li class="align-middle mt-1">
                       <i class="far fa-check-circle fa-1x text-success"></i>
-                      <span>Vous devez être adhérent <a href="#membership-infos">{{ event.organization }}</a></span>
+                      <span>Vous devez être adhérent à <a href="#membership-infos">{{ event.organization }}</a></span>
                     </li>
                   {% endif %}
                 </ul>

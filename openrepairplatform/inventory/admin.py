@@ -17,6 +17,7 @@ from .models import (
     Intervention,
     RepairFolder,
     Status,
+    ThermalPrinter,
 )
 
 
@@ -49,6 +50,7 @@ class ReasoningAdmin(ImportExportActionModelAdmin, SimpleHistoryAdmin):
 class StatusAdmin(ImportExportActionModelAdmin, SimpleHistoryAdmin):
     ... 
 
+
 admin.site.register(Brand, BrandAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Device, DeviceAdmin)
@@ -59,3 +61,4 @@ admin.site.register(Reasoning, ReasoningAdmin)
 admin.site.register(Intervention, SimpleHistoryAdmin)
 admin.site.register(RepairFolder, SimpleHistoryAdmin)
 admin.site.register(Status, StatusAdmin)
+admin.site.register(ThermalPrinter)

@@ -1,5 +1,6 @@
 from dal import autocomplete
 from django.contrib import messages
+from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse
 
 from bootstrap_modal_forms.generic import (
@@ -31,7 +32,7 @@ from .models import (
     Reasoning,
     Brand,
     Intervention,
-    RepairFolder,
+    RepairFolder, ThermalPrinter,
 )
 from .filters import StockFilter
 from .forms import (
@@ -113,6 +114,9 @@ class StuffDetailView(PermissionEditStuffMixin, DetailView):
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
+        # Esce qu'une imprimante est activée ?
+        if ThermalPrinter.objects.filter(active=True).exists():
+            context["thermal_printer_active"] = True
         return context
 
 
@@ -373,3 +377,37 @@ class StatusAutocomplete(autocomplete.Select2QuerySetView):
 
     def has_add_permission(self, request):
         return True
+
+
+### PRINTER
+
+
+def print_thermal_label(request, pk, *args, **kwargs):
+    if request.method != "POST":
+        return JsonResponse({"error": "Method not allowed"}, status=405)
+
+    stuff = get_object_or_404(Stuff, pk=pk)
+
+    thermal_printer = ThermalPrinter.objects.filter(active=True).first()
+    data_printed = {"timeout" : 2}
+    if thermal_printer:
+        data_printed["host"] = thermal_printer.ip
+        if thermal_printer.port :
+            data_printed['port'] = thermal_printer.port
+        if thermal_printer.profile :
+            data_printed['profile'] = thermal_printer.profile
+
+        # on importe la lib ici pour éviter de surcharger le controleur
+        from escpos.printer import Network
+        print(data_printed)
+        try :
+            printer = Network(**data_printed)
+            if printer.is_online():
+                printer.qr(stuff.get_url_qrcode())
+                printer.textln(f"N°{stuff.pk}")
+                printer.cut()
+            printer.close()
+        except Exception as e:
+            print(f"printer error {e} : {data_printed}")
+
+    return redirect(request.META.get('HTTP_REFERER') or reverse("home"))

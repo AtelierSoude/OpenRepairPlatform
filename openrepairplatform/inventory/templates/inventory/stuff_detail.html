@@ -37,16 +37,16 @@
             </span>
             <div class="card col-md-12 mb-2 p-3">
               <span>
-                <b class="pe-2">Categorie</b> 
+                <b class="pe-2">Categorie</b>
                 {% for parent in stuff.device.category.get_ancestors %}
-                  {{ parent }} > 
+                  {{ parent }} >
                 {% endfor %}
                 <a href="{{ stuff.device.get_absolute_url }}">{{ stuff.device }}</a>
               </span>
             </div>
             <div class="card col-md-12 mb-2 p-3">
               <span>
-                <b class="pe-2">Visibilité</b> 
+                <b class="pe-2">Visibilité</b>
                 {% if stuff.is_visible %}
                   Visibilité publique
                 {% else %}
@@ -61,7 +61,7 @@
             </div>
             <div class="card col-md-12 mb-2 p-3">
               <span>
-                <b class="pe-2">Propriétaire</b> 
+                <b class="pe-2">Propriétaire</b>
                 {% if can_edit or stuff.organization_owner %}
                   {% if stuff.owner.picture %}
                     {% thumbnail stuff.owner.picture "30x30" crop="left" format="PNG" as im %}
@@ -87,7 +87,7 @@
             </div>
             <div class="card col-md-12 mb-2 p-3">
               <span>
-              <b class="pe-2">Localisation</b> 
+              <b class="pe-2">Localisation</b>
               {% if stuff.place %}
                 <a href="{{stuff.place.get_absolute_url}}">
                     {{stuff.place}}
@@ -113,6 +113,19 @@
                 {% endif %}
               </span>
             </div>
+
+            {% if thermal_printer_active %}
+{#                and can_edit #}
+            <div class="card col-md-12 mb-2 p-3">
+                <form method="post" action="{% url 'inventory:print_thermal_label' stuff.pk %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-default rounded-circle btn-sm bs-gobal-modal float-end">
+                        <i class="fa fa-print"></i><span class="badge badge-pill bg-warning">Imprimer une étiquette</span>
+                    </button>
+                </form>
+            </div>
+            {% endif %}
+
           </div>
     </section>
     <section class="row">
@@ -123,22 +136,22 @@
         </div>
       </div>
       <div class="col-md-8">
-        <h4 class="pt-2 pb-2">Dossiers de réparation  
+        <h4 class="pt-2 pb-2">Dossiers de réparation
           {% if can_edit %}
             <a class="btn btn-success btn-sm rounded-circle bs-gobal-modal" data-form-url="{% url 'inventory:create_folder' stuff.pk %}">
               <i class="fa fa-plus"></i>
             </a>
           {% endif %}
-        </h4> 
+        </h4>
         {% for folder in stuff.folders.all %}
           {% include "inventory/repair_folder.html" %}
         {% empty %}
-          Pas de dossiers pour l'instant. 
+          Pas de dossiers pour l'instant.
         {% endfor %}
       </div>
     </section>
   </div>
-</div>  
+</div>
 {% endblock %}
 
 {% block extra_js %}

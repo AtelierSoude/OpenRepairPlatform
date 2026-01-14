@@ -224,7 +224,7 @@ class Event(models.Model):
 
     @property
     def remaining_seats(self):
-        return self.available_seats - (self.registered.count() + self.presents.count())
+        return self.available_seats - self.registered.count()
 
     def date_interval_format(self):
         date = self.date.strftime("%A %d %B")

@@ -255,6 +255,7 @@ class InterventionUpdateView(BSModalUpdateView):
         kwargs = super().get_form_kwargs()
         intervention = Intervention.objects.get(pk=self.kwargs["pk"])
         kwargs["folder"] = intervention.folder
+        kwargs["event"] = intervention.event
         kwargs["stuff"] = kwargs["folder"].stuff
         return kwargs
 

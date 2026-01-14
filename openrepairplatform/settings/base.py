@@ -150,6 +150,9 @@ EMAIL_FILE_PATH = join(BASE_DIR, "tmp", "messages")
 
 AUTHENTICATION_BACKENDS = ("django.contrib.auth.backends.ModelBackend",)
 
+# Session settings
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+
 # Config django-assets
 ASSETS_MODULES = ["openrepairplatform.assets"]
 

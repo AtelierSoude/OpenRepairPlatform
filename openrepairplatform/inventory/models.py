@@ -146,7 +146,7 @@ class Device(models.Model):
         blank=True,
         null=True,
     )
-    model = models.CharField(max_length=100, null=True, blank=True)
+    model = models.CharField(max_length=200, null=True, blank=True)
     description = CleanHTMLField(null=True, blank=True)
     picture = models.ImageField(
         upload_to="devices/",

@@ -88,7 +88,7 @@
     {% if record.has_ended %}
         <span>
             <i class="fas fa-users text-success"></i>
-            {{ record.presents.count}} présent.e.s
+            {{ record.presents.count}}/{{ record.available_seats }} présent.e.s
         </span>
     {% else%}
         <span

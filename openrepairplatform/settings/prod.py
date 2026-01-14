@@ -12,7 +12,8 @@ STATICFILES_DIRS = [
     ]
     
 ASSETS_ROOT = "/srv/static/"
-
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 DEBUG = True
 

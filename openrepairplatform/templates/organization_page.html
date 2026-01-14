@@ -37,6 +37,12 @@
     <section class="p-2 row">
       <div class="d-flex flex-column col-md-4">
         <div class="card p-2 m-2">
+          {% if organization.validated_parents %}
+            <h4 class="mt-2">Organisations parentes</h4>
+            {% for orga in organization.validated_parents.all %} 
+              <h5><a href="{{orga.get_absolute_url}}">{{orga.name}}</a></h5>
+            {% endfor %}
+          {% endif %}
           <h4 class="mt-2">Communauté</h4>
           <span>
             <span class="badge badge-pill">{{ organization.memberships.all.count }} membres</span>

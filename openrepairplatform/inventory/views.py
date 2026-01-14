@@ -113,11 +113,15 @@ class StuffDetailView(PermissionEditStuffMixin, DetailView):
     pk_url_kwarg = "stuff_pk"
 
     def get_context_data(self, *args, **kwargs):
-        context = super().get_context_data(*args, **kwargs)
+        context_stuff = super().get_context_data(*args, **kwargs)
+        stuff: Stuff = self.object
+        orga: Organization = stuff.organization_owner
+
         # Esce qu'une imprimante est activée ?
-        if ThermalPrinter.objects.filter(active=True).exists():
-            context["thermal_printer_active"] = True
-        return context
+        if orga:
+            if ThermalPrinter.objects.filter(active=True, organization_owner=orga).exists():
+                context_stuff["thermal_printer_active"] = ThermalPrinter.pk
+        return context_stuff
 
 
 class StuffFormMixin(BSModalCreateView):
@@ -387,8 +391,8 @@ def print_thermal_label(request, pk, *args, **kwargs):
         return JsonResponse({"error": "Method not allowed"}, status=405)
 
     stuff = get_object_or_404(Stuff, pk=pk)
+    thermal_printer = get_object_or_404(ThermalPrinter, pk=request.data.get('printer_pk'))
 
-    thermal_printer = ThermalPrinter.objects.filter(active=True).first()
     data_printed = {"timeout" : 2}
     if thermal_printer:
         data_printed["host"] = thermal_printer.ip

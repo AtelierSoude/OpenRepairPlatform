@@ -293,11 +293,13 @@ class RepairFolder(models.Model):
 
 class ThermalPrinter(models.Model):
     name = models.CharField(max_length=250)
+    organization = models.ForeignKey("user.Organization", on_delete=models.CASCADE, blank=True, null=True)
+
     # Liste des profils ici : https://python-escpos.readthedocs.io/en/latest/printer_profiles/available-profiles.html
-    profile = models.CharField(max_length=250, blank=True, null=True, help_text="Profil de l'imprimante thermique. Liste ici : liste dispo ici : https://python-escpos.readthedocs.io/en/latest/printer_profiles/available-profiles.html")
+    profile = models.CharField(max_length=250, blank=True, null=True,
+                               help_text="Optionnel. Profil de l'imprimante thermique. Liste ici : liste dispo ici : https://python-escpos.readthedocs.io/en/latest/printer_profiles/available-profiles.html")
     ip = models.GenericIPAddressField()
     port = models.IntegerField(blank=True, null=True)
-    api_key = models.CharField(max_length=250, default=uuid4().hex)
     active = models.BooleanField(default=True)
 
     def __str__(self):

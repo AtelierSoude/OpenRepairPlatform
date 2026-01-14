@@ -114,11 +114,12 @@
               </span>
             </div>
 
-            {% if thermal_printer_active %}
-{#                and can_edit #}
+
+            {% if thermal_printer_active and can_edit %}
             <div class="card col-md-12 mb-2 p-3">
                 <form method="post" action="{% url 'inventory:print_thermal_label' stuff.pk %}">
                     {% csrf_token %}
+                    <input type="hidden" name="printer_pk" value="{{ thermal_printer_active }}">
                     <button type="submit" class="btn btn-default rounded-circle btn-sm bs-gobal-modal float-end">
                         <i class="fa fa-print"></i><span class="badge badge-pill bg-warning">Imprimer une étiquette</span>
                     </button>

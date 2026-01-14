@@ -8,10 +8,13 @@ echo "cron started"
 npm install -prefix /srv/static/
 npm run build -prefix /srv/static/ &
 
+sleep infinity
+
 python3 manage.py migrate
 python3 manage.py shell -c "from openrepairplatform.user.models import CustomUser; CustomUser.objects.filter(email='admin@example.com').exists() or CustomUser.objects.create_superuser('admin@example.com', 'adminpass')" || true
 
 #sleep infinity
+
 
 python3  manage.py runserver 0.0.0.0:8005
 #python3  manage.py livereload --host=0.0.0.0

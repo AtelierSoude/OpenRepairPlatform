@@ -96,4 +96,11 @@ urlpatterns = [
         views.InterventionUpdateView.as_view(),
         name="update_intervention",
     ),
+
+    path(
+        "print_thermal_label/<int:pk>/",
+        views.print_thermal_label,
+        name="print_thermal_label",
+    ),
+
 ]

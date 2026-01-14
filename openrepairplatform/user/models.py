@@ -205,6 +205,13 @@ class Organization(models.Model):
     membership_url = models.URLField(
         max_length=255, verbose_name="Lien d'adhésion en ligne", default="", blank=True
     )
+    parents = models.ManyToManyField(
+        "self", symmetrical=False, related_name="children_of", blank=True
+    )
+
+    childs = models.ManyToManyField(
+        "self", symmetrical=False, related_name="parents_of", blank=True
+    )
     history = HistoricalRecords()
 
     def save(self, *args, **kwargs):
@@ -213,6 +220,15 @@ class Organization(models.Model):
 
     def get_absolute_url(self):
         return reverse("organization_page", kwargs={"orga_slug": self.slug})
+
+    def validated_parents(self):
+        """
+        Pour chaque A :
+        si A est dans self.parents
+        ET si self est dans A.childs
+        alors A est un parent valide.
+        """
+        return self.parents.filter(childs__pk=self.pk).distinct()
 
     @property
     def actives_or_more(self):

@@ -20,12 +20,16 @@ def validate_image(image):
 
 def get_future_published_events(events_objects, organization=None):
     """Filters the events to fetch only the future published events"""
+    now = timezone.now()
+    today = date.today()
     return (
-        events_objects.filter(published=True)
-        .filter(publish_at__lte=timezone.now())
-        .exclude(date__lt=date.today())
-        .exclude(date=date.today(), ends_at__lte=timezone.now().time())
-        .order_by("date")
+        events_objects.filter(
+            published=True, # Récupère les évènements publiés
+            publish_at__lte=now, # __lte = less than or equal - Récupère les évènements dont la date de publication est passé (inférieur a aujourd'hui)
+            date__gte=today, # __gte = greater than or equal - Récupère les évènements dont la date est à venir (supérieur à aujourd'hui)
+        )
+        .order_by("date","starts_at","ends_at")
+        .distinct()
     )
 
 

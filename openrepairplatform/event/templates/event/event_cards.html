@@ -24,10 +24,12 @@
           <span class="bg-success badge-pill badge">J'anime</span><br>
         {% endif %}
         <!-- L'évènement nécessite une réservation = event.booking -->
-        {% if !event.booking %}
+        {% if not event.booking %}
           <span class="text-success">Sans réservation</span>
-        {% elif event.booking && if event.external %}
+        {% elif event.booking and event.external %}
           <span class="text-success">Réservation externe</span>
+        {% elif event.booking and event.is_free %}
+          <span class="text-success">Sur Réservation</span>
         {% endif %}
 
         {% if event.is_free %}

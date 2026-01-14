@@ -75,7 +75,11 @@
                     </div>
                   {% endfor %}
                   <span class="align-middle {% if event.available_seats != 0 %} {% if event.available_seats > registered.count %} text-warning {% elif event.available_seats <= registered.count %} text-success {% else %} text-danger {% endif %} {% endif %}">
-                    {% if event.available_seats != 0 %}{{ registered.count }}/{{ event.available_seats }} participants{% endif %}
+                    {% if event.available_seats != 0 %}
+                      {{ registered.count }}
+                      {% if not event.is_free %}/{{ event.available_seats }} {% endif %}
+                       participants
+                    {% endif %}
                   </span>
                 </div>
               </div>

@@ -228,7 +228,7 @@ class Organization(models.Model):
         ET si self est dans A.childs
         alors A est un parent valide.
         """
-        return self.parents.filter(childs__pk=self.pk).distinct()
+        return self.parents.filter(childs__pk=self.pk).exclude(pk=self.pk).distinct()
 
     @property
     def actives_or_more(self):

@@ -2,29 +2,15 @@
 {% load thumbnail %}
 <li class="align-middle mt-1">
     <i class="far fa-check-circle fa-1x text-success"></i>
-    <span>Vous devez être adhérent à <a href="#membership-infos">{{ organization }}</a></span>
+    <span>Vous devez être adhérent de <a href="#membership-infos">{{ organization }}</a></span>
 </li>
-<div class="col-lg" id="membership-infos">
-    <p>
+<div class="col-lg border border-2 p-2" id="membership-infos">
+    <small>
     {% with user_is_member=membership_by_org_id|dict_get:organization.id %}
-        {% if user_is_member %}
-            Vous êtes membre de {{ organization }}
-            <br>
-            <small>statut</small>
-            {% if user_is_member.current_contribution == 0 %}
-            <small class="text-danger">Pas à jour</small>
-            <span class="badge badge-pill bg-danger">{{ user_is_member.current_contribution }}€</span>
-            {% elif user_is_member.current_contribution >= organization.advised_fee %}
-            <small class="text-success">A jour</small>
-            <span class="badge badge-pill bg-success">{{ user_is_member.current_contribution }}€</span>
-            {% else %}
-            <small class="text-warning">Incomplet</small>
-            <span class="badge badge-pill bg-warning">{{ user_is_member.current_contribution }}€</span>
-            {% endif %}
-        {% endif %}
+        {% include "user/membership_pill.html" with membership=user_is_member %}
     {% endwith %}
-    </p>
-    <p>
+    </small>
+    <small>
     {{ organization.get_membership_system_display }} Elle
     {% if organization.advised_fee == organization.min_fee %}
         est de {{ organization.min_fee }}€
@@ -38,5 +24,5 @@
             href="{{ organization.membership_url }}">Adhérer en ligne</a>
         ou une fois sur place
     {% endif %}
-    </p>
+    </small>
 </div>

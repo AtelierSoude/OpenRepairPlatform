@@ -139,19 +139,19 @@
           {{ event.description | safe }}
         {% else %}
           {% if event.activity %}
-            <div class="row">
-              <div class="col-md-6">
-                <b>{{ event.activity.name }}</b>
+            <div>
+              <div class="col-lg">
+                <h5>{{ event.activity.name }}</h5>
                 <small>{{ event.activity.description | safe }}</small>
               </div>
               {% if event.activity.picture and event.activity.picture.url %}
-                <div class="col-md-6">
+                <div class="col-lg">
                   <img class="img-fluid p-0"
                        src="{{ event.activity.picture.url }}"
                        alt="activity illustration">
                   <a href="{% url 'event:activity_detail' event.activity.pk event.activity.slug %}"
-                     class="btn btn-light btn-sm col-md-12 float-end">
-                    <i class="fa fa-eye"></i>
+                     class="btn btn-light col-md-12 float-end">
+                    <i class="fa fa-eye"></i> Voir plus d'infos 
                   </a>
                 </div>
               {% endif %}
@@ -168,9 +168,9 @@
           <i class="fas fa-info-circle"></i> Informations utiles
         </h3>
         <div class="row">
-          <div class="col-md-6">
-            <b>Conditions de participation:</b>
-            <ul >
+          <div class="col-lg">
+            <h5>Conditions de participation :</h5>
+            <ul class="list-unstyled">
               {% for condition in event.conditions.all %}
                 <li>
                   {% if condition.price > 0 %}
@@ -184,44 +184,25 @@
                   <span>La participation est libre / pas de condition d'accès</span>
                 </li>
               {% endfor %}
+              {% if event.members_only %}
+                {% include "event/detail/members_only_user_detail.html" with organization=event.organization %}
+                {% if event.organization.validated_parents.all %}
+                  <span><br>
+                    <b> {{event.organization}} est une structure dont l'adhésion dépend également de  
+                    {% for parent_orga in event.organization.validated_parents.all %}
+                        {{ parent_orga }}{% if not forloop.last %} OU {% endif %}
+                    {% endfor %}
+                    </b>
+                  </span>
+                  {% for parent_orga in event.organization.validated_parents.all %}
+                      {% include "event/detail/members_only_user_detail.html" with organization=parent_orga %}
+                      {% if not forloop.last %}
+                        <span><br><b>OU</b></span>
+                      {% endif %}
+                  {% endfor %}
+                {% endif %}
+              {% endif %}
             </ul>
-          </div>
-          <div class="col-md-6" id="membership-infos">
-            {% if event.members_only %}
-              <b>Adhérer à {{ event.organization.name }}</b>
-              <p>
-                {% if user_is_member %}
-                  Vous êtes membre de {{ event.organization }}
-                  <br>
-                  <small>statut</small>
-                  {% if user_is_member.current_contribution == 0 %}
-                    <small class="text-danger">Pas à jour</small>
-                    <span class="badge badge-pill bg-danger">{{ user_is_member.current_contribution }}€</span>
-                  {% elif user_is_member.current_contribution >= organization.advised_fee %}
-                    <small class="text-success">A jour</small>
-                    <span class="badge badge-pill bg-success">{{ user_is_member.current_contribution }}€</span>
-                  {% else %}
-                    <small class="text-warning">Incomplet</small>
-                    <span class="badge badge-pill bg-warning">{{ user_is_member.current_contribution }}€</span>
-                  {% endif %}
-                {% endif %}
-              </p>
-              <p>
-                {{ event.organization.get_membership_system_display }} Elle
-                {% if event.organization.advised_fee == event.organization.min_fee %}
-                  est de {{ event.organization.min_fee }}€
-                {% else %}
-                  va de {{ event.organization.min_fee }}€ à {{ event.organization.advised_fee }}€
-                {% endif %}
-                {% if event.organization.membership_url %}
-                  Vous pouvez
-                  <a class=""
-                     target="_blank"
-                     href="{{ event.organization.membership_url }}">Adhérer en ligne</a>
-                  ou une fois sur place
-                {% endif %}
-              </p>
-            {% endif %}
           </div>
         </div>
       </div>
@@ -303,60 +284,35 @@
                       <span>Réserver vous engage à participer</span>
                     </li>
                   {% endif %}
-                  {% if event.members_only %}
-                    <li class="align-middle mt-1">
-                      <i class="far fa-check-circle fa-1x text-success"></i>
-                      <span>Vous devez être adhérent à <a href="#membership-infos">{{ event.organization }}</a></span>
-                    </li>
+                </ul>
+                {% endif %}
+                <ul class="list-unstyled">
+                {% if event.members_only %}
+                    {% include "event/detail/members_only_user_detail.html" with organization=event.organization %}
+                    {% if event.organization.validated_parents.all %}
+                      <span><br>
+                        <b> {{event.organization}} est une structure dont l'adhésion dépend également de  
+                        {% for parent_orga in event.organization.validated_parents.all %}
+                            {{ parent_orga }}{% if not forloop.last %} OU {% endif %}
+                        {% endfor %}
+                        </b><br>
+                      </span>
+                      {% for parent_orga in event.organization.validated_parents.all %}
+                          {% include "event/detail/members_only_user_detail.html" with organization=parent_orga %}
+                          {% if not forloop.last %}
+                            <span><br><b>OU</b></span>
+                          {% endif %}
+                      {% endfor %}
+                    {% endif %}
                   {% endif %}
                 </ul>
-              {% endif %}
-              {% if event.members_only %}
-                {% if request.user in registered %}
-                  Soutenez {{ event.organization }} en adhérant même si vous ne venez pas :
-                {% endif %}
-                <div class="">
-                  <b>Adhérer à {{ event.organization.name }}</b>
-                  <p>
-                    {% if user_is_member %}
-                      Vous êtes membre de {{ event.organization }}
-                      <br>
-                      <small>status</small>
-                      {% if user_is_member.current_contribution == 0 %}
-                        <small class="text-danger">Pas à jour</small>
-                        <span class="badge badge-pill bg-danger">{{ user_is_member.current_contribution }}€</span>
-                      {% elif user_is_member.current_contribution >= organization.advised_fee %}
-                        <small class="text-success">A jour</small>
-                        <span class="badge badge-pill bg-success">{{ user_is_member.current_contribution }}€</span>
-                      {% else %}
-                        <small class="text-warning">Incomplet</small>
-                        <span class="badge badge-pill bg-warning">{{ user_is_member.current_contribution }}€</span>
-                      {% endif %}
-                    {% endif %}
-                  </p>
-                  <p>
-                    {{ event.organization.get_membership_system_display }} Elle
-                    {% if event.organization.advised_fee == event.organization.min_fee %}
-                      est de {{ event.organization.min_fee }}€
-                    {% else %}
-                      va de {{ event.organization.min_fee }}€ à {{ event.organization.advised_fee }}€ .
-                    {% endif %}
-                    {% if event.organization.membership_url %}
-                      <br>
-                      Vous pouvez
-                      <a class="" target="_blank" href="{{ event.organization.membership_url }}">Adhérer en ligne</a>
-                      ou une fois sur place
-                    {% endif %}
-                  </p>
-                  <p>
-                    {% if event.external_url and event.external == False %}
-                      <a class="btn btn-block btn-light"
-                      target="_blank"
-                      href="{{ event.external_url }}">Lien externe vers + d'infos</a>
-                    {% endif %} 
-                  </p>
-                </div>
-              {% endif %}
+              <p>
+                {% if event.external_url and event.external == False %}
+                  <a class="btn btn-block btn-light"
+                  target="_blank"
+                  href="{{ event.external_url }}">Lien externe vers + d'infos</a>
+                {% endif %} 
+              </p>
               {% if user in organizers %}
                 <div class="card mb-2">
                   <div class="card-body p-2">

@@ -59,59 +59,42 @@
                       </div>
                     </div>
                   </div>
-                  {% if event.organization.validated_parents %}
+                  {% if event.organization.validated_parents.all %}
                     {% for parent_orga in event.organization.validated_parents.all %}
+
+                      {% filter_orga queryset=user.memberships organization=parent_orga as parent_membership %}
+
                       <div class="row border mb-2 mt-2">
-                          <b class="border-bottom mb-1 p-1">Adhésion à {{event.organization}}{% include "user/membership_pill.html" with membership=membership_by_org_id|dict_get:parent_orga.id %}</b>
-                          <br>
-                          <div class="mb-1">
+                        <b class="border-bottom mb-1 p-1">
+                          Adhésion à {{ parent_orga }}
+                          {% include "user/membership_pill.html" with membership=parent_membership %}
+                        </b>
+                        <br>
+
+                        <div class="mb-1">
                           <b>Cotisations : </b>
-                          {% related_membership queryset=event.fees membership=membership_by_org_id|dict_get:parent_orga.id as fees %}
+
+                          {% related_membership queryset=event.fees membership=parent_membership as fees %}
                           {% if fees %}
                             {% for fee in fees %}
-                            <span class="badge badge-pill badge-light pe-2 m-2">
-                              {{ fee.amount }}€
-                              {{ fee.get_payment_display }}
-                              <form class="d-inline" action="{% url 'user:fee_delete' fee.pk %}" method="post">
-                                {% csrf_token %}
-                                <button type="submit" class="btn text-danger btn-sm">x</button>
-                              </form>
-                            </span>
+                              <span class="badge badge-pill badge-light pe-2 m-2">
+                                {{ fee.amount }}€
+                                {{ fee.get_payment_display }}
+                                <form class="d-inline" action="{% url 'user:fee_delete' fee.pk %}" method="post">
+                                  {% csrf_token %}
+                                  <button type="submit" class="btn text-danger btn-sm">x</button>
+                                </form>
+                              </span>
                             {% endfor %}
                           {% endif %}
+
                           <div class="col">
-                          {% include "event/modal_more_info.html" with user=user target_organization=parent_orga user=user membership=membership_by_org_id|dict_get:parent_orga.id form=present_form|initial:user %}
+                            {% include "event/modal_more_info.html" with user=user target_organization=parent_orga membership=parent_membership form=present_form|initial:user %}
                           </div>
                         </div>
                       </div>
+
                     {% endfor %}
-                  {% endif %}
-                  {% if event.conditions.all %}
-                    <div class="row border mb-2 mt-2">
-                      <b class="border-bottom mb-1 p-1">Participation</b>
-                      <br>
-                        <span>
-                        {% if participation.amount == 0 or not participation.amount %}
-                        <span class="text-danger">0€</span>
-                        {% elif participation.amount >= condition_prices %}
-                        <span class="text-success">{{participation.amount}}€</span>
-                        {% else %}
-                        <span class="text-warning">{{participation.amount}}€</span>
-                        {% endif %}
-                        / {{condition_prices }}€
-                      </span>
-                      {% if participation %}
-                        <button class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#participation-{{ user.pk|escape }}">
-                          Mettre à jour la participation
-                        </button>
-                        {% include "event/participation_form.html" with user=user event=event form=participation_form|initial:participation %}
-                      {% else %}
-                        <button class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#participation-{{ user.pk|escape }}">
-                          Ajouter une participation
-                        </button>
-                        {% include "event/participation_form.html" with user=user event=event form=participation_form %}
-                      {% endif %}
-                    </div>
                   {% endif %}
               </div>
               <div class="row border mb-2 mt-2">

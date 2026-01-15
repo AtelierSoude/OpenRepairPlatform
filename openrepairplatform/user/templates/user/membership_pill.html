@@ -1,19 +1,30 @@
 {% load assets l10n app_filters %}
 
 {% if membership %}
-    {% if membership.current_contribution == 0 and event.organization.advised_fee > 0 %}
-    <span class="text-danger" >Pas de cotisation</span>
-    <span class="badge badge-pill bg-danger" >0€</span>
-    {% elif membership.current_contribution == 0 and event.organization.advised_fee == 0 or event.organization.min_fee == 0  %}
-    <span class="text-success" >A jour </span>
-    <span class="badge badge-pill bg-success" >{{membership.current_contribution}}€/{{event.organization.advised_fee}}€</span>
-    {% elif membership.current_contribution >= event.organization.advised_fee %}
-    <span class="text-success" >A jour </span>
-    <span class="badge badge-pill bg-success" >{{membership.current_contribution}}€/{{event.organization.advised_fee}}€</span>
+  {% with org=membership.organization %}
+    {% if membership.current_contribution == 0 and org.advised_fee > 0 %}
+      <span class="text-danger">Pas de cotisation</span>
+      <span class="badge badge-pill bg-danger">0€</span>
+
+    {% elif membership.current_contribution == 0 and org.advised_fee == 0 and org.min_fee == 0 %}
+      <span class="text-success">A jour</span>
+      <span class="badge badge-pill bg-success">
+        {{ membership.current_contribution }}€/{{ org.advised_fee }}€
+      </span>
+
+    {% elif membership.current_contribution >= org.advised_fee %}
+      <span class="text-success">A jour</span>
+      <span class="badge badge-pill bg-success">
+        {{ membership.current_contribution }}€/{{ org.advised_fee }}€
+      </span>
+
     {% else %}
-    <span class="text-warning" >Incomplet</span>
-    <span class="badge badge-pill bg-warning" >{{membership.current_contribution}}€</span>
+      <span class="text-warning">Incomplet</span>
+      <span class="badge badge-pill bg-warning">
+        {{ membership.current_contribution }}€/{{ org.advised_fee }}€
+      </span>
     {% endif %}
-    {% else %}
-    <span class="badge badge-pill bg-warning">Non membre</span>   
+  {% endwith %}
+{% else %}
+  <span class="badge badge-pill bg-warning">Non membre</span>
 {% endif %}

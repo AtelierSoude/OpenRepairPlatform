@@ -206,11 +206,11 @@ class Organization(models.Model):
         max_length=255, verbose_name="Lien d'adhésion en ligne", default="", blank=True
     )
     parents = models.ManyToManyField(
-        "self", symmetrical=False, related_name="children_of", blank=True
+        "self", symmetrical=False, related_name="children_of", verbose_name="Organisations 'parentes'", blank=True
     )
 
     childs = models.ManyToManyField(
-        "self", symmetrical=False, related_name="parents_of", blank=True
+        "self", symmetrical=False, related_name="parents_of", verbose_name="Organisations 'filles'", blank=True
     )
     history = HistoricalRecords()
 

@@ -338,17 +338,27 @@ class Membership(models.Model):
         return f"{self.user}-{self.organization}"
 
     def update_first_payment(self):
-        """
-        If a new fee linked to current membership is add after the date limit
-        Then is a new cycle of membership, so the first_payment field is
-        updated with this fee date. If there is'nt fees, first_payment is today.
-        """
-        last_fee = self.fees.first()
-        if last_fee:
-            if last_fee.date > self.date_limit:
-                self.first_payment = last_fee.date
-        else:
-            self.first_payment = date.today()
+
+        fees_qs = self.fees.all()
+
+        fees_count = fees_qs.count()
+        if fees_count == 0:
+            return 
+
+        if fees_count == 1:
+            only_fee = fees_qs.order_by("date").first()
+            self.first_payment = only_fee.date
+            return
+
+        # >= 2 fees : on ne change first_payment que si un nouveau cycle commence
+        limit = self.date_limit  # basé sur le first_payment actuel
+        first_fee_after_limit = fees_qs.filter(date__gt=limit).order_by("date").first()
+        if first_fee_after_limit:
+            self.first_payment = first_fee_after_limit.date
+            return
+
+        # sinon: on garde le first_payment actuel, même si on a ajouté une fee plus ancienne
+
 
     def computed_amount(self):
         """

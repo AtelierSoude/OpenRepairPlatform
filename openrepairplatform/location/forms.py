@@ -6,8 +6,8 @@ from openrepairplatform.location.models import Place
 
 
 class PlaceForm(ModelForm):
-    longitude = forms.CharField(widget=forms.HiddenInput, required=False)
     latitude = forms.CharField(widget=forms.HiddenInput, required=False)
+    longitude = forms.CharField(widget=forms.HiddenInput, required=False)
     zipcode = forms.CharField(widget=forms.HiddenInput, required=False)
 
     def __init__(self, *args, **kwargs):

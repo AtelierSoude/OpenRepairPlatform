@@ -97,8 +97,34 @@
                     {% endfor %}
                   {% endif %}
               </div>
-              <div class="row border mb-2 mt-2">
+              {% if event.conditions.all %}
+                <div class="row border mb-2 mt-2">
+                  <p><b>Participation</b>
+                    <br>
+                    {% if participation.amount == 0 or not participation.amount %}
+                    <span class="text-danger">0€</span>
+                    {% elif participation.amount >= condition_prices %}
+                    <span class="text-success">{{participation.amount}}€</span>
+                    {% else %}
+                    <span class="text-warning">{{participation.amount}}€</span>
+                    {% endif %}
+                    / {{condition_prices }}€
+                  </p>
+                  {% if participation %}
+                    <button class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#participation-{{ user.pk|escape }}">
+                      Mettre à jour la participation
+                    </button>
+                    {% include "event/participation_form.html" with user=user event=event form=participation_form|initial:participation %}
+                  {% else %}
+                    <button class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#participation-{{ user.pk|escape }}">
+                      Ajouter une participation
+                    </button>
+                    {% include "event/participation_form.html" with user=user event=event form=participation_form %}
+                  {% endif %}
+                </div>
+              {% endif %}
               {% if event.allow_stuffs %}
+                <div class="row border mb-2 mt-2">
                   <b class="border-bottom mb-1 p-1">Objets en réparation</b>
                   <br>
                   <button class="btn btn-light bs-gobal-modal"  href="#" data-modal-id="modal-stuff" data-form-url="{% url 'event:create_user_event_stuff_orga' event.pk user.pk %}" >
@@ -111,7 +137,8 @@
                         {% include "inventory/stuff_state_display.html" with stuff_state=stuff.get_state_display %}
                       </span>
                     {% endif %}
-                {% endfor %}
+                  {% endfor %}
+                </div>
               {% endif %}
               </div>
             </div>

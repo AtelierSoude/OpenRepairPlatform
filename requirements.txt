@@ -178,3 +178,5 @@ webencodings==0.5.1
     #   tinycss2
 zopfli==0.2.3.post1
     # via fonttools
+qrcode
+escpos

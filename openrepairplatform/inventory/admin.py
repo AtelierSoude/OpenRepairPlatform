@@ -52,16 +52,8 @@ class StatusAdmin(ImportExportActionModelAdmin, SimpleHistoryAdmin):
     ... 
 
 class ThermalPrinterAdmin(admin.ModelAdmin):
-    fields = [
-        'name',
-        'organization',
-        'profile',
-        ('ip', 'port'),
-        'active',
-    ]
-
-    def __str__(self):
-        return self.name
+    class Meta:
+        model = ThermalPrinter
 
 
 admin.site.register(Brand, BrandAdmin)

@@ -119,8 +119,9 @@ class StuffDetailView(PermissionEditStuffMixin, DetailView):
 
         # Esce qu'une imprimante est activée ?
         if orga:
-            if ThermalPrinter.objects.filter(active=True, organization_owner=orga).exists():
-                context_stuff["thermal_printer_active"] = ThermalPrinter.pk
+            printer = ThermalPrinter.objects.filter(active=True,organization=orga).first()
+            if printer:
+                context_stuff["thermal_printer_active"] = printer.pk
         return context_stuff
 
 
@@ -391,7 +392,9 @@ def print_thermal_label(request, pk, *args, **kwargs):
         return JsonResponse({"error": "Method not allowed"}, status=405)
 
     stuff = get_object_or_404(Stuff, pk=pk)
-    thermal_printer = get_object_or_404(ThermalPrinter, pk=request.data.get('printer_pk'))
+
+    thermal_printer = get_object_or_404(ThermalPrinter, pk=request.POST.get('printer_pk'))
+
 
     data_printed = {"timeout" : 2}
     if thermal_printer:
@@ -403,14 +406,51 @@ def print_thermal_label(request, pk, *args, **kwargs):
 
         # on importe la lib ici pour éviter de surcharger le controleur
         from escpos.printer import Network
+        import qrcode
+        from PIL import Image, ImageDraw, ImageFont
+
         print(data_printed)
         try :
             printer = Network(**data_printed)
             if printer.is_online():
-                printer.qr(stuff.get_url_qrcode())
-                printer.textln(f"N°{stuff.pk}")
-                printer.cut()
-            printer.close()
+
+                WIDTH = 262 
+                HEIGHT = 90
+
+                img = Image.new("RGB", (WIDTH, HEIGHT), "white")
+                draw = ImageDraw.Draw(img)
+                w, h = img.size
+                draw.rectangle((0, 0, w-1, h-1), outline="black", width=1)
+
+                # Logo
+                logo_path = "../static/img/logo.png"
+                if logo_path:
+                    logo = Image.open(logo_path)
+                    logo.thumbnail((140, 80))
+                    img.paste(logo, (75, 0), logo)
+
+                qr = qrcode.QRCode(
+                    version=1,
+                    error_correction=qrcode.constants.ERROR_CORRECT_L,
+                    border=1,
+                )
+                qr.add_data(stuff.get_url_qrcode())
+                qr.make()
+                qr_img = qr.make_image(fill_color="black", back_color="white")
+                qr_img.thumbnail((70, 70))
+                img.paste(qr_img, (10, 10))
+
+                font_big = ImageFont.truetype("../usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 16 )
+                font_small = ImageFont.truetype("../usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 10 )
+                draw.text((80, 38), "ID/", font=font_big, fill="black")
+                draw.text((120, 38), f"{stuff.pk}", font=font_big, fill="black")
+                draw.text((80, 55), "retrouve et modifie mon carnet", font=font_small, fill="black")
+                draw.text((80, 65), "de santé sur Reparons.org" , font=font_small, fill="black")
+
+                printer.image(img, impl="bitImageRaster", center=False)
+                printer.cut(mode='FULL')
+                printer.close()
+                
         except Exception as e:
             print(f"printer error {e} : {data_printed}")
 

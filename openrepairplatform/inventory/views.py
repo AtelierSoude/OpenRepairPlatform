@@ -385,16 +385,14 @@ class StatusAutocomplete(autocomplete.Select2QuerySetView):
 
 
 ### PRINTER
-
+#### BETA VERSION - ONLY TEST WITH 
 
 def print_thermal_label(request, pk, *args, **kwargs):
     if request.method != "POST":
         return JsonResponse({"error": "Method not allowed"}, status=405)
-
+    
     stuff = get_object_or_404(Stuff, pk=pk)
-
     thermal_printer = get_object_or_404(ThermalPrinter, pk=request.POST.get('printer_pk'))
-
 
     data_printed = {"timeout" : 2}
     if thermal_printer:
@@ -423,11 +421,11 @@ def print_thermal_label(request, pk, *args, **kwargs):
                 draw.rectangle((0, 0, w-1, h-1), outline="black", width=1)
 
                 # Logo
-                logo_path = "../static/img/logo.png"
+                logo_path = "../static/img/logo_thermal-print.png"
                 if logo_path:
                     logo = Image.open(logo_path)
                     logo.thumbnail((140, 80))
-                    img.paste(logo, (75, 0), logo)
+                    img.paste(logo, (77, 0), logo)
 
                 qr = qrcode.QRCode(
                     version=1,
@@ -443,12 +441,12 @@ def print_thermal_label(request, pk, *args, **kwargs):
                 font_big = ImageFont.truetype("../usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 16 )
                 font_small = ImageFont.truetype("../usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 10 )
                 draw.text((80, 38), "ID/", font=font_big, fill="black")
-                draw.text((120, 38), f"{stuff.pk}", font=font_big, fill="black")
-                draw.text((80, 55), "retrouve et modifie mon carnet", font=font_small, fill="black")
-                draw.text((80, 65), "de santé sur Reparons.org" , font=font_small, fill="black")
+                draw.text((110, 38), f"{stuff.pk}", font=font_big, fill="black")
+                draw.text((80, 57), "retrouve et modifie mon carnet", font=font_small, fill="black")
+                draw.text((80, 67), "de santé sur Reparons.org" , font=font_small, fill="black")
 
                 printer.image(img, impl="bitImageRaster", center=False)
-                printer.cut(mode='FULL')
+                printer.cut()
                 printer.close()
                 
         except Exception as e:

@@ -25,13 +25,26 @@
           {% endif %}
         </div>
         <div class="col-md-8">
-            <h4 class="pt-2 pb-2">{{ stuff }}
+            <h4 class="pt-4 pb-2 float-start">{{ stuff }}
               {% if can_edit %}
               <a class="btn btn-success rounded-circle btn-sm bs-gobal-modal" data-form-url="{% url 'inventory:update_stuff' stuff.pk %}">
                 <i class="fa fa-pencil-alt"></i>
               </a>
               {% endif %}
             </h4>
+
+            {% if thermal_printers_active and can_edit %} 
+              {% for printer in thermal_printers_active %}
+                <form method="post" action="{% url 'inventory:print_thermal_label' stuff.pk %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="printer_pk" value="{{ printer.pk }}">
+                    <button type="submit" class="btn mt-4 btn-light btn-m bs-gobal-modal float-end">
+                        <span class=""><i class="fa fa-print"></i>  Imprimer une étiquette avec {{printer.name}}</span>
+                    </button>
+                </form>
+              {% endfor %}
+            {% endif %}
+
               {{ stuff.information | safe }}
               <span>
             </span>
@@ -113,20 +126,6 @@
                 {% endif %}
               </span>
             </div>
-
-
-            {% if thermal_printer_active and can_edit %} 
-            <div class="card col-md-12 mb-2 p-3">
-                <form method="post" action="{% url 'inventory:print_thermal_label' stuff.pk %}">
-                    {% csrf_token %}
-                    <input type="hidden" name="printer_pk" value="{{ thermal_printer_active }}">
-                    <button type="submit" class="btn btn-default rounded-circle btn-sm bs-gobal-modal float-end">
-                        <i class="fa fa-print"></i><span class="badge badge-pill bg-warning">Imprimer une étiquette</span>
-                    </button>
-                </form>
-            </div>
-            {% endif %}
-
           </div>
     </section>
     <section class="row">

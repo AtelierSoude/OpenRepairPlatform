@@ -15,7 +15,7 @@ from django.views.generic import (
 )
 from openrepairplatform.mixins import HasActivePermissionMixin
 from openrepairplatform.user.mixins import PermissionOrgaContextMixin
-from openrepairplatform.inventory.mixins import PermissionEditStuffMixin
+from openrepairplatform.inventory.mixins import PermissionCreateUserStuffMixin, PermissionEditUserStuffMixin, ThermalPrintersContextMixin
 
 import django_tables2 as tables
 from django_filters.views import FilterView
@@ -107,25 +107,18 @@ class OrganizationStockView(
         return context
 
 
-class StuffDetailView(PermissionEditStuffMixin, DetailView):
+class StuffDetailView(PermissionEditUserStuffMixin, ThermalPrintersContextMixin, DetailView):
     model = Stuff
     template_name = "inventory/stuff_detail.html"
     pk_url_kwarg = "stuff_pk"
 
     def get_context_data(self, *args, **kwargs):
         context_stuff = super().get_context_data(*args, **kwargs)
-        stuff: Stuff = self.object
-        orga: Organization = stuff.organization_owner
-
-        # Esce qu'une imprimante est activée ?
-        if orga:
-            printer = ThermalPrinter.objects.filter(active=True,organization=orga).first()
-            if printer:
-                context_stuff["thermal_printer_active"] = printer.pk
+        self.add_thermal_printers(context_stuff, self.object)
         return context_stuff
 
 
-class StuffFormMixin(BSModalCreateView):
+class StuffFormMixin(BSModalCreateView, PermissionCreateUserStuffMixin, ThermalPrintersContextMixin):
     model = Stuff
     form_class = StuffForm
     template_name = "inventory/stuff_form.html"
@@ -133,6 +126,8 @@ class StuffFormMixin(BSModalCreateView):
 
     def form_valid(self, form):
         res = super().form_valid(form)
+        context = {}
+        self.add_thermal_printers(context, form.instance)
         messages.success(
             self.request, "l'objet #"f"{form.instance.id} bien ajouté à l'inventaire"
         )
@@ -385,7 +380,7 @@ class StatusAutocomplete(autocomplete.Select2QuerySetView):
 
 
 ### PRINTER
-#### BETA VERSION - ONLY TEST WITH 
+### BETA VERSION - ONLY TEST WITH TP35 s
 
 def print_thermal_label(request, pk, *args, **kwargs):
     if request.method != "POST":

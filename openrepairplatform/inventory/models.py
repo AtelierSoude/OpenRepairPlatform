@@ -134,9 +134,8 @@ class Stuff(models.Model):
         return reverse("inventory:stuff_view", kwargs={"stuff_pk": self.pk})
 
     def get_url_qrcode(self):
-        domain = os.environ.get("DOMAINDNS", "reparons.org")
-        return f"https://{domain}/inventory/stuff/{self.pk}/"
-        # return self.get_absolute_url()
+        domain = os.environ.get("DOMAINDNS")
+        return domain + self.get_absolute_url()
 
     def __str__(self):
         return f"{self.device} - #{self.id}"

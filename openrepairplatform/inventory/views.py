@@ -411,6 +411,7 @@ def print_thermal_label(request, pk, *args, **kwargs):
         from escpos.printer import Network
         import qrcode
         from PIL import Image, ImageDraw, ImageFont
+        import os
 
         print(data_printed)
         try :
@@ -442,13 +443,13 @@ def print_thermal_label(request, pk, *args, **kwargs):
                 qr_img = qr.make_image(fill_color="black", back_color="white")
                 qr_img.thumbnail((70, 70))
                 img.paste(qr_img, (10, 10))
-
+                site = os.environ.get("DOMAINDNS")
                 font_big = ImageFont.truetype("../usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 16 )
                 font_small = ImageFont.truetype("../usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 10 )
                 draw.text((80, 38), "ID/", font=font_big, fill="black")
                 draw.text((110, 38), f"{stuff.pk}", font=font_big, fill="black")
                 draw.text((80, 57), "retrouve et modifie mon carnet", font=font_small, fill="black")
-                draw.text((80, 67), "de santé sur Reparons.org" , font=font_small, fill="black")
+                draw.text((80, 67), "de santé sur " + f"{site}" , font=font_small, fill="black")
 
                 printer.image(img, impl="bitImageRaster", center=False)
                 printer.cut()

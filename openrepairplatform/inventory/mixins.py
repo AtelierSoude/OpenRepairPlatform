@@ -37,24 +37,29 @@ class PermissionCreateUserStuffMixin:
                         context["can_create"] = True
         return context
 
+
 class ThermalPrintersContextMixin:
-    def add_thermal_printers(self, context, stuff):
+    def add_thermal_printers(self, context, *, organization=None, member_user=None):
         editable_organizations = []
-        if stuff.organization_owner:
-            if stuff.organization_owner in self.request.user.get_active_or_more_organizations():
-                editable_organizations.append(stuff.organization_owner)
-        elif stuff.member_owner:
-            for organization in stuff.member_owner.get_organizations():
-                if organization in self.request.user.get_active_or_more_organizations():
-                    editable_organizations.append(organization)
+        user = self.request.user
+
+        if not user.is_authenticated:
+            context["thermal_printers_active"] = []
+            context["can_print"] = False
+            return context
+
+        if organization:
+            if organization in user.get_active_or_more_organizations():
+                editable_organizations.append(organization)
+
+        elif member_user:
+            for orga in member_user.get_organizations():
+                if orga in user.get_active_or_more_organizations():
+                    editable_organizations.append(orga)
+
         printers = ThermalPrinter.objects.filter(active=True, organization__in=editable_organizations)
-        if printers.exists():
-            context["thermal_printers_active"] = list(printers)
+
+        context["thermal_printers_active"] = list(printers)
+        context["can_print"] = printers.exists()
         return context
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        stuff = getattr(self, "object", None)  
-        if stuff:
-            return self.add_thermal_printers(context, stuff)
-        return context

@@ -33,7 +33,7 @@
               {% endif %}
             </h4>
 
-            {% if thermal_printers_active and can_edit %} 
+            {% if thermal_printers_active and can_print %} 
               {% for printer in thermal_printers_active %}
                 <form method="post" action="{% url 'inventory:print_thermal_label' stuff.pk %}">
                     {% csrf_token %}

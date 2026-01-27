@@ -114,24 +114,35 @@ class StuffDetailView(PermissionEditUserStuffMixin, ThermalPrintersContextMixin,
 
     def get_context_data(self, *args, **kwargs):
         context_stuff = super().get_context_data(*args, **kwargs)
-        self.add_thermal_printers(context_stuff, self.object)
+        self.add_thermal_printers(
+            context_stuff, 
+            organization=self.object.organization_owner, 
+            member_user=self.object.member_owner)
         return context_stuff
-
 
 class StuffFormMixin(BSModalCreateView, PermissionCreateUserStuffMixin, ThermalPrintersContextMixin):
     model = Stuff
     form_class = StuffForm
     template_name = "inventory/stuff_form.html"
-    success_message = "L'objet a bien été ajouté à l'inventaire"
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        form_kwargs = self.get_form_kwargs()
+        orga = form_kwargs.get("organization")
+        member_user = form_kwargs.get("user")
+        if form_kwargs.get("visitor_user"):
+            orga = form_kwargs.get('event').organization
+        self.add_thermal_printers(context, organization=orga, member_user=member_user)
+        return context
 
     def form_valid(self, form):
         res = super().form_valid(form)
-        context = {}
-        self.add_thermal_printers(context, form.instance)
-        messages.success(
-            self.request, "l'objet #"f"{form.instance.id} bien ajouté à l'inventaire"
-        )
+        stuff = form.instance 
+        if self.request.POST.get("submit_action") == "create_print":
+            print_thermal_label(self.request, stuff.pk)
+        messages.success(self.request, f"l'objet #{stuff.pk} bien ajouté à l'inventaire")
         return res
+
 
 
 class StuffUserFormView(StuffFormMixin):
@@ -380,7 +391,7 @@ class StatusAutocomplete(autocomplete.Select2QuerySetView):
 
 
 ### PRINTER
-### BETA VERSION - ONLY TEST WITH TP35 s
+### BETA VERSION - ONLY TESTED WITH TP35 
 
 def print_thermal_label(request, pk, *args, **kwargs):
     if request.method != "POST":
@@ -388,7 +399,6 @@ def print_thermal_label(request, pk, *args, **kwargs):
     
     stuff = get_object_or_404(Stuff, pk=pk)
     thermal_printer = get_object_or_404(ThermalPrinter, pk=request.POST.get('printer_pk'))
-
     data_printed = {"timeout" : 2}
     if thermal_printer:
         data_printed["host"] = thermal_printer.ip

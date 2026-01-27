@@ -104,7 +104,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
             self.volunteer_organizations.all(),
             self.admin_organizations.all(),
         )
-
+    def get_active_or_more_organizations(self):
+        return self.active_organizations.all().union(self.admin_organizations.all()) 
+        
     def get_absolute_url(self):
         return reverse("user:user_detail", kwargs={"pk": self.pk})
 
@@ -124,6 +126,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
             .union(self.volunteer_organizations.all(), self.admin_organizations.all())
         )
         return organizations
+    
+   
 
     def clean(self):
         super().clean()

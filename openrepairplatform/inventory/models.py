@@ -1,4 +1,7 @@
+import os
 from datetime import date
+
+from uuid import uuid4
 from django.db import models
 from treebeard.mp_tree import MP_Node
 from django.urls import reverse
@@ -117,6 +120,7 @@ class Stuff(models.Model):
     def owner(self):
         if self.member_owner or self.organization_owner:
             return self.member_owner or self.organization_owner
+        return None
 
     def set_owner(self, new_owner):
         if isinstance(new_owner, Organization):
@@ -128,6 +132,10 @@ class Stuff(models.Model):
 
     def get_absolute_url(self):
         return reverse("inventory:stuff_view", kwargs={"stuff_pk": self.pk})
+
+    def get_url_qrcode(self):
+        domain = os.environ.get("DOMAINDNS")
+        return domain + self.get_absolute_url()
 
     def __str__(self):
         return f"{self.device} - #{self.id}"
@@ -280,3 +288,18 @@ class RepairFolder(models.Model):
 
     def __str__(self):
         return f"dossier {self.stuff}-{self.open_date}"
+
+
+class ThermalPrinter(models.Model):
+    name = models.CharField(max_length=250)
+    organization = models.ForeignKey("user.Organization", on_delete=models.CASCADE, blank=True, null=True)
+
+    # Liste des profils ici : https://python-escpos.readthedocs.io/en/latest/printer_profiles/available-profiles.html
+    profile = models.CharField(max_length=250, blank=True, null=True,
+                               help_text="Optionnel. Profil de l'imprimante thermique. Liste ici : liste dispo ici : https://python-escpos.readthedocs.io/en/latest/printer_profiles/available-profiles.html")
+    ip = models.GenericIPAddressField()
+    port = models.IntegerField(blank=True, null=True)
+    active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.name

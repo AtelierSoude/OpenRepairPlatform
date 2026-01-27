@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.db import models
 from simple_history.admin import SimpleHistoryAdmin
 from import_export import resources
 from treebeard.admin import TreeAdmin
@@ -17,6 +18,7 @@ from .models import (
     Intervention,
     RepairFolder,
     Status,
+    ThermalPrinter,
 )
 
 
@@ -49,6 +51,11 @@ class ReasoningAdmin(ImportExportActionModelAdmin, SimpleHistoryAdmin):
 class StatusAdmin(ImportExportActionModelAdmin, SimpleHistoryAdmin):
     ... 
 
+class ThermalPrinterAdmin(admin.ModelAdmin):
+    class Meta:
+        model = ThermalPrinter
+
+
 admin.site.register(Brand, BrandAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Device, DeviceAdmin)
@@ -59,3 +66,4 @@ admin.site.register(Reasoning, ReasoningAdmin)
 admin.site.register(Intervention, SimpleHistoryAdmin)
 admin.site.register(RepairFolder, SimpleHistoryAdmin)
 admin.site.register(Status, StatusAdmin)
+admin.site.register(ThermalPrinter, ThermalPrinterAdmin)

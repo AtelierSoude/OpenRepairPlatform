@@ -56,9 +56,31 @@
             </div>
         </div>
     </div>
-<div class="form-group p-2">
-    <button role="button" type="submit" id="btnsubmit" style="display:none" class="btn submit-btn btn-success w-100 p-3">Valider</button>
-</div>
+
+    <div class="form-group p-2">
+
+        <!-- champ caché qui renvois create ou create-print + voir JS dans l'assets qui utilise data-submit-action -->
+        {{ form.submit_action }}
+
+        <button role="button" type="submit" data-submit-action="create" id="btnsubmit" style="display:none" class="btn submit-btn btn-primary w-100 p-3">Créer</button>
+        {% if can_print %}
+            <div class="print-action mt-2 border-secondary border p-2" id="btnsubmitandprint" style="display:none">
+                <h5>Imprimer une étiquette</h5>
+                <select name="printer_pk" class="form-select mb-1 float-start" required>
+                    {% for printer in thermal_printers_active %}
+                        <option value="{{ printer.pk }}">Imprimer avec {{ printer.name|default:printer.pk }}</option>
+                    {% endfor %}
+                </select>
+                <button
+                    type="submit"
+                    data-submit-action="create_print"
+                    class="btn submit-btn btn-secondary w-100 p-3">
+                    Créer et imprimer
+                </button>
+            </div>
+        {% endif %}
+    </div>
+
 </form>
 {% block extra_js %}
    

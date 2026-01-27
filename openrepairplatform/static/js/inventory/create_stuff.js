@@ -1,5 +1,25 @@
 $(document).ready(function () {
+
+  // ICI on regarde quel bouton submit a été cliqué afin de pouvoir renvoyer create_print via data-submit-action
+  // C'est pas très beau , à revoir un jour 
+  
+
+  // affichage des champs au fil de l'eau 
   var myModalEl = document.getElementById('modal')
+
+  myModalEl.addEventListener('click', function (e) {
+    const btn = e.target.closest('button[type="submit"][data-submit-action]');
+    if (!btn) return;
+
+    const form = btn.form;
+    if (!form) return;
+
+    const hidden = form.querySelector('input[name="submit_action"]');
+    if (!hidden) return;
+
+    hidden.value = btn.dataset.submitAction || '';
+  }, true);
+
   myModalEl.addEventListener('show.bs.modal', function (event) {
 
     category = document.querySelector("#id_category");
@@ -17,6 +37,7 @@ $(document).ready(function () {
         if ($(this).val()) {
           $("#stuffcreate").show()
           $("#btnsubmit").show()
+          $("#btnsubmitandprint").show()
         }
       };
     }
@@ -33,6 +54,7 @@ $(document).ready(function () {
         $("#adddevice").show()
         $("#stuffcreate").show()
         $("#btnsubmit").show()
+        $("#btnsubmitandprint").show()
         $(".device-search-form").hide()
         $("#id_device").val("")
         $("#select2-id_device-container").html('')
@@ -41,6 +63,7 @@ $(document).ready(function () {
         $("#adddevice").hide()
         $("#stuffcreate").hide()
         $("#btnsubmit").hide()
+        $("#btnsubmitandprint").hide()
         $(".device-search-form").show()
       }
     });

@@ -319,6 +319,7 @@ class InterventionForm(BSModalModelForm):
 
 
 class StuffForm(BSModalModelForm):
+    submit_action = forms.CharField(required=False, widget=forms.HiddenInput())
     category = forms.ModelChoiceField(
         widget=autocomplete.ModelSelect2(url="inventory:category_autocomplete"),
         label="Catégorie d'appareil",
@@ -389,6 +390,10 @@ class StuffForm(BSModalModelForm):
         queryset=Status.objects.all(),
     )
 
+    def clean_submit_action(self):
+        # utilisé pour distinguer les 2 boutons submit "créer" et "créer et imprimer"
+        return self.cleaned_data.get("submit_action") or "create"
+
     def init_folder(self, data):
         self.folder = {}
         self.intervention = {}
@@ -444,6 +449,7 @@ class StuffForm(BSModalModelForm):
             folder = RepairFolder.objects.create(**self.folder)
             self.intervention["folder"] = folder
             Intervention.objects.create(**self.intervention)
+        return instance
 
     def __init__(
         self,

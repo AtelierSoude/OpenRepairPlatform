@@ -18,8 +18,21 @@ Informations pratiques:
 {% endfor %}
 
 {% if event.members_only %}
-    Vous devez être adhérent à {{ event.organization }}
+    Vous devez être adhérent de {{ event.organization }}.
     Vous pouvez adhérer en ligne {{ event.organization.membership_url }} ou une fois sur place
+    {% if event.organization.validated_parents.all %}
+        {{event.organization}} est une structure dont l'adhésion dépend également de  
+        {% for parent_orga in event.organization.validated_parents.all %}
+            {{ parent_orga }}{% if not forloop.last %} OU {% endif %}
+        {% endfor %}
+        {% for parent_orga in event.organization.validated_parents.all %}
+            Vous devez être adhérent de {{ event.organization }}.
+            Vous pouvez adhérer en ligne {{ event.organization.membership_url }} ou une fois sur place
+            {% if not forloop.last %}
+             OU 
+            {% endif %}
+        {% endfor %}
+    {% endif %}
 {% endif %}
 
 Nos ateliers ont une capacité de places limitée:

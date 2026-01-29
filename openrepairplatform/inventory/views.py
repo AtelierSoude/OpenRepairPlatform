@@ -2,7 +2,7 @@ from dal import autocomplete
 from django.contrib import messages
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse
-
+from django.contrib.staticfiles import finders
 from bootstrap_modal_forms.generic import (
     BSModalCreateView,
     BSModalUpdateView,
@@ -427,7 +427,7 @@ def print_thermal_label(request, pk, *args, **kwargs):
                 draw.rectangle((0, 0, w-1, h-1), outline="black", width=1)
 
                 # Logo
-                logo_path = "../static/img/logo_thermal-print.png"
+                logo_path = finders.find("img/logo_thermal-print.png")        
                 if logo_path:
                     logo = Image.open(logo_path)
                     logo.thumbnail((140, 80))

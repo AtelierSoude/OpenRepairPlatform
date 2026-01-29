@@ -44,9 +44,16 @@ class EventViewMixin(PermissionOrgaContextMixin, DetailView):
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         if not self.request.user.is_anonymous:
-            ctx["user_is_member"] = self.request.user.memberships.filter(
-                organization=self.object.organization
-            ).first()
+            org = self.object.organization 
+            parents = org.validated_parents()  
+            org_ids = list(parents.values_list("id", flat=True)) + [org.id]
+            memberships = (
+                self.request.user.memberships
+                .filter(organization_id__in=org_ids)
+                .select_related("organization")
+            )
+            ctx["membership_by_org_id"] = {m.organization_id: m for m in memberships}
+
         ctx["register_form"] = CustomUserEmailForm
         ctx["event_menu"] = "active"
         # Display success booking informations and inventory

@@ -19,16 +19,19 @@
         {% if request.user in registereds %}
           <span class="bg-success badge-pill badge">Je participe</span><br>
         {% endif %}
+
         {% if request.user in organizers %}
           <span class="bg-success badge-pill badge">J'anime</span><br>
         {% endif %}
-        {% if event.booking == False %}
-          {% if event.external == True %}
-            <span class="text-success">Réservation externe</span>
-          {% elif event.external == False %}
-            <span class="text-success">Sans réservation</span>
-          {% endif %}
+        <!-- L'évènement nécessite une réservation = event.booking -->
+        {% if not event.booking %}
+          <span class="text-success">Sans réservation</span>
+        {% elif event.booking and event.external %}
+          <span class="text-success">Réservation externe</span>
+        {% elif event.booking and event.is_free %}
+          <span class="text-success">Sur Réservation</span>
         {% endif %}
+
         {% if event.is_free %}
           <span class="text-success">Places non limitées</span>
         {% elif event.remaining_seats <= 0 %}

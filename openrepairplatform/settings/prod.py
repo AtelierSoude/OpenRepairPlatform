@@ -12,7 +12,7 @@ STATICFILES_DIRS = [
     ]
     
 ASSETS_ROOT = "/srv/static/"
-
+MEDIA_URL = "/media/"
 
 DEBUG = True
 

@@ -15,7 +15,7 @@
                 {% endif %}
                 <span class="badge badge-pill badge-success float-right">{{ membership.current_contribution }}€</span>
             </h5>
-            {% if can_create %}
+            {% if can_create and not same_user %}
                 <div class="m-2">
                     <label class="btn btn-primary"
                         for="modal_fee_{{ membership.organization.name }}">Ajouter une cotisation</label>

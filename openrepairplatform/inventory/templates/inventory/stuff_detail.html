@@ -32,7 +32,6 @@
               </a>
               {% endif %}
             </h4>
-
             {% if thermal_printers_active and can_print %} 
               <div class="float-end mt-4">
                 {% for printer in thermal_printers_active %}
@@ -46,10 +45,11 @@
                 {% endfor %}
               </div>
             {% endif %}
-
-              {{ stuff.information | safe }}
-              <span>
-            </span>
+            {% if stuff.information %}
+              <div class="card col-md-12 mb-2 p-3">
+                <span><b class="pe-2">Infos supplémentaires: </b>{{ stuff.information | safe }}</span>
+              </div>
+            {% endif %}
             <div class="card col-md-12 mb-2 p-3">
               <span>
                 <b class="pe-2">Categorie</b>

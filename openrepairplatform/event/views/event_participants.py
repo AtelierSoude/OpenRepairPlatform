@@ -156,8 +156,11 @@ class CancelReservationView(RedirectView):
         event.registered.remove(user)
         event.presents.remove(user)
 
-        # Check if user is registered to others events
-        if user.first_name == "" and not (user.registered_events.count() > 0):
+        # Check if user is registered or has participated to others events
+        if (user.first_name == "" and
+                user.registered_events.count() == 0
+                and user.presents_events.count() == 0
+                and user.organizers_events.count() == 0):
             # This is a temporary user created only for this event, we can
             # delete it
             user.delete()

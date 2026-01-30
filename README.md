@@ -129,6 +129,17 @@ PGADMIN_DEFAULT_PASSWORD=root
 cd [git checkout directory]/
 docker-compose up
 ```
+Enter into the container: 
+
+```bash
+docker exec -ti openrepairplatform bash
+```
+
+lauch app: 
+
+```bash
+python3 ./manage.py runserver 0.0.0.0:8005
+```
 
 The website is now deployed and accessible on http://[DOMAINDNS]
 

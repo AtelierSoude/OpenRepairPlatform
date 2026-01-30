@@ -97,9 +97,9 @@ RUN  npm run buildprod
 
 WORKDIR /srv/app/
 RUN python3 ./manage.py collectstatic --noinput --clear
-RUN python3 ./manage.py assets build
 
 COPY ../../openrepairplatform/static /srv/static
+RUN python3 ./manage.py assets build
 
 COPY deployment/django/start.sh .
 COPY deployment/django/uwsgi.ini .

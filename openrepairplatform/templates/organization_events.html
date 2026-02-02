@@ -9,7 +9,7 @@
     <h2 class="text-center mt-4">Evénements de {{ organization }}</h2>
     {% if is_active %}
     <p class="d-none" id="ical">{{ request.META.HTTP_HOST }}{% url 'event:ical_events' organization.pk %}</p>
-    <button onclick="copyToClipboard('#ical')" class="btn btn-light mb-2">
+    <button onclick="copyToClipboard('#ical')" class="btn btn-light mb-2" data-toggle="tooltip" data-bs-placement="bottom" title="Copié !">
       <i class="far fa-calendar-plus"></i> Copier l'url Ical
     </button>
     <section class="add-event">
@@ -72,8 +72,17 @@
     document.execCommand("copy");
     $temp.remove();
   }
+  $(document).ready(function () {
+    $('[data-toggle="tooltip"]').tooltip({ trigger: "click" })
+    $(function (){
+       $(document).on('shown.bs.tooltip', function (e) {
+          setTimeout(function () {
+            $(e.target).tooltip('hide');
+          }, 1000);
+       });
+    });
+  })
 </script>
-
 <script>
   $(document).ready(function(){
     $( "#more-button" ).hover(

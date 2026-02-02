@@ -1,0 +1,28 @@
+{% load assets l10n app_filters static dict_extras %}
+{% load thumbnail %}
+<li class="align-middle mt-1">
+    <i class="far fa-check-circle fa-1x text-success"></i>
+    <span>Vous devez être adhérent de <a href="#membership-infos">{{ organization }}</a></span>
+</li>
+<div class="col-lg border border-2 p-2" id="membership-infos">
+    <small>
+    {% with user_is_member=membership_by_org_id|dict_get:organization.id %}
+        {% include "user/membership_pill.html" with membership=user_is_member %}
+    {% endwith %}
+    </small>
+    <small>
+    {{ organization.get_membership_system_display }} Elle
+    {% if organization.advised_fee == organization.min_fee %}
+        est de {{ organization.min_fee }}€
+    {% else %}
+        va de {{ organization.min_fee }}€ à {{ organization.advised_fee }}€
+    {% endif %}
+    {% if organization.membership_url %}
+        Vous pouvez
+        <a class=""
+            target="_blank"
+            href="{{ organization.membership_url }}">Adhérer en ligne</a>
+        ou une fois sur place
+    {% endif %}
+    </small>
+</div>

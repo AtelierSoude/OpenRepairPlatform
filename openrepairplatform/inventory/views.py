@@ -1,11 +1,13 @@
 from dal import autocomplete
 from django.contrib import messages
+from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse
 from django.db.models import Count, Q, F, Max, Sum
 from django.utils.safestring import mark_safe
 from django.db.models import Case, When, Value, IntegerField
 
 
+from django.contrib.staticfiles import finders
 from bootstrap_modal_forms.generic import (
     BSModalCreateView,
     BSModalUpdateView,
@@ -19,6 +21,7 @@ from django.views.generic import (
 from openrepairplatform.mixins import HasActivePermissionMixin
 from openrepairplatform.user.mixins import PermissionOrgaContextMixin
 from openrepairplatform.inventory.mixins import PermissionEditStuffMixin, DeviceContextAutocompleteMixin
+from openrepairplatform.inventory.mixins import PermissionCreateUserStuffMixin, PermissionEditUserStuffMixin, ThermalPrintersContextMixin
 
 import django_tables2 as tables
 from django_filters.views import FilterView
@@ -35,7 +38,7 @@ from .models import (
     Reasoning,
     Brand,
     Intervention,
-    RepairFolder,
+    RepairFolder, ThermalPrinter,
 )
 from .filters import StockFilter
 from .forms import (
@@ -110,28 +113,42 @@ class OrganizationStockView(
         return context
 
 
-class StuffDetailView(PermissionEditStuffMixin, DetailView):
+class StuffDetailView(PermissionEditUserStuffMixin, ThermalPrintersContextMixin, DetailView):
     model = Stuff
     template_name = "inventory/stuff_detail.html"
     pk_url_kwarg = "stuff_pk"
 
     def get_context_data(self, *args, **kwargs):
-        context = super().get_context_data(*args, **kwargs)
-        return context
+        context_stuff = super().get_context_data(*args, **kwargs)
+        self.add_thermal_printers(
+            context_stuff, 
+            organization=self.object.organization_owner, 
+            member_user=self.object.member_owner)
+        return context_stuff
 
-
-class StuffFormMixin(BSModalCreateView):
+class StuffFormMixin(BSModalCreateView, PermissionCreateUserStuffMixin, ThermalPrintersContextMixin):
     model = Stuff
     form_class = StuffForm
     template_name = "inventory/stuff_form.html"
-    success_message = "L'objet a bien été ajouté à l'inventaire"
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        form_kwargs = self.get_form_kwargs()
+        orga = form_kwargs.get("organization")
+        member_user = form_kwargs.get("user")
+        if form_kwargs.get("visitor_user"):
+            orga = form_kwargs.get('event').organization
+        self.add_thermal_printers(context, organization=orga, member_user=member_user)
+        return context
 
     def form_valid(self, form):
         res = super().form_valid(form)
-        messages.success(
-            self.request, "l'objet #"f"{form.instance.id} bien ajouté à l'inventaire"
-        )
+        stuff = form.instance 
+        if self.request.POST.get("submit_action") == "create_print":
+            print_thermal_label(self.request, stuff.pk)
+        messages.success(self.request, f"l'objet #{stuff.pk} bien ajouté à l'inventaire")
         return res
+
 
 
 class StuffUserFormView(StuffFormMixin):
@@ -670,3 +687,74 @@ class StatusAutocomplete(autocomplete.Select2QuerySetView):
 
     def has_add_permission(self, request):
         return True
+
+
+### PRINTER
+### BETA VERSION - ONLY TESTED WITH TP35 
+
+def print_thermal_label(request, pk, *args, **kwargs):
+    if request.method != "POST":
+        return JsonResponse({"error": "Method not allowed"}, status=405)
+    
+    stuff = get_object_or_404(Stuff, pk=pk)
+    thermal_printer = get_object_or_404(ThermalPrinter, pk=request.POST.get('printer_pk'))
+    data_printed = {"timeout" : 2}
+    if thermal_printer:
+        data_printed["host"] = thermal_printer.ip
+        if thermal_printer.port :
+            data_printed['port'] = thermal_printer.port
+        if thermal_printer.profile :
+            data_printed['profile'] = thermal_printer.profile
+
+        # on importe la lib ici pour éviter de surcharger le controleur
+        from escpos.printer import Network
+        import qrcode
+        from PIL import Image, ImageDraw, ImageFont
+        import os
+
+        print(data_printed)
+        try :
+            printer = Network(**data_printed)
+            if printer.is_online():
+
+                WIDTH = 262 
+                HEIGHT = 90
+
+                img = Image.new("RGB", (WIDTH, HEIGHT), "white")
+                draw = ImageDraw.Draw(img)
+                w, h = img.size
+                draw.rectangle((0, 0, w-1, h-1), outline="black", width=1)
+
+                # Logo
+                logo_path = finders.find("img/logo_thermal-print.png")        
+                if logo_path:
+                    logo = Image.open(logo_path)
+                    logo.thumbnail((140, 80))
+                    img.paste(logo, (77, 0), logo)
+
+                qr = qrcode.QRCode(
+                    version=1,
+                    error_correction=qrcode.constants.ERROR_CORRECT_L,
+                    border=1,
+                )
+                qr.add_data(stuff.get_url_qrcode())
+                qr.make()
+                qr_img = qr.make_image(fill_color="black", back_color="white")
+                qr_img.thumbnail((70, 70))
+                img.paste(qr_img, (10, 10))
+                site = os.environ.get("DOMAINDNS")
+                font_big = ImageFont.truetype("../usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 16 )
+                font_small = ImageFont.truetype("../usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 10 )
+                draw.text((80, 38), "ID/", font=font_big, fill="black")
+                draw.text((110, 38), f"{stuff.pk}", font=font_big, fill="black")
+                draw.text((80, 57), "retrouve et modifie mon carnet", font=font_small, fill="black")
+                draw.text((80, 67), "de santé sur " + f"{site}" , font=font_small, fill="black")
+
+                printer.image(img, impl="bitImageRaster", center=False)
+                printer.cut()
+                printer.close()
+                
+        except Exception as e:
+            print(f"printer error {e} : {data_printed}")
+
+    return redirect(request.META.get('HTTP_REFERER') or reverse("home"))

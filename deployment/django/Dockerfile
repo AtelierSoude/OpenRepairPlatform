@@ -1,5 +1,5 @@
 ################ BASE #########################
-FROM python:3.12-slim-bullseye AS base
+FROM python:3.9-slim-bullseye AS base
 
 # set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -16,12 +16,12 @@ RUN set -uex; \
      > /etc/apt/sources.list.d/nodesource.list; \
     apt-get update; \
     apt-get install nodejs -y;
-RUN apt-get install -y libproj-dev locales locales-all cron gdal-bin build-essential sassc
+RUN apt-get install -y libproj-dev locales locales-all cron gdal-bin build-essential sassc libcups2-dev
 RUN apt-get install --assume-yes git
 
 RUN ln /usr/bin/sassc /usr/bin/sass
 
-RUN pip install --upgrade pip
+RUN pip3 install --upgrade pip
 
 # French ENV for date
 RUN sed -i -e 's/# fr_FR.UTF-8 UTF-8/fr_FR.UTF-8 UTF-8/' /etc/locale.gen && \
@@ -51,8 +51,8 @@ WORKDIR /srv/app
 COPY ../../requirements.txt ./
 COPY ../../requirements_dev.txt /srv/app/requirements_dev.txt
 
-RUN pip install -r requirements_dev.txt
-RUN pip install uwsgi
+RUN pip3 install -r requirements_dev.txt
+RUN pip3 install uwsgi
 
 # for cron
 COPY deployment/django/openrepairplatform.cron /etc/cron.d/openrepairplatform
@@ -75,7 +75,7 @@ FROM base AS developpement
 
 WORKDIR /srv/app/
 
-RUN pip install ptvsd
+RUN pip3 install ptvsd
 
 WORKDIR /srv/app/
 
@@ -97,9 +97,9 @@ RUN  npm run buildprod
 
 WORKDIR /srv/app/
 RUN python3 ./manage.py collectstatic --noinput --clear
-COPY ../../openrepairplatform/static /srv/static
 
-RUN python3 manage.py assets build
+COPY ../../openrepairplatform/static /srv/static
+RUN python3 ./manage.py assets build
 
 COPY deployment/django/start.sh .
 COPY deployment/django/uwsgi.ini .

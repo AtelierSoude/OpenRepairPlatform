@@ -1,9 +1,8 @@
-{% load static assets app_filters thumbnail initialavatar %}
-    <section class="row ">
+{% load static assets app_filters thumbnail initialavatar dict_extras %}
+  <section class="row ">
     {% for user in users %}
       {% filter_orga queryset=user.memberships organization=event.organization as membership %}
       {% filter_user queryset=event.participations user=user as participation %}
-      {% related_membership queryset=event.fees membership=membership as fees %}
       {% sum_conditions conditions=event.conditions.all as condition_prices %}
       {% tokenize user=user event=event action='present' as tok_event_present %}
       {% tokenize user=user event=event action='absent' as tok_event_absent %}
@@ -36,86 +35,103 @@
           </div>
           <div class="card-body">
             <div class="container">
-              <div class="row row-cols-2">
-                  <div class="col">
-                      <b>Etat de l'adhésion</b>
-                      <br>
-                      {% if membership %}
-                        {% if membership.current_contribution == 0 %}
-                        <span class="text-danger" >Pas de cotisation</span>
-                        <span class="badge badge-pill bg-danger" >0€</span>
-                        {% elif membership.current_contribution >= event.organization.advised_fee %}
-                        <span class="text-success" >A jour </span>
-                        <span class="badge badge-pill bg-success" >{{membership.current_contribution}}€/{{event.organization.advised_fee}}€</span>
-                        {% else %}
-                        <span class="text-warning" >Incomplet</span>
-                        <span class="badge badge-pill bg-warning" >{{membership.current_contribution}}€</span>
-                        {% endif %}
-                      {% else %}
-                          Non membre
-                      {% endif %}
+              <div class="row border mb-2 mt-2">
+                <b class="border-bottom mb-1 p-1">Adhésion à {{event.organization}}{% include "user/membership_pill.html" with membership=membership %}</b>
+                <br>
+                <div class="mb-1">
+                  <b>Cotisations : </b>
+                  {% related_membership queryset=event.fees membership=membership as fees %}
+                    {% if fees %}
+                      {% for fee in fees %}
+                      <span class="badge badge-pill badge-light pe-2 m-2">
+                        {{ fee.amount }}€
+                        {{ fee.get_payment_display }}
+                        <form class="d-inline" action="{% url 'user:fee_delete' fee.pk %}" method="post">
+                          {% csrf_token %}
+                          <button type="submit" class="btn text-danger btn-sm">x</button>
+                        </form>
+                      </span>
+                      {% endfor %}
+                    {% endif %}
+                    <div class="col">
+                    {% include "event/modal_more_info.html" with user=user target_organization=event.organization membership=membership form=present_form|initial:user %}
+                    </div>
                 </div>
-                  <div class="col">
-                      <b>Cotisations</b>
-                        {% include "event/modal_more_info.html" with user=user membership=membership form=present_form|initial:user %}
+              </div>
+              {% if event.organization.validated_parents.all %}
+                {% for parent_orga in event.organization.validated_parents.all %}
+                  {% filter_orga queryset=user.memberships organization=parent_orga as parent_membership %}
+                  <div class="row border mb-2 mt-2">
+                    <b class="border-bottom mb-1 p-1">
+                      Adhésion à {{ parent_orga }}
+                      {% include "user/membership_pill.html" with membership=parent_membership %}
+                    </b>
+                    <br>
+                    <div class="mb-1">
+                      <b>Cotisations : </b>
+                      {% related_membership queryset=event.fees membership=parent_membership as fees %}
                       {% if fees %}
                         {% for fee in fees %}
-                        <span class="badge badge-pill badge-light pe-2 m-2">
-                          {{ fee.amount }}€
-                          {{ fee.get_payment_display }}
-                          <form class="d-inline" action="{% url 'user:fee_delete' fee.pk %}" method="post">
-                            {% csrf_token %}
-                            <button type="submit" class="btn text-danger btn-sm">x</button>
-                          </form>
-                        </span>
+                          <span class="badge badge-pill badge-light pe-2 m-2">
+                            {{ fee.amount }}€
+                            {{ fee.get_payment_display }}
+                            <form class="d-inline" action="{% url 'user:fee_delete' fee.pk %}" method="post">
+                              {% csrf_token %}
+                              <button type="submit" class="btn text-danger btn-sm">x</button>
+                            </form>
+                          </span>
                         {% endfor %}
                       {% endif %}
-                  </div>
-                  {% if event.conditions.all %}
-                    <div class="col">
-                      <p><b>Participation</b>
-                        <br>
-                        {% if participation.amount == 0 or not participation.amount %}
-                        <span class="text-danger">0€</span>
-                        {% elif participation.amount >= condition_prices %}
-                        <span class="text-success">{{participation.amount}}€</span>
-                        {% else %}
-                        <span class="text-warning">{{participation.amount}}€</span>
-                        {% endif %}
-                        / {{condition_prices }}€
-                      </p>
-                      {% if participation %}
-                        <button class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#participation-{{ user.pk|escape }}">
-                          Mettre à jour la participation
-                        </button>
-                        {% include "event/participation_form.html" with user=user event=event form=participation_form|initial:participation %}
-                      {% else %}
-                        <button class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#participation-{{ user.pk|escape }}">
-                          Ajouter une participation
-                        </button>
-                        {% include "event/participation_form.html" with user=user event=event form=participation_form %}
-                      {% endif %}
+                      <div class="col">
+                        {% include "event/modal_more_info.html" with user=user target_organization=parent_orga membership=parent_membership form=present_form|initial:user %}
+                      </div>
                     </div>
-                  {% endif %}
-              </div>
-              <div class="row">
-              {% if event.allow_stuffs %}
-                <div class="col">
-                    <b>Objets en réparation</b>
-
-                    <button class="btn btn-light btn-sm bs-gobal-modal"  href="#" data-modal-id="modal-stuff" data-form-url="{% url 'event:create_user_event_stuff_orga' event.pk user.pk %}" >
-                      <i class="fas fa-tools"></i> ajouter
-                    </button>
-                  {% for stuff in user.user_stuffs.all %}
-                    {% if stuff in event.stuffs.all %}<br>
-                      <a href="{{stuff.get_absolute_url}}">{{ stuff }}
-                      </a>
-                      {% include "inventory/stuff_state_display.html" with stuff_state=stuff.get_state_display %}
+                  </div>
+                {% endfor %}
+              {% endif %}
+              {% if event.conditions.all and condition_prices > 0 %}
+                <div class="row border mb-2 mt-2">
+                  <p><b>Participation</b>
+                    <br>
+                    {% if participation.amount == 0 or not participation.amount %}
+                    <span class="text-danger">0€</span>
+                    {% elif participation.amount >= condition_prices %}
+                    <span class="text-success">{{participation.amount}}€</span>
+                    {% else %}
+                    <span class="text-warning">{{participation.amount}}€</span>
                     {% endif %}
-                  {% endfor %}
+                    / {{condition_prices }}€
+                  </p>
+                  {% if participation %}
+                    <button class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#participation-{{ user.pk|escape }}">
+                      Mettre à jour la participation
+                    </button>
+                    {% include "event/participation_form.html" with user=user event=event form=participation_form|initial:participation %}
+                  {% else %}
+                    <button class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#participation-{{ user.pk|escape }}">
+                      Ajouter une participation
+                    </button>
+                    {% include "event/participation_form.html" with user=user event=event form=participation_form %}
+                  {% endif %}
                 </div>
               {% endif %}
-              </div>
+              {% if event.allow_stuffs %}
+                <div class="row border mb-2 mt-2">
+                  <b class="border-bottom mb-1 p-1">Objets en réparation</b>
+                  <br>
+                  {% for stuff in user.user_stuffs.all %}
+                    {% if stuff in event.stuffs.all %}<br>
+                      <span>
+                        <a href="{{stuff.get_absolute_url}}">{{ stuff }}</a>
+                        {% include "inventory/stuff_state_display.html" with stuff_state=stuff.get_state_display %}
+                      </span>
+                    {% endif %}
+                  {% endfor %}
+                  <button class="btn btn-light bs-gobal-modal mt-2"  href="#" data-modal-id="modal-stuff" data-form-url="{% url 'event:create_user_event_stuff_orga' event.pk user.pk %}" >
+                    <i class="fas fa-tools"></i> ajouter
+                  </button>
+                </div>
+              {% endif %}
             </div>
           </div>
           <div class="card-footer text-center">
@@ -128,7 +144,7 @@
             </a>
             {% else %}
               <a class="btn btn-light btn-large" href="{% url 'event:user_present' tok_event_present %}">
-                <span class="text-success">
+                <span class="text-primary">
                   <i class="fas fa-check"></i> Valider présence
                 </span>
               </a>
@@ -138,5 +154,5 @@
         </div>
       </div>
     {% endfor %}
-    </section>
+  </section>
 

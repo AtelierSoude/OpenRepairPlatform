@@ -10,7 +10,7 @@
             </span><br>
             <small><a href="{{folder.stuff.get_absolute_url}}">{{ folder.stuff }}</a></small><br>
             <small>Etat innitial : <b>{{folder.interventions.first.observation}}</b> / dernier état : <b>{{folder.interventions.last.status}}</b></small>
-            {% if can_edit or is_active %}
+            {% if can_edit %}
                 <button class="btn btn-sm bs-gobal-modal text-success float-end" data-form-url="{% url 'inventory:create_intervention' folder.pk %}">
                     <i class="fa fa-plus"></i> Ajouter une intervention 
                 </button>

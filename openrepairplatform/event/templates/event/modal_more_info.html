@@ -1,25 +1,26 @@
 {% extends "./parts/modal.html" %}
 {% load app_filters bootstrap5 %}
-{% block idBtnModal %}more-info-{{ user.pk|escape }}{% endblock idBtnModal %}
-{% block idModal %}more-info-{{ user.pk|escape }}{% endblock idModal %}
+{% block idBtnModal %}more-info-{{ user.pk|escape }}-{{target_organization.pk|escape }}{% endblock idBtnModal %}
+{% block idModal %}more-info-{{ user.pk|escape }}-{{target_organization.pk|escape }}{% endblock idModal %}
 {% block contentBtnModal %}
 <i class="fa fa-plus"></i> ajouter
 {% endblock contentBtnModal %}
 {% block titleModal %}
-  Ajouter/modifier membre
+  Ajouter/modifier 
 {% endblock titleModal %}
 {% block contentModal %}
 <div class="modal-body">
+  <h5>{{target_organization}}</h5>
   <br>
   <b>
-    {% filter_orga queryset=user.memberships organization=event.organization as membership %}
+    {% filter_orga queryset=user.memberships organization=target_organization as membership %}
       {% if membership %}
         <p>
           statut
           {% if membership.current_contribution == 0 %}
             <span class="text-danger">Pas à jour</span>
             <span class="badge badge-pill bg-danger">{{ membership.current_contribution }}€</span>
-          {% elif membership.current_contribution >= event.organization.advised_fee %}
+          {% elif membership.current_contribution >= target_organization.advised_fee %}
             <span class="text-success">A jour</span>
             <span class="badge badge-pill bg-success">{{ membership.current_contribution }}€</span>
           {% else %}
@@ -29,18 +30,18 @@
         </p>
       {% else %}
         {{ user }} n'a pas encore contribué pour
-        <span class="badge badge-pill bg-primary">{{ event.organization }}</span>
+        <span class="badge badge-pill bg-primary">{{ target_organization }}</span>
       {% endif %}
       <p>
-        {{ event.organization.get_membership_system_display }} Elle
-        {% if event.organization.advised_fee == event.organization.min_fee %}
-          est de {{ event.organization.min_fee }}€
+        {{ target_organization.get_membership_system_display }} Elle
+        {% if target_organization.advised_fee == target_organization.min_fee %}
+          est de {{ target_organization.min_fee }}€
         {% else %}
-          va de {{ event.organization.min_fee }}€ à {{ event.organization.advised_fee }}€
+          va de {{ target_organization.min_fee }}€ à {{ target_organization.advised_fee }}€
         {% endif %}
       </p>
     </b>
-    <form action="{% if membership %}{% url 'event:update_member' event.organization.pk membership.user.pk event.pk %}{% else %}{% url 'event:add_member' event.organization.pk event.pk %}{% endif %}"
+    <form action="{% if membership %}{% url 'event:update_member' target_organization.pk membership.user.pk event.pk %}{% else %}{% url 'event:add_member' target_organization.pk event.pk %}{% endif %}"
           method="post"
           class="text-left">
         {% csrf_token %}

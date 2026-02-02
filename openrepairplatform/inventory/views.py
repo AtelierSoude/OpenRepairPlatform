@@ -20,9 +20,12 @@ from django.views.generic import (
 )
 from openrepairplatform.mixins import HasActivePermissionMixin
 from openrepairplatform.user.mixins import PermissionOrgaContextMixin
-from openrepairplatform.inventory.mixins import PermissionEditStuffMixin, DeviceContextAutocompleteMixin
-from openrepairplatform.inventory.mixins import PermissionCreateUserStuffMixin, PermissionEditUserStuffMixin, ThermalPrintersContextMixin
-
+from openrepairplatform.inventory.mixins import (
+    PermissionCreateUserStuffMixin, 
+    DeviceContextAutocompleteMixin, 
+    PermissionEditUserStuffMixin, 
+    ThermalPrintersContextMixin
+)
 import django_tables2 as tables
 from django_filters.views import FilterView
 from django_tables2.export.views import ExportMixin

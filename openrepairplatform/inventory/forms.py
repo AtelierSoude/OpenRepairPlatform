@@ -16,7 +16,8 @@ from .models import (
 )
 from dal import autocomplete
 from bootstrap_modal_forms.forms import BSModalModelForm
-
+from django.urls import reverse
+from openrepairplatform.inventory.mixins import DeviceContextAutocompleteMixin
 
 class StuffEditOwnerForm(BSModalModelForm):
     def __init__(self, *args, **kwargs):
@@ -88,7 +89,7 @@ class StuffEditStateForm(BSModalModelForm):
         ]
 
 
-class FolderForm(BSModalModelForm):
+class FolderForm(DeviceContextAutocompleteMixin, BSModalModelForm):
     BROKEN = "B"
     WORKING = "W"
     DISASSEMBLED = "D"
@@ -117,20 +118,31 @@ class FolderForm(BSModalModelForm):
         initial=True,
     )
     observation = forms.ModelChoiceField(
-        widget=autocomplete.ModelSelect2(url="inventory:observation_autocomplete"),
+        widget=autocomplete.ModelSelect2(
+            url="inventory:observation_autocomplete",
+            attrs={"data-html": True}
+        ),
         help_text="Quel est (ou était) le problème ?",
         required=False,
         queryset=Observation.objects.all(),
     )
     reasoning = forms.ModelChoiceField(
-        widget=autocomplete.ModelSelect2(url="inventory:reasoning_autocomplete"),
+        widget=autocomplete.ModelSelect2(
+            url="inventory:reasoning_autocomplete",
+            forward=["observation"],
+            attrs={"data-html": True}
+        ),
         help_text="Quel en est (ou serait) la cause ?",
         label="Raisonnement",
         required=False,
         queryset=Reasoning.objects.all(),
     )
     action = forms.ModelChoiceField(
-        widget=autocomplete.ModelSelect2(url="inventory:action_autocomplete"),
+        widget=autocomplete.ModelSelect2(
+            url="inventory:action_autocomplete", 
+            forward=["reasoning"],
+            attrs={"data-html": True}
+        ),
         help_text="Qu'avez-vous fait ?",
         required=False,
         queryset=Action.objects.all(),
@@ -199,7 +211,8 @@ class FolderForm(BSModalModelForm):
             initial=True,
             required=False,
         )
-
+        self.set_autocomplete_urls()
+        
     class Meta:
         model = RepairFolder
         fields = [
@@ -213,8 +226,7 @@ class FolderForm(BSModalModelForm):
             "change_stuff_state",
         ]
 
-
-class InterventionForm(BSModalModelForm):
+class InterventionForm(DeviceContextAutocompleteMixin, BSModalModelForm):
     BROKEN = "B"
     WORKING = "W"
     DISASSEMBLED = "D"
@@ -268,40 +280,61 @@ class InterventionForm(BSModalModelForm):
             self.folder = folder
         if stuff:
             self.stuff = stuff
-        if event: 
+        if event:
             self.event = event
+
         super().__init__(*args, **kwargs)
-        if not event: 
-            self.fields['repair_date'] = forms.DateField(
-                    initial=dt.today,
-                    widget=forms.DateInput(attrs={"type": "date"}, format="%Y-%m-%d"),
-                    label="date",
-                )
+
+        if not event:
+            self.fields["repair_date"] = forms.DateField(
+                initial=dt.today,
+                widget=forms.DateInput(attrs={"type": "date"}, format="%Y-%m-%d"),
+                label="date",
+            )
+
         self.fields["observation"] = forms.ModelChoiceField(
-            widget=autocomplete.ModelSelect2(url="inventory:observation_autocomplete"),
+            widget=autocomplete.ModelSelect2(
+                url="inventory:observation_autocomplete",
+                attrs={"data-html": True}
+            ),
             help_text="Quel est (ou était) le problème ?",
             required=False,
             queryset=Observation.objects.all(),
         )
+
         self.fields["reasoning"] = forms.ModelChoiceField(
-            widget=autocomplete.ModelSelect2(url="inventory:reasoning_autocomplete"),
+            widget=autocomplete.ModelSelect2(
+                url="inventory:reasoning_autocomplete",
+                forward=["observation"],  
+                attrs={"data-html": True},
+            ),
             help_text="Quel en est (ou serait) la cause ?",
             label="Raisonnement",
             required=False,
             queryset=Reasoning.objects.all(),
         )
+
         self.fields["action"] = forms.ModelChoiceField(
-            widget=autocomplete.ModelSelect2(url="inventory:action_autocomplete"),
+            widget=autocomplete.ModelSelect2(
+                url="inventory:action_autocomplete",
+                forward=["reasoning"],  
+                attrs={"data-html": True}
+            ),
             help_text="Qu'avez-vous fait ?",
             required=False,
             queryset=Action.objects.all(),
         )
+
         self.fields["status"] = forms.ModelChoiceField(
-            widget=autocomplete.ModelSelect2(url="inventory:status_autocomplete"),
+            widget=autocomplete.ModelSelect2(
+                url="inventory:status_autocomplete",
+            ),
             help_text="Quel est le résultat de l'action ?",
             required=False,
             queryset=Status.objects.all(),
         )
+
+        self.set_autocomplete_urls()
 
     class Meta:
         model = Intervention
@@ -317,9 +350,7 @@ class InterventionForm(BSModalModelForm):
             "stuff_state",
         ]
 
-
-class StuffForm(BSModalModelForm):
-    submit_action = forms.CharField(required=False, widget=forms.HiddenInput())
+class StuffForm(DeviceContextAutocompleteMixin, BSModalModelForm):
     category = forms.ModelChoiceField(
         widget=autocomplete.ModelSelect2(url="inventory:category_autocomplete"),
         label="Catégorie d'appareil",
@@ -365,20 +396,31 @@ class StuffForm(BSModalModelForm):
         initial=True,
     )
     observation = forms.ModelChoiceField(
-        widget=autocomplete.ModelSelect2(url="inventory:observation_autocomplete"),
+        widget=autocomplete.ModelSelect2(
+            url="inventory:observation_autocomplete",
+            attrs={"data-html": True},
+            forward=["category"],
+        ),
         help_text="Quel est (ou était) le problème ?",
         required=False,
         queryset=Observation.objects.all(),
     )
     reasoning = forms.ModelChoiceField(
-        widget=autocomplete.ModelSelect2(url="inventory:reasoning_autocomplete"),
+        widget=autocomplete.ModelSelect2(
+            url="inventory:reasoning_autocomplete",
+            forward=["observation"],
+            attrs={"data-html": True}
+        ),
         help_text="Quel en est (ou serait) la cause ?",
         label="Raisonnement",
         required=False,
         queryset=Reasoning.objects.all(),
     )
     action = forms.ModelChoiceField(
-        widget=autocomplete.ModelSelect2(url="inventory:action_autocomplete"),
+        widget=autocomplete.ModelSelect2(url="inventory:action_autocomplete", 
+            forward=["reasoning"],
+            attrs={"data-html": True}
+        ),
         help_text="Qu'avez-vous fait ?",
         required=False,
         queryset=Action.objects.all(),
@@ -457,10 +499,18 @@ class StuffForm(BSModalModelForm):
         user=None,
         visitor_user=None,
         event=None,
+        category=None,     
         *args,
         **kwargs,
     ):
         super().__init__(*args, **kwargs)
+
+        if category is not None:
+            # pour que le mixin puisse l'utiliser
+            self.category = category
+            # tu peux aussi la pré-remplir dans le champ form :
+            self.fields["category"].initial = category
+
         if event:
             self.event = event
         if organization:
@@ -490,6 +540,8 @@ class StuffForm(BSModalModelForm):
             self.user = user
             del self.fields["is_visible"]
             del self.fields["place"]
+        
+        self.set_autocomplete_urls()
 
     class Meta:
         model = Stuff

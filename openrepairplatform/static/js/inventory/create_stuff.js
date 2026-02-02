@@ -22,10 +22,23 @@ $(document).ready(function () {
 
   myModalEl.addEventListener('show.bs.modal', function (event) {
 
+    function clearSelect2(id) {
+  const $el = $(id);
+  if ($el.length) {
+    $el.val(null).trigger('change'); // clear select2
+  }
+}
+    
+
     category = document.querySelector("#id_category");
 
     if (category) {
       category.onchange = function () {
+          clearSelect2('#id_device');
+          clearSelect2('#id_observation');
+          clearSelect2('#id_reasoning');
+          clearSelect2('#id_action');
+          clearSelect2('#id_status');
         if ($(this).val()) {
           $("#devicesearch").show()
         }

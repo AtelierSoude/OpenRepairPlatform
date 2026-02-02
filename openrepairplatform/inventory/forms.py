@@ -120,9 +120,10 @@ class FolderForm(DeviceContextAutocompleteMixin, BSModalModelForm):
     observation = forms.ModelChoiceField(
         widget=autocomplete.ModelSelect2(
             url="inventory:observation_autocomplete",
-            attrs={"data-html": True}
+            attrs={"data-html": True},
+            forward=["category"],
         ),
-        help_text="Quel est le problème ? / symptôme",
+        help_text="Quel est le problème ?",
         label="Problème",
         required=False,
         queryset=Observation.objects.all(),
@@ -130,31 +131,33 @@ class FolderForm(DeviceContextAutocompleteMixin, BSModalModelForm):
     reasoning = forms.ModelChoiceField(
         widget=autocomplete.ModelSelect2(
             url="inventory:reasoning_autocomplete",
-            forward=["observation"],
+            forward=["category", "observation"],
             attrs={"data-html": True}
         ),
-        help_text="Quel en est la cause ? / diagnostic ",
+        help_text="Quelle est la cause ?",
         label="Cause",
         required=False,
         queryset=Reasoning.objects.all(),
     )
     action = forms.ModelChoiceField(
-        widget=autocomplete.ModelSelect2(
-            url="inventory:action_autocomplete", 
-            forward=["reasoning"],
+        widget=autocomplete.ModelSelect2(url="inventory:action_autocomplete", 
+            forward=["category", "reasoning"],
             attrs={"data-html": True}
         ),
-        help_text="Quelle action a été menée ?",
+        help_text="Quelle action avez-vous fait ?",
         required=False,
         queryset=Action.objects.all(),
     )
     status = forms.ModelChoiceField(
-        widget=autocomplete.ModelSelect2(url="inventory:status_autocomplete"),
-        help_text="Quel est le résultat de l'action ?",
-        label="Résultat",
-        required=False,
+        widget=autocomplete.ModelSelect2(url="inventory:status_autocomplete", 
+            forward=["category"],
+            attrs={"data-html": True}
+        ),  
+        help_text="Quel est le résultat ?",
+        required=False,                
         queryset=Status.objects.all(),
     )
+
 
     def init_folder(self, data):
         self.folder = {}
@@ -308,7 +311,7 @@ class InterventionForm(DeviceContextAutocompleteMixin, BSModalModelForm):
         self.fields["reasoning"] = forms.ModelChoiceField(
             widget=autocomplete.ModelSelect2(
                 url="inventory:reasoning_autocomplete",
-                forward=["observation"],  
+                forward=["category", "observation"],
                 attrs={"data-html": True},
             ),
             help_text="Quelle est la cause ?",
@@ -320,24 +323,22 @@ class InterventionForm(DeviceContextAutocompleteMixin, BSModalModelForm):
         self.fields["action"] = forms.ModelChoiceField(
             widget=autocomplete.ModelSelect2(
                 url="inventory:action_autocomplete",
-                forward=["reasoning"],  
+                forward=["category", "reasoning"],  
                 attrs={"data-html": True}
             ),
             help_text="Qu'avez-vous fait ?",
             required=False,
             queryset=Action.objects.all(),
         )
-
         self.fields["status"] = forms.ModelChoiceField(
-            widget=autocomplete.ModelSelect2(
-                url="inventory:status_autocomplete",
-            ),
-            help_text="Quel est le résultat de l'action ?",
-            label="Résultat",
-            required=False,
-            queryset=Status.objects.all(),
-        )
-
+                widget=autocomplete.ModelSelect2(url="inventory:status_autocomplete", 
+                    forward=["category"],
+                    attrs={"data-html": True}
+                ),  
+                help_text="Quel est le résultat ?",
+                required=False,                
+                queryset=Status.objects.all(),
+            )
         self.set_autocomplete_urls()
 
     class Meta:
@@ -413,7 +414,7 @@ class StuffForm(DeviceContextAutocompleteMixin, BSModalModelForm):
     reasoning = forms.ModelChoiceField(
         widget=autocomplete.ModelSelect2(
             url="inventory:reasoning_autocomplete",
-            forward=["observation"],
+            forward=["category", "observation"],
             attrs={"data-html": True}
         ),
         help_text="Quelle est la cause ?",
@@ -423,7 +424,7 @@ class StuffForm(DeviceContextAutocompleteMixin, BSModalModelForm):
     )
     action = forms.ModelChoiceField(
         widget=autocomplete.ModelSelect2(url="inventory:action_autocomplete", 
-            forward=["reasoning"],
+            forward=["category", "reasoning"],
             attrs={"data-html": True}
         ),
         help_text="Quelle action avez-vous fait ?",
@@ -431,10 +432,12 @@ class StuffForm(DeviceContextAutocompleteMixin, BSModalModelForm):
         queryset=Action.objects.all(),
     )
     status = forms.ModelChoiceField(
-        widget=autocomplete.ModelSelect2(url="inventory:status_autocomplete"),
+        widget=autocomplete.ModelSelect2(url="inventory:status_autocomplete", 
+            forward=["category"],
+            attrs={"data-html": True}
+        ),  
         help_text="Quel est le résultat ?",
-        required=False,
-        label="Résultat",
+        required=False,                
         queryset=Status.objects.all(),
     )
 

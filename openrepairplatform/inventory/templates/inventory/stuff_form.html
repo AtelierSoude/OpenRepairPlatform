@@ -38,20 +38,20 @@
             {% endif %}
             <div class="row">
             {% if form.action %}
-                {% bootstrap_field form.observation form_group_class="col-md-6" %}
+                {% bootstrap_field form.observation form_group_class="col" %}
             {% else %}
-                {% bootstrap_field form.observation form_group_class="col-md-12" %}
+                {% bootstrap_field form.observation form_group_class="col" %}
             {% endif %}
             {% if form.reasoning %}
-                {% bootstrap_field form.reasoning form_group_class="col-md-6" %}
+                {% bootstrap_field form.reasoning form_group_class="col" %}
             {% endif %}
             </div>
             <div class="row">
             {% if form.action %}
-                {% bootstrap_field form.action form_group_class="col-md-6" %}
+                {% bootstrap_field form.action form_group_class="col" %}
             {% endif %}
             {% if form.status %}
-                {% bootstrap_field form.status form_group_class="col-md-6" %}
+                {% bootstrap_field form.status form_group_class="col" %}
             {% endif %}
             </div>
         </div>

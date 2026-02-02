@@ -186,6 +186,7 @@ class Device(models.Model):
 
 class Observation(models.Model):
     name = models.CharField(max_length=250, default="")
+    verbose_name = _("Problème")
 
     def __str__(self):
         return self.name
@@ -193,7 +194,7 @@ class Observation(models.Model):
 
 class Reasoning(models.Model):
     name = models.CharField(max_length=250, default="")
-    verbose_name = _("raisonnement")
+    verbose_name = _("Cause")
 
     def __str__(self):
         return self.name
@@ -208,6 +209,7 @@ class Action(models.Model):
 
 class Status(models.Model):
     name = models.CharField(max_length=250, default="")
+    verbose_name = _("Résultat")
 
     def __str__(self):
         return self.name

@@ -122,7 +122,8 @@ class FolderForm(DeviceContextAutocompleteMixin, BSModalModelForm):
             url="inventory:observation_autocomplete",
             attrs={"data-html": True}
         ),
-        help_text="Quel est (ou était) le problème ?",
+        help_text="Quel est le problème ? / symptôme",
+        label="Problème",
         required=False,
         queryset=Observation.objects.all(),
     )
@@ -132,8 +133,8 @@ class FolderForm(DeviceContextAutocompleteMixin, BSModalModelForm):
             forward=["observation"],
             attrs={"data-html": True}
         ),
-        help_text="Quel en est (ou serait) la cause ?",
-        label="Raisonnement",
+        help_text="Quel en est la cause ? / diagnostic ",
+        label="Cause",
         required=False,
         queryset=Reasoning.objects.all(),
     )
@@ -143,13 +144,14 @@ class FolderForm(DeviceContextAutocompleteMixin, BSModalModelForm):
             forward=["reasoning"],
             attrs={"data-html": True}
         ),
-        help_text="Qu'avez-vous fait ?",
+        help_text="Quelle action a été menée ?",
         required=False,
         queryset=Action.objects.all(),
     )
     status = forms.ModelChoiceField(
         widget=autocomplete.ModelSelect2(url="inventory:status_autocomplete"),
         help_text="Quel est le résultat de l'action ?",
+        label="Résultat",
         required=False,
         queryset=Status.objects.all(),
     )
@@ -297,7 +299,8 @@ class InterventionForm(DeviceContextAutocompleteMixin, BSModalModelForm):
                 url="inventory:observation_autocomplete",
                 attrs={"data-html": True}
             ),
-            help_text="Quel est (ou était) le problème ?",
+            help_text="Quel est le problème ?",
+            label="Problème",
             required=False,
             queryset=Observation.objects.all(),
         )
@@ -308,8 +311,8 @@ class InterventionForm(DeviceContextAutocompleteMixin, BSModalModelForm):
                 forward=["observation"],  
                 attrs={"data-html": True},
             ),
-            help_text="Quel en est (ou serait) la cause ?",
-            label="Raisonnement",
+            help_text="Quelle est la cause ?",
+            label="Cause",
             required=False,
             queryset=Reasoning.objects.all(),
         )
@@ -330,6 +333,7 @@ class InterventionForm(DeviceContextAutocompleteMixin, BSModalModelForm):
                 url="inventory:status_autocomplete",
             ),
             help_text="Quel est le résultat de l'action ?",
+            label="Résultat",
             required=False,
             queryset=Status.objects.all(),
         )
@@ -401,7 +405,8 @@ class StuffForm(DeviceContextAutocompleteMixin, BSModalModelForm):
             attrs={"data-html": True},
             forward=["category"],
         ),
-        help_text="Quel est (ou était) le problème ?",
+        help_text="Quel est le problème ?",
+        label="Problème",
         required=False,
         queryset=Observation.objects.all(),
     )
@@ -411,8 +416,8 @@ class StuffForm(DeviceContextAutocompleteMixin, BSModalModelForm):
             forward=["observation"],
             attrs={"data-html": True}
         ),
-        help_text="Quel en est (ou serait) la cause ?",
-        label="Raisonnement",
+        help_text="Quelle est la cause ?",
+        label="Cause",
         required=False,
         queryset=Reasoning.objects.all(),
     )
@@ -421,14 +426,15 @@ class StuffForm(DeviceContextAutocompleteMixin, BSModalModelForm):
             forward=["reasoning"],
             attrs={"data-html": True}
         ),
-        help_text="Qu'avez-vous fait ?",
+        help_text="Quelle action avez-vous fait ?",
         required=False,
         queryset=Action.objects.all(),
     )
     status = forms.ModelChoiceField(
         widget=autocomplete.ModelSelect2(url="inventory:status_autocomplete"),
-        help_text="Quel est le résultat de l'action ?",
+        help_text="Quel est le résultat ?",
         required=False,
+        label="Résultat",
         queryset=Status.objects.all(),
     )
 

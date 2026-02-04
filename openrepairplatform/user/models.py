@@ -2,6 +2,8 @@ import logging
 
 import datetime
 from datetime import date
+from uuid import uuid4
+
 from dateutil.relativedelta import relativedelta
 from django.contrib.auth.models import (
     AbstractBaseUser,
@@ -281,6 +283,8 @@ class Fee(models.Model):
         Organization, on_delete=models.CASCADE, related_name="fees"
     )
 
+    id_payment = models.CharField(max_length=255, blank=True, null=True, help_text="Identifiant de la transaction HelloAsso ou TiBillet")
+
     def computed_membership_payment(self, membership):
         """
         When a fee is create, check if a membership is linked
@@ -320,6 +324,14 @@ class DisabledMembershipManager(models.Manager):
         return super().get_queryset().filter(disabled=True)
 
 
+class SourceChoice(models.TextChoices):
+    # Source choices for membership origin
+    SOURCE_ADMIN = "ADMIN", "ADMIN"
+    SOURCE_HELLOASSO = "HELLOASSO","HELLOASSO"
+    SOURCE_TIBILLET = "TIBILLET","TIBILLET"
+
+
+
 class Membership(models.Model):
 
     objects = MembershipManager()
@@ -340,6 +352,11 @@ class Membership(models.Model):
 
     def __str__(self):
         return f"{self.user}-{self.organization}"
+
+    source = models.CharField(max_length=20, choices=SourceChoice.choices,
+                                   default=SourceChoice.SOURCE_ADMIN,
+                                   verbose_name=_("Origine de l'adhésion"))
+
 
     def update_first_payment(self):
 
@@ -411,3 +428,17 @@ class Membership(models.Model):
 
     class Meta:
         unique_together = (("user", "organization"),)
+
+
+class WebHook(models.Model):
+    uuid = models.UUIDField(primary_key=True, default=uuid4)
+    organization = models.ForeignKey(
+        Organization, on_delete=models.CASCADE, related_name="webhooks"
+    )
+    signature_public_key = models.CharField(max_length=255)
+
+    def hex(self):
+        return self.uuid.hex
+
+    def __str__(self):
+        return f"WebHook for {self.organization.name} - {self.uuid.hex}"

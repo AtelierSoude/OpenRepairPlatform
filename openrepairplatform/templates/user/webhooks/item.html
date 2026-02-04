@@ -1,0 +1,23 @@
+<li class="list-group-item d-flex justify-content-between align-items-center" id="webhook-{{ webhook.uuid }}">
+    <!-- Affichage de la source et de l'URL du Webhook / Displaying source and Webhook URL -->
+    <div class="d-flex flex-column">
+        <div>
+            <span class="badge bg-secondary me-2">{{ webhook.source }}</span>
+            <span class="font-monospace small text-muted">{{ webhook.hex }}</span>
+        </div>
+        <div class="mt-1">
+            <small class="text-primary">URL: </small>
+            <code class="small">/api/user/webhook/{{ webhook.uuid }}/</code>
+        </div>
+    </div>
+    
+    <!-- Bouton de suppression avec HTMX / Delete button with HTMX -->
+    <button class="btn btn-outline-danger btn-sm"
+            hx-delete="{% url 'api_user:webhook-detail' organization.slug webhook.uuid %}"
+            hx-target="#webhook-{{ webhook.uuid }}"
+            hx-swap="outerHTML"
+            hx-confirm="Voulez-vous vraiment supprimer ce webhook ? / Do you really want to delete this webhook?"
+            hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+        <i class="fa fa-trash-alt"></i> Supprimer
+    </button>
+</li>

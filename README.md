@@ -1,3 +1,4 @@
+----- FR -----
 
 # OpenRepairPlatform
 
@@ -7,6 +8,21 @@ OpenRepairPlateform est une application basée sur Django, pensée pour organise
 Elle intègre principalement des fonctionnalités de gestion d'organisation, de membres, de comptabilité, la publication d'événements, d'inventaire et de suivi/partage de réparations.
 
 Cette application est développée et notamment utilisée par [l'Atelier Soudé](https://atelier-soude.fr).
+La procedure d'installation et la documentation est disponible [ici](https://openrepairplatform.readthedocs.io/en/latest/)
+
+## Envie de contribuer ?
+
+OpenRepairPlateform se veut être un commun et accessible à tout.es.
+Si vous souhaitez nous aider ou bien utiliser le commun, vous pouvez rejoindre notre équipe de dév, via notre (Forum)[https://forum.atelier-soude.fr/c/reparons/101] ou en nous envoyant un message sur le (formulaire contact)[https://atelier-soude.fr/contact/]. Il est aussi possible de contribuer financièrement via (ce site)[https://lescommuns.tiers-lieux.org/#detail-un-commun.communId.672ba674b778d86e155788be].
+
+
+- (Forum du projet)[https://forum.atelier-soude.fr/c/reparons/101]
+- Github, outil de dev -> normalement tu es dessus :)
+- Discord, messagerie directe : Sur demande !
+- (Plateforme vitrine de collaboration)[https://openrepairplateform.tibillet.coop/ 1]
+- (Tableau des fonctionnalité à dev)[https://github.com/orgs/AtelierSoude/projects/1/views/7?groupedBy%5BcolumnId%5D=Status&visibleFields=%5B%22Title%22%2C%22Assignees%22%2C%22Status%22%2C%22Linked+pull+requests%22%2C%22Milestone%22%2C240118894%5D&sortedBy%5Bdirection%5D=asc&sortedBy%5BcolumnId%5D=Status]
+- (Vitrine du projet pour des contributions)[https://lescommuns.tiers-lieux.org/#detail-un-commun.communId.672ba674b778d86e155788be]
+
 
 ----- ENG -----
 
@@ -20,6 +36,19 @@ The plateform is created by Atelier Soudé, an organization which repair everyda
 Full installation and user documentation are avalaible [here](https://openrepairplatform.readthedocs.io/en/latest/). (sorry, only in French at this point !)
 
 For basic develop installation, follow those steps:
+
+## Interested in contributing?
+
+OpenRepairPlatform aims to be a shared resource accessible to everyone.
+If you would like to assist us or utilize the shared resource, you can join our development team via our (Forum)[https://forum.atelier-soude.fr/c/reparons/101]  or by sending us a message on the (contact form)[https://atelier-soude.fr/contact/].  It is also possible to contribute financially via (this website)[https://lescommuns.tiers-lieux.org/#detail-un-commun.communId.672ba674b778d86e155788be].
+
+
+- (Project forum)[https://forum.atelier-soude.fr/c/reparons/101]
+- Github, outil de dev -> normalement tu es dessus :)
+- Discord, messagerie directe : Sur demande !
+- (Collaboration showcase platform)[https://openrepairplateform.tibillet.coop/ 1]
+- (Table of features to be developed)[https://github.com/orgs/AtelierSoude/projects/1/views/7?groupedBy%5BcolumnId%5D=Status&visibleFields=%5B%22Title%22%2C%22Assignees%22%2C%22Status%22%2C%22Linked+pull+requests%22%2C%22Milestone%22%2C240118894%5D&sortedBy%5Bdirection%5D=asc&sortedBy%5BcolumnId%5D=Status]
+- (Project showcase for contributions)[https://lescommuns.tiers-lieux.org/#detail-un-commun.communId.672ba674b778d86e155788be]
 
 ## Run the application in production mode
 

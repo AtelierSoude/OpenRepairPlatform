@@ -60,7 +60,7 @@
     <div class="form-group p-2">
 
         <!-- champ caché qui renvois create ou create-print + voir JS dans l'assets qui utilise data-submit-action -->
-        {{ form.submit_action }}
+        {{ form.submit_action.as_hidden }}
 
         <button role="button" type="submit" data-submit-action="create" id="btnsubmit" style="display:none" class="btn submit-btn btn-primary w-100 p-3">Créer</button>
         {% if can_print %}

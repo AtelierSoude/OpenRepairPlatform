@@ -4,31 +4,31 @@ $(document).ready(function () {
   // C'est pas très beau , à revoir un jour 
   
 
-  // affichage des champs au fil de l'eau 
   var myModalEl = document.getElementById('modal')
 
-  myModalEl.addEventListener('click', function (e) {
-    const btn = e.target.closest('button[type="submit"][data-submit-action]');
+  document.addEventListener('click', function (e) {
+    const btn = e.target.closest('[data-submit-action]');
     if (!btn) return;
 
-    const form = btn.form;
+    const form = btn.closest('form');
     if (!form) return;
 
-    const hidden = form.querySelector('input[name="submit_action"]');
+    const hidden = form.querySelector('#id_submit_action, input[name="submit_action"]');
     if (!hidden) return;
 
-    hidden.value = btn.dataset.submitAction || '';
+    hidden.value = btn.getAttribute('data-submit-action') || '';
   }, true);
-
+  
   myModalEl.addEventListener('show.bs.modal', function (event) {
 
     function clearSelect2(id) {
-  const $el = $(id);
-  if ($el.length) {
-    $el.val(null).trigger('change'); // clear select2
-  }
-}
-    
+      const $el = $(id);
+      if ($el.length) {
+        $el.val(null).trigger('change'); // clear select2 autocomplete suggestions
+      }
+    }
+    // affichage des champs au fil de l'eau 
+
 
     category = document.querySelector("#id_category");
 

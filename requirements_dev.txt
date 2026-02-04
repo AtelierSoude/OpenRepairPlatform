@@ -4,3 +4,4 @@ django-livereload-server
 pytest==8.3.2
 pytest-factoryboy
 pytest-django
+sentry-sdk[django]

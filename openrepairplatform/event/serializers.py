@@ -64,6 +64,7 @@ class EventCreateSerializer(serializers.ModelSerializer):
                 "ends_at": self.validated_data["ends_at"],
                 "organization": self.validated_data["organization"],
                 "allow_stuffs": self.validated_data["allow_stuffs"],
+                #"booking": self.validated_data["booking"],
                 "needed_organizers": self.validated_data["needed_organizers"],
                 "collaborator": self.validated_data.get("collaborator", ""),
                 "external": self.validated_data["external"],

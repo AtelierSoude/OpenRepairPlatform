@@ -147,7 +147,6 @@ class StuffFormMixin(BSModalCreateView, PermissionCreateUserStuffMixin, ThermalP
     def form_valid(self, form):
         res = super().form_valid(form)
         stuff = form.instance 
-        stuff.save()
         if self.request.POST.get("submit_action") == "create_print":
             print_thermal_label(self.request, stuff.pk)
         messages.success(self.request, f"l'objet #{stuff.pk} bien ajouté à l'inventaire")

@@ -105,6 +105,66 @@ de {{organization.name}}: contrôles des préférences{% endblock %}
     <div>Il n'y a pas de local associé à cette organisation.</div>
     {% endif %}
   </div>
+  <h4 class="mt-4">Webhooks</h4>
+  <div class="card p-4">
+    <div id="webhook-management">
+      <!-- Bouton pour afficher le formulaire de création / Button to show the creation form -->
+      <div class="mb-3">
+        <button
+          class="btn btn-primary btn-sm"
+          type="button"
+          onclick="toggleWebhookForm()"
+        >
+          <i class="fa fa-plus-circle"></i> Créer un nouveau point d'écoute Webhook
+        </button>
+        <div class="small mt-2 mb-0">
+          <p class="mb-1">Crée une route qui écoute et fabrique une adhésion pour chaque paiement via TiBillet ou HelloAsso.</p>
+          <p class="mb-1">La route aura le chemin <code>/api/user/webhook/&lt;uuid&gt;/</code></p>
+          <p class="mb-0">Le payload doit ressembler à ceci : 
+            <a href="https://dev.helloasso.com/docs/paiement-autoris%C3%A9-sur-un-formulaire-de-don" target="_blank" class="text-break">
+              https://dev.helloasso.com/docs/paiement-autoris%C3%A9-sur-un-formulaire-de-don
+            </a>
+          </p>
+        </div>
+      </div>
+
+      <!-- Formulaire de création (caché par défaut) / Creation form (hidden by default) -->
+      <div id="webhook-form-container" class="d-none mb-4 p-3 border rounded bg-light">
+        <h5 class="mb-3">Enregistrer une clé de signature HelloAsso / TiBillet</h5>
+        <form
+          hx-post="{% url 'api_user:webhook-list' organization.slug %}"
+          hx-target="#webhook-list"
+          hx-swap="beforeend"
+          hx-on::after-request="if(event.detail.successful) { this.reset(); toggleWebhookForm(); }"
+        >
+          {% csrf_token %}
+          <div class="input-group">
+            <input
+              type="text"
+              name="signature_public_key"
+              class="form-control"
+              placeholder="Entrez la clé de signature publique..."
+              required
+            />
+            <button class="btn btn-success" type="submit">
+              <i class="fa fa-save"></i> Enregistrer
+            </button>
+          </div>
+          <small class="text-muted mt-2 d-block">
+            Cette clé sera utilisée pour valider l'origine des webhooks entrants.
+          </small>
+        </form>
+      </div>
+
+      <!-- Liste des webhooks existants / List of existing webhooks -->
+      <ul id="webhook-list" class="list-group">
+        {% for webhook in organization.webhooks.all %}
+          {% include 'user/webhooks/item.html' with webhook=webhook organization=organization %}
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+
   <h4 class="mt-4">Supprimer</h4>
   <div class="card p-4">
     <a
@@ -119,4 +179,17 @@ de {{organization.name}}: contrôles des préférences{% endblock %}
 {% endif %} {% endblock menu_content %} 
 
 {% block extra_js %}
+<script src="https://unpkg.com/htmx.org@1.9.10"></script>
+<script>
+  /**
+   * Bascule l'affichage du formulaire de création de Webhook.
+   * Toggles the display of the Webhook creation form.
+   */
+  function toggleWebhookForm() {
+    const container = document.getElementById("webhook-form-container");
+    if (container) {
+      container.classList.toggle("d-none");
+    }
+  }
+</script>
 {% endblock extra_js %}

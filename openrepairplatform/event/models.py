@@ -204,7 +204,7 @@ class Event(models.Model):
         default=False, verbose_name=_("Pas de limite de place ?")
     )
     booking = models.BooleanField(
-        default=True, verbose_name=_("Réservation interne au site ?")
+        default=False, verbose_name=_("Réservation nécessaire ?")
     )
     internal_notes = CleanHTMLField(
         verbose_name= _("Notes de l'évènement visibles en interne"),

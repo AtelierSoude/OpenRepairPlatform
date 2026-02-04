@@ -68,6 +68,7 @@ export default {
         allow_stuffs: false,
       },
       dataThree: {
+	booking: false,
         is_free: true,
         available_seats: 0,
         external: false,

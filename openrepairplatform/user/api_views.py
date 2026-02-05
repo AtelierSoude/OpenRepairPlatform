@@ -174,7 +174,7 @@ class MembershipWebhookView(viewsets.ViewSet):
             return Response(
                 {
                     "status": "ignored",
-                    "message": f"Payment type '{items[0].get("type")}' ignored. Only 'Payment' is processed."
+                    "message": f"Payment type '{items[0].get('type')}' ignored. Only 'Payment' is processed."
                 },
                 status=status.HTTP_200_OK
             )

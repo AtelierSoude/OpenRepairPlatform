@@ -59,7 +59,7 @@ class MembershipWebhookView(viewsets.ViewSet):
         curl -X POST http://localhost:8005/api/user/webhook/5f351b5b-9360-4b2a-ad9b-b4ec84b602e8/ \
              -H "Content-Type: application/json" \
              -H "x-ha-signature: ff3ca62addcbf329f74e9abd826fbfd792eefb3c9d1507c02d1aff4e06ddc46c" \
-             -d '{"eventType": "Payment", "data": {"date": "2026-02-10T11:50:48Z", "state": "Authorized", "payer": {"email": "test@example.com", "firstName": "John", "lastName": "Doe"}, "items": [{"amount": 1000, "name": "Adhésion"}]}, "metadata": {"id": 75698555}}'
+             -d '{"eventType": "Payment", "data": {"date": "2026-02-10T11:50:48Z", "state": "Authorized", "payer": {"email": "test@example.com", "firstName": "John", "lastName": "Doe"}, "items": [{"amount": 1000, "type": "Membership", "name": "Adhésion"}]}, "metadata": {"id": 75698555}}'
         
         Note: Cet exemple fonctionne si la clé de signature enregistrée pour le webhook est :
         AyCM0yTeQd8In2OzdP3R2HGTrYiCA818UCFLhrD9BCnNhTriWLipxEDpsaTbdfec
@@ -165,16 +165,17 @@ class MembershipWebhookView(viewsets.ViewSet):
                 status=status.HTTP_200_OK
             )
 
-        # 6. Vérification du type du paiement (doit être "Payment")
-        # 6. Check payment's type (must be "Payment")
+
+        # 6. Vérification du type du paiement (doit être "Membership")
+        # 6. Check payment's type (must be "Membership")
         items = validated_data["items"]
 
-        # Check if any of the items is of type "Payment"
-        if not any(item.get("type")=="Payment" for item in items):
+        # Check if any of the items is of type "Membership"
+        if not any(item.get("type")=="Membership" for item in items):
             return Response(
                 {
                     "status": "ignored",
-                    "message": f"Payment type '{items[0].get('type')}' ignored. Only 'Payment' is processed."
+                    "message": f"Payment type '{items[0].get('type')}' ignored. Only 'Membership' is processed."
                 },
                 status=status.HTTP_200_OK
             )

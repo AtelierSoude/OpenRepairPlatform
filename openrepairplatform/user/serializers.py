@@ -31,6 +31,7 @@ class HelloAssoPayerSerializer(serializers.Serializer):
 class HelloAssoItemSerializer(serializers.Serializer):
     amount = serializers.IntegerField()
     name = serializers.CharField()
+    type = serializers.CharField()
 
 class HelloAssoDataSerializer(serializers.Serializer):
     payer = HelloAssoPayerSerializer()

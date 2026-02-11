@@ -59,7 +59,7 @@ class MembershipWebhookView(viewsets.ViewSet):
         curl -X POST http://localhost:8005/api/user/webhook/5f351b5b-9360-4b2a-ad9b-b4ec84b602e8/ \
              -H "Content-Type: application/json" \
              -H "x-ha-signature: ff3ca62addcbf329f74e9abd826fbfd792eefb3c9d1507c02d1aff4e06ddc46c" \
-             -d '{"eventType": "Payment", "data": {"date": "2026-02-10T11:50:48Z", "state": "Authorized", "payer": {"email": "test@example.com", "firstName": "John", "lastName": "Doe"}, "items": [{"amount": 1000, "name": "Adhésion"}]}, "metadata": {"id": 75698555}}'
+             -d '{"eventType": "Payment", "data": {"date": "2026-02-10T11:50:48Z", "state": "Authorized", "payer": {"email": "test@example.com", "firstName": "John", "lastName": "Doe"}, "items": [{"amount": 1000, "type": "Membership", "name": "Adhésion"}]}, "metadata": {"id": 75698555}}'
         
         Note: Cet exemple fonctionne si la clé de signature enregistrée pour le webhook est :
         AyCM0yTeQd8In2OzdP3R2HGTrYiCA818UCFLhrD9BCnNhTriWLipxEDpsaTbdfec
@@ -165,12 +165,26 @@ class MembershipWebhookView(viewsets.ViewSet):
                 status=status.HTTP_200_OK
             )
 
-        payer_data = validated_data["payer"]
+
+        # 6. Vérification du type du paiement (doit être "Membership")
+        # 6. Check payment's type (must be "Membership")
         items = validated_data["items"]
+
+        # Check if any of the items is of type "Membership"
+        if not any(item.get("type")=="Membership" for item in items):
+            return Response(
+                {
+                    "status": "ignored",
+                    "message": f"Payment type '{items[0].get('type')}' ignored. Only 'Membership' is processed."
+                },
+                status=status.HTTP_200_OK
+            )
+
+        payer_data = validated_data["payer"]
         payment_date = validated_data["date"].date()
         
-        # 6. Récupération ou création de l'utilisateur (CustomUser)
-        # 6. Retrieve or create the user (CustomUser)
+        # 7. Récupération ou création de l'utilisateur (CustomUser)
+        # 7. Retrieve or create the user (CustomUser)
         # On utilise l'email comme identifiant unique
         # We use email as a unique identifier
         user, user_created = CustomUser.objects.get_or_create(
@@ -181,8 +195,8 @@ class MembershipWebhookView(viewsets.ViewSet):
             }
         )
         
-        # 7. Récupération ou création de l'adhésion (Membership) pour cet utilisateur et cette organisation
-        # 7. Retrieve or create the membership (Membership) for this user and organization
+        # 8. Récupération ou création de l'adhésion (Membership) pour cet utilisateur et cette organisation
+        # 8. Retrieve or create the membership (Membership) for this user and organization
         membership, membership_created = Membership.objects.get_or_create(
             user=user,
             organization=organization,
@@ -192,8 +206,8 @@ class MembershipWebhookView(viewsets.ViewSet):
             }
         )
         
-        # 8. Création de la cotisation (Fee) associée
-        # 8. Creation of the associated fee (Fee)
+        # 9. Création de la cotisation (Fee) associée
+        # 9. Creation of the associated fee (Fee)
         # On calcule le montant total (HelloAsso fournit les montants en centimes)
         # Calculate the total amount (HelloAsso provides amounts in cents)
         total_amount_cents = sum(item["amount"] for item in items)
@@ -208,8 +222,8 @@ class MembershipWebhookView(viewsets.ViewSet):
             id_payment=str(payment_id) if payment_id else None
         )
         
-        # 9. Retour d'une réponse explicite de succès (201 Created)
-        # 9. Return an explicit success response (201 Created)
+        # 10. Retour d'une réponse explicite de succès (201 Created)
+        # 10. Return an explicit success response (201 Created)
         return Response(
             {
                 "status": "success",

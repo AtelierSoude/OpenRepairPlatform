@@ -14,6 +14,8 @@
           <li class="breadcrumb-item">
             <a href="{{ first_parent_url }}">{{ first_parent_text }}</a>
           </li>
+        {% elif first_parent_text %}
+          <li class="breadcrumb-item">{{ first_parent_text }}</li>
         {% endif %}
         <li class="breadcrumb-item active" aria-current="page">{{ current }}</li>
       </ol>

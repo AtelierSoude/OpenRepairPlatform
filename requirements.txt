@@ -139,7 +139,7 @@ pexpect==4.9.0
     # via ipython
 pickleshare==0.7.5
     # via ipython
-pillow==10.4.0
+pillow==12.1.1
     # via
     #   django4-initial-avatars
     #   python-escpos

@@ -237,7 +237,7 @@ urllib3==2.2.3
     #   requests
 wcwidth==0.5.0
     # via prompt-toolkit
-weasyprint==61.2
+weasyprint==68.0
     # via openrepairplatform (setup.py)
 webassets==2.0
     # via django-assets

@@ -202,7 +202,7 @@ sorl-thumbnail==12.11.0
     # via openrepairplatform (setup.py)
 soupsieve==2.6
     # via beautifulsoup4
-sqlparse==0.5.3
+sqlparse==0.5.4
     # via
     #   django
     #   django-debug-toolbar

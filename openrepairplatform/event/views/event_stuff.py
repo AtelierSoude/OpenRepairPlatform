@@ -51,14 +51,6 @@ class StuffUserOrgaEventFormView(StuffFormMixin):
             event.save()
         return res
 
-
-    def form_valid(self, form):
-        res = super().form_valid(form)
-        stuff = form.instance         
-        messages.success(self.request, f"l'objet #{stuff.pk} bien ajouté à l'inventaire")
-        return res
-
-
     def get_success_url(self, *args, **kwargs):
         event = Event.objects.get(pk=self.kwargs["event_pk"])
         registered_pk = self.kwargs["registered_pk"]

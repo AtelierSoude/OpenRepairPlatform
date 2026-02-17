@@ -54,9 +54,7 @@ class StuffUserOrgaEventFormView(StuffFormMixin):
 
     def form_valid(self, form):
         res = super().form_valid(form)
-        stuff = form.instance 
-        import pdb; pdb.set_trace()
-        
+        stuff = form.instance         
         messages.success(self.request, f"l'objet #{stuff.pk} bien ajouté à l'inventaire")
         return res
 

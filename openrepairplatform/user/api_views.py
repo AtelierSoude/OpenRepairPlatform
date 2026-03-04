@@ -168,19 +168,22 @@ class MembershipWebhookView(viewsets.ViewSet):
                 status=status.HTTP_200_OK,
             )
 
-        # 8. Vérification du type du paiement (doit être "Membership")
-        # 8. Check payment's type (must be "Membership")
+        # 8. Vérification du type des items (doit être "Payment", pas "Donation")
+        # 8. Check items type (must be "Payment", not "Donation")
+        # HelloAsso utilise "Payment" pour les Checkout (adhésions) et "Donation" pour les dons
+        # HelloAsso uses "Payment" for Checkout (memberships) and "Donation" for donations
         items = validated_data["items"]
 
-        # On vérifie si au moins un item est de type "Membership"
-        # Check if any of the items is of type "Membership"
-        if not any(item.get("type") == "Membership" for item in items):
-            logger.info("Webhook %s: item type '%s' ignoré", webhook_pk, items[0].get("type"))
-            print("Webhook %s: item type '%s' ignoré", webhook_pk, items[0].get("type"))
+        # On vérifie si au moins un item est de type "Payment"
+        # Check if any of the items is of type "Payment"
+        if not any(item.get("type") == "Payment" for item in items):
+            first_item_type = items[0].get("type") if items else "none"
+            logger.info("Webhook %s: item type '%s' ignoré", webhook_pk, first_item_type)
+            print("Webhook %s: item type '%s' ignoré", webhook_pk, first_item_type)
             return Response(
                 {
                     "status": "ignored",
-                    "message": f"Payment type '{items[0].get('type')}' ignored. Only 'Membership' is processed."
+                    "message": f"Item type '{first_item_type}' ignored. Only 'Payment' is processed."
                 },
                 status=status.HTTP_200_OK
             )

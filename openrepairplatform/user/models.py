@@ -437,6 +437,7 @@ class WebHook(models.Model):
     )
     signature_public_key = models.CharField(max_length=255)
 
+    @property
     def hex(self):
         return self.uuid.hex
 

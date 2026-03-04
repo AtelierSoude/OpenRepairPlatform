@@ -22,17 +22,9 @@ class FeeResource(resources.ModelResource):
 
 
 class MembershipResource(resources.ModelResource):
-    user = Field(
-        column_name="user", attribute="user", widget=ForeignKeyWidget(CustomUser, "id")
-    )
-    organization = Field(
-        column_name="organization",
-        attribute="organization",
-        widget=ForeignKeyWidget(Organization, "id"),
-    )
-
     class Meta:
         model = Membership
+        fields = ('user__first_name','user__last_name','user__email', 'organization__name')
 
 
 class OrganizationResource(resources.ModelResource):

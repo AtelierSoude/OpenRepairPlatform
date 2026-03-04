@@ -172,3 +172,16 @@ KM_DISTANCE = 50
 
 LOCATION = os.getenv("LOCATION", "False").lower() in ('true', '1', 'y')
 SESSION_COOKIE_AGE =2419200
+
+
+DEBUG = os.getenv("DEBUG", "False").lower() in ('true', '1', 'y')
+if not DEBUG and os.getenv("SENTRY_DNS"):
+    import sentry_sdk
+    sentry_sdk.init(
+        dsn=os.getenv("SENTRY_DSN"),
+        # Add data like request headers and IP for users,
+        # see https://docs.sentry.io/platforms/python/data-management/data-collected/ for more info
+        send_default_pii=True,
+        # Enable sending logs to Sentry
+        enable_logs=True,
+    )

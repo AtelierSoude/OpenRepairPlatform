@@ -67,11 +67,10 @@ class OrganizationPageView(PermissionOrgaContextMixin, DetailView):
     template_name = "organization_page.html"
 
     def get_object(self, *args, **kwargs):
-        try :
-            self.organization = Organization.objects.get(slug=self.kwargs["orga_slug"])
-            return self.organization
-        except Organization.DoesNotExist:
-            return None
+        self.organization = get_object_or_404(
+            Organization, slug=self.kwargs["orga_slug"]
+        )
+        return self.organization
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)

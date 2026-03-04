@@ -98,6 +98,10 @@ class MembershipWebhookView(viewsets.ViewSet):
                 "Webhook %s: IP non autorisée - reçue=%s, attendue=%s (source=%s)",
                 webhook_pk, client_ip, allowed_ip, webhook.source,
             )
+            print(
+                "Webhook %s: IP non autorisée - reçue=%s, attendue=%s (source=%s)",
+                webhook_pk, client_ip, allowed_ip, webhook.source,
+            )
             return Response(
                 {"status": "error", "message": "Unauthorized IP address."},
                 status=status.HTTP_403_FORBIDDEN,
@@ -109,7 +113,11 @@ class MembershipWebhookView(viewsets.ViewSet):
 
         # On vérifie si les données sont valides (lève une exception 400 en cas d'erreur)
         # Check if data is valid (raises a 400 exception on error)
-        serializer.is_valid(raise_exception=True)
+        if not serializer.is_valid():
+            logger.error(f"Invalid webhook data received {request.data} : {serializer.errors}")
+            print(f"Invalid webhook data received {request.data} : {serializer.errors}")
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
         # Extraction des données validées
         # Extraction of validated data
@@ -121,6 +129,7 @@ class MembershipWebhookView(viewsets.ViewSet):
         # 4. Filter on eventType — only payments are relevant
         if event_type != "Payment":
             logger.info("Webhook %s: eventType '%s' ignoré", webhook_pk, event_type)
+            print("Webhook %s: eventType '%s' ignoré", webhook_pk, event_type)
             return Response(
                 {"status": "ignored", "message": f"eventType '{event_type}' ignored."},
                 status=status.HTTP_200_OK,
@@ -130,6 +139,7 @@ class MembershipWebhookView(viewsets.ViewSet):
         # 5. Filter on formType — only Checkout and Membership create a membership
         if form_type and form_type not in self.ACCEPTED_FORM_TYPES:
             logger.info("Webhook %s: formType '%s' ignoré", webhook_pk, form_type)
+            print("Webhook %s: formType '%s' ignoré", webhook_pk, form_type)
             return Response(
                 {"status": "ignored", "message": f"formType '{form_type}' ignored."},
                 status=status.HTTP_200_OK,
@@ -142,6 +152,7 @@ class MembershipWebhookView(viewsets.ViewSet):
         payment_id = str(validated_data["id"])
         if Fee.objects.filter(id_payment=payment_id).exists():
             logger.info("Webhook %s: paiement %s déjà traité", webhook_pk, payment_id)
+            print("Webhook %s: paiement %s déjà traité", webhook_pk, payment_id)
             return Response(
                 {"status": "ignored", "message": f"Payment {payment_id} already processed."},
                 status=status.HTTP_200_OK,
@@ -151,6 +162,7 @@ class MembershipWebhookView(viewsets.ViewSet):
         # 7. Check payment state (must be "Authorized")
         if validated_data["state"] != "Authorized":
             logger.info("Webhook %s: état '%s' ignoré", webhook_pk, validated_data["state"])
+            print("Webhook %s: état '%s' ignoré", webhook_pk, validated_data["state"])
             return Response(
                 {"status": "ignored", "message": f"State '{validated_data['state']}' ignored."},
                 status=status.HTTP_200_OK,
@@ -164,6 +176,7 @@ class MembershipWebhookView(viewsets.ViewSet):
         # Check if any of the items is of type "Membership"
         if not any(item.get("type") == "Membership" for item in items):
             logger.info("Webhook %s: item type '%s' ignoré", webhook_pk, items[0].get("type"))
+            print("Webhook %s: item type '%s' ignoré", webhook_pk, items[0].get("type"))
             return Response(
                 {
                     "status": "ignored",
@@ -189,6 +202,7 @@ class MembershipWebhookView(viewsets.ViewSet):
                 "last_name": payer_data.get("lastName", ""),
             }
         )
+        print(f"Utilisateur récupéré ou créé : {user.email}")
 
         # 10. Récupération ou création de l'adhésion (Membership) pour cet utilisateur et cette organisation
         # 10. Retrieve or create the membership (Membership) for this user and organization
@@ -200,6 +214,7 @@ class MembershipWebhookView(viewsets.ViewSet):
                 "source": SourceChoice.SOURCE_HELLOASSO,
             }
         )
+        print(f"Adhésion récupérée ou créée {membership.pk}")
 
         # 11. Création de la cotisation (Fee) associée
         # 11. Creation of the associated fee (Fee)
@@ -211,10 +226,15 @@ class MembershipWebhookView(viewsets.ViewSet):
             payment=Fee.PAYMENT_BANK,  # Paiement en ligne / Online payment
             id_payment=payment_id,
         )
+        print(f"Cotisation créée pour l'adhésion {membership.pk}")
 
         # 12. Retour d'une réponse explicite de succès (201 Created)
         # 12. Return an explicit success response (201 Created)
         logger.info(
+            "Webhook %s: adhésion créée pour %s (%s) - formType=%s, montant=%s€",
+            webhook_pk, user.email, organization.name, form_type, amount,
+        )
+        print(
             "Webhook %s: adhésion créée pour %s (%s) - formType=%s, montant=%s€",
             webhook_pk, user.email, organization.name, form_type, amount,
         )

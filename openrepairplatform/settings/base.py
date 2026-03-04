@@ -175,7 +175,7 @@ SESSION_COOKIE_AGE =2419200
 
 
 DEBUG = os.getenv("DEBUG", "False").lower() in ('true', '1', 'y')
-if not DEBUG and os.getenv("SENTRY_DNS"):
+if not DEBUG and os.getenv("SENTRY_DSN"):
     import sentry_sdk
     sentry_sdk.init(
         dsn=os.getenv("SENTRY_DSN"),

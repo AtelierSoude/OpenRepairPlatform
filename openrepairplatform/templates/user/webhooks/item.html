@@ -6,8 +6,7 @@
             <span class="font-monospace small text-muted">{{ webhook.hex }}</span>
         </div>
         <div class="mt-1">
-            <small class="text-primary">URL: </small>
-            <code class="small">/api/user/webhook/{{ webhook.uuid }}/</code>
+            <code class="small">{{ request.scheme }}://{{ request.get_host }}/api/user/webhook/{{ webhook.uuid }}/</code>
         </div>
     </div>
     

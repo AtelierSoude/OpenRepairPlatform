@@ -62,6 +62,8 @@ class MembershipWebhookView(viewsets.ViewSet):
              -H "Content-Type: application/json" \
              -d '{"eventType": "Payment", "data": {"id": 15222, "amount": 1000, "date": "2026-02-10T11:50:48Z", "state": "Authorized", "order": {"formType": "Checkout"}, "payer": {"email": "test@example.com", "firstName": "John", "lastName": "Doe"}, "items": [{"amount": 1000, "type": "Membership", "name": "Adhésion"}]}, "metadata": {"id": 75698555}}'
         """
+        logger.info(f"webhook membership {webhook_pk} : {request.data}")
+        print(f"webhook membership {webhook_pk} : {request.data}")
 
         # 1. Récupération du WebHook par son UUID (hex) passé dans l'URL
         # 1. Retrieve the WebHook by its UUID (hex) passed in the URL

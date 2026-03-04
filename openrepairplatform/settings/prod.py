@@ -14,8 +14,6 @@ STATICFILES_DIRS = [
 ASSETS_ROOT = "/srv/static/"
 MEDIA_URL = "/media/"
 
-DEBUG = True
-
 if os.getenv("SENTRY_DSN"):
     import sentry_sdk
     sentry_sdk.init(

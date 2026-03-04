@@ -1,0 +1,20 @@
+{% for activity in activities %}
+<div class="col">
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">{{ activity.name }}</h5>
+      {#{{ activity.description | safe | truncatechars:255 }}#}
+    </div>
+    <div class="card-footer">
+      <a href="{% url 'event:activity_edit' activity.pk %}" class="btn btn-success btn-sm">
+        <i class="fa fa-pencil-alt"></i>
+        Éditer
+      </a>
+      <a href="{% url 'event:activity_delete' activity.pk %}" class="btn btn-danger btn-sm">
+        <i class="fa fa-trash"></i>
+        Supprimer
+      </a>
+    </div>
+  </div>
+</div>
+{% endfor %}

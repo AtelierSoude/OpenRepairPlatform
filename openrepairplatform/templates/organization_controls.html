@@ -30,6 +30,9 @@ de {{organization.name}}: contrôles des préférences{% endblock %}
         </a>
       </div>
     </div>
+     <div class="row row-cols-1 row-cols-md-3">
+        {% include 'event/activity/admin_list.html' with activities=organization.activities.all %}
+        </div>
   </div>
 
   <h4 class="mt-4">Conditions d'accès</h4>

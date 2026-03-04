@@ -73,7 +73,7 @@ class MembershipWebhookView(viewsets.ViewSet):
         logger.info(
             "Webhook %s reçu: body=%s",
             webhook_pk,
-            request.body.decode("utf-8", errors="replace")[:2000],
+            request.body.decode("utf-8", errors="replace"),
         )
 
         # 2. Vérification de l'IP source (Authenticité)

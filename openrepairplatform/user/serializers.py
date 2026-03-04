@@ -33,18 +33,19 @@ class HelloAssoItemSerializer(serializers.Serializer):
     name = serializers.CharField()
     type = serializers.CharField()
 
+class HelloAssoOrderSerializer(serializers.Serializer):
+    formType = serializers.CharField(required=False, default="")
+
 class HelloAssoDataSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    order = HelloAssoOrderSerializer(required=False, default=dict)
     payer = HelloAssoPayerSerializer()
     items = HelloAssoItemSerializer(many=True)
+    amount = serializers.IntegerField()
     date = serializers.DateTimeField()
     state = serializers.CharField()
 
 class HelloAssoWebhookSerializer(serializers.Serializer):
     data = HelloAssoDataSerializer()
     eventType = serializers.CharField()
-    metadata = serializers.DictField(required=True)
-
-    def validate_metadata(self, value):
-        if "id" not in value:
-            raise serializers.ValidationError("The 'id' field is required in metadata.")
-        return value
+    metadata = serializers.DictField(required=False, default=dict)

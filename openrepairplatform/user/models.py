@@ -65,7 +65,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     )
     avatar_img = models.ImageField(
         verbose_name=_("Avatar"),
-        upload_to="media/avatar/",
+        upload_to="avatar/",
         null=True,
         blank=True,
     )

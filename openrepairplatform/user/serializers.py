@@ -15,11 +15,14 @@ class CustomUserSerializer(serializers.ModelSerializer):
 class WebHookSerializer(serializers.ModelSerializer):
     """
     Serializer pour le modèle WebHook.
-    Affiche l'UUID en hexadécimal et permet de renseigner la clé de signature.
+    Affiche l'UUID en hexadécimal et la source (HelloAsso ou TiBillet).
+
+    Serializer for the WebHook model.
+    Displays the UUID as hex and the source (HelloAsso or TiBillet).
     """
     class Meta:
         model = WebHook
-        fields = ["uuid", "hex", "signature_public_key"]
+        fields = ["uuid", "hex", "source"]
         read_only_fields = ["uuid", "hex"]
 
 

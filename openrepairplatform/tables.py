@@ -41,6 +41,7 @@ class EventTable(ColumnShiftTable):
         extra_context={"column": "details"},
         verbose_name="Action",
         linkify=True,
+        orderable=False,
     )
 
     class Meta:

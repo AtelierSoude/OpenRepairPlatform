@@ -168,6 +168,8 @@ class RecurrentEventForm(forms.ModelForm):
                 "allow_stuffs": self.cleaned_data["allow_stuffs"],
                 "needed_organizers": self.cleaned_data["needed_organizers"],
                 "collaborator": self.cleaned_data["collaborator"],
+                "booking": self.cleaned_data["booking"],
+                "internal_notes": self.cleaned_data["internal_notes"],
                 "external": self.cleaned_data["external"],
                 "external_url": self.cleaned_data["external_url"],
                 "description": self.cleaned_data["description"],

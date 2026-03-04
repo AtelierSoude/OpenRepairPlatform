@@ -13,7 +13,8 @@ def update_old_fees(apps, schema_editor):
 
 
 def real_update_memberships(apps, schema_editor):
-    for membership in Membership.objects.all():
+    AbstractMembership = apps.get_model('user', 'Membership')
+    for membership in AbstractMembership.objects.all():
         membership.update_first_payment()
         membership.computed_amount()
         membership.save()

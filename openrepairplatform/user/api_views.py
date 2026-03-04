@@ -108,43 +108,65 @@ class MembershipWebhookView(viewsets.ViewSet):
                 status=status.HTTP_200_OK,
             )
 
+
+        # 6. Vérification du type du paiement (doit être "Membership")
+        # 6. Check payment's type (must be "Membership")
+        items = validated_data["items"]
+
+        # Check if any of the items is of type "Membership"
+        if not any(item.get("type")=="Membership" for item in items):
+            return Response(
+                {
+                    "status": "ignored",
+                    "message": f"Payment type '{items[0].get('type')}' ignored. Only 'Membership' is processed."
+                },
+                status=status.HTTP_200_OK
+            )
+
         payer_data = validated_data["payer"]
         payment_date = validated_data["date"].date()
-        # HelloAsso fournit les montants en centimes
-        amount = validated_data["amount"] // 100
-
-        # 9. Création atomique : utilisateur + adhésion + cotisation
-        with transaction.atomic():
-            user, _ = CustomUser.objects.get_or_create(
-                email=payer_data["email"],
-                defaults={
-                    "first_name": payer_data.get("firstName", ""),
-                    "last_name": payer_data.get("lastName", ""),
-                },
-            )
-
-            membership, _ = Membership.objects.get_or_create(
-                user=user,
-                organization=organization,
-                defaults={
-                    "first_payment": payment_date,
-                    "source": SourceChoice.SOURCE_HELLOASSO,
-                },
-            )
-
-            Fee.objects.create(
-                organization=organization,
-                membership=membership,
-                amount=amount,
-                date=payment_date,
-                payment=Fee.PAYMENT_BANK,
-                id_payment=payment_id,
-            )
-
-        logger.info(
-            "Webhook %s: adhésion créée pour %s (%s) - formType=%s, montant=%s€",
-            webhook_pk, user.email, organization.name, form_type, amount,
+        
+        # 7. Récupération ou création de l'utilisateur (CustomUser)
+        # 7. Retrieve or create the user (CustomUser)
+        # On utilise l'email comme identifiant unique
+        # We use email as a unique identifier
+        user, user_created = CustomUser.objects.get_or_create(
+            email=payer_data["email"],
+            defaults={
+                "first_name": payer_data.get("firstName", ""),
+                "last_name": payer_data.get("lastName", ""),
+            }
         )
+        
+        # 8. Récupération ou création de l'adhésion (Membership) pour cet utilisateur et cette organisation
+        # 8. Retrieve or create the membership (Membership) for this user and organization
+        membership, membership_created = Membership.objects.get_or_create(
+            user=user,
+            organization=organization,
+            defaults={
+                "first_payment": payment_date,
+                "source": source
+            }
+        )
+        
+        # 9. Création de la cotisation (Fee) associée
+        # 9. Creation of the associated fee (Fee)
+        # On calcule le montant total (HelloAsso fournit les montants en centimes)
+        # Calculate the total amount (HelloAsso provides amounts in cents)
+        total_amount_cents = sum(item["amount"] for item in items)
+        total_amount_unit = total_amount_cents // 100
+        
+        Fee.objects.create(
+            organization=organization,
+            membership=membership,
+            amount=total_amount_unit,
+            date=payment_date,
+            payment=Fee.PAYMENT_BANK,  # Paiement en ligne / Online payment
+            id_payment=str(payment_id) if payment_id else None
+        )
+        
+        # 10. Retour d'une réponse explicite de succès (201 Created)
+        # 10. Return an explicit success response (201 Created)
         return Response(
             {"status": "success", "user_email": user.email, "organization": organization.name},
             status=status.HTTP_201_CREATED,

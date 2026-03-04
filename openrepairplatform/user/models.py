@@ -308,7 +308,7 @@ class Fee(models.Model):
         self.computed_membership_payment(membership)
 
     def __str__(self):
-        return f"{self.date}-{self.user}-{self.organization}-{self.amount}"
+        return f"{self.date}-{self.membership.user}-{self.organization}-{self.amount}"
 
     class Meta:
         ordering = ["-date"]

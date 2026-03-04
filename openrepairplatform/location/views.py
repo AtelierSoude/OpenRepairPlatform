@@ -31,13 +31,6 @@ class PlaceDeleteView(HasAdminPermissionMixin, RedirectQueryParamView, DeleteVie
         return super().delete(request, *args, **kwargs)
 
 
-class PlaceMapView(TemplateView):
-    template_name = "location/place_list.html"
-
-    def get(self, request, *args, **kwargs):
-        return super().get(request, *args, **kwargs)
-
-
 class PlaceFormView(HasAdminPermissionMixin):
     def form_valid(self, form):
         form.instance.organization = self.organization

@@ -440,6 +440,7 @@ class StuffForm(DeviceContextAutocompleteMixin, BSModalModelForm):
         required=False,                
         queryset=Status.objects.all(),
     )
+    submit_action = forms.CharField(required=False, widget=forms.HiddenInput())
 
     def clean_submit_action(self):
         # utilisé pour distinguer les 2 boutons submit "créer" et "créer et imprimer"
@@ -517,7 +518,6 @@ class StuffForm(DeviceContextAutocompleteMixin, BSModalModelForm):
         if category is not None:
             # pour que le mixin puisse l'utiliser
             self.category = category
-            # tu peux aussi la pré-remplir dans le champ form :
             self.fields["category"].initial = category
 
         if event:

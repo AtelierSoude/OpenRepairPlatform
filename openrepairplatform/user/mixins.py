@@ -10,6 +10,13 @@ class PermissionOrgaContextMixin:
             organization = self.object.organization
         else:
             organization = self.object
+
+        if organization is None:
+            context["is_admin"] = False
+            context["is_active"] = False
+            context["is_volunteer"] = False
+            return context
+
         user = self.request.user
         context["is_admin"] = user in organization.admins.all()
         context["is_active"] = user in organization.actives.all() or context["is_admin"]

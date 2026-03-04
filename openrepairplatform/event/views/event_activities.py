@@ -31,7 +31,7 @@ class ActivityView(PermissionOrgaContextMixin, DetailView):
 
 class ActivityListView(LocationActivity, ListView):
     model = Activity
-    template_name = "event/activity/list.html"
+    template_name = "event/activity/page_list.html"
 
     def get_queryset(self):
         queryset = (

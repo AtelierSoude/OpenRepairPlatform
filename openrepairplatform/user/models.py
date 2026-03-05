@@ -65,7 +65,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     )
     avatar_img = models.ImageField(
         verbose_name=_("Avatar"),
-        upload_to="media/avatar/",
+        upload_to="avatar/",
         null=True,
         blank=True,
     )
@@ -431,12 +431,27 @@ class Membership(models.Model):
 
 
 class WebHook(models.Model):
+    # IPs autorisées par source de webhook
+    # Allowed IPs per webhook source
+    ALLOWED_IPS = {
+        SourceChoice.SOURCE_HELLOASSO: "51.138.206.200",
+        SourceChoice.SOURCE_TIBILLET: "51.77.151.34",
+    }
+
     uuid = models.UUIDField(primary_key=True, default=uuid4)
     organization = models.ForeignKey(
         Organization, on_delete=models.CASCADE, related_name="webhooks"
     )
-    signature_public_key = models.CharField(max_length=255)
+    source = models.CharField(
+        max_length=20,
+        choices=[
+            (SourceChoice.SOURCE_HELLOASSO, "HelloAsso"),
+            (SourceChoice.SOURCE_TIBILLET, "TiBillet"),
+        ],
+        default=SourceChoice.SOURCE_HELLOASSO,
+    )
 
+    @property
     def hex(self):
         return self.uuid.hex
 

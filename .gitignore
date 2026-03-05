@@ -177,3 +177,4 @@ openrepairplatform/static/js/vue.apps.bundle.css
 *dump_*.sql.zip
 *dump_*.sql.gz
 deployment/nginx/shared/*
+/CLAUDE.md

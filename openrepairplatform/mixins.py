@@ -173,14 +173,26 @@ class LocationRedirectMixin:
         if postcode and settings.LOCATION:
             request.session["postcode"] = postcode
             request.session["location"] = None
-            point = requests.get(
-                "https://api-adresse.data.gouv.fr/search/"
-                f"?q={postcode}&type=municipality"
-            )
-            if point.json()['features']:
-                request.session["location"] = (
-                    point.json()['features'][0]['geometry']['coordinates']
+            try:
+                # Appel à l'API adresse du gouvernement pour géolocaliser le code postal
+                # Call the French government address API to geolocate the postcode
+                point = requests.get(
+                    "https://api-adresse.data.gouv.fr/search/"
+                    f"?q={postcode}&type=municipality",
+                    timeout=5,
                 )
+                point.raise_for_status()
+                features = point.json().get("features", [])
+                if features:
+                    request.session["location"] = (
+                        features[0]["geometry"]["coordinates"]
+                    )
+            except (requests.RequestException, ValueError, KeyError):
+                # Si l'API est indisponible ou retourne une réponse invalide,
+                # on continue sans géolocalisation.
+                # If the API is unavailable or returns an invalid response,
+                # we continue without geolocation.
+                pass
 
         if not request.session.get("location", False) and settings.LOCATION:
             if request.session.get("postcode", False):

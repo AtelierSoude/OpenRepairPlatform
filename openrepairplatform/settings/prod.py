@@ -14,12 +14,15 @@ STATICFILES_DIRS = [
 ASSETS_ROOT = "/srv/static/"
 MEDIA_URL = "/media/"
 
-DEBUG = True
-
-raven = os.getenv("RAVEN_DNS")
-
-if raven:
-    RAVEN_CONFIG = {"dsn": raven}
+if os.getenv("SENTRY_DSN"):
+    import sentry_sdk
+    sentry_sdk.init(
+        dsn=os.getenv("SENTRY_DSN"),
+        send_default_pii=True,
+        enable_logs=True,
+    )
+elif os.getenv("RAVEN_DNS"):
+    RAVEN_CONFIG = {"dsn": os.getenv("RAVEN_DNS")}
     INSTALLED_APPS += ["raven.contrib.django.raven_compat"]  # noqa
 
 # Email Settings

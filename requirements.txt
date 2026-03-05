@@ -186,6 +186,8 @@ qrcode==7.4.2
     #   python-escpos
 raven==6.10.0
     # via openrepairplatform (setup.py)
+sentry-sdk[django]>=2.0
+    # via openrepairplatform
 requests==2.32.3
     # via
     #   django-anymail

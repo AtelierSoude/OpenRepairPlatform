@@ -15,11 +15,14 @@ class CustomUserSerializer(serializers.ModelSerializer):
 class WebHookSerializer(serializers.ModelSerializer):
     """
     Serializer pour le modèle WebHook.
-    Affiche l'UUID en hexadécimal et permet de renseigner la clé de signature.
+    Affiche l'UUID en hexadécimal et la source (HelloAsso ou TiBillet).
+
+    Serializer for the WebHook model.
+    Displays the UUID as hex and the source (HelloAsso or TiBillet).
     """
     class Meta:
         model = WebHook
-        fields = ["uuid", "hex", "signature_public_key"]
+        fields = ["uuid", "hex", "source"]
         read_only_fields = ["uuid", "hex"]
 
 
@@ -29,22 +32,35 @@ class HelloAssoPayerSerializer(serializers.Serializer):
     lastName = serializers.CharField(required=False, allow_blank=True)
 
 class HelloAssoItemSerializer(serializers.Serializer):
-    amount = serializers.IntegerField()
-    name = serializers.CharField()
-    type = serializers.CharField()
+    # Le montant au niveau item n'est pas utilisé (seul le montant top-level compte)
+    # Item-level amount is not used (only the top-level amount matters)
+    amount = serializers.IntegerField(required=False, default=0)
+    # Le nom de l'item n'est pas utilisé dans le traitement, on autorise le vide
+    # Item name is not used in processing, we allow blank
+    name = serializers.CharField(required=False, allow_blank=True, default="")
+    # Le type peut être absent sur certains payloads (donations, etc.)
+    # Type may be missing on some payloads (donations, etc.)
+    type = serializers.CharField(required=False, default="")
+
+class HelloAssoOrderSerializer(serializers.Serializer):
+    formType = serializers.CharField(required=False, default="")
 
 class HelloAssoDataSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    order = HelloAssoOrderSerializer(required=False, default=dict)
     payer = HelloAssoPayerSerializer()
-    items = HelloAssoItemSerializer(many=True)
+    # Les donations HelloAsso peuvent ne pas avoir d'items
+    # HelloAsso donations may not have items
+    items = HelloAssoItemSerializer(many=True, required=False, default=list)
+    amount = serializers.IntegerField()
     date = serializers.DateTimeField()
-    state = serializers.CharField()
+    # Si l'état est absent, on utilise une valeur par défaut qui sera rejetée
+    # proprement par le filtre "Authorized" dans la vue (pas d'erreur 400)
+    # If state is missing, we use a default value that will be cleanly rejected
+    # by the "Authorized" filter in the view (no 400 error)
+    state = serializers.CharField(required=False, default="")
 
 class HelloAssoWebhookSerializer(serializers.Serializer):
     data = HelloAssoDataSerializer()
     eventType = serializers.CharField()
-    metadata = serializers.DictField(required=True)
-
-    def validate_metadata(self, value):
-        if "id" not in value:
-            raise serializers.ValidationError("The 'id' field is required in metadata.")
-        return value
+    metadata = serializers.DictField(required=False, default=dict)

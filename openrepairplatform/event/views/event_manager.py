@@ -128,9 +128,9 @@ class EventListView(LocationRedirectMixin, ListView):
     def get(self, request, *args, **kwargs):
         res = super().get(request, *args, **kwargs)
         if not self.object_list and self.future_published_events:
-            addresses = "<br/>".join(
+            addresses = ", ".join(
                 {
-                    f"- {event.location.zipcode}"
+                    f" {event.location.zipcode}"
                     for event in self.future_published_events
                 }
             )

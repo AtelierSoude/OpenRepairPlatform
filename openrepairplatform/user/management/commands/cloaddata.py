@@ -8,11 +8,6 @@ from openrepairplatform.inventory.models import Stuff, Intervention, RepairFolde
 from openrepairplatform.user.models import Fee, Membership
 
 
-def random_date(orig):
-    now = datetime.datetime.now()
-    return now.replace(year=now.year+2)
-
-
 class Command(LoadDataCommand):
     """
     Extends the loaddata command to edit the models after their importation

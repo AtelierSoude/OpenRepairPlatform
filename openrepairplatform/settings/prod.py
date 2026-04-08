@@ -23,6 +23,7 @@ if os.getenv("SENTRY_DSN"):
         send_default_pii=True,
         enable_logs=True,
     )
+    traces_sample_rate=0.0,
 
     # Les requêtes par IP directe (scanners, bots) déclenchent DisallowedHost.
     # C'est du bruit opérationnel, pas un bug — on ne l'envoie pas à Sentry.

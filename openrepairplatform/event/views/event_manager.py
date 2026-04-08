@@ -1,8 +1,6 @@
-import json
 from django.conf import settings
 from django.contrib import messages
 from django.core.serializers import serialize
-from django.forms.models import model_to_dict
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy, reverse
@@ -44,8 +42,8 @@ class EventViewMixin(PermissionOrgaContextMixin, DetailView):
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         if not self.request.user.is_anonymous:
-            org = self.object.organization 
-            parents = org.validated_parents()  
+            org = self.object.organization
+            parents = org.validated_parents()
             org_ids = list(parents.values_list("id", flat=True)) + [org.id]
             memberships = (
                 self.request.user.memberships
@@ -174,8 +172,6 @@ class EventListView(LocationRedirectMixin, ListView):
             queryset = queryset.filter(organization=form.cleaned_data["organization"])
         if form.cleaned_data["activity"]:
             queryset = queryset.filter(activity=form.cleaned_data["activity"])
-        if form.cleaned_data["place"]:
-            queryset = queryset.filter(location=form.cleaned_data["place"])
         if form.cleaned_data["starts_before"]:
             queryset = queryset.filter(date__lte=form.cleaned_data["starts_before"])
         if form.cleaned_data["starts_after"]:
@@ -274,8 +270,9 @@ class EventDeleteView(HasAdminPermissionMixin, RedirectQueryParamView, DeleteVie
             request=self.request,
         )
 
-    def form_valid(self, form):
-        event = self.get_object()
+    def delete(self, request, *args, **kwargs):
+        event_pk = kwargs["pk"]
+        event = get_object_or_404(Event, pk=event_pk)
         users = event.organizers.all().union(
             event.presents.all(), event.registered.all()
         )
@@ -284,9 +281,9 @@ class EventDeleteView(HasAdminPermissionMixin, RedirectQueryParamView, DeleteVie
                 self.send_mail(event, user)
 
         messages.success(
-            self.request, "L'évènement a bien été supprimé et les participants avertis"
+            request, "L'évènement a bien été supprimé et les participants avertis"
         )
-        return super().form_valid(form)
+        return super().delete(request, *args, **kwargs)
 
 
 class RecurrentEventCreateView(HasActivePermissionMixin, FormView):

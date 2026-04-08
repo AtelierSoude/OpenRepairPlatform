@@ -13,7 +13,7 @@ from openrepairplatform.inventory.models import (
     RepairFolder,
     Intervention,
 )
-from openrepairplatform.user.factories import CustomUserFactory, OrganizationFactory
+from openrepairplatform.user.factories import CustomUserFactory
 
 
 class BrandFactory(DjangoModelFactory):

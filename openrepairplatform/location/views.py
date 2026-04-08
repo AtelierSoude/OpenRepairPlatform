@@ -21,6 +21,10 @@ from openrepairplatform.mixins import (
 class PlaceView(PermissionOrgaContextMixin, DetailView):
     model = Place
 
+    def get_queryset(self):
+        # renvoie un 404 si le lieu n'existe pas
+        return super().get_queryset().filter(organization__isnull=False)
+
 
 class PlaceDeleteView(HasAdminPermissionMixin, RedirectQueryParamView, DeleteView):
     model = Place

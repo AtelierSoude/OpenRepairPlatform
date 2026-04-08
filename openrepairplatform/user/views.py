@@ -302,17 +302,14 @@ class OrganizationUpdateView(HasAdminPermissionMixin, UpdateView):
         context["organization_menu"] = "active"
         return context
 
-
 class OrganizationDeleteView(HasAdminPermissionMixin, DeleteView):
     template_name = "user/organization/confirmation_delete.html"
     model = Organization
     success_url = reverse_lazy("user:organization_list")
 
-    def delete(self, request, *args, **kwargs):
-        delete = super().delete(request, *args, **kwargs)
-        messages.success(request, "L'organisation a bien été supprimé")
-        return delete
-
+    def form_valid(self, form):
+        messages.success(self.request, "L'organisation a bien été supprimée")
+        return super().form_valid(form)
 
 class AddUserToOrganization(HasAdminPermissionMixin, RedirectView):
     model = Organization
@@ -391,10 +388,9 @@ class FeeDeleteView(HasActivePermissionMixin, DeleteView):
     def get_success_url(self):
         return self.request.META["HTTP_REFERER"]
 
-    def delete(self, request, *args, **kwargs):
-        res = super().delete(request, *args, **kwargs)
-        messages.success(request, "La cotisation a bien été supprimée")
-        return res
+    def form_valid(self, form):
+        messages.success(self.request, "La cotisation a bien été supprimée")
+        return super().form_valid(form)
 
 
 class RemoveAdminFromOrganization(RemoveUserFromOrganization):

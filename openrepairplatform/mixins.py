@@ -156,15 +156,15 @@ class UpdateMembershipMixin(HasActivePermissionMixin, UpdateView):
 
 class DeleteMembershipMixin(HasActivePermissionMixin, DeleteView):
     model = Membership
-    http_methods = ["post"]
+    http_method_names = ["post"]
 
-    def delete(self, request, *args, **kwargs):
-        res = super().delete(request, *args, **kwargs)
-        messages.success(request, "La cotisation a bien été supprimée")
-        return res
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, "La cotisation a bien été supprimée")
+        return response
 
-    def get_success_url(self, *args, **kwargs):
-        return self.request.META["HTTP_REFERER"]
+    def get_success_url(self):
+        return self.request.META.get("HTTP_REFERER")
 
 
 class LocationRedirectMixin:

@@ -78,6 +78,6 @@ class ActivityDeleteView(HasAdminPermissionMixin, RedirectQueryParamView, Delete
     success_url = reverse_lazy("event:activity_list")
     template_name = "event/activity/confirm_delete.html"
 
-    def delete(self, request, *args, **kwargs):
-        messages.success(request, "L'activité a bien été supprimée")
-        return super().delete(request, *args, **kwargs)
+    def form_valid(self, form):
+        messages.success(self.request, "L'activité a bien été supprimée")
+        return super().form_valid(form)

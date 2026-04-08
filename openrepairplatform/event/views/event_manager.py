@@ -272,20 +272,23 @@ class EventDeleteView(HasAdminPermissionMixin, RedirectQueryParamView, DeleteVie
             request=self.request,
         )
 
-    def delete(self, request, *args, **kwargs):
-        event_pk = kwargs["pk"]
-        event = get_object_or_404(Event, pk=event_pk)
+    def notify_users_before_delete(self, event):
         users = event.organizers.all().union(
-            event.presents.all(), event.registered.all()
+            event.presents.all(),
+            event.registered.all(),
         )
-        if users:
-            for user in users:
-                self.send_mail(event, user)
+        for user in users:
+            self.send_mail(event, user)
+
+    def form_valid(self, form):
+        self.object = self.get_object()
+        self.notify_users_before_delete(self.object)
 
         messages.success(
-            request, "L'évènement a bien été supprimé et les participants avertis"
+            self.request,
+            "L'évènement a bien été supprimé et les participants avertis",
         )
-        return super().delete(request, *args, **kwargs)
+        return super().form_valid(form)
 
 
 class RecurrentEventCreateView(HasActivePermissionMixin, FormView):

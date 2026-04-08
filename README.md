@@ -2,9 +2,10 @@
 
 [![Python 3.9](https://img.shields.io/badge/Python-3.9-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 [![Django 4.2](https://img.shields.io/badge/Django-4.2-092E20?logo=django&logoColor=white)](https://www.djangoproject.com/)
-[![Django REST Framework](https://img.shields.io/badge/DRF-3.15-a30000?logo=django&logoColor=white)](https://www.django-rest-framework.org/)
 [![PostGIS](https://img.shields.io/badge/PostGIS-PostgreSQL-336791?logo=postgresql&logoColor=white)](https://postgis.net/)
 [![Bootstrap 5](https://img.shields.io/badge/Bootstrap-5-7952B3?logo=bootstrap&logoColor=white)](https://getbootstrap.com/)
+[![Tests 223 passed](https://img.shields.io/badge/Tests-223%20passed-brightgreen?logo=pytest&logoColor=white)](./openrepairplatform/)
+[![Coverage 83%](https://img.shields.io/badge/Coverage-83%25-yellowgreen)](./openrepairplatform/)
 [![License BSD-3](https://img.shields.io/badge/License-BSD--3--Clause-blue.svg)](./LICENSE)
 [![Docker](https://img.shields.io/badge/Docker-ready-2496ED?logo=docker&logoColor=white)](./docker-compose.yml)
 [![Website reparons.org](https://img.shields.io/badge/Website-reparons.org-green)](https://reparons.org)

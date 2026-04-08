@@ -46,9 +46,9 @@ class ConditionDeleteView(HasAdminPermissionMixin, DeleteView):
     model = Condition
     template_name = "event/condition/confirm_delete.html"
 
-    def delete(self, request, *args, **kwargs):
-        messages.success(request, "La condition a bien été supprimée")
-        return super().delete(request, *args, **kwargs)
+    def form_valid(self, form):
+        messages.success(self.request, "La condition a bien été supprimée")
+        return super().form_valid(form)
 
     def get_success_url(self):
         return self.object.get_absolute_url()

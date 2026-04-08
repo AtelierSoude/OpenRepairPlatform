@@ -304,8 +304,9 @@ class Fee(models.Model):
 
     def delete(self, *args, **kwargs):
         membership = self.membership
-        super().delete(*args, **kwargs)
+        result = super().delete(*args, **kwargs)
         self.computed_membership_payment(membership)
+        return result
 
     def __str__(self):
         return f"{self.date}-{self.membership.user}-{self.organization}-{self.amount}"

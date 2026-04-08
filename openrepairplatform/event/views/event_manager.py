@@ -274,17 +274,21 @@ class EventDeleteView(HasAdminPermissionMixin, RedirectQueryParamView, DeleteVie
             request=self.request,
         )
 
-    def form_valid(self, form):
-        event = self.get_object()
+    def notify_users_before_delete(self, event):
         users = event.organizers.all().union(
-            event.presents.all(), event.registered.all()
+            event.presents.all(),
+            event.registered.all(),
         )
-        if users:
-            for user in users:
-                self.send_mail(event, user)
+        for user in users:
+            self.send_mail(event, user)
+
+    def form_valid(self, form):
+        self.object = self.get_object()
+        self.notify_users_before_delete(self.object)
 
         messages.success(
-            self.request, "L'évènement a bien été supprimé et les participants avertis"
+            self.request,
+            "L'évènement a bien été supprimé et les participants avertis",
         )
         return super().form_valid(form)
 

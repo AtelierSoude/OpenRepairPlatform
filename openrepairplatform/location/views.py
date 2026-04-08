@@ -7,6 +7,7 @@ from django.views.generic import (
     DeleteView,
     CreateView,
     UpdateView,
+    ListView,
 )
 
 from openrepairplatform.location.forms import PlaceForm
@@ -16,6 +17,10 @@ from openrepairplatform.mixins import (
     RedirectQueryParamView,
     HasAdminPermissionMixin,
 )
+
+
+class PlaceListView(ListView):
+    model = Place
 
 
 class PlaceView(PermissionOrgaContextMixin, DetailView):

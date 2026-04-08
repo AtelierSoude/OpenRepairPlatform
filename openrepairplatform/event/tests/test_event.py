@@ -212,10 +212,11 @@ def test_event_create_invalid(client, user_log, event_data):
     data = event_data
     del data["starts_at"]
     response = client.post(reverse("event:create", args=[organization.pk]), data)
-    html = response.content.decode()
     assert response.status_code == 200
     assert Event.objects.count() == 0
-    assert "Ce champ est obligatoire." in html
+    # Le formulaire est rendu par Vue.js, les erreurs Django sont dans le contexte
+    # The form is rendered by Vue.js, Django errors are in the context
+    assert "starts_at" in response.context_data["form"].errors
 
 
 def test_get_event_update(client, user_log, event, organization):
@@ -634,7 +635,7 @@ def test_events_ics_by_organization(
     assert f"SUMMARY:{str(event2)}" not in ics
 
     assert f"{event1.location.name}" in ics
-    assert f"{event2.location.name}" in ics
+    assert f"{event3.location.name}" in ics
 
 
 def test_event_ics(client, organization, activity, published_event_factory):

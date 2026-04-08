@@ -287,6 +287,11 @@ class EventSearchForm(forms.Form):
             queryset=Organization.objects.filter(events__in=future_events).distinct(),
             label="Organisateur",
         )
+        self.fields["place"] = forms.ModelChoiceField(
+            required=False,
+            queryset=Place.objects.filter(events__in=future_events).distinct(),
+            label="Lieu",
+        )
 
 
 class ParticipationForm(ModelForm):

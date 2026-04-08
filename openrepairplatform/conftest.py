@@ -20,6 +20,19 @@ from openrepairplatform.user.factories import (
     FeeFactory,
 )
 
+from openrepairplatform.inventory.factories import (
+    BrandFactory,
+    CategoryFactory,
+    DeviceFactory,
+    StuffFactory,
+    ObservationFactory,
+    ReasoningFactory,
+    ActionFactory,
+    StatusFactory,
+    RepairFolderFactory,
+    InterventionFactory,
+)
+
 register(CustomUserFactory)
 register(PlaceFactory)
 register(OrganizationFactory)
@@ -30,6 +43,17 @@ register(PublishedEventFactory)
 register(MembershipFactory)
 register(ParticipationFactory)
 register(FeeFactory)
+
+register(BrandFactory)
+register(CategoryFactory)
+register(DeviceFactory)
+register(StuffFactory)
+register(ObservationFactory)
+register(ReasoningFactory)
+register(ActionFactory)
+register(StatusFactory)
+register(RepairFolderFactory)
+register(InterventionFactory)
 
 
 @pytest.fixture

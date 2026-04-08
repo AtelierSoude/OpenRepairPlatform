@@ -26,6 +26,7 @@ services:
     volumes:
       - openrepairplatform_static:/srv/static
       - openrepairplatform_media:/srv/media
+      - ./deployment/saves-bdd:/saves-bdd
     depends_on:
       - db
     networks:

@@ -1,6 +1,50 @@
 [
   {
     "model": "user.customuser",
+    "pk": 666,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$7v2I8iVH2QkP59AtDACIDp$7CPUF5R0bT4v67VgJtkP8Uk6LE7oWevQ5UA6/6AqN5w=",
+      "last_login": null,
+      "is_superuser": true,
+      "email": "admin@admin.com",
+      "first_name": "Admin",
+      "last_name": "Admin",
+      "street_address": "Rue de l'administration",
+      "phone_number": "000000000",
+      "birth_date": "2026-04-06",
+      "gender": "n",
+      "avatar_img": "",
+      "bio": "",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2025-10-18T17:02:02.283379+00:00",
+      "is_visible": false
+    }
+  },
+  {
+    "model": "user.customuser",
+    "pk": 6666,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$DQUYYd71NaelcbX1WWNugS$j+AGUbbeVDIKZuTOXTSTwCgYLl0OuTID7d2GW4WEj78=",
+      "last_login": null,
+      "is_superuser": false,
+      "email": "user@user.com",
+      "first_name": "User",
+      "last_name": "User",
+      "street_address": "Rue de l'utilisation",
+      "phone_number": "000000000",
+      "birth_date": "2026-04-06",
+      "gender": "n",
+      "avatar_img": "",
+      "bio": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-10-18T17:02:02.283379+00:00",
+      "is_visible": false
+    }
+  },
+  {
+    "model": "user.customuser",
     "pk": 3408,
     "fields": {
       "password": "pbkdf2_sha256$260000$EoLXBYr0wh7sdr5RQdVUBw==$uu7a8hfryf5BRB0vdA2krW0f8PulJmCIMoSNbeYcXGw=",
@@ -76630,7 +76674,8 @@
         3562,
         1838,
         5862,
-        5713
+        5713,
+        666
       ]
     }
   },
@@ -76675,7 +76720,8 @@
         2497,
         3562,
         4476,
-        1151
+        1151,
+        666
       ]
     }
   },
@@ -76726,7 +76772,8 @@
         5196,
         4643,
         7094,
-        6386
+        6386,
+        666
       ]
     }
   },
@@ -76752,7 +76799,8 @@
       "admins": [
         106,
         3207,
-        277
+        277,
+        666
       ]
     }
   },
@@ -76778,7 +76826,8 @@
       "admins": [
         106,
         3299,
-        3273
+        3273,
+        666
       ]
     }
   },
@@ -76803,7 +76852,8 @@
       "actives": [],
       "admins": [
         106,
-        4026
+        4026,
+        666
       ]
     }
   },
@@ -76828,7 +76878,8 @@
       "actives": [],
       "admins": [
         106,
-        1420
+        1420,
+        666
       ]
     }
   },
@@ -76855,7 +76906,8 @@
       ],
       "admins": [
         106,
-        3219
+        3219,
+        666
       ]
     }
   },
@@ -76895,7 +76947,8 @@
         106,
         2497,
         1221,
-        4548
+        4548,
+        666
       ]
     }
   },
@@ -76921,7 +76974,8 @@
       "admins": [
         106,
         5278,
-        5226
+        5226,
+        666
       ]
     }
   },
@@ -76944,7 +76998,9 @@
       "visitors": [],
       "volunteers": [],
       "actives": [],
-      "admins": []
+      "admins": [
+        666
+      ]
     }
   },
   {
@@ -76969,7 +77025,8 @@
       "admins": [
         106,
         6029,
-        6069
+        6069,
+        666
       ]
     }
   },
@@ -76994,7 +77051,8 @@
       "actives": [],
       "admins": [
         106,
-        778
+        778,
+        666
       ]
     }
   },
@@ -77019,7 +77077,8 @@
       "actives": [],
       "admins": [
         106,
-        4558
+        4558,
+        666
       ]
     }
   },

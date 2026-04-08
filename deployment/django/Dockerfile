@@ -1,5 +1,5 @@
 ################ BASE #########################
-FROM python:3.9-slim-bullseye AS base
+FROM python:3.13-slim-bullseye AS base
 
 # set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -21,7 +21,17 @@ RUN apt-get install --assume-yes git
 
 RUN ln /usr/bin/sassc /usr/bin/sass
 
-RUN pip3 install --upgrade pip
+
+# Install UV
+
+# Download the latest installer
+ADD https://astral.sh/uv/install.sh /uv-installer.sh
+
+# Run the installer then remove it
+RUN sh /uv-installer.sh && rm /uv-installer.sh
+
+# Ensure the installed binary is on the `PATH`
+ENV PATH="/root/.local/bin/:$PATH"
 
 # French ENV for date
 RUN sed -i -e 's/# fr_FR.UTF-8 UTF-8/fr_FR.UTF-8 UTF-8/' /etc/locale.gen && \
@@ -48,11 +58,15 @@ RUN chmod 660 /var/uwsgi/openrepairplatform.sock
 WORKDIR /srv/app
 
 # install dependencies
-COPY ../../requirements.txt ./
-COPY ../../requirements_dev.txt /srv/app/requirements_dev.txt
 
-RUN pip3 install -r requirements_dev.txt
-RUN pip3 install uwsgi
+# Copy the pyproject
+COPY ../../pyproject.toml ./
+
+# Sync uv dependancies
+RUN uv sync
+
+# Add rsp as an alias to start the server
+RUN echo "alias rsp='uv run manage.py runserver 0.0.0.0:8005'" >> /root/.bashrc
 
 # for cron
 COPY deployment/django/openrepairplatform.cron /etc/cron.d/openrepairplatform
@@ -75,7 +89,7 @@ FROM base AS developpement
 
 WORKDIR /srv/app/
 
-RUN pip3 install ptvsd
+RUN uv pip install ptvsd
 
 WORKDIR /srv/app/
 

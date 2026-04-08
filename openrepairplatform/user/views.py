@@ -318,7 +318,7 @@ class AddUserToOrganization(HasAdminPermissionMixin, RedirectView):
         email = self.request.POST.get("email", "")
         user = CustomUser.objects.filter(email=email).exclude(first_name="").first()
         redirect_url = reverse(
-            "organization_page",
+            "organization_groups",
             kwargs={"orga_slug": self.organization.slug},
         )
 

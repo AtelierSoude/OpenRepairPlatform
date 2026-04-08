@@ -85,8 +85,8 @@ class MemberTable(ColumnShiftTable):
         return super(MemberTable, self).get_column_default_show()
 
     user = tables.Column(linkify=True, verbose_name="Membre")
-    email = tables.Column(accessor="user.email")
-    street_address = tables.Column(accessor="user.street_address")
+    email = tables.Column(accessor="user__email")
+    street_address = tables.Column(accessor="user__street_address")
     avatar = tables.TemplateColumn(
         template_name="extra_column_data.html",
         extra_context={"column": "avatar"},

@@ -7,6 +7,7 @@ from django.views.generic import (
     DeleteView,
     CreateView,
     UpdateView,
+    ListView,
 )
 
 from openrepairplatform.location.forms import PlaceForm
@@ -18,6 +19,10 @@ from openrepairplatform.mixins import (
 )
 
 
+class PlaceListView(ListView):
+    model = Place
+
+
 class PlaceView(PermissionOrgaContextMixin, DetailView):
     model = Place
 
@@ -26,9 +31,9 @@ class PlaceDeleteView(HasAdminPermissionMixin, RedirectQueryParamView, DeleteVie
     model = Place
     success_url = reverse_lazy("location:list")
 
-    def delete(self, request, *args, **kwargs):
-        messages.success(request, "Le lieu a bien été supprimé")
-        return super().delete(request, *args, **kwargs)
+    def form_valid(self, form):
+        messages.success(self.request, "Le lieu a bien été supprimé")
+        return super().form_valid(form)
 
 
 class PlaceFormView(HasAdminPermissionMixin):

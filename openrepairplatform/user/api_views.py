@@ -10,7 +10,12 @@ from rest_framework.permissions import BasePermission, AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
 from openrepairplatform.user.models import CustomUser, Organization, Membership, Fee, WebHook, SourceChoice
-from openrepairplatform.user.serializers import CustomUserSerializer, HelloAssoWebhookSerializer, WebHookSerializer
+from openrepairplatform.user.serializers import (
+    CustomUserSerializer,
+    HelloAssoWebhookSerializer,
+    TiBilletMembershipSerializer,
+    WebHookSerializer,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -47,6 +52,12 @@ class MembershipWebhookView(viewsets.ViewSet):
     # formTypes HelloAsso acceptés pour créer une adhésion
     # HelloAsso formTypes accepted to create a membership
     ACCEPTED_FORM_TYPES = {"Checkout", "Membership"}
+
+    # États TiBillet acceptés pour créer une adhésion
+    # A=payé une fois, O=payé récurrent, AV=validé admin, D=créé admin
+    # TiBillet states accepted to create a membership
+    # A=paid once, O=paid recurring, AV=admin validated, D=admin created
+    ACCEPTED_TIBILLET_STATES = {"A", "O", "AV", "D"}
 
     def create(self, request, webhook_pk=None):
         """
@@ -106,6 +117,14 @@ class MembershipWebhookView(viewsets.ViewSet):
                 {"status": "error", "message": "Unauthorized IP address."},
                 status=status.HTTP_403_FORBIDDEN,
             )
+
+        # Branchement selon la source du webhook
+        # Route to the correct processing method based on webhook source
+        if webhook.source == SourceChoice.SOURCE_TIBILLET:
+            return self._process_tibillet_webhook(request, webhook, organization)
+
+        # --- Flux HelloAsso (étapes 3 à 12) ---
+        # --- HelloAsso flow (steps 3 to 12) ---
 
         # 3. Filtre précoce sur eventType — seuls les paiements nous intéressent
         # HelloAsso envoie tous les types d'événements (Order, Payment, Form…)
@@ -253,6 +272,135 @@ class MembershipWebhookView(viewsets.ViewSet):
                 "message": "Membership and fee processed successfully",
                 "user_email": user.email,
                 "organization": organization.name
+            },
+            status=status.HTTP_201_CREATED,
+        )
+
+
+    def _process_tibillet_webhook(self, request, webhook, organization):
+        """
+        Traite un webhook TiBillet. Le payload est plat (pas d'enveloppe).
+        Le flux est similaire à HelloAsso mais avec des champs et filtres différents.
+
+        Processes a TiBillet webhook. The payload is flat (no envelope).
+        The flow is similar to HelloAsso but with different fields and filters.
+        """
+        webhook_pk = webhook.pk
+
+        # 3b. Validation du payload TiBillet
+        # 3b. TiBillet payload validation
+        serializer = TiBilletMembershipSerializer(data=request.data)
+        if not serializer.is_valid():
+            logger.error(
+                "Webhook %s TiBillet: payload invalide: %s",
+                webhook_pk, serializer.errors,
+            )
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        validated = serializer.validated_data
+
+        # 4b. Filtre sur object — doit être "membership"
+        # 4b. Filter on object — must be "membership"
+        if validated["object"] != "membership":
+            logger.info(
+                "Webhook %s TiBillet: object '%s' ignoré",
+                webhook_pk, validated["object"],
+            )
+            return Response(
+                {"status": "ignored", "message": f"object '{validated['object']}' ignored."},
+                status=status.HTTP_200_OK,
+            )
+
+        # 5b. Filtre sur state — seuls les états validés/payés sont acceptés
+        # TiBillet states: A=payé une fois, O=payé récurrent, AV=validé admin, D=créé admin
+        # 5b. Filter on state — only validated/paid states are accepted
+        # TiBillet states: A=paid once, O=paid recurring, AV=admin validated, D=admin created
+        tibillet_state = validated["state"]
+        if tibillet_state not in self.ACCEPTED_TIBILLET_STATES:
+            logger.info(
+                "Webhook %s TiBillet: state '%s' ignoré",
+                webhook_pk, tibillet_state,
+            )
+            return Response(
+                {"status": "ignored", "message": f"state '{tibillet_state}' ignored."},
+                status=status.HTTP_200_OK,
+            )
+
+        # 6b. Vérifie que deadline est présent et non-null (= adhésion effectivement validée)
+        # 6b. Check that deadline is present and non-null (= membership actually validated)
+        if not validated.get("deadline"):
+            logger.info("Webhook %s TiBillet: deadline absent, ignoré", webhook_pk)
+            return Response(
+                {"status": "ignored", "message": "No deadline — membership not yet validated."},
+                status=status.HTTP_200_OK,
+            )
+
+        # 7b. Idempotence via l'UUID TiBillet de l'adhésion
+        # 7b. Idempotency via the TiBillet membership UUID
+        payment_id = str(validated["uuid"])
+        if Fee.objects.filter(id_payment=payment_id).exists():
+            logger.info(
+                "Webhook %s TiBillet: uuid %s déjà traité",
+                webhook_pk, payment_id,
+            )
+            return Response(
+                {"status": "ignored", "message": f"UUID {payment_id} already processed."},
+                status=status.HTTP_200_OK,
+            )
+
+        # 8b. Extraction des données — contribution_value est DÉJÀ en euros (pas de ÷100)
+        # 8b. Data extraction — contribution_value is ALREADY in euros (no ÷100)
+        email = validated["email"]
+        first_name = validated.get("first_name", "")
+        last_name = validated.get("last_name", "")
+        amount = int(validated["contribution_value"])
+        payment_date = validated["last_contribution"].date()
+
+        # --- Étapes communes 10-12 (identiques au flux HelloAsso) ---
+        # --- Common steps 10-12 (identical to HelloAsso flow) ---
+
+        # 10. Récupération ou création de l'utilisateur
+        # 10. Retrieve or create the user
+        user, user_created = CustomUser.objects.get_or_create(
+            email=email,
+            defaults={"first_name": first_name, "last_name": last_name},
+        )
+        print(f"Utilisateur récupéré ou créé : {user.email}")
+
+        # 11. Récupération ou création de l'adhésion
+        # 11. Retrieve or create the membership
+        membership, membership_created = Membership.objects.get_or_create(
+            user=user,
+            organization=organization,
+            defaults={
+                "first_payment": payment_date,
+                "source": SourceChoice.SOURCE_TIBILLET,
+            },
+        )
+        print(f"Adhésion récupérée ou créée {membership.pk}")
+
+        # 12. Création de la cotisation
+        # 12. Create the fee
+        Fee.objects.create(
+            organization=organization,
+            membership=membership,
+            amount=amount,
+            date=payment_date,
+            payment=Fee.PAYMENT_BANK,
+            id_payment=payment_id,
+        )
+        print(f"Cotisation créée pour l'adhésion {membership.pk}")
+
+        logger.info(
+            "Webhook %s TiBillet: adhésion créée pour %s (%s) — montant=%s€",
+            webhook_pk, email, organization.name, amount,
+        )
+        return Response(
+            {
+                "status": "success",
+                "message": "TiBillet membership and fee processed successfully",
+                "user_email": email,
+                "organization": organization.name,
             },
             status=status.HTTP_201_CREATED,
         )

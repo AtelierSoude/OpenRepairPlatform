@@ -1,7 +1,6 @@
 from datetime import timedelta, date as dt
 from dateutil import rrule, relativedelta
 from rest_framework import serializers
-from rest_framework.fields import empty
 from .models import Event
 
 

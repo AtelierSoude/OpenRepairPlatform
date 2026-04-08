@@ -1,5 +1,5 @@
 import django_tables2 as tables
-from openrepairplatform.user.models import Fee, CustomUser, Membership
+from openrepairplatform.user.models import Fee, Membership
 from openrepairplatform.event.models import Event
 from django_tables2_column_shifter.tables import ColumnShiftTable
 

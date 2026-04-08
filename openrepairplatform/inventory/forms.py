@@ -16,7 +16,6 @@ from .models import (
 )
 from dal import autocomplete
 from bootstrap_modal_forms.forms import BSModalModelForm
-from django.urls import reverse
 from openrepairplatform.inventory.mixins import DeviceContextAutocompleteMixin
 
 class StuffEditOwnerForm(BSModalModelForm):

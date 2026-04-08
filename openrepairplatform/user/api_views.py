@@ -2,7 +2,7 @@ import hmac
 import hashlib
 from openrepairplatform.user.models import CustomUser, Organization, Membership, Fee, WebHook, SourceChoice
 from openrepairplatform.user.serializers import CustomUserSerializer, HelloAssoWebhookSerializer, WebHookSerializer
-from rest_framework.generics import RetrieveAPIView, CreateAPIView
+from rest_framework.generics import RetrieveAPIView
 from rest_framework.permissions import BasePermission, AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status, viewsets
@@ -263,7 +263,7 @@ class WebHookViewSet(viewsets.ViewSet):
         
         # Vérification des droits : l'utilisateur doit être dans la liste des admins
         # Rights check: the user must be in the admins list
-        if not self.request.user in organization.admins.all():
+        if self.request.user not in organization.admins.all():
             raise PermissionDenied(
                 _("Accès refusé : Vous n'êtes pas administrateur de cette organisation.")
             )

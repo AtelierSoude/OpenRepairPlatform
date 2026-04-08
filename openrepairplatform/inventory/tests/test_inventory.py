@@ -6,20 +6,13 @@ Tests for the inventory app.
 Covers models, views, autocompletes and mixins.
 """
 import pytest
-from datetime import date
 
 from django.urls import reverse
 from django.utils.text import slugify
 
 from openrepairplatform.inventory.models import (
-    Stuff,
     Device,
-    Category,
-    Observation,
-    RepairFolder,
-    Intervention,
 )
-from openrepairplatform.user.models import Organization
 
 pytestmark = pytest.mark.django_db
 
@@ -179,7 +172,7 @@ class TestOrganizationStockView:
         # Ajouter l'utilisateur comme actif dans l'organisation
         # actives est un ManyToManyField sur Organization
         orga.actives.add(user_log)
-        stuff = stuff_factory(organization_owner=orga, member_owner=None)
+        stuff_factory(organization_owner=orga, member_owner=None)
         url = reverse("organization_stock", kwargs={"orga_slug": orga.slug})
         response = client_log.get(url)
         assert response.status_code == 200
@@ -226,7 +219,7 @@ class TestAutocompleteViews:
         With ?category=X, the autocomplete computes probability scores.
         """
         cat = category_factory()
-        obs = observation_factory()
+        observation_factory()
         url = reverse("inventory:observation_autocomplete")
         response = client_log.get(url, {"category": cat.pk})
         assert response.status_code == 200

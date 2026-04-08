@@ -1,6 +1,9 @@
 from http import HTTPStatus
 
-from django.test import TestCase
+import pytest
+from django.test import TestCase, override_settings
+from django.urls import reverse
+
 
 class RobotsTxtTests(TestCase):
     def test_get(self):
@@ -19,10 +22,6 @@ class RobotsTxtTests(TestCase):
 
 # --- Tests des vues principales et des autocompletes ---
 # --- Tests for root views and autocomplete views ---
-
-import pytest
-from django.test import override_settings
-from django.urls import reverse
 
 pytestmark = pytest.mark.django_db
 

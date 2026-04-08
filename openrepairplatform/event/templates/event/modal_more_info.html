@@ -1,5 +1,5 @@
 {% extends "./parts/modal.html" %}
-{% load app_filters bootstrap5 %}
+{% load app_filters django_bootstrap5 %}
 {% block idBtnModal %}more-info-{{ user.pk|escape }}-{{target_organization.pk|escape }}{% endblock idBtnModal %}
 {% block idModal %}more-info-{{ user.pk|escape }}-{{target_organization.pk|escape }}{% endblock idModal %}
 {% block contentBtnModal %}

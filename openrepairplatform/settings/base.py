@@ -1,7 +1,6 @@
 from os.path import dirname, abspath, join
 import os
 
-from bootstrap5 import forms
 from django.contrib import messages
 
 PROJECT_DIR = dirname(dirname(abspath(__file__)))
@@ -42,7 +41,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "fontawesome",
     "django_assets",
-    "bootstrap5",
+    "django_bootstrap5",
     "sorl.thumbnail",
     "import_export",
     "initial_avatars",
@@ -154,9 +153,6 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
 # Config django-assets
 ASSETS_MODULES = ["openrepairplatform.assets"]
-
-# Add class to field wrapper in django-bootstrap5
-forms.FORM_GROUP_CLASS += " p-2"
 
 # django messages settings
 MESSAGE_TAGS = {messages.ERROR: "danger"}

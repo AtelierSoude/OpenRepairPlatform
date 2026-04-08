@@ -1,5 +1,5 @@
 {% extends './parts/modal.html' %}
-{% load app_filters bootstrap5 %}
+{% load app_filters django_bootstrap5 %}
 {% block idBtnModal %}add_participant{{ event_to_organize.pk | slugify }}{% endblock %}
 {% block idModal %}add_participant{{ event_to_organize.pk | slugify }}{% endblock %}
 {% block idbsModal %}add_participant{{ event_to_organize.pk | slugify }}{% endblock %}

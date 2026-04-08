@@ -3,7 +3,7 @@ name = "openrepairplatform"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.13"
 dependencies = [
     "appdirs==1.4.4",
     "argcomplete==3.6.3",
@@ -22,14 +22,14 @@ dependencies = [
     "cssselect2==0.7.0",
     "decorator==5.2.1",
     "diff-match-patch==20241021",
-    "django==4.2.30",
+    "django==5.2.13",
     "django-anymail==12.0",
     "django-assets",
     "django-autocomplete-light==3.9.7",
     "django-better-admin-arrayfield==1.4.2",
     "django-bootstrap-modal-forms==3.0.5",
     "django-bootstrap-static==5.3.3",
-    "django-bootstrap-v5==1.0.11",
+    "django-bootstrap5>=25.2",
     "django-debug-toolbar==4.4.6",
     "django-extensions==3.2.3",
     "django-filter==24.3",

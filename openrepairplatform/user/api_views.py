@@ -107,8 +107,26 @@ class MembershipWebhookView(viewsets.ViewSet):
                 status=status.HTTP_403_FORBIDDEN,
             )
 
-        # 3. Validation manuelle des données via le Serializer
-        # 3. Manual data validation via the Serializer
+        # 3. Filtre précoce sur eventType — seuls les paiements nous intéressent
+        # HelloAsso envoie tous les types d'événements (Order, Payment, Form…)
+        # au même webhook. On filtre AVANT la validation du serializer car les
+        # payloads non-Payment ont une structure différente qui ferait échouer
+        # la validation inutilement.
+        # 3. Early filter on eventType — only payments are relevant
+        # HelloAsso sends all event types (Order, Payment, Form…) to the same
+        # webhook. We filter BEFORE serializer validation because non-Payment
+        # payloads have a different structure that would fail validation needlessly.
+        event_type = request.data.get("eventType", "")
+        if event_type != "Payment":
+            logger.info("Webhook %s: eventType '%s' ignoré", webhook_pk, event_type)
+            print("Webhook %s: eventType '%s' ignoré", webhook_pk, event_type)
+            return Response(
+                {"status": "ignored", "message": f"eventType '{event_type}' ignored."},
+                status=status.HTTP_200_OK,
+            )
+
+        # 4. Validation manuelle des données via le Serializer
+        # 4. Manual data validation via the Serializer
         serializer = HelloAssoWebhookSerializer(data=request.data)
 
         # On vérifie si les données sont valides (lève une exception 400 en cas d'erreur)
@@ -118,22 +136,10 @@ class MembershipWebhookView(viewsets.ViewSet):
             print(f"Invalid webhook data received {request.data} : {serializer.errors}")
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
         # Extraction des données validées
         # Extraction of validated data
-        event_type = serializer.validated_data["eventType"]
         validated_data = serializer.validated_data["data"]
         form_type = validated_data.get("order", {}).get("formType", "")
-
-        # 4. Filtre sur eventType — seuls les paiements nous intéressent
-        # 4. Filter on eventType — only payments are relevant
-        if event_type != "Payment":
-            logger.info("Webhook %s: eventType '%s' ignoré", webhook_pk, event_type)
-            print("Webhook %s: eventType '%s' ignoré", webhook_pk, event_type)
-            return Response(
-                {"status": "ignored", "message": f"eventType '{event_type}' ignored."},
-                status=status.HTTP_200_OK,
-            )
 
         # 5. Filtre sur formType — seuls Checkout et Membership créent une adhésion
         # 5. Filter on formType — only Checkout and Membership create a membership

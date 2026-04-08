@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.db.models import Count
+from django.urls import reverse
 from django.urls import reverse_lazy
 from django.views.generic import (
     CreateView,
@@ -75,9 +76,14 @@ class ActivityEditView(RedirectQueryParamView, ActivityFormView, UpdateView):
 
 class ActivityDeleteView(HasAdminPermissionMixin, RedirectQueryParamView, DeleteView):
     model = Activity
-    success_url = reverse_lazy("event:activity_list")
     template_name = "event/activity/confirm_delete.html"
 
     def form_valid(self, form):
         messages.success(self.request, "L'activité a bien été supprimée")
         return super().form_valid(form)
+    
+    def get_success_url(self):
+        return reverse(
+            "organization_controls",
+            kwargs={"orga_slug": self.organization.slug},
+        )

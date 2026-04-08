@@ -29,6 +29,13 @@ if os.getenv("SENTRY_DSN"):
     # Direct IP requests (scanners, bots) trigger DisallowedHost.
     # This is operational noise, not a bug — we don't send it to Sentry.
     ignore_logger("django.security.DisallowedHost")
+
+    # En preprod les fichiers media de prod ne sont pas présents.
+    # sorl-thumbnail log une exception quand l'image source manque — ce n'est pas un bug.
+    # On preprod, prod media files are missing.
+    # sorl-thumbnail logs an exception when the source image is absent — not a bug.
+    if os.getenv("PREPROD"):
+        ignore_logger("sorl.thumbnail")
 elif os.getenv("RAVEN_DNS"):
     RAVEN_CONFIG = {"dsn": os.getenv("RAVEN_DNS")}
     INSTALLED_APPS += ["raven.contrib.django.raven_compat"]  # noqa

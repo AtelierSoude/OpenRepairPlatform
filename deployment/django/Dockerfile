@@ -1,9 +1,8 @@
 ################ BASE #########################
 FROM python:3.13-slim-bullseye AS base
 
-# set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
 RUN apt-get update --fix-missing
 RUN set -uex; \
@@ -16,66 +15,53 @@ RUN set -uex; \
      > /etc/apt/sources.list.d/nodesource.list; \
     apt-get update; \
     apt-get install nodejs -y;
+
 RUN apt-get install -y libproj-dev locales locales-all cron gdal-bin build-essential sassc libcups2-dev
 RUN apt-get install --assume-yes git
 
 RUN ln /usr/bin/sassc /usr/bin/sass
 
-
-# Install UV
-
-# Download the latest installer
+# Install UV globally
 ADD https://astral.sh/uv/install.sh /uv-installer.sh
-
-# Run the installer then remove it
-RUN sh /uv-installer.sh && rm /uv-installer.sh
-
-# Ensure the installed binary is on the `PATH`
-ENV PATH="/root/.local/bin/:$PATH"
+RUN sh /uv-installer.sh && rm /uv-installer.sh && \
+    cp /root/.local/bin/uv /usr/local/bin/uv && \
+    cp /root/.local/bin/uvx /usr/local/bin/uvx
 
 # French ENV for date
 RUN sed -i -e 's/# fr_FR.UTF-8 UTF-8/fr_FR.UTF-8 UTF-8/' /etc/locale.gen && \
     locale-gen
-ENV LC_ALL fr_FR
-ENV LANG fr_FR
-ENV LANGUAGE fr_FR
+ENV LC_ALL=fr_FR
+ENV LANG=fr_FR
+ENV LANGUAGE=fr_FR
+
 RUN mkdir -p /srv/app /srv/static /srv/media
 
-# add user 
 RUN groupadd -r openrepairplatform
 RUN useradd -ms /bin/bash -r -g openrepairplatform openrepairplatform
 RUN usermod -G openrepairplatform,www-data openrepairplatform
 RUN chown -R openrepairplatform:openrepairplatform /srv/*
 
-#uwisgi
 RUN mkdir /var/uwsgi
 RUN touch /var/uwsgi/openrepairplatform.sock
 RUN chown openrepairplatform:www-data /var/uwsgi
 RUN chown openrepairplatform:www-data /var/uwsgi/openrepairplatform.sock
 RUN chmod 660 /var/uwsgi/openrepairplatform.sock
 
-# set work directory
 WORKDIR /srv/app
 
-# install dependencies
-
-# Copy the pyproject
 COPY ../../pyproject.toml ./
-
-# Sync uv dependancies
 RUN uv sync
 
-# Add rsp as an alias to start the server
+ENV PATH="/srv/app/.venv/bin:/usr/local/bin:$PATH"
+
 RUN echo "alias rsp='uv run manage.py runserver 0.0.0.0:8005'" >> /root/.bashrc
 
-# for cron
 COPY deployment/django/openrepairplatform.cron /etc/cron.d/openrepairplatform
 RUN chmod 0644 /etc/cron.d/openrepairplatform
 RUN chown openrepairplatform:openrepairplatform /etc/default/locale
 RUN crontab /etc/cron.d/openrepairplatform
 RUN chmod u+s /usr/sbin/cron
 
-#RUN ln /usr/bin/sassc /usr/bin/sass
 COPY manage.py .
 
 ################ BUILDER #########################
@@ -123,4 +109,4 @@ RUN chown -R openrepairplatform:openrepairplatform /srv/*
 USER openrepairplatform
 EXPOSE 8000
 
-ENTRYPOINT ./start.sh
+ENTRYPOINT ["./start.sh"]

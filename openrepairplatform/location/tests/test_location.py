@@ -20,12 +20,6 @@ def location_data(organization_factory):
     }
 
 
-def test_location_list(client):
-    response = client.get(reverse("location:list"))
-    assert response.status_code == 200
-    assert get_user(client).is_anonymous
-
-
 def test_location_api_list(client_log, place_factory):
     response = client_log.get(reverse("api_location:places"))
     places = response.json()
@@ -88,7 +82,7 @@ def test_location_delete(client_log, place_factory):
     response_ok = client_log.post(reverse("location:delete", args=[place.pk]))
     assert Place.objects.count() == 0
     assert response_ok.status_code == 302
-    assert response_ok["Location"] == reverse("location:list")
+    assert response_ok["Location"] == reverse("organization_controls", kwargs={"orga_slug": place.organization.slug})
 
 
 def test_get_location_create(client_log, organization):

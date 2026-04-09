@@ -87,7 +87,7 @@ If you would like to assist us or utilize the shared resource, you can join our 
 
 | Layer | Technology |
 |-------|-----------|
-| Backend | Python 3.9, Django 4.2, Django REST Framework 3.15 |
+| Backend | Python 3.9, Django 5.2, Django REST Framework 3.15 |
 | Database | PostgreSQL + PostGIS |
 | Frontend | Django Templates, Bootstrap 5, Vue 3 (event forms), HTMX, Leaflet |
 | Infrastructure | Docker, uWSGI, Nginx |

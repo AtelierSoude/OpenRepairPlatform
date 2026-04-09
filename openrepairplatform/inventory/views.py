@@ -2,7 +2,7 @@ from dal import autocomplete
 from django.contrib import messages
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse
-from django.db.models import Count, Q, F, Max, Sum
+from django.db.models import Count, Q, Sum
 from django.utils.safestring import mark_safe
 from django.db.models import Case, When, Value, IntegerField
 
@@ -22,7 +22,6 @@ from openrepairplatform.mixins import HasActivePermissionMixin
 from openrepairplatform.user.mixins import PermissionOrgaContextMixin
 from openrepairplatform.inventory.mixins import (
     PermissionCreateUserStuffMixin, 
-    DeviceContextAutocompleteMixin, 
     PermissionEditUserStuffMixin, 
     ThermalPrintersContextMixin
 )

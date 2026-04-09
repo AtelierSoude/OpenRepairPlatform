@@ -1,8 +1,6 @@
-import json
 from django.conf import settings
 from django.contrib import messages
 from django.core.serializers import serialize
-from django.forms.models import model_to_dict
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy, reverse
@@ -174,8 +172,6 @@ class EventListView(LocationRedirectMixin, ListView):
             queryset = queryset.filter(organization=form.cleaned_data["organization"])
         if form.cleaned_data["activity"]:
             queryset = queryset.filter(activity=form.cleaned_data["activity"])
-        if form.cleaned_data["place"]:
-            queryset = queryset.filter(location=form.cleaned_data["place"])
         if form.cleaned_data["starts_before"]:
             queryset = queryset.filter(date__lte=form.cleaned_data["starts_before"])
         if form.cleaned_data["starts_after"]:

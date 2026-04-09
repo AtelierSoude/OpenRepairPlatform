@@ -1,7 +1,7 @@
 import django_filters
 from dal import autocomplete
 
-from openrepairplatform.user.models import Fee, CustomUser, Membership
+from openrepairplatform.user.models import Fee, Membership
 from openrepairplatform.event.models import Event
 from openrepairplatform.location.models import Place
 from openrepairplatform.event.models import Activity

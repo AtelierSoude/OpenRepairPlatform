@@ -1,5 +1,4 @@
 from django.contrib import admin
-from django.db import models
 from simple_history.admin import SimpleHistoryAdmin
 from import_export import resources
 from treebeard.admin import TreeAdmin

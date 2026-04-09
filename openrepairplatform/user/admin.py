@@ -4,7 +4,7 @@ from django.utils.translation import gettext as _
 from simple_history.admin import SimpleHistoryAdmin
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
-from import_export.widgets import ForeignKeyWidget, ManyToManyWidget
+from import_export.widgets import ManyToManyWidget
 from import_export.fields import Field
 
 from .models import CustomUser, Organization, Membership, Fee

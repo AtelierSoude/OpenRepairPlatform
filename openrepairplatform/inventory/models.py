@@ -1,7 +1,6 @@
 import os
 from datetime import date
 
-from uuid import uuid4
 from django.db import models
 from treebeard.mp_tree import MP_Node
 from django.urls import reverse

@@ -15,7 +15,7 @@ python3 manage.py shell -c "from openrepairplatform.user.models import CustomUse
 
 sleep infinity
 
-#python3  manage.py runserver 0.0.0.0:8005
+#rsp
 #python3  manage.py livereload --host=0.0.0.0
 
 

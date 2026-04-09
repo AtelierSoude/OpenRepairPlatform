@@ -1,6 +1,4 @@
 from django.core.management.commands.loaddata import Command as LoadDataCommand
-from django.core.serializers import deserialize
-from django.db import transaction
 import datetime
 
 from openrepairplatform.event.models import Event

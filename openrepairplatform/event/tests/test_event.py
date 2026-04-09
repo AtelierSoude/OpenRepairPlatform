@@ -13,7 +13,6 @@ from openrepairplatform.user.models import CustomUser, Membership
 pytestmark = pytest.mark.django_db
 
 
-
 def _django_date(datetime):
     return str(datetime).split(".")[0]
 
@@ -46,6 +45,7 @@ def event_data(condition_factory, activity, custom_user_factory, place, organiza
         "needed_organizers": 1,
     }
 
+
 @override_settings(LOCATION=False)
 def test_event_list(client, event_factory, published_event_factory):
     response = client.get(reverse("event:list"))
@@ -62,6 +62,7 @@ def test_event_list(client, event_factory, published_event_factory):
     assert event1 in response.context_data["object_list"]
     assert event2 in response.context_data["object_list"]
 
+
 @override_settings(LOCATION=False)
 def test_event_list_invalid(client, published_event_factory):
     event1 = published_event_factory()
@@ -70,15 +71,7 @@ def test_event_list_invalid(client, published_event_factory):
     assert event1 in response.context_data["object_list"]
     assert event2 in response.context_data["object_list"]
 
-@override_settings(LOCATION=False)
-def test_event_list_filter_place(client, place_factory, published_event_factory):
-    place1 = place_factory()
-    place2 = place_factory()
-    event1 = published_event_factory(location=place1)
-    event2 = published_event_factory(location=place2)
-    response = client.get(reverse("event:list") + f"?place={place1.pk}")
-    assert event1 in response.context_data["object_list"]
-    assert event2 not in response.context_data["object_list"]
+
 
 @override_settings(LOCATION=False)
 def test_event_list_filter_orga(client, organization_factory, published_event_factory):
@@ -90,6 +83,7 @@ def test_event_list_filter_orga(client, organization_factory, published_event_fa
     assert event1 in response.context_data["object_list"]
     assert event2 not in response.context_data["object_list"]
 
+
 @override_settings(LOCATION=False)
 def test_event_list_filter_activity(client, activity_factory, published_event_factory):
     activity1 = activity_factory(name="hello")
@@ -99,6 +93,7 @@ def test_event_list_filter_activity(client, activity_factory, published_event_fa
     response = client.get(reverse("event:list") + f"?activity={activity1.pk}")
     assert event1 in response.context_data["object_list"]
     assert event2 not in response.context_data["object_list"]
+
 
 @override_settings(LOCATION=False)
 def test_event_list_filter_start_time(client, published_event_factory):
@@ -303,10 +298,10 @@ def test_cancel_reservation_redirect(client, event, custom_user):
     token = signing.dumps(
         {"user_id": custom_user.id, "event_id": event.id}, salt="cancel"
     )
-    query_params = "?redirect=/location/"
+    query_params = "?redirect=/"
     resp = client.get(reverse("event:cancel_reservation", args=[token]) + query_params)
     assert resp.status_code == 302
-    assert resp["Location"] == reverse("location:list")
+    assert resp["Location"] == reverse("homepage")
 
 
 def test_book_wrong_token(client):
@@ -390,10 +385,10 @@ def test_book_redirect(client, event, custom_user):
     token = signing.dumps(
         {"user_id": custom_user.id, "event_id": event.id}, salt="book"
     )
-    query_params = "?redirect=/location/"
+    query_params = "?redirect=/"
     resp = client.get(reverse("event:book", args=[token]) + query_params)
     assert resp.status_code == 302
-    assert resp["Location"] == reverse("location:list")
+    assert resp["Location"] == reverse("homepage")
 
 
 def test_organizer_book_user_not_authorized(
@@ -687,4 +682,3 @@ def test_event_internal_notes(event_factory):
     event = event_factory(internal_notes=notes)
     assert hasattr(event, "internal_notes")
     assert event.internal_notes == notes
-

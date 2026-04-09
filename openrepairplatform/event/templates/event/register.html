@@ -1,4 +1,4 @@
-{% load app_filters bootstrap5 %}
+{% load app_filters django_bootstrap5 %}
 {% if admin_text or not request.user.is_authenticated %}
   {% if event.booking == False %}
     <a class="btn btn-outline-warning">Événement sans réservation</a>

@@ -169,7 +169,7 @@ def test_add_admin_to_organization(custom_user_factory, client, organization):
     )
     assert response.status_code == 302
     assert response.url == reverse(
-        "organization_page",
+        "organization_groups",
         kwargs={"orga_slug": organization.slug},
     )
     assert organization.admins.count() == 2
@@ -208,7 +208,7 @@ def test_add_active_to_organization(custom_user_factory, client, organization):
     )
     assert response.status_code == 302
     assert response.url == reverse(
-        "organization_page",
+        "organization_groups",
         kwargs={"orga_slug": organization.slug},
     )
     actives = organization.actives.all()
@@ -231,7 +231,7 @@ def test_add_admin_to_actives_of_organization(
     )
     assert response.status_code == 302
     assert response.url == reverse(
-        "organization_page",
+        "organization_groups",
         kwargs={"orga_slug": organization.slug},
     )
     assert organization.actives.count() == 0
@@ -253,7 +253,7 @@ def test_add_active_to_admins_of_organization(
     )
     assert response.status_code == 302
     assert response.url == reverse(
-        "organization_page",
+        "organization_groups",
         kwargs={"orga_slug": organization.slug},
     )
     assert organization.actives.count() == 0
@@ -337,7 +337,7 @@ def test_add_volunteer_to_organization(custom_user_factory, client, organization
     )
     assert response.status_code == 302
     assert response.url == reverse(
-        "organization_page",
+        "organization_groups",
         kwargs={"orga_slug": organization.slug},
     )
     volunteers = organization.volunteers.all()
@@ -360,7 +360,7 @@ def test_add_admin_to_volunteers_of_organization(
     )
     assert response.status_code == 302
     assert response.url == reverse(
-        "organization_page",
+        "organization_groups",
         kwargs={"orga_slug": organization.slug},
     )
     assert organization.volunteers.count() == 0
@@ -382,7 +382,7 @@ def test_add_volunteer_to_admins_of_organization(
     )
     assert response.status_code == 302
     assert response.url == reverse(
-        "organization_page",
+        "organization_groups",
         kwargs={"orga_slug": organization.slug},
     )
     assert organization.volunteers.count() == 0

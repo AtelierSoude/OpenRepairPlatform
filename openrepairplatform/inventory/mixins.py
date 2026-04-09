@@ -1,4 +1,3 @@
-from django.urls import reverse
 from openrepairplatform.inventory.models import ThermalPrinter
 
 class PermissionEditUserStuffMixin:

@@ -220,7 +220,7 @@ class Event(models.Model):
         else:
             slug = "no activity type"
         self.slug = slugify(slug)
-        return super().save(*args, kwargs)
+        return super().save(*args, **kwargs)
 
     @property
     def remaining_seats(self):

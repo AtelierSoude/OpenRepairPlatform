@@ -1,5 +1,5 @@
 {% extends "./parts/modal.html" %}
-{% load app_filters bootstrap5 %}
+{% load app_filters django_bootstrap5 %}
 {% block idBtnModal %}more-info-{{ user.pk|escape }}-{{target_organization.pk|escape }}{% endblock idBtnModal %}
 {% block idModal %}more-info-{{ user.pk|escape }}-{{target_organization.pk|escape }}{% endblock idModal %}
 {% block contentBtnModal %}
@@ -47,7 +47,7 @@
         {% csrf_token %}
         <div class="row ">
           {% for field in form %}
-            {% bootstrap_field field form_group_class="col-md-6 p-2" %}
+            {% bootstrap_field field wrapper_class="col-md-6 p-2" %}
           {% endfor %}
         </div>
       

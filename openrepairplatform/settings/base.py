@@ -1,7 +1,6 @@
 from os.path import dirname, abspath, join
 import os
 
-from bootstrap5 import forms
 from django.contrib import messages
 
 PROJECT_DIR = dirname(dirname(abspath(__file__)))
@@ -42,7 +41,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "fontawesome",
     "django_assets",
-    "bootstrap5",
+    "django_bootstrap5",
     "sorl.thumbnail",
     "import_export",
     "initial_avatars",
@@ -130,7 +129,6 @@ INTERNAL_IPS = ["127.0.0.1", "0.0.0.0"]
 TIME_ZONE = "Europe/Paris"
 
 USE_I18N = True
-USE_L10N = True
 USE_TZ = True
 USE_THOUSAND_SEPARATOR = True
 
@@ -156,9 +154,6 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 # Config django-assets
 ASSETS_MODULES = ["openrepairplatform.assets"]
 
-# Add class to field wrapper in django-bootstrap5
-forms.FORM_GROUP_CLASS += " p-2"
-
 # django messages settings
 MESSAGE_TAGS = {messages.ERROR: "danger"}
 
@@ -167,6 +162,12 @@ AVATAR_COLORS = ((254, 229, 110), (8, 51, 66), (43, 230, 171),)
 
 # Django tables2
 DJANGO_TABLES2_TEMPLATE = "django_tables2/bootstrap5.html"
+
+BOOTSTRAP5 = {
+    # Wrapper class for non-inline fields.
+    # The default value "mb-3" is the spacing as used by Bootstrap 5 example code.
+    'wrapper_class': 'mb-3 p-2',
+}
 
 KM_DISTANCE = 50
 

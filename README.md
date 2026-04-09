@@ -1,7 +1,7 @@
 # OpenRepairPlatform
 
 [![Python 3.9](https://img.shields.io/badge/Python-3.9-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-[![Django 4.2](https://img.shields.io/badge/Django-4.2-092E20?logo=django&logoColor=white)](https://www.djangoproject.com/)
+[![Django 5.2](https://img.shields.io/badge/Django-5.2-092E20?logo=django&logoColor=white)](https://www.djangoproject.com/)
 [![PostGIS](https://img.shields.io/badge/PostGIS-PostgreSQL-336791?logo=postgresql&logoColor=white)](https://postgis.net/)
 [![Bootstrap 5](https://img.shields.io/badge/Bootstrap-5-7952B3?logo=bootstrap&logoColor=white)](https://getbootstrap.com/)
 [![Tests 223 passed](https://img.shields.io/badge/Tests-223%20passed-brightgreen?logo=pytest&logoColor=white)](./openrepairplatform/)

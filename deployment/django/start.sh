@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 env > /etc/default/locale
 
+# Ensure the installed binary is on the `PATH`
+ENV PATH="/root/.local/bin/:$PATH"
+
 echo "Start cron"
 cron
 echo "cron started"

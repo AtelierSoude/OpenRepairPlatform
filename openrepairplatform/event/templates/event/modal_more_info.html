@@ -47,7 +47,7 @@
         {% csrf_token %}
         <div class="row ">
           {% for field in form %}
-            {% bootstrap_field field form_group_class="col-md-6 p-2" %}
+            {% bootstrap_field field wrapper_class="col-md-6 p-2" %}
           {% endfor %}
         </div>
       

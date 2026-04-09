@@ -26,12 +26,12 @@
         {% endif %}
             <div class="bordered p-2 m-2">
                 <div class="row">
-                    {% bootstrap_field form.observation form_group_class="col" %}
-                    {% bootstrap_field form.reasoning form_group_class="col" %}
+                    {% bootstrap_field form.observation wrapper_class="col" %}
+                    {% bootstrap_field form.reasoning wrapper_class="col" %}
                 </div>
                 <div class="row">
-                    {% bootstrap_field form.action form_group_class="col" %}
-                    {% bootstrap_field form.status form_group_class="col" %}
+                    {% bootstrap_field form.action wrapper_class="col" %}
+                    {% bootstrap_field form.status wrapper_class="col" %}
                 </div>
             </div>
             {% bootstrap_field form.close_folder %}

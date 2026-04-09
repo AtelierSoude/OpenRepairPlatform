@@ -10,15 +10,15 @@
       {% bootstrap_field form.is_visible %}
     {% endif %}
     <div id="devicesearch">
-        {% bootstrap_field form.device form_group_class="device-search-form" %}
+        {% bootstrap_field form.device wrapper_class="device-search-form" %}
         {% bootstrap_field form.create_device %}
     </div>
     <div id="adddevice" style="display:none">
         <div class="row bordered p-2 m-2">
-          {% bootstrap_field form.category form_group_class="col-md-12 "%}
+          {% bootstrap_field form.category wrapper_class="col-md-12 "%}
             <small><i>Vous allez créer un type d'appareil appartenant à la catégorie précédemment sélectionnée</i></small>
-            {% bootstrap_field form.brand form_group_class="col-md-6 model_edit_stuff" %}
-            {% bootstrap_field form.model form_group_class="col-md-6" %}
+            {% bootstrap_field form.brand wrapper_class="col-md-6 model_edit_stuff" %}
+            {% bootstrap_field form.model wrapper_class="col-md-6" %}
             <small>Vous pouvez ajouter une photo si vous le souhaitez</small>
             {% bootstrap_field form.picture %}
         </div>

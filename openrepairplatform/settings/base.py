@@ -163,6 +163,12 @@ AVATAR_COLORS = ((254, 229, 110), (8, 51, 66), (43, 230, 171),)
 # Django tables2
 DJANGO_TABLES2_TEMPLATE = "django_tables2/bootstrap5.html"
 
+BOOTSTRAP5 = {
+    # Wrapper class for non-inline fields.
+    # The default value "mb-3" is the spacing as used by Bootstrap 5 example code.
+    'wrapper_class': 'mb-3 p-2',
+}
+
 KM_DISTANCE = 50
 
 LOCATION = os.getenv("LOCATION", "False").lower() in ('true', '1', 'y')

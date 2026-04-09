@@ -102,7 +102,7 @@ dependencies = [
     "types-python-dateutil==2.9.0.20241206",
     "typing-extensions==4.13.2",
     "tzdata==2025.3",
-    "urllib3==2.2.3",
+    "urllib3==2.6.3",
     "uwsgi==2.0.31",
     "wcwidth==0.5.0",
     "weasyprint==61.2",

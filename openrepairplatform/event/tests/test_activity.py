@@ -65,7 +65,7 @@ def test_activity_delete(client_log, activity_factory):
     response = client_log.post(reverse("event:activity_delete", args=[activity.pk]))
     assert Activity.objects.count() == 0
     assert response.status_code == 302
-    assert response["Location"] == reverse("event:activity_list")
+    assert response["Location"] == reverse("organization_controls",kwargs={"orga_slug": activity.organization.slug})
 
 
 def test_get_activity_create(client, user_log, organization):

@@ -72,16 +72,6 @@ def test_event_list_invalid(client, published_event_factory):
     assert event2 in response.context_data["object_list"]
 
 
-@override_settings(LOCATION=False)
-def test_event_list_filter_place(client, place_factory, published_event_factory):
-    place1 = place_factory()
-    place2 = place_factory()
-    event1 = published_event_factory(location=place1)
-    event2 = published_event_factory(location=place2)
-    response = client.get(reverse("event:list") + f"?place={place1.pk}")
-    assert event1 in response.context_data["object_list"]
-    assert event2 not in response.context_data["object_list"]
-
 
 @override_settings(LOCATION=False)
 def test_event_list_filter_orga(client, organization_factory, published_event_factory):
@@ -308,10 +298,10 @@ def test_cancel_reservation_redirect(client, event, custom_user):
     token = signing.dumps(
         {"user_id": custom_user.id, "event_id": event.id}, salt="cancel"
     )
-    query_params = "?redirect=/location/"
+    query_params = "?redirect=/"
     resp = client.get(reverse("event:cancel_reservation", args=[token]) + query_params)
     assert resp.status_code == 302
-    assert resp["Location"] == reverse("location:list")
+    assert resp["Location"] == reverse("homepage")
 
 
 def test_book_wrong_token(client):
@@ -395,10 +385,10 @@ def test_book_redirect(client, event, custom_user):
     token = signing.dumps(
         {"user_id": custom_user.id, "event_id": event.id}, salt="book"
     )
-    query_params = "?redirect=/location/"
+    query_params = "?redirect=/"
     resp = client.get(reverse("event:book", args=[token]) + query_params)
     assert resp.status_code == 302
-    assert resp["Location"] == reverse("location:list")
+    assert resp["Location"] == reverse("homepage")
 
 
 def test_organizer_book_user_not_authorized(

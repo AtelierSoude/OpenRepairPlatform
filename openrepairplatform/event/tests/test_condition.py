@@ -131,7 +131,7 @@ def test_condition_delete(client, user_log, condition_factory):
     assert Condition.objects.count() == 0
     assert response.status_code == 302
     assert response["Location"] == reverse(
-        "organization_page",
+        "organization_controls",
         args=[condition.organization.slug],
     )
 

@@ -1,15 +1,23 @@
-import hmac
-import hashlib
-from openrepairplatform.user.models import CustomUser, Organization, Membership, Fee, WebHook, SourceChoice
-from openrepairplatform.user.serializers import CustomUserSerializer, HelloAssoWebhookSerializer, WebHookSerializer
+import logging
+
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, render
+from django.utils.translation import gettext_lazy as _
+from rest_framework import status, viewsets
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.permissions import BasePermission, AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from rest_framework import status, viewsets
-from django.shortcuts import get_object_or_404, render
-from django.http import HttpResponse
-from rest_framework.exceptions import PermissionDenied
-from django.utils.translation import gettext_lazy as _
+
+from openrepairplatform.user.models import CustomUser, Organization, Membership, Fee, WebHook, SourceChoice
+from openrepairplatform.user.serializers import (
+    CustomUserSerializer,
+    HelloAssoWebhookSerializer,
+    TiBilletMembershipSerializer,
+    WebHookSerializer,
+)
+
+logger = logging.getLogger(__name__)
 
 
 class OrganizationOwner(BasePermission):
@@ -29,11 +37,6 @@ class CustomUserAPIView(RetrieveAPIView):
     serializer_class = CustomUserSerializer
     permission_classes = [OrganizationOwner]
 
-class MembershipAPIView(RetrieveAPIView):
-    queryset = CustomUser.objects.all()
-    serializer_class = CustomUserSerializer
-
-
 class MembershipWebhookView(viewsets.ViewSet):
     """
     ViewSet pour traiter les webhooks entrants de HelloAsso ou TiBillet.
@@ -46,145 +49,178 @@ class MembershipWebhookView(viewsets.ViewSet):
     """
     permission_classes = [AllowAny]
 
+    # formTypes HelloAsso acceptés pour créer une adhésion
+    # HelloAsso formTypes accepted to create a membership
+    ACCEPTED_FORM_TYPES = {"Checkout", "Membership"}
+
+    # États TiBillet acceptés pour créer une adhésion
+    # A=payé une fois, O=payé récurrent, AV=validé admin, D=créé admin
+    # TiBillet states accepted to create a membership
+    # A=paid once, O=paid recurring, AV=admin validated, D=admin created
+    ACCEPTED_TIBILLET_STATES = {"A", "O", "AV", "D"}
+
     def create(self, request, webhook_pk=None):
         """
         Action pour traiter le payload du webhook et créer une adhésion.
-        
+
         Action to process the webhook payload and create a membership.
 
         Exemple de test avec curl / Example test with curl:
-        (Note: x-ha-signature est obligatoire et doit correspondre au HMAC SHA-256 
-        du body avec la clé secrète)
-        
-        curl -X POST http://localhost:8005/api/user/webhook/5f351b5b-9360-4b2a-ad9b-b4ec84b602e8/ \
+        (Note: l'IP source doit correspondre à celle autorisée pour la source du webhook)
+        (Note: the source IP must match the one allowed for this webhook's source)
+
+        curl -X POST http://localhost:8005/api/user/webhook/<uuid>/ \
              -H "Content-Type: application/json" \
-             -H "x-ha-signature: ff3ca62addcbf329f74e9abd826fbfd792eefb3c9d1507c02d1aff4e06ddc46c" \
-             -d '{"eventType": "Payment", "data": {"date": "2026-02-10T11:50:48Z", "state": "Authorized", "payer": {"email": "test@example.com", "firstName": "John", "lastName": "Doe"}, "items": [{"amount": 1000, "type": "Membership", "name": "Adhésion"}]}, "metadata": {"id": 75698555}}'
-        
-        Note: Cet exemple fonctionne si la clé de signature enregistrée pour le webhook est :
-        AyCM0yTeQd8In2OzdP3R2HGTrYiCA818UCFLhrD9BCnNhTriWLipxEDpsaTbdfec
-
-        Méthode pour générer la signature en Python / Method to generate the signature in Python:
-        ```python
-        import hmac
-        import hashlib
-        
-        secret_key = "AyCM0yTeQd8In2OzdP3R2HGTrYiCA818UCFLhrD9BCnNhTriWLipxEDpsaTbdfec"
-        payload = '{"eventType": "Payment", "data": {"date": "2026-02-10T11:50:48Z", "state": "Authorized", "payer": {"email": "test@example.com", "firstName": "John", "lastName": "Doe"}, "items": [{"amount": 1000, "name": "Adhésion"}]}, "metadata": {"id": 75698555}}' # Corps brut / Raw body
-        
-        signature = hmac.new(
-            secret_key.encode("utf-8"),
-            msg=payload.encode("utf-8"),
-            digestmod=hashlib.sha256
-        ).hexdigest()
-        print(signature)
-        ```
+             -d '{"eventType": "Payment", "data": {"id": 15222, "amount": 1000, "date": "2026-02-10T11:50:48Z", "state": "Authorized", "order": {"formType": "Checkout"}, "payer": {"email": "test@example.com", "firstName": "John", "lastName": "Doe"}, "items": [{"amount": 1000, "type": "Membership", "name": "Adhésion"}]}, "metadata": {"id": 75698555}}'
         """
-
+        logger.info(f"webhook membership {webhook_pk} : {request.data}")
+        print(f"webhook membership {webhook_pk} : {request.data}")
 
         # 1. Récupération du WebHook par son UUID (hex) passé dans l'URL
         # 1. Retrieve the WebHook by its UUID (hex) passed in the URL
         webhook = get_object_or_404(WebHook, pk=webhook_pk)
-        
-        # 2. Vérification de la signature (Authenticité)
-        # 2. Signature verification (Authenticity)
-        # On récupère la signature reçue dans les en-têtes
-        received_signature = request.headers.get("x-ha-signature")
-        # On récupère la clé secrète enregistrée pour ce webhook
-        secret_key = webhook.signature_public_key
-
-
-        try :
-            # HELLOASSO METHOD
-            # Calcul de la signature attendue via HMAC SHA-256 sur le corps brut
-            # Computing expected signature via HMAC SHA-256 on raw body
-            # request.body contient le corps brut de la requête
-            computed_signature = hmac.new(
-                secret_key.encode('utf-8'),
-                msg=request.body,
-                digestmod=hashlib.sha256
-            ).hexdigest()
-
-            # Comparaison sécurisée des signatures
-            if not received_signature or not hmac.compare_digest(computed_signature, received_signature):
-                return Response(
-                    {
-                        "status": "error",
-                        "message": "Invalid signature. Webhook authenticity could not be verified."
-                    },
-                    status=status.HTTP_403_FORBIDDEN
-                )
-            # On en déduit l'organisation et la source HELLOASSO
-            source = SourceChoice.SOURCE_HELLOASSO
-        except Exception as e:
-            return Response(
-                {
-                    "status": "error",
-                    "message": f"An error occurred while verifying webhook authenticity: {e}"
-                },
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
-
         organization = webhook.organization
 
-        # 3. Validation manuelle des données via le Serializer
-        # 3. Manual data validation via the Serializer
+        # Log systématique de chaque appel webhook pour diagnostic
+        # Systematic log of each webhook call for diagnostics
+        logger.info(
+            "Webhook %s reçu: body=%s",
+            webhook_pk,
+            request.data,
+        )
+
+        # 2. Vérification de l'IP source (Authenticité)
+        # 2. Source IP verification (Authenticity)
+        # On récupère l'IP du client, en tenant compte du proxy (nginx/uWSGI)
+        # We retrieve the client IP, taking the proxy into account (nginx/uWSGI)
+        forwarded_for = request.META.get("HTTP_X_FORWARDED_FOR")
+        if forwarded_for:
+            # Le premier élément est l'IP réelle du client
+            # The first element is the real client IP
+            client_ip = forwarded_for.split(",")[0].strip()
+        else:
+            client_ip = request.META.get("REMOTE_ADDR")
+
+        # Comparaison de l'IP avec celle autorisée pour la source du webhook
+        # Comparing IP with the one allowed for this webhook's source
+        allowed_ip = WebHook.ALLOWED_IPS.get(webhook.source)
+        if client_ip != allowed_ip:
+            logger.warning(
+                "Webhook %s: IP non autorisée - reçue=%s, attendue=%s (source=%s)",
+                webhook_pk, client_ip, allowed_ip, webhook.source,
+            )
+            print(
+                "Webhook %s: IP non autorisée - reçue=%s, attendue=%s (source=%s)",
+                webhook_pk, client_ip, allowed_ip, webhook.source,
+            )
+            return Response(
+                {"status": "error", "message": "Unauthorized IP address."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        # Branchement selon la source du webhook
+        # Route to the correct processing method based on webhook source
+        if webhook.source == SourceChoice.SOURCE_TIBILLET:
+            return self._process_tibillet_webhook(request, webhook, organization)
+
+        # --- Flux HelloAsso (étapes 3 à 12) ---
+        # --- HelloAsso flow (steps 3 to 12) ---
+
+        # 3. Filtre précoce sur eventType — seuls les paiements nous intéressent
+        # HelloAsso envoie tous les types d'événements (Order, Payment, Form…)
+        # au même webhook. On filtre AVANT la validation du serializer car les
+        # payloads non-Payment ont une structure différente qui ferait échouer
+        # la validation inutilement.
+        # 3. Early filter on eventType — only payments are relevant
+        # HelloAsso sends all event types (Order, Payment, Form…) to the same
+        # webhook. We filter BEFORE serializer validation because non-Payment
+        # payloads have a different structure that would fail validation needlessly.
+        event_type = request.data.get("eventType", "")
+        if event_type != "Payment":
+            logger.info("Webhook %s: eventType '%s' ignoré", webhook_pk, event_type)
+            print("Webhook %s: eventType '%s' ignoré", webhook_pk, event_type)
+            return Response(
+                {"status": "ignored", "message": f"eventType '{event_type}' ignored."},
+                status=status.HTTP_200_OK,
+            )
+
+        # 4. Validation manuelle des données via le Serializer
+        # 4. Manual data validation via the Serializer
         serializer = HelloAssoWebhookSerializer(data=request.data)
-        
+
         # On vérifie si les données sont valides (lève une exception 400 en cas d'erreur)
         # Check if data is valid (raises a 400 exception on error)
-        serializer.is_valid(raise_exception=True)
-        
+        if not serializer.is_valid():
+            logger.error(f"Invalid webhook data received {request.data} : {serializer.errors}")
+            print(f"Invalid webhook data received {request.data} : {serializer.errors}")
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
         # Extraction des données validées
         # Extraction of validated data
         validated_data = serializer.validated_data["data"]
-        metadata = serializer.validated_data.get("metadata", {})
-        payment_id = metadata.get("id")
-        
-        # 4. Vérification si le paiement a déjà été traité (id_payment unique)
-        # 4. Check if payment has already been processed (unique id_payment)
+        form_type = validated_data.get("order", {}).get("formType", "")
+
+        # 5. Filtre sur formType — seuls Checkout et Membership créent une adhésion
+        # 5. Filter on formType — only Checkout and Membership create a membership
+        if form_type and form_type not in self.ACCEPTED_FORM_TYPES:
+            logger.info("Webhook %s: formType '%s' ignoré", webhook_pk, form_type)
+            print("Webhook %s: formType '%s' ignoré", webhook_pk, form_type)
+            return Response(
+                {"status": "ignored", "message": f"formType '{form_type}' ignored."},
+                status=status.HTTP_200_OK,
+            )
+
+        # 6. Idempotence via l'ID de paiement HelloAsso (data.id)
+        # 6. Idempotency via the HelloAsso payment ID (data.id)
         # On le fait avant de créer quoi que ce soit pour rester idempotent.
         # We do it before creating anything to remain idempotent.
-        if payment_id and Fee.objects.filter(id_payment=str(payment_id)).exists():
+        payment_id = str(validated_data["id"])
+        if Fee.objects.filter(id_payment=payment_id).exists():
+            logger.info("Webhook %s: paiement %s déjà traité", webhook_pk, payment_id)
+            print("Webhook %s: paiement %s déjà traité", webhook_pk, payment_id)
             return Response(
-                {
-                    "status": "error",
-                    "message": f"Payment with ID {payment_id} has already been processed."
-                },
-                status=status.HTTP_400_BAD_REQUEST
+                {"status": "ignored", "message": f"Payment {payment_id} already processed."},
+                status=status.HTTP_200_OK,
             )
 
-        # 5. Vérification de l'état du paiement (doit être "Authorized")
-        # 5. Check payment state (must be "Authorized")
-        if validated_data.get("state") != "Authorized":
+        # 7. Vérification de l'état du paiement (doit être "Authorized")
+        # 7. Check payment state (must be "Authorized")
+        if validated_data["state"] != "Authorized":
+            logger.info("Webhook %s: état '%s' ignoré", webhook_pk, validated_data["state"])
+            print("Webhook %s: état '%s' ignoré", webhook_pk, validated_data["state"])
             return Response(
-                {
-                    "status": "ignored",
-                    "message": f"Payment state '{validated_data.get('state')}' ignored. Only 'Authorized' is processed."
-                },
-                status=status.HTTP_200_OK
+                {"status": "ignored", "message": f"State '{validated_data['state']}' ignored."},
+                status=status.HTTP_200_OK,
             )
 
-
-        # 6. Vérification du type du paiement (doit être "Membership")
-        # 6. Check payment's type (must be "Membership")
+        # 8. Vérification du type des items (doit être "Payment", pas "Donation")
+        # 8. Check items type (must be "Payment", not "Donation")
+        # HelloAsso utilise "Payment" pour les Checkout (adhésions) et "Donation" pour les dons
+        # HelloAsso uses "Payment" for Checkout (memberships) and "Donation" for donations
         items = validated_data["items"]
 
-        # Check if any of the items is of type "Membership"
-        if not any(item.get("type")=="Membership" for item in items):
+        # On vérifie si au moins un item est de type "Payment"
+        # Check if any of the items is of type "Payment"
+        if not any(item.get("type") == "Payment" for item in items):
+            first_item_type = items[0].get("type") if items else "none"
+            logger.info("Webhook %s: item type '%s' ignoré", webhook_pk, first_item_type)
+            print("Webhook %s: item type '%s' ignoré", webhook_pk, first_item_type)
             return Response(
                 {
                     "status": "ignored",
-                    "message": f"Payment type '{items[0].get('type')}' ignored. Only 'Membership' is processed."
+                    "message": f"Item type '{first_item_type}' ignored. Only 'Payment' is processed."
                 },
                 status=status.HTTP_200_OK
             )
 
         payer_data = validated_data["payer"]
         payment_date = validated_data["date"].date()
-        
-        # 7. Récupération ou création de l'utilisateur (CustomUser)
-        # 7. Retrieve or create the user (CustomUser)
+        # HelloAsso fournit les montants en centimes
+        # HelloAsso provides amounts in cents
+        amount = validated_data["amount"] // 100
+
+        # 9. Récupération ou création de l'utilisateur (CustomUser)
+        # 9. Retrieve or create the user (CustomUser)
         # On utilise l'email comme identifiant unique
         # We use email as a unique identifier
         user, user_created = CustomUser.objects.get_or_create(
@@ -194,44 +230,179 @@ class MembershipWebhookView(viewsets.ViewSet):
                 "last_name": payer_data.get("lastName", ""),
             }
         )
-        
-        # 8. Récupération ou création de l'adhésion (Membership) pour cet utilisateur et cette organisation
-        # 8. Retrieve or create the membership (Membership) for this user and organization
+        print(f"Utilisateur récupéré ou créé : {user.email}")
+
+        # 10. Récupération ou création de l'adhésion (Membership) pour cet utilisateur et cette organisation
+        # 10. Retrieve or create the membership (Membership) for this user and organization
         membership, membership_created = Membership.objects.get_or_create(
             user=user,
             organization=organization,
             defaults={
                 "first_payment": payment_date,
-                "source": source
+                "source": SourceChoice.SOURCE_HELLOASSO,
             }
         )
-        
-        # 9. Création de la cotisation (Fee) associée
-        # 9. Creation of the associated fee (Fee)
-        # On calcule le montant total (HelloAsso fournit les montants en centimes)
-        # Calculate the total amount (HelloAsso provides amounts in cents)
-        total_amount_cents = sum(item["amount"] for item in items)
-        total_amount_unit = total_amount_cents // 100
-        
+        print(f"Adhésion récupérée ou créée {membership.pk}")
+
+        # 11. Création de la cotisation (Fee) associée
+        # 11. Creation of the associated fee (Fee)
         Fee.objects.create(
             organization=organization,
             membership=membership,
-            amount=total_amount_unit,
+            amount=amount,
             date=payment_date,
             payment=Fee.PAYMENT_BANK,  # Paiement en ligne / Online payment
-            id_payment=str(payment_id) if payment_id else None
+            id_payment=payment_id,
         )
-        
-        # 10. Retour d'une réponse explicite de succès (201 Created)
-        # 10. Return an explicit success response (201 Created)
+        print(f"Cotisation créée pour l'adhésion {membership.pk}")
+
+        # 12. Retour d'une réponse explicite de succès (201 Created)
+        # 12. Return an explicit success response (201 Created)
+        logger.info(
+            "Webhook %s: adhésion créée pour %s (%s) - formType=%s, montant=%s€",
+            webhook_pk, user.email, organization.name, form_type, amount,
+        )
+        print(
+            "Webhook %s: adhésion créée pour %s (%s) - formType=%s, montant=%s€",
+            webhook_pk, user.email, organization.name, form_type, amount,
+        )
         return Response(
             {
                 "status": "success",
                 "message": "Membership and fee processed successfully",
                 "user_email": user.email,
                 "organization": organization.name
-            }, 
-            status=status.HTTP_201_CREATED
+            },
+            status=status.HTTP_201_CREATED,
+        )
+
+
+    def _process_tibillet_webhook(self, request, webhook, organization):
+        """
+        Traite un webhook TiBillet. Le payload est plat (pas d'enveloppe).
+        Le flux est similaire à HelloAsso mais avec des champs et filtres différents.
+
+        Processes a TiBillet webhook. The payload is flat (no envelope).
+        The flow is similar to HelloAsso but with different fields and filters.
+        """
+        webhook_pk = webhook.pk
+
+        # 3b. Validation du payload TiBillet
+        # 3b. TiBillet payload validation
+        serializer = TiBilletMembershipSerializer(data=request.data)
+        if not serializer.is_valid():
+            logger.error(
+                "Webhook %s TiBillet: payload invalide: %s",
+                webhook_pk, serializer.errors,
+            )
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        validated = serializer.validated_data
+
+        # 4b. Filtre sur object — doit être "membership"
+        # 4b. Filter on object — must be "membership"
+        if validated["object"] != "membership":
+            logger.info(
+                "Webhook %s TiBillet: object '%s' ignoré",
+                webhook_pk, validated["object"],
+            )
+            return Response(
+                {"status": "ignored", "message": f"object '{validated['object']}' ignored."},
+                status=status.HTTP_200_OK,
+            )
+
+        # 5b. Filtre sur state — seuls les états validés/payés sont acceptés
+        # TiBillet states: A=payé une fois, O=payé récurrent, AV=validé admin, D=créé admin
+        # 5b. Filter on state — only validated/paid states are accepted
+        # TiBillet states: A=paid once, O=paid recurring, AV=admin validated, D=admin created
+        tibillet_state = validated["state"]
+        if tibillet_state not in self.ACCEPTED_TIBILLET_STATES:
+            logger.info(
+                "Webhook %s TiBillet: state '%s' ignoré",
+                webhook_pk, tibillet_state,
+            )
+            return Response(
+                {"status": "ignored", "message": f"state '{tibillet_state}' ignored."},
+                status=status.HTTP_200_OK,
+            )
+
+        # 6b. Vérifie que deadline est présent et non-null (= adhésion effectivement validée)
+        # 6b. Check that deadline is present and non-null (= membership actually validated)
+        if not validated.get("deadline"):
+            logger.info("Webhook %s TiBillet: deadline absent, ignoré", webhook_pk)
+            return Response(
+                {"status": "ignored", "message": "No deadline — membership not yet validated."},
+                status=status.HTTP_200_OK,
+            )
+
+        # 7b. Idempotence via l'UUID TiBillet de l'adhésion
+        # 7b. Idempotency via the TiBillet membership UUID
+        payment_id = str(validated["uuid"])
+        if Fee.objects.filter(id_payment=payment_id).exists():
+            logger.info(
+                "Webhook %s TiBillet: uuid %s déjà traité",
+                webhook_pk, payment_id,
+            )
+            return Response(
+                {"status": "ignored", "message": f"UUID {payment_id} already processed."},
+                status=status.HTTP_200_OK,
+            )
+
+        # 8b. Extraction des données — contribution_value est DÉJÀ en euros (pas de ÷100)
+        # 8b. Data extraction — contribution_value is ALREADY in euros (no ÷100)
+        email = validated["email"]
+        first_name = validated.get("first_name", "")
+        last_name = validated.get("last_name", "")
+        amount = int(validated["contribution_value"])
+        payment_date = validated["last_contribution"].date()
+
+        # --- Étapes communes 10-12 (identiques au flux HelloAsso) ---
+        # --- Common steps 10-12 (identical to HelloAsso flow) ---
+
+        # 10. Récupération ou création de l'utilisateur
+        # 10. Retrieve or create the user
+        user, user_created = CustomUser.objects.get_or_create(
+            email=email,
+            defaults={"first_name": first_name, "last_name": last_name},
+        )
+        print(f"Utilisateur récupéré ou créé : {user.email}")
+
+        # 11. Récupération ou création de l'adhésion
+        # 11. Retrieve or create the membership
+        membership, membership_created = Membership.objects.get_or_create(
+            user=user,
+            organization=organization,
+            defaults={
+                "first_payment": payment_date,
+                "source": SourceChoice.SOURCE_TIBILLET,
+            },
+        )
+        print(f"Adhésion récupérée ou créée {membership.pk}")
+
+        # 12. Création de la cotisation
+        # 12. Create the fee
+        Fee.objects.create(
+            organization=organization,
+            membership=membership,
+            amount=amount,
+            date=payment_date,
+            payment=Fee.PAYMENT_BANK,
+            id_payment=payment_id,
+        )
+        print(f"Cotisation créée pour l'adhésion {membership.pk}")
+
+        logger.info(
+            "Webhook %s TiBillet: adhésion créée pour %s (%s) — montant=%s€",
+            webhook_pk, email, organization.name, amount,
+        )
+        return Response(
+            {
+                "status": "success",
+                "message": "TiBillet membership and fee processed successfully",
+                "user_email": email,
+                "organization": organization.name,
+            },
+            status=status.HTTP_201_CREATED,
         )
 
 
@@ -241,7 +412,7 @@ class WebHookViewSet(viewsets.ViewSet):
     Permet de lister (list), créer (create) et supprimer (destroy) des webhooks de manière explicite.
     L'organisation est identifiée par son slug passé dans l'URL.
     Seuls les administrateurs de l'organisation peuvent effectuer ces actions.
-    
+
     ViewSet to manage Organization WebHooks.
     Allows listing, creating, and deleting webhooks in an explicit manner.
     The organization is identified by its slug passed in the URL.
@@ -253,43 +424,43 @@ class WebHookViewSet(viewsets.ViewSet):
         """
         Méthode utilitaire explicite pour récupérer l'organisation à partir du slug.
         Elle vérifie également si l'utilisateur actuel fait partie des administrateurs.
-        
+
         Explicit utility method to retrieve the organization from the slug.
         It also checks if the current user is among the administrators.
         """
         # Récupération de l'objet Organization ou erreur 404
         # Retrieving the Organization object or 404 error
         organization = get_object_or_404(Organization, slug=orga_slug)
-        
+
         # Vérification des droits : l'utilisateur doit être dans la liste des admins
         # Rights check: the user must be in the admins list
-        if self.request.user not in organization.admins.all():
+        if not organization.admins.filter(pk=self.request.user.pk).exists():
             raise PermissionDenied(
                 _("Accès refusé : Vous n'êtes pas administrateur de cette organisation.")
             )
-        
+
         return organization
 
     def list(self, request, orga_slug=None):
         """
         Action pour lister les webhooks d'une organisation.
         Tout est explicite : récupération de l'orga, filtrage des webhooks, et sérialisation.
-        
+
         Action to list webhooks of an organization.
         Everything is explicit: organization retrieval, webhook filtering, and serialization.
         """
         # On récupère l'organisation via le slug passé dans l'URL
         # Retrieving the organization via the slug passed in the URL
         organization = self.get_organization(orga_slug)
-        
+
         # Récupération manuelle et explicite des webhooks
         # Manual and explicit retrieval of webhooks
         webhooks = WebHook.objects.filter(organization=organization)
-        
+
         # Sérialisation manuelle
         # Manual serialization
         serializer = WebHookSerializer(webhooks, many=True)
-        
+
         # Retour d'une réponse DRF avec les données sérialisées
         # Returning a DRF response with the serialized data
         return Response(serializer.data)
@@ -298,43 +469,43 @@ class WebHookViewSet(viewsets.ViewSet):
         """
         Action pour créer un nouveau webhook pour une organisation.
         Gère explicitement la validation, la sauvegarde et le support HTMX.
-        
+
         Action to create a new webhook for an organization.
         Explicitly handles validation, saving, and HTMX support.
         """
         # On récupère l'organisation via le slug
         # Retrieving the organization via the slug
         organization = self.get_organization(orga_slug)
-        
+
         # Initialisation du serializer avec les données de la requête
         # Initializing the serializer with the request data
         serializer = WebHookSerializer(data=request.data)
-        
+
         # Validation explicite (si invalide, une exception est levée ou on renvoie 400)
         # Explicit validation (if invalid, an exception is raised or we return 400)
         if serializer.is_valid():
             # Sauvegarde manuelle en injectant l'organisation récupérée
             # Manual save by injecting the retrieved organization
             webhook = serializer.save(organization=organization)
-            
+
             # Détection explicite d'une requête HTMX
             # Explicit detection of an HTMX request
-            if "HTTP_HX_REQUEST" in request.META:
+            if request.headers.get("HX-Request"):
                 # Si c'est du HTMX, on renvoie un fragment HTML via 'render'
                 # If it's HTMX, we return an HTML fragment via 'render'
                 return render(
-                    request, 
-                    "user/webhooks/item.html", 
+                    request,
+                    "user/webhooks/item.html",
                     {"webhook": webhook, "organization": organization}
                 )
-            
+
             # Sinon on renvoie une réponse JSON standard avec un code 201
             # Otherwise return a standard JSON response with a 201 code
             return Response(
-                WebHookSerializer(webhook).data, 
+                WebHookSerializer(webhook).data,
                 status=status.HTTP_201_CREATED
             )
-        
+
         # Si le serializer n'est pas valide, on renvoie les erreurs
         # If the serializer is not valid, we return the errors
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -343,31 +514,31 @@ class WebHookViewSet(viewsets.ViewSet):
         """
         Action pour supprimer un webhook spécifique.
         Recherche explicite de l'objet et gestion de la réponse HTMX.
-        
+
         Action to delete a specific webhook.
         Explicit object lookup and HTMX response management.
         """
         # On récupère d'abord l'organisation (pour vérification des droits)
         # First retrieve the organization (for rights check)
         organization = self.get_organization(orga_slug)
-        
+
         # Récupération explicite du webhook appartenant à cette organisation
         # Explicit retrieval of the webhook belonging to this organization
         webhook = get_object_or_404(WebHook, pk=pk, organization=organization)
-        
+
         # Suppression manuelle de l'objet
         # Manual deletion of the object
         webhook.delete()
-        
+
         # Détection explicite d'une requête HTMX
         # Explicit detection of an HTMX request
-        if "HTTP_HX_REQUEST" in request.META:
-            # Pour HTMX, une réponse vide avec succès (200) suffit pour que 
+        if request.headers.get("HX-Request"):
+            # Pour HTMX, une réponse vide avec succès (200) suffit pour que
             # hx-swap="outerHTML" supprime l'élément.
-            # For HTMX, a successful empty response (200) is enough for 
+            # For HTMX, a successful empty response (200) is enough for
             # hx-swap="outerHTML" to remove the element.
             return HttpResponse("", status=status.HTTP_200_OK)
-            
+
         # Réponse DRF standard (204 No Content) pour les clients non-HTMX
         # Standard DRF response (204 No Content) for non-HTMX clients
         return Response(status=status.HTTP_204_NO_CONTENT)

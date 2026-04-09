@@ -156,15 +156,15 @@ class UpdateMembershipMixin(HasActivePermissionMixin, UpdateView):
 
 class DeleteMembershipMixin(HasActivePermissionMixin, DeleteView):
     model = Membership
-    http_methods = ["post"]
+    http_method_names = ["post"]
 
-    def delete(self, request, *args, **kwargs):
-        res = super().delete(request, *args, **kwargs)
-        messages.success(request, "La cotisation a bien été supprimée")
-        return res
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, "La cotisation a bien été supprimée")
+        return response
 
-    def get_success_url(self, *args, **kwargs):
-        return self.request.META["HTTP_REFERER"]
+    def get_success_url(self):
+        return self.request.META.get("HTTP_REFERER")
 
 
 class LocationRedirectMixin:
@@ -173,14 +173,26 @@ class LocationRedirectMixin:
         if postcode and settings.LOCATION:
             request.session["postcode"] = postcode
             request.session["location"] = None
-            point = requests.get(
-                "https://api-adresse.data.gouv.fr/search/"
-                f"?q={postcode}&type=municipality"
-            )
-            if point.json()['features']:
-                request.session["location"] = (
-                    point.json()['features'][0]['geometry']['coordinates']
+            try:
+                # Appel à l'API adresse du gouvernement pour géolocaliser le code postal
+                # Call the French government address API to geolocate the postcode
+                point = requests.get(
+                    "https://api-adresse.data.gouv.fr/search/"
+                    f"?q={postcode}&type=municipality",
+                    timeout=5,
                 )
+                point.raise_for_status()
+                features = point.json().get("features", [])
+                if features:
+                    request.session["location"] = (
+                        features[0]["geometry"]["coordinates"]
+                    )
+            except (requests.RequestException, ValueError, KeyError):
+                # Si l'API est indisponible ou retourne une réponse invalide,
+                # on continue sans géolocalisation.
+                # If the API is unavailable or returns an invalid response,
+                # we continue without geolocation.
+                pass
 
         if not request.session.get("location", False) and settings.LOCATION:
             if request.session.get("postcode", False):

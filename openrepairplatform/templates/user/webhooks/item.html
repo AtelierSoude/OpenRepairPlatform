@@ -2,12 +2,11 @@
     <!-- Affichage de la source et de l'URL du Webhook / Displaying source and Webhook URL -->
     <div class="d-flex flex-column">
         <div>
-            <span class="badge bg-secondary me-2">{{ webhook.source }}</span>
+            <span class="badge bg-secondary me-2">{{ webhook.get_source_display }}</span>
             <span class="font-monospace small text-muted">{{ webhook.hex }}</span>
         </div>
         <div class="mt-1">
-            <small class="text-primary">URL: </small>
-            <code class="small">/api/user/webhook/{{ webhook.uuid }}/</code>
+            <code class="small">{{ request.scheme }}://{{ request.get_host }}/api/user/webhook/{{ webhook.uuid }}/</code>
         </div>
     </div>
     

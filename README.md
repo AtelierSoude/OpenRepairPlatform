@@ -1,54 +1,96 @@
------ FR -----
-
 # OpenRepairPlatform
 
-Ce projet cherche à faciliter l’accessibilité de la réparation par le plus grand nombre. Par une interface simple et claire, l'application web invite participants et organisations à collaborer autours de l’auto-réparation et de la réparation participative.
+[![Python 3.9](https://img.shields.io/badge/Python-3.9-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![Django 4.2](https://img.shields.io/badge/Django-4.2-092E20?logo=django&logoColor=white)](https://www.djangoproject.com/)
+[![PostGIS](https://img.shields.io/badge/PostGIS-PostgreSQL-336791?logo=postgresql&logoColor=white)](https://postgis.net/)
+[![Bootstrap 5](https://img.shields.io/badge/Bootstrap-5-7952B3?logo=bootstrap&logoColor=white)](https://getbootstrap.com/)
+[![Tests 223 passed](https://img.shields.io/badge/Tests-223%20passed-brightgreen?logo=pytest&logoColor=white)](./openrepairplatform/)
+[![Coverage 83%](https://img.shields.io/badge/Coverage-83%25-yellowgreen)](./openrepairplatform/)
+[![License BSD-3](https://img.shields.io/badge/License-BSD--3--Clause-blue.svg)](./LICENSE)
+[![Docker](https://img.shields.io/badge/Docker-ready-2496ED?logo=docker&logoColor=white)](./docker-compose.yml)
+[![Website reparons.org](https://img.shields.io/badge/Website-reparons.org-green)](https://reparons.org)
 
-OpenRepairPlateform est une application basée sur Django, pensée pour organiser les structures de réparations participatives.
-Elle intègre principalement des fonctionnalités de gestion d'organisation, de membres, de comptabilité, la publication d'événements, d'inventaire et de suivi/partage de réparations.
+> **Plateforme web open source pour organiser la reparation participative** — gestion d’organisations, d’evenements, de membres, d’inventaire et de suivi de reparations.
+>
+> **Open source web platform for collaborative repair** — organization management, event publishing, member management, inventory and repair tracking.
 
-Cette application est développée et notamment utilisée par [l'Atelier Soudé](https://atelier-soude.fr).
-La procedure d'installation et la documentation est disponible [ici](https://openrepairplatform.readthedocs.io/en/latest/)
+---
 
-## Envie de contribuer ?
+## FR
 
-OpenRepairPlateform se veut être un commun et accessible à tout.es.
-Si vous souhaitez nous aider ou bien utiliser le commun, vous pouvez rejoindre notre équipe de dév, via notre (Forum)[https://forum.atelier-soude.fr/c/reparons/101] ou en nous envoyant un message sur le (formulaire contact)[https://atelier-soude.fr/contact/]. Il est aussi possible de contribuer financièrement via (ce site)[https://lescommuns.tiers-lieux.org/#detail-un-commun.communId.672ba674b778d86e155788be].
+Ce projet cherche a faciliter l’accessibilite de la reparation par le plus grand nombre. Par une interface simple et claire, l’application web invite participants et organisations a collaborer autours de l’auto-reparation et de la reparation participative.
 
+OpenRepairPlatform est une application basee sur Django, pensee pour organiser les structures de reparations participatives.
+Elle integre principalement des fonctionnalites de gestion d’organisation, de membres, de comptabilite, la publication d’evenements, d’inventaire et de suivi/partage de reparations.
 
-- (Forum du projet)[https://forum.atelier-soude.fr/c/reparons/101]
+Cette application est developpee et notamment utilisee par [l’Atelier Soude](https://atelier-soude.fr).
+La procedure d’installation et la documentation est disponible [ici](https://openrepairplatform.readthedocs.io/en/latest/)
+
+### Fonctionnalites principales
+
+- **Gestion d’organisations** — creation, membres (5 niveaux : visiteur, membre, benevole, actif, admin), adhesions, cotisations
+- **Evenements** — publication, reservation, recurrence, export iCal, conditions tarifaires
+- **Inventaire** — objets, appareils, categories arborescentes, dossiers de reparation, interventions, impression QR thermique
+- **Geolocalisation** — lieux avec PostGIS, recherche par proximite, cartes Leaflet
+- **Interoperabilite** — webhooks HelloAsso & TiBillet, API REST (DRF)
+- **Suivi de reparations** — historique des interventions, observations, diagnostics, actions
+
+### Envie de contribuer ?
+
+OpenRepairPlatform se veut etre un commun et accessible a tout.es.
+Si vous souhaitez nous aider ou bien utiliser le commun, vous pouvez rejoindre notre equipe de dev, via notre [Forum](https://forum.atelier-soude.fr/c/reparons/101) ou en nous envoyant un message sur le [formulaire contact](https://atelier-soude.fr/contact/). Il est aussi possible de contribuer financierement via [ce site](https://lescommuns.tiers-lieux.org/#detail-un-commun.communId.672ba674b778d86e155788be).
+
+- [Forum du projet](https://forum.atelier-soude.fr/c/reparons/101)
 - Github, outil de dev -> normalement tu es dessus :)
 - Discord, messagerie directe : Sur demande !
-- (Plateforme vitrine de collaboration)[https://openrepairplateform.tibillet.coop/ 1]
-- (Tableau des fonctionnalité à dev)[https://github.com/orgs/AtelierSoude/projects/1/views/7?groupedBy%5BcolumnId%5D=Status&visibleFields=%5B%22Title%22%2C%22Assignees%22%2C%22Status%22%2C%22Linked+pull+requests%22%2C%22Milestone%22%2C240118894%5D&sortedBy%5Bdirection%5D=asc&sortedBy%5BcolumnId%5D=Status]
-- (Vitrine du projet pour des contributions)[https://lescommuns.tiers-lieux.org/#detail-un-commun.communId.672ba674b778d86e155788be]
+- [Plateforme vitrine de collaboration](https://openrepairplateform.tibillet.coop/)
+- [Tableau des fonctionnalites a dev](https://github.com/orgs/AtelierSoude/projects/1/views/7?groupedBy%5BcolumnId%5D=Status&visibleFields=%5B%22Title%22%2C%22Assignees%22%2C%22Status%22%2C%22Linked+pull+requests%22%2C%22Milestone%22%2C240118894%5D&sortedBy%5Bdirection%5D=asc&sortedBy%5BcolumnId%5D=Status)
+- [Vitrine du projet pour des contributions](https://lescommuns.tiers-lieux.org/#detail-un-commun.communId.672ba674b778d86e155788be)
 
+---
 
------ ENG -----
+## ENG
 
-This application is still in developpment.
-Any contributes are welcome. Please contact us if you want to contribute and we tell you how to.
+This application is still in development.
+Any contributions are welcome. Please contact us if you want to contribute and we tell you how to.
 
-OpenRepairPlatform is a Django based application designed to organize collaborative repair structures, features provides organization managment, event publishing, community members managment, repair tracking and sharing.
+OpenRepairPlatform is a Django based application designed to organize collaborative repair structures, features provides organization management, event publishing, community members management, repair tracking and sharing.
 
-The plateform is created by Atelier Soudé, an organization which repair everyday's people electric and electronic objects in Lyon, France.
+The platform is created by Atelier Soude, an organization which repairs everyday people’s electric and electronic objects in Lyon, France.
 
-Full installation and user documentation are avalaible [here](https://openrepairplatform.readthedocs.io/en/latest/). (sorry, only in French at this point !)
+Full installation and user documentation are available [here](https://openrepairplatform.readthedocs.io/en/latest/). (sorry, only in French at this point!)
 
-For basic develop installation, follow those steps:
+### Key Features
 
-## Interested in contributing?
+- **Organization management** — creation, members (5 levels: visitor, member, volunteer, active, admin), memberships, fees
+- **Events** — publishing, booking, recurrence, iCal export, pricing conditions
+- **Inventory** — items, devices, tree-structured categories, repair folders, interventions, thermal QR printing
+- **Geolocation** — places with PostGIS, proximity search, Leaflet maps
+- **Interoperability** — HelloAsso & TiBillet webhooks, REST API (DRF)
+- **Repair tracking** — intervention history, observations, diagnostics, actions
+
+### Interested in contributing?
 
 OpenRepairPlatform aims to be a shared resource accessible to everyone.
-If you would like to assist us or utilize the shared resource, you can join our development team via our (Forum)[https://forum.atelier-soude.fr/c/reparons/101]  or by sending us a message on the (contact form)[https://atelier-soude.fr/contact/].  It is also possible to contribute financially via (this website)[https://lescommuns.tiers-lieux.org/#detail-un-commun.communId.672ba674b778d86e155788be].
+If you would like to assist us or utilize the shared resource, you can join our development team via our [Forum](https://forum.atelier-soude.fr/c/reparons/101) or by sending us a message on the [contact form](https://atelier-soude.fr/contact/). It is also possible to contribute financially via [this website](https://lescommuns.tiers-lieux.org/#detail-un-commun.communId.672ba674b778d86e155788be).
 
-
-- (Project forum)[https://forum.atelier-soude.fr/c/reparons/101]
+- [Project forum](https://forum.atelier-soude.fr/c/reparons/101)
 - Github, outil de dev -> normalement tu es dessus :)
 - Discord, messagerie directe : Sur demande !
-- (Collaboration showcase platform)[https://openrepairplateform.tibillet.coop/ 1]
-- (Table of features to be developed)[https://github.com/orgs/AtelierSoude/projects/1/views/7?groupedBy%5BcolumnId%5D=Status&visibleFields=%5B%22Title%22%2C%22Assignees%22%2C%22Status%22%2C%22Linked+pull+requests%22%2C%22Milestone%22%2C240118894%5D&sortedBy%5Bdirection%5D=asc&sortedBy%5BcolumnId%5D=Status]
-- (Project showcase for contributions)[https://lescommuns.tiers-lieux.org/#detail-un-commun.communId.672ba674b778d86e155788be]
+- [Collaboration showcase platform](https://openrepairplateform.tibillet.coop/)
+- [Table of features to be developed](https://github.com/orgs/AtelierSoude/projects/1/views/7?groupedBy%5BcolumnId%5D=Status&visibleFields=%5B%22Title%22%2C%22Assignees%22%2C%22Status%22%2C%22Linked+pull+requests%22%2C%22Milestone%22%2C240118894%5D&sortedBy%5Bdirection%5D=asc&sortedBy%5BcolumnId%5D=Status)
+- [Project showcase for contributions](https://lescommuns.tiers-lieux.org/#detail-un-commun.communId.672ba674b778d86e155788be)
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Backend | Python 3.9, Django 4.2, Django REST Framework 3.15 |
+| Database | PostgreSQL + PostGIS |
+| Frontend | Django Templates, Bootstrap 5, Vue 3 (event forms), HTMX, Leaflet |
+| Infrastructure | Docker, uWSGI, Nginx |
 
 ## Run the application in production mode
 

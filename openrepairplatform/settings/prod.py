@@ -14,12 +14,31 @@ STATICFILES_DIRS = [
 ASSETS_ROOT = "/srv/static/"
 MEDIA_URL = "/media/"
 
-DEBUG = True
+if os.getenv("SENTRY_DSN"):
+    import sentry_sdk
+    from sentry_sdk.integrations.logging import ignore_logger
 
-raven = os.getenv("RAVEN_DNS")
+    sentry_sdk.init(
+        dsn=os.getenv("SENTRY_DSN"),
+        send_default_pii=True,
+        enable_logs=True,
+    )
+    traces_sample_rate=0.0,
 
-if raven:
-    RAVEN_CONFIG = {"dsn": raven}
+    # Les requêtes par IP directe (scanners, bots) déclenchent DisallowedHost.
+    # C'est du bruit opérationnel, pas un bug — on ne l'envoie pas à Sentry.
+    # Direct IP requests (scanners, bots) trigger DisallowedHost.
+    # This is operational noise, not a bug — we don't send it to Sentry.
+    ignore_logger("django.security.DisallowedHost")
+
+    # En preprod les fichiers media de prod ne sont pas présents.
+    # sorl-thumbnail log une exception quand l'image source manque — ce n'est pas un bug.
+    # On preprod, prod media files are missing.
+    # sorl-thumbnail logs an exception when the source image is absent — not a bug.
+    if os.getenv("PREPROD"):
+        ignore_logger("sorl.thumbnail")
+elif os.getenv("RAVEN_DNS"):
+    RAVEN_CONFIG = {"dsn": os.getenv("RAVEN_DNS")}
     INSTALLED_APPS += ["raven.contrib.django.raven_compat"]  # noqa
 
 # Email Settings

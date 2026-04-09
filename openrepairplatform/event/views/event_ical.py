@@ -36,7 +36,7 @@ class EventByOrganizationICSView(DetailView):
                     end=timezone.make_aware(datetime.combine(event.date, event.ends_at)),
                     organizer=organizer,
                     url=event_url,
-                    location=event.location.name,
+                    location=event.location.name if event.location else "",
                     description=html2text(event.description),
                 )
             )
@@ -70,7 +70,7 @@ class EventICSView(DetailView):
             end=timezone.make_aware(datetime.combine(event.date, event.ends_at)),
             organizer=organizer,
             url=event_url,
-            location=event.location.name,
+            location=event.location.name if event.location else "",
             description=html2text(event.description),
         )
 

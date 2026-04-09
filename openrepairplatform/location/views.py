@@ -1,11 +1,12 @@
 from django.contrib import messages
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 
 from django.views.generic import (
     DetailView,
     DeleteView,
     CreateView,
     UpdateView,
+    ListView,
 )
 
 from openrepairplatform.location.forms import PlaceForm
@@ -17,18 +18,30 @@ from openrepairplatform.mixins import (
 )
 
 
+class PlaceListView(ListView):
+    model = Place
+
+
 class PlaceView(PermissionOrgaContextMixin, DetailView):
     model = Place
+
+    def get_queryset(self):
+        # renvoie un 404 si le lieu n'existe pas
+        return super().get_queryset().filter(organization__isnull=False)
 
 
 class PlaceDeleteView(HasAdminPermissionMixin, RedirectQueryParamView, DeleteView):
     model = Place
-    success_url = reverse_lazy("location:list")
 
-    def delete(self, request, *args, **kwargs):
-        messages.success(request, "Le lieu a bien été supprimé")
-        return super().delete(request, *args, **kwargs)
+    def form_valid(self, form):
+        messages.success(self.request, "Le lieu a bien été supprimé")
+        return super().form_valid(form)
 
+    def get_success_url(self):
+        return reverse(
+            "organization_controls",
+            kwargs={"orga_slug": self.organization.slug},
+        )
 
 class PlaceFormView(HasAdminPermissionMixin):
     def form_valid(self, form):

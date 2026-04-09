@@ -13,7 +13,6 @@ from openrepairplatform.user.models import CustomUser, Membership
 pytestmark = pytest.mark.django_db
 
 
-
 def _django_date(datetime):
     return str(datetime).split(".")[0]
 
@@ -46,6 +45,7 @@ def event_data(condition_factory, activity, custom_user_factory, place, organiza
         "needed_organizers": 1,
     }
 
+
 @override_settings(LOCATION=False)
 def test_event_list(client, event_factory, published_event_factory):
     response = client.get(reverse("event:list"))
@@ -62,6 +62,7 @@ def test_event_list(client, event_factory, published_event_factory):
     assert event1 in response.context_data["object_list"]
     assert event2 in response.context_data["object_list"]
 
+
 @override_settings(LOCATION=False)
 def test_event_list_invalid(client, published_event_factory):
     event1 = published_event_factory()
@@ -69,6 +70,7 @@ def test_event_list_invalid(client, published_event_factory):
     response = client.get(reverse("event:list") + "?activity=99")
     assert event1 in response.context_data["object_list"]
     assert event2 in response.context_data["object_list"]
+
 
 
 @override_settings(LOCATION=False)
@@ -81,6 +83,7 @@ def test_event_list_filter_orga(client, organization_factory, published_event_fa
     assert event1 in response.context_data["object_list"]
     assert event2 not in response.context_data["object_list"]
 
+
 @override_settings(LOCATION=False)
 def test_event_list_filter_activity(client, activity_factory, published_event_factory):
     activity1 = activity_factory(name="hello")
@@ -90,6 +93,7 @@ def test_event_list_filter_activity(client, activity_factory, published_event_fa
     response = client.get(reverse("event:list") + f"?activity={activity1.pk}")
     assert event1 in response.context_data["object_list"]
     assert event2 not in response.context_data["object_list"]
+
 
 @override_settings(LOCATION=False)
 def test_event_list_filter_start_time(client, published_event_factory):
@@ -203,10 +207,11 @@ def test_event_create_invalid(client, user_log, event_data):
     data = event_data
     del data["starts_at"]
     response = client.post(reverse("event:create", args=[organization.pk]), data)
-    html = response.content.decode()
     assert response.status_code == 200
     assert Event.objects.count() == 0
-    assert "Ce champ est obligatoire." in html
+    # Le formulaire est rendu par Vue.js, les erreurs Django sont dans le contexte
+    # The form is rendered by Vue.js, Django errors are in the context
+    assert "starts_at" in response.context_data["form"].errors
 
 
 def test_get_event_update(client, user_log, event, organization):
@@ -625,7 +630,7 @@ def test_events_ics_by_organization(
     assert f"SUMMARY:{str(event2)}" not in ics
 
     assert f"{event1.location.name}" in ics
-    assert f"{event2.location.name}" in ics
+    assert f"{event3.location.name}" in ics
 
 
 def test_event_ics(client, organization, activity, published_event_factory):
@@ -677,4 +682,3 @@ def test_event_internal_notes(event_factory):
     event = event_factory(internal_notes=notes)
     assert hasattr(event, "internal_notes")
     assert event.internal_notes == notes
-

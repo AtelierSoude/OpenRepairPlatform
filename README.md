@@ -209,7 +209,7 @@ docker exec -ti openrepairplatform bash
 lauch app: 
 
 ```bash
-python3 ./manage.py runserver 0.0.0.0:8005
+rsp
 ```
 
 The website is now deployed and accessible on http://[DOMAINDNS]

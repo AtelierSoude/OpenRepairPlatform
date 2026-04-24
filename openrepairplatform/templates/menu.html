@@ -135,7 +135,12 @@
                   {% endif %}
                 </li>
                 <li>
-                  <a class="dropdown-item" href="{% url 'logout' %}" title="Logout">Déconnexion</a>
+                    <form method="post" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="dropdown-item">
+                            <a>Déconnexion</a>
+                        </button>
+                    </form>
                 </li>
               </ul>
             {% endif %}

@@ -75,7 +75,7 @@ dependencies = [
     "pycparser==2.22",
     "pycups==2.0.4",
     "pydyf==0.11.0",
-    "pygments==2.19.2",
+    "pygments==2.20.0",
     "pyphen==0.15.0",
     "pypng==0.20220715.0",
     "pyserial==3.5",

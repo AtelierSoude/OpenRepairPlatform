@@ -91,7 +91,7 @@ dependencies = [
     "six==1.17.0",
     "sorl-thumbnail==12.11.0",
     "soupsieve==2.6",
-    "sqlparse==0.5.3",
+    "sqlparse==0.5.4",
     "stack-data==0.6.3",
     "tablib==3.5.0",
     "tatsu==5.8.3",

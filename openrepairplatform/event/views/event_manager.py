@@ -77,6 +77,9 @@ class EventAdminView(HasVolunteerPermissionMixin, EventViewMixin):
             (f"{user.email} ({user.first_name} {user.last_name})", user.email)
             for user in CustomUser.objects.only("email", "first_name", "last_name")
         ]
+
+        context["emails_list"] = [user.email for user in context["event"].registered.all()]
+
         context["present_form"] = MoreInfoCustomUserForm
         context["total_fees"] = sum(
             [fee.amount for fee in self.get_object().fees.all()]

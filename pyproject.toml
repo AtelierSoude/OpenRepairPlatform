@@ -22,7 +22,7 @@ dependencies = [
     "cssselect2==0.7.0",
     "decorator==5.2.1",
     "diff-match-patch==20241021",
-    "django==5.2.13",
+    "django==5.2.14",
     "django-anymail==12.0",
     "django-assets",
     "django-autocomplete-light==3.9.7",

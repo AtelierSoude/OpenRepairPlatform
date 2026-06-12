@@ -97,7 +97,7 @@ dependencies = [
     "tatsu==5.8.3",
     "tinycss2==1.4.0",
     "tomli==2.4.0",
-    "tornado==6.5.5",
+    "tornado==6.5.6",
     "traitlets==5.14.3",
     "types-python-dateutil==2.9.0.20241206",
     "typing-extensions==4.13.2",

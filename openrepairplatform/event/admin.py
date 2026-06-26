@@ -67,16 +67,10 @@ class EventResource(resources.ModelResource):
     class Meta:
         model = Event
 
-
 class ParticipationResource(resources.ModelResource):
-    user = Field(
-        column_name="user", attribute="user", widget=ForeignKeyWidget(CustomUser, "id")
-    )
-    event = Field(
-        column_name="event", attribute="event", widget=ForeignKeyWidget(Event, "id")
-    )
 
     class Meta:
+        fields = ('user__first_name','event__activity__name', 'event__date', 'payment', 'amount')
         model = Participation
 
 

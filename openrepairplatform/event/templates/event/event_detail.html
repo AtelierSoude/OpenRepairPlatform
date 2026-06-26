@@ -27,6 +27,22 @@
           {% if request.get_full_path == the_url %}
             <a href="{{ event.get_absolute_url }}"
                class="btn btn-large btn-light me-2 mb-2 ">Ne plus administrer</a>
+            <div class="btn-group">
+              <button type="button" class="m-2 btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="far fa-envelope"></i> Mail aux participants
+              </button>
+              <div class="dropdown-menu" aria-labelledby="btnGroupDrop2">
+                  <a href="mailto:{{ emails_list|join:"," }}" class="dropdown-item">Envoyer un mail</a>
+                  <a href="#" onclick="navigator.clipboard.writeText('{{ emails_list|join:"," }}');$('#liveToast').css('right','0px')" class="dropdown-item">Copier les mails</a>
+              </div>
+                <div class="alert alert-info alert-dismissible alert-stay fade show mb-0" role="alert" id="liveToast">
+                    Copié !
+                    <button type="button" class="close" aria-label="Close" onclick="$('#liveToast').css('right','-1000px')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+            </div>
             {% include "event/invitation.html" %}
           {% else %}
             <a href="admin" class="btn btn-large btn-light me-2 mb-2 ">

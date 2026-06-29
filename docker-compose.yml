@@ -27,7 +27,6 @@ services:
       - ./deployment:/srv/app/deployment
       - ./deployment/saves-bdd:/srv/saves-bdd
       - ./deployment/openrepairplatform_data/openrepairplatform_media/:/srv/media
-      - ./openrepairplatform/static/:/srv/static
     ports:
       - 8005:8005
       - 5679:5679

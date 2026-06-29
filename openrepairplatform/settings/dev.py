@@ -2,8 +2,7 @@ from .base import *
 
 DEBUG = True
 
-
-ASSETS_ROOT = BASE_DIR / "static"
+ASSETS_ROOT = PROJECT_DIR / "static"
 
 INSTALLED_APPS += ["debug_toolbar","livereload"]  
 

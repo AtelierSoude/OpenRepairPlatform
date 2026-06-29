@@ -94,7 +94,7 @@ If you would like to assist us or utilize the shared resource, you can join our 
 
 ## Run the application in production mode
 
-1 - set up the environment
+1. Set up the environment
 
 ```bash
 git clone https://github.com/AtelierSoude/OpenRepairPlatform.git
@@ -102,7 +102,7 @@ cd OpenRepairPlatform
 touch .env
 ```
 
-2 - Populate the envfile with the following content. Make sure to change the vars.
+2. Populate the envfile with the following content. Make sure to change the vars.
 
 ```bash
 #default content of the configuration .env file
@@ -138,7 +138,7 @@ POSTGRES_DBNAME=openrepairplatform
 POSTGRES_PASSWORD=mangerdespommes
 ```
 
-3 - launch the application in production mode
+3. launch the application in production mode
 
 This script will stop all previous openrepairplatform services and start the application.
 1 - obtaining the certificate for the domain by using certbot/nginx
@@ -153,7 +153,7 @@ sh ./install.prod.sh
 
 ## Run the application (in Develop mode only)
 
-1.Set django, postgres and nginx/domain variables in `openrepairplatform/.env`
+1. Set django, postgres and nginx/domain variables in `openrepairplatform/.env`
 
 ```bash
 #default content of the configuration .env file
@@ -192,9 +192,9 @@ PGADMIN_DEFAULT_EMAIL=admin@admin.com
 PGADMIN_DEFAULT_PASSWORD=root
 ```
 
-2.Add the DOMAINDNS value to your host configuration
+2. Add the DOMAINDNS value to your host configuration
 
-3.Run the following command:
+3. Run the following command:
 
 ```bash
 cd [git checkout directory]/
@@ -219,7 +219,7 @@ Then in the docker terminal, run the following command for livereload.
 By default the dev app will start with a livereload server, the auto watch for django files, and the automatic compilation of vue.js files.
 
 
-3 - Create an organization within the `http://localhost:8000/admin` path and you can start everythings else (further documentation will come).
+4. Create an organization within the `http://localhost:8000/admin` path and you can start everythings else (further documentation will come).
 
 ## Build the application from a branch to a docker image
 
@@ -234,7 +234,7 @@ docker build --file /django/Dockerfile https://github.com/AtelierSoude/OpenRepai
 
 ### build from local repository
 
-1 - First you have to clone the project inyour directory using the following commands depending on your configuration.
+1. First you have to clone the project inyour directory using the following commands depending on your configuration.
 
 ```bash
  git clone https://github.com/AtelierSoude/OpenRepairPlatform.git
@@ -245,7 +245,7 @@ docker build --file /django/Dockerfile https://github.com/AtelierSoude/OpenRepai
 
 ```
 
-2 - You can now build your image using the following command
+2. You can now build your image using the following command
 
 ```bash
 # enter your cloned directory

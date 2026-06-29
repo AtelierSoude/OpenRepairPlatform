@@ -153,7 +153,7 @@ sh ./install.prod.sh
 
 ## Run the application (in Develop mode only)
 
-1. Set django, postgres and nginx/domain variables in `openrepairplatform/.env`
+1. Set django, postgres and nginx/domain variables in `[git checkout directory]/.env`
 
 ```bash
 #default content of the configuration .env file
@@ -167,12 +167,6 @@ SECRET_KEY=CHANGE_ME
 # To activate the debug mode, set the environment variable to True
 DEBUG=true
 PREPROD=False # !!! to keep robots from indexing preprod pages. Change to False on Production server
-
-#Emailing settings only used in production mode
-EMAIL_PASSWORD=CHANGE_ME
-EMAIL_HOST_USER=CHANGE_ME
-EMAIL_HOST=CHANGE_ME
-DEFAULT_FROM_EMAIL=no-reply@reparons.org
 
 #Let's encrypt and nginx settings
 #The principal domain that django will use
@@ -212,14 +206,14 @@ lauch app:
 rsp
 ```
 
-The website is now deployed and accessible on http://[DOMAINDNS]
+The website is now deployed and accessible on http://localhost:8005
 
 Then in the docker terminal, run the following command for livereload.
 
 By default the dev app will start with a livereload server, the auto watch for django files, and the automatic compilation of vue.js files.
 
 
-4. Create an organization within the `http://localhost:8000/admin` path and you can start everythings else (further documentation will come).
+4. Login within the `http://localhost:8005/admin` path using `admin@example.com` / `adminpass` as credentials, and create an organization. You can start everythings else (further documentation will come).
 
 ## Build the application from a branch to a docker image
 

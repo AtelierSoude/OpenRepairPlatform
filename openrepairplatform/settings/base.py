@@ -136,7 +136,7 @@ USE_TZ = True
 USE_THOUSAND_SEPARATOR = True
 
 
-MEDIA_URL = "/srv/media/"
+MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media"
 # MEDIA_ROOT = join(BASE_DIR, "/media") 
 

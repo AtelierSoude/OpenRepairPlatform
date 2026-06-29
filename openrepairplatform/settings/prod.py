@@ -3,7 +3,6 @@ from .base import *  # noqa
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 ASSETS_ROOT = BASE_DIR / "static"
-MEDIA_URL = "/media/"
 
 if os.getenv("SENTRY_DSN"):
     import sentry_sdk

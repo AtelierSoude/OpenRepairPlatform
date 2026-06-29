@@ -198,7 +198,7 @@ PGADMIN_DEFAULT_PASSWORD=root
 
 ```bash
 cd [git checkout directory]/
-docker-compose up
+docker compose up
 ```
 Enter into the container: 
 
@@ -326,7 +326,7 @@ You can click on any step of the call stack, and browser the variables, test som
 
 ### Run unit tests
 
-First, start the containers with `docker-compose up`
+First, start the containers with `docker compose up`
 Then, run the tests with `docker exec openrepairplatform pytest --disable-pytest-warnings --cov=openrepairplatform --cov-report term-missing`
 
 
@@ -350,7 +350,7 @@ To see the running chrome sessions:
 
 To launch the tests :
 
-First, start the Docker containers with `docker-compose up`, and then:
+First, start the Docker containers with `docker compose up`, and then:
 
 `docker exec openrepairplatform_selenium_1 python3 -m pytest /tests/integration_tests.py -v`
 

@@ -203,7 +203,7 @@ docker compose up
 Enter into the container: 
 
 ```bash
-docker exec -ti openrepairplatform bash
+docker compose exec openrepairplatform bash
 ```
 
 lauch app: 

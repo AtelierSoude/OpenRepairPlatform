@@ -96,7 +96,7 @@ DATABASES = {
         "ENGINE": "django.contrib.gis.db.backends.postgis",
         "NAME": os.getenv("POSTGRES_DBNAME"),
         "USER": os.getenv("POSTGRES_USER"),
-        "HOST": "db",
+        "HOST": os.getenv("POSTGRES_HOST", "db"),
         "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
     }
 }

@@ -9,7 +9,7 @@ STATICFILES_DIRS = [
     PROJECT_DIR / "static/css",
     PROJECT_DIR / "static/scss",
 ]
-    
+
 ASSETS_ROOT = BASE_DIR / "static"
 MEDIA_URL = "/media/"
 

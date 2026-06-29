@@ -22,10 +22,7 @@ RUN apt-get install --assume-yes git
 RUN ln /usr/bin/sassc /usr/bin/sass
 
 # Install UV globally
-ADD https://astral.sh/uv/install.sh /uv-installer.sh
-RUN sh /uv-installer.sh && rm /uv-installer.sh && \
-    cp /root/.local/bin/uv /usr/local/bin/uv && \
-    cp /root/.local/bin/uvx /usr/local/bin/uvx
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
 # French ENV for date
 RUN sed -i -e 's/# fr_FR.UTF-8 UTF-8/fr_FR.UTF-8 UTF-8/' /etc/locale.gen && \

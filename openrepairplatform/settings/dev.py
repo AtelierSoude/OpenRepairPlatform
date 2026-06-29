@@ -2,21 +2,21 @@ from .base import *
 
 DEBUG = True
 
-STATIC_ROOT = "/srv/static/"
+STATIC_ROOT = BASE_DIR / "static"
 
 STATICFILES_DIRS = [
-    "/srv/app/openrepairplatform/static/",
-    "/srv/app/openrepairplatform/static/js",
-    "/srv/app/openrepairplatform/static/css",
-    "/srv/app/openrepairplatform/static/scss",
-    ]
-ASSETS_ROOT = "/srv/static/"
+    PROJECT_DIR / "static/",
+    PROJECT_DIR / "static/js",
+    PROJECT_DIR / "static/css",
+    PROJECT_DIR / "static/scss",
+]
+ASSETS_ROOT = BASE_DIR / "static"
 
 
 
 
 #pourquoi ? ... parceque...
-MEDIA_ROOT = "/srv/media/"
+MEDIA_ROOT = BASE_DIR / "media"
 
 INSTALLED_APPS += ["debug_toolbar","livereload"]  
 

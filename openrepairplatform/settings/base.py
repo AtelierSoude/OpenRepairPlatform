@@ -1,10 +1,11 @@
-from os.path import dirname, abspath, join
 import os
+from os.path import join
+from pathlib import Path
 
 from django.contrib import messages
 
-PROJECT_DIR = dirname(dirname(abspath(__file__)))
-BASE_DIR = dirname(PROJECT_DIR)
+PROJECT_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = PROJECT_DIR.parent
 
 STATIC_URL = "/static/"
 ASSETS_DEBUG = False
@@ -74,7 +75,7 @@ ROOT_URLCONF = "openrepairplatform.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [(join(BASE_DIR, "openrepairplatform", "templates"))],
+        "DIRS": [PROJECT_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -134,7 +135,7 @@ USE_THOUSAND_SEPARATOR = True
 
 
 MEDIA_URL = "/srv/media/"
-MEDIA_ROOT = "/srv/media/"
+MEDIA_ROOT = BASE_DIR / "media"
 # MEDIA_ROOT = join(BASE_DIR, "/media") 
 
 FILE_UPLOAD_HANDLERS = [

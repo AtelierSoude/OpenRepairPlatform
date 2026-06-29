@@ -1,17 +1,16 @@
-import os
 from .base import *  # noqa
 
 SECRET_KEY = os.getenv("SECRET_KEY")
-STATIC_ROOT = "/srv/static/"
+STATIC_ROOT = BASE_DIR / "static"
 
 STATICFILES_DIRS = [
-    "/srv/app/openrepairplatform/static/",
-    "/srv/app/openrepairplatform/static/js",
-    "/srv/app/openrepairplatform/static/css",
-    "/srv/app/openrepairplatform/static/scss",
-    ]
+    PROJECT_DIR / "static/",
+    PROJECT_DIR / "static/js",
+    PROJECT_DIR / "static/css",
+    PROJECT_DIR / "static/scss",
+]
     
-ASSETS_ROOT = "/srv/static/"
+ASSETS_ROOT = BASE_DIR / "static"
 MEDIA_URL = "/media/"
 
 if os.getenv("SENTRY_DSN"):

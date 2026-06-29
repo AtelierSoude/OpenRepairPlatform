@@ -5,9 +5,6 @@ DEBUG = True
 
 ASSETS_ROOT = BASE_DIR / "static"
 
-#pourquoi ? ... parceque...
-MEDIA_ROOT = BASE_DIR / "media"
-
 INSTALLED_APPS += ["debug_toolbar","livereload"]  
 
 MIDDLEWARE.insert(101, "debug_toolbar.middleware.DebugToolbarMiddleware")  

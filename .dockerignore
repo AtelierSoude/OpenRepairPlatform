@@ -5,6 +5,7 @@ media/
 openrepairplatform.egg-info/
 postgres_data/
 venv/
+.venv/
 openrepairplatform_static/
 !/openrepairplatform_static/img/**
 openrepairplatform_media/

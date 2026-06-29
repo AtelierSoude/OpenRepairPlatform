@@ -28,3 +28,27 @@ if DEBUG:
     import socket  # only if you haven't already imported this
     hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
     INTERNAL_IPS = [ip[: ip.rfind(".")] + ".1" for ip in ips] + ["127.0.0.1", "10.0.2.2"]
+
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console_verbose": {
+            "class": "logging.StreamHandler",
+            "formatter": "console_verbose",
+        },
+    },
+    "loggers": {
+        "openrepairplatform.user.management.commands": {
+            "handlers": ["console_verbose"],
+            "level": "INFO",
+            "propagate": True,
+        }
+    },
+    "formatters": {
+        "console_verbose": {
+            "format": "%(asctime)s - %(levelname)-8s - %(name)s - %(message)s",
+        },
+    },
+}

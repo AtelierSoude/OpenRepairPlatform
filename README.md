@@ -215,6 +215,9 @@ By default the dev app will start with a livereload server, the auto watch for d
 
 4. Login within the `http://localhost:8005/admin` path using `admin@example.com` / `adminpass` as credentials, and create an organization. You can start everythings else (further documentation will come).
 
+5. You optionally can create mock data with `docker compose run --rm openrepairplatform uv run manage.py create_mock_data`. An event starting right now will be created in Lyon and adding
+   the admin user as an admin. You can find it by searching the 69001 postcode.
+
 ## Build the application from a branch to a docker image
 
 ### build dev app from github branch

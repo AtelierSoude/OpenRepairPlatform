@@ -250,15 +250,15 @@ class OrganizationListView(LocationOrganization, ListView):
 
         places = Place.objects.all()
         if not self.get_queryset().exists():
-            zipcodes = "<br/>".join({
-                f"- {place.zipcode}" for place in places if place.address
+            zipcodes = ", ".join({
+                f" {place.zipcode}" for place in places if place.address
             })
             message = f"""
                 <p>
                     <b>
                     Il n'y a pas d'organisation dans la zone selectionnée.
-                    Vous pouvez retrouver nos organisations de réparation dans les zones
-                    suivantes :
+                    Retrouvez nos organisations de réparation dans les zones
+                    ci-dessous :
                     </b>
                 </p>
                 {zipcodes}

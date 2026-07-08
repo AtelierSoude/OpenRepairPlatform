@@ -65,7 +65,7 @@ dependencies = [
     "parso==0.8.5",
     "pexpect==4.9.0",
     "pickleshare==0.7.5",
-    "pillow==10.4.0",
+    "pillow==12.2.0",
     "pluggy==1.6.0",
     "prompt-toolkit==3.0.52",
     "psycopg2-binary==2.9.10",

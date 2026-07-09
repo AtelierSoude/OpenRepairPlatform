@@ -119,7 +119,7 @@ django-assets = { git = "https://github.com/ahguerilla/django-assets.git", rev =
 dev = [
     "django-debug-toolbar>=4.4.6",
     "django-livereload-server>=0.5.1",
-    "pytest==8.3.2",
+    "pytest==9.0.3",
     "pytest-django>=4.11.1",
     "pytest-factoryboy>=2.8.1",
     "sentry-sdk[django]>=2.57.0",

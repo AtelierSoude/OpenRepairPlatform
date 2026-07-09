@@ -51,7 +51,7 @@ dependencies = [
     "html2text==2024.2.26",
     "html5lib==1.1",
     "ics==0.7.2",
-    "idna==3.10",
+    "idna==3.15",
     "importlib-resources==6.4.5",
     "inflection==0.5.1",
     "iniconfig==2.1.0",

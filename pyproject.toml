@@ -14,7 +14,7 @@ dependencies = [
     "backcall==0.2.0",
     "beautifulsoup4==4.12.3",
     "bleach==6.1.0",
-    "brotli==1.1.0",
+    "brotli==1.2.0",
     "certifi==2024.8.30",
     "cffi==1.17.1",
     "charset-normalizer==3.4.0",

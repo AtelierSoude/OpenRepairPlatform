@@ -5,7 +5,7 @@ services:
     env_file:
       - .env
     volumes:
-      - openrepairplatform-db:/var/lib/postgresql/data
+      - openrepairplatform-db:/var/lib/postgresql
       - ./deployment/saves-bdd:/saves-bdd
       - ./deployment/saves-bdd:/srv/saves-bdd
     ports: # uncomment for dev env

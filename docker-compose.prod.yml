@@ -7,7 +7,7 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - openrepairplatform-db:/var/lib/postgresql/data
+      - openrepairplatform-db:/var/lib/postgresql
       - ./deployment/saves-bdd:/saves-bdd
     networks:
       - openrepairplatform-db

@@ -2,21 +2,7 @@ from .base import *
 
 DEBUG = True
 
-STATIC_ROOT = "/srv/static/"
-
-STATICFILES_DIRS = [
-    "/srv/app/openrepairplatform/static/",
-    "/srv/app/openrepairplatform/static/js",
-    "/srv/app/openrepairplatform/static/css",
-    "/srv/app/openrepairplatform/static/scss",
-    ]
-ASSETS_ROOT = "/srv/static/"
-
-
-
-
-#pourquoi ? ... parceque...
-MEDIA_ROOT = "/srv/media/"
+ASSETS_ROOT = PROJECT_DIR / "static"
 
 INSTALLED_APPS += ["debug_toolbar","livereload"]  
 
@@ -24,18 +10,18 @@ MIDDLEWARE.insert(101, "debug_toolbar.middleware.DebugToolbarMiddleware")
 MIDDLEWARE.insert(100, 'livereload.middleware.LiveReloadScript') 
 
 DEBUG_TOOLBAR_PANELS = [
-        'debug_toolbar.panels.versions.VersionsPanel',
-        'debug_toolbar.panels.timer.TimerPanel',
-        'debug_toolbar.panels.settings.SettingsPanel',
-        'debug_toolbar.panels.headers.HeadersPanel',
-        'debug_toolbar.panels.request.RequestPanel',
-        'debug_toolbar.panels.sql.SQLPanel',
-        'debug_toolbar.panels.staticfiles.StaticFilesPanel',
-        'debug_toolbar.panels.templates.TemplatesPanel',
-        'debug_toolbar.panels.cache.CachePanel',
-        'debug_toolbar.panels.signals.SignalsPanel',
-        'debug_toolbar.panels.redirects.RedirectsPanel',
-    ]
+    'debug_toolbar.panels.versions.VersionsPanel',
+    'debug_toolbar.panels.timer.TimerPanel',
+    'debug_toolbar.panels.settings.SettingsPanel',
+    'debug_toolbar.panels.headers.HeadersPanel',
+    'debug_toolbar.panels.request.RequestPanel',
+    'debug_toolbar.panels.sql.SQLPanel',
+    'debug_toolbar.panels.staticfiles.StaticFilesPanel',
+    'debug_toolbar.panels.templates.TemplatesPanel',
+    'debug_toolbar.panels.cache.CachePanel',
+    'debug_toolbar.panels.signals.SignalsPanel',
+    'debug_toolbar.panels.redirects.RedirectsPanel',
+]
 
 
 if DEBUG:
@@ -43,3 +29,26 @@ if DEBUG:
     hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
     INTERNAL_IPS = [ip[: ip.rfind(".")] + ".1" for ip in ips] + ["127.0.0.1", "10.0.2.2"]
 
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console_verbose": {
+            "class": "logging.StreamHandler",
+            "formatter": "console_verbose",
+        },
+    },
+    "loggers": {
+        "openrepairplatform.user.management.commands": {
+            "handlers": ["console_verbose"],
+            "level": "INFO",
+            "propagate": True,
+        }
+    },
+    "formatters": {
+        "console_verbose": {
+            "format": "%(asctime)s - %(levelname)-8s - %(name)s - %(message)s",
+        },
+    },
+}

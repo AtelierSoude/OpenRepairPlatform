@@ -1,12 +1,15 @@
-from os.path import dirname, abspath, join
 import os
+from os.path import join
+from pathlib import Path
 
 from django.contrib import messages
 
-PROJECT_DIR = dirname(dirname(abspath(__file__)))
-BASE_DIR = dirname(PROJECT_DIR)
+PROJECT_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = PROJECT_DIR.parent
 
 STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "static"
+STATICFILES_DIRS = [PROJECT_DIR / "static"]
 ASSETS_DEBUG = False
 
 SECRET_KEY = "H/hXAUnb1ZKNGpToim2cg38dxiyHM6b+zB9zozhpTzkP"
@@ -74,7 +77,7 @@ ROOT_URLCONF = "openrepairplatform.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [(join(BASE_DIR, "openrepairplatform", "templates"))],
+        "DIRS": [PROJECT_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -96,7 +99,7 @@ DATABASES = {
         "ENGINE": "django.contrib.gis.db.backends.postgis",
         "NAME": os.getenv("POSTGRES_DBNAME"),
         "USER": os.getenv("POSTGRES_USER"),
-        "HOST": "db",
+        "HOST": os.getenv("POSTGRES_HOST", "db"),
         "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
     }
 }
@@ -133,9 +136,8 @@ USE_TZ = True
 USE_THOUSAND_SEPARATOR = True
 
 
-MEDIA_URL = "/srv/media/"
-MEDIA_ROOT = "/srv/media/"
-# MEDIA_ROOT = join(BASE_DIR, "/media") 
+MEDIA_URL = "media/"
+MEDIA_ROOT = BASE_DIR / "media"
 
 FILE_UPLOAD_HANDLERS = [
     "django.core.files.uploadhandler.TemporaryFileUploadHandler",

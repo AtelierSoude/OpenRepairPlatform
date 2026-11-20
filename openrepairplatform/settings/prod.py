@@ -1,18 +1,8 @@
-import os
 from .base import *  # noqa
 
 SECRET_KEY = os.getenv("SECRET_KEY")
-STATIC_ROOT = "/srv/static/"
 
-STATICFILES_DIRS = [
-    "/srv/app/openrepairplatform/static/",
-    "/srv/app/openrepairplatform/static/js",
-    "/srv/app/openrepairplatform/static/css",
-    "/srv/app/openrepairplatform/static/scss",
-    ]
-    
-ASSETS_ROOT = "/srv/static/"
-MEDIA_URL = "/media/"
+ASSETS_ROOT = BASE_DIR / "static"
 
 if os.getenv("SENTRY_DSN"):
     import sentry_sdk

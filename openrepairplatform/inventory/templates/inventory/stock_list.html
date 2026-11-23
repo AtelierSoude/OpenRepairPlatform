@@ -48,7 +48,7 @@
                         <td>
                             {% if stuff.owner.picture %}
                                 {% thumbnail stuff.owner.picture "30x30" crop="left" format="PNG" as im %}
-                                <img class="img-fluid rounded-circle square-2" src="{{ im.url }}" alt="organization img">
+                                <img class="img-fluid rounded-circle square-2" src="{{ im.url }}" alt="organization img" width="{{ im.width }}" height="{{ im.height }}">
                                 {% endthumbnail %}
                             {% endif %}
                             {% if stuff.owner %}

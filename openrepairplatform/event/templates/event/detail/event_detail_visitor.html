@@ -19,6 +19,7 @@
               {% thumbnail event.organization.picture "30x30" crop="left" format="PNG" as im %}
               <img class="img-fluid rounded-circle square-2"
                    src="{{ im.url }}"
+                   width="{{ im.width }}" height="{{ im.height }}"
                    alt="organization img">
             {% endthumbnail %}
           {% endif %}
@@ -67,7 +68,7 @@
                       <div class="position-relative float-start mini">
                         {% if user.avatar_img %}
                           {% thumbnail user.avatar_img "35x35" crop="center" format="PNG" as im %}
-                          <img src="{{ im.url }}" class="rounded-circle" />
+                          <img src="{{ im.url }}" class="rounded-circle" width="{{ im.width }}" height="{{ im.height }}" />
                         {% endthumbnail %}
                       {% else %}
                         {% get_initial_avatar user 35 'circle' %}
@@ -90,7 +91,7 @@
                     <div class="position-relative float-start mini">
                       {% if orga.avatar_img %}
                         {% thumbnail orga.avatar_img "35x35" crop="center" format="PNG" as im %}
-                        <img src="{{ im.url }}" class="rounded-circle" />
+                        <img src="{{ im.url }}" class="rounded-circle" width="{{ im.width }}" height="{{ im.height }}" />
                       {% endthumbnail %}
                     {% else %}
                       {% if orga.first_name %}

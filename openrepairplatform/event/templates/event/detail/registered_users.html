@@ -13,7 +13,7 @@
             <div class="d-inline pe-2 float-start">
             {% if user.avatar_img %}
                 {% thumbnail user.avatar_img "35x35" crop="center" format="PNG" as im %}
-                  <img src="{{ im.url }}" class="m-2 rounded-circle"/>
+                  <img src="{{ im.url }}" class="m-2 rounded-circle" width="{{ im.width }}" height="{{ im.height }}"/>
                 {% endthumbnail %}
                 {% else %}
                 {% if user.first_name %}

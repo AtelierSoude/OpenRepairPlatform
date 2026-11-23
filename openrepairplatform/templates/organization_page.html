@@ -16,8 +16,8 @@
               {% if organization.picture %}
                 {% thumbnail organization.picture "100x100" crop="center" format="PNG" as im %}
                 <img src="{{ im.url }}"
-                     height="100"
-                     width="100"
+                     width="{{ im.width }}"
+                     height="{{ im.height }}"
                      alt="{{ organization.name |cut:' ' }}-logo"
                      class="mr-2 rounded-circle float-end" />
               {% endthumbnail %}

@@ -87,7 +87,7 @@
                   <a class="card-link h6" href="{{ user.get_absolute_url }}" id="square-{{ user.pk }}">
                     {% if user.avatar_img %}
                       {% thumbnail user.avatar_img "35x35" crop="center" format="PNG" as im %}
-                        <img src="{{ im.url }}" class="rounded-circle"/>
+                        <img src="{{ im.url }}" class="rounded-circle" width="{{ im.width }}" height="{{ im.height }}"/>
                       {% endthumbnail %}
                     {% else %}
                       {% if user.first_name %}

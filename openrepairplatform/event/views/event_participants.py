@@ -48,7 +48,7 @@ class BookView(RedirectView):
         try:
             event, user = _load_token(token, "book")
         except Exception:
-            logger.exception(f"Error loading token {token} during book")
+            logger.warning(f"Error loading token {token} during book")
             messages.error(
                 self.request, "Une erreur est survenue lors de votre requête"
             )
@@ -142,7 +142,7 @@ class CancelReservationView(RedirectView):
         try:
             event, user = _load_token(token, "cancel")
         except Exception:
-            logger.exception(f"Error loading token {token} during unbook")
+            logger.warning(f"Error loading token {token} during unbook")
             messages.error(
                 self.request, "Une erreur est survenue lors de votre requête"
             )
@@ -217,7 +217,7 @@ class InvitationFormView(RedirectView):
         try:
             event, user = _load_token(token, "invitation")
         except Exception:
-            logger.exception(f"Error loading token {token}.")
+            logger.warning(f"Error loading token {token}.")
             raise PermissionDenied("Une erreur est survenue lors de votre requête")
         return event, user
 

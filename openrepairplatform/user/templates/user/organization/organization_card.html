@@ -6,7 +6,7 @@
     <a class="card-link text-center" href="{% url 'organization_page' organization.slug %}">
       {% if organization.picture %}
       {% thumbnail organization.picture "250" format="PNG" as im %}
-        <img class="d-inline" src="{{ im.url }}"/>
+        <img class="d-inline" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" />
       {% endthumbnail %}
       {% endif %}
       <div class="card-body">

@@ -9,7 +9,7 @@
       <a class="card-link card-img-crop" href="{% url 'event:activity_detail' activity.pk activity.slug %}">
         {% if activity.picture %}
         {% thumbnail activity.picture "400" format="PNG" as im %}
-        <img class="card-img-top mt-3" src="{{ im.url }}" alt="activité illustration">
+        <img class="card-img-top mt-3" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="activité illustration">
         {% endthumbnail %}
         {% endif %}
         <div class="card-body p-2 d-flex flex-column bg-white">

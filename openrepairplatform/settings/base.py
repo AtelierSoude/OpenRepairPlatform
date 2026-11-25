@@ -11,6 +11,8 @@ STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "static"
 STATICFILES_DIRS = [PROJECT_DIR / "static"]
 ASSETS_DEBUG = False
+THUMBNAIL_DUMMY = True
+THUMBNAIL_DUMMY_SOURCE = f"{STATIC_URL}img/placeholder.svg"
 
 SECRET_KEY = "H/hXAUnb1ZKNGpToim2cg38dxiyHM6b+zB9zozhpTzkP"
 PREPROD=os.environ.get("PREPROD")

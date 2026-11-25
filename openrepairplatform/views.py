@@ -177,7 +177,7 @@ class OrganizationGroupsView(PermissionOrgaContextMixin, DetailView):
     template_name = "organization_groups.html"
 
     def get_object(self, *args, **kwargs):
-        self.organization = Organization.objects.get(slug=self.kwargs["orga_slug"])
+        self.organization = get_object_or_404(Organization, slug=self.kwargs.get("slug"))
         return self.organization
 
     def get_context_data(self, *args, **kwargs):

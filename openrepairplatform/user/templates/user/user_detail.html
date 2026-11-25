@@ -24,9 +24,8 @@
           {% if object.avatar_img %}
             {% thumbnail object.avatar_img "150x150" crop="center" format="PNG" as im %}
             <img src="{{ im.url }}"
-                 width="150"
-                 height="150"
-                 alt="{{ object }}"
+                 width="{{ im.width }}"
+                 height="{{ im.height }}"                 alt="{{ object }}"
                  class="m-2 rounded-circle" />
           {% endthumbnail %}
         {% else %}

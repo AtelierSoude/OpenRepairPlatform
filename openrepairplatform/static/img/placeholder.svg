@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="100mm"
+   height="100mm"
+   viewBox="0 0 100 100"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4.4 (dcaf3e7d9e, 2026-05-05)"
+   sodipodi:docname="placeholder.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="2.2179518"
+     inkscape:cx="174.4853"
+     inkscape:cy="158.70498"
+     inkscape:window-width="1671"
+     inkscape:window-height="1041"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Calque 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="fill:#9d9d9d;stroke-width:0.264583;fill-opacity:1"
+       id="rect1"
+       width="106.2375"
+       height="103.46127"
+       x="-1.6657449"
+       y="-0.92541379" />
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#3e3e3e;stroke-width:1;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;stroke-linecap:round;paint-order:normal"
+       id="rect2"
+       width="47.566269"
+       height="36.831467"
+       x="26.216866"
+       y="31.584267" />
+    <circle
+       style="fill:#3e3e3e;fill-opacity:1;stroke:none;stroke-width:0.694444;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:normal"
+       id="path2"
+       cx="61.912411"
+       cy="41.990692"
+       r="2.9822936" />
+    <path
+       style="fill:#3e3e3e;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:normal"
+       d="m 26.363474,59.049411 12.406342,-10.020506 11.332715,12.525631 12.525632,-5.845293 10.855547,6.083876 0.119293,6.203172 -47.239529,0.238583 z"
+       id="path3" />
+  </g>
+</svg>

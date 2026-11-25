@@ -9,7 +9,7 @@
 {% elif column == "avatar" %}
     {% if record.user.avatar_img %}
       {% thumbnail record.user.avatar_img "30x30" crop="center" format="PNG" as im %}
-        <img src="{{ im.url }}" class="rounded-circle"/>
+        <img src="{{ im.url }}" class="rounded-circle" width="{{ im.width }}" height="{{ im.height }}"/>
       {% endthumbnail %}
     {% else %}
       {% if record.user.first_name %}
@@ -69,7 +69,7 @@
         <div class="position-relative float-start mini d-none d-md-block d-lg-block">
         {% if orga.avatar_img %}
           {% thumbnail orga.avatar_img "25x25" crop="center" format="PNG" as im %}
-            <img src="{{ im.url }}" class="rounded-circle"/>
+            <img src="{{ im.url }}" class="rounded-circle" width="{{ im.width }}" height="{{ im.height }}"/>
           {% endthumbnail %}
         {% else %}
           {% if orga.first_name %}

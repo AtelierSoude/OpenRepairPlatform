@@ -26,7 +26,7 @@
         <div class="col-2 mb-1">
           {% if user.avatar_img %}
             {% thumbnail user.avatar_img "50x50" crop="center" format="PNG" as im %}
-              <img src="{{ im.url }}" class="m-2 rounded-circle"/>
+              <img src="{{ im.url }}" class="m-2 rounded-circle" width="{{ im.width }}" height="{{ im.height }}"/>
             {% endthumbnail %}
           {% else %}
             {% if user.first_name %}

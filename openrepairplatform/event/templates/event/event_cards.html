@@ -10,7 +10,7 @@
       <div class="col-2 p-1 text-muted text-center">
         {% if event.organization.picture %}
           {% thumbnail event.organization.picture "100x100" crop="left" format="PNG" as img %}
-            <img class="img-fluid rounded-circle" src="{{ img.url }}" alt="organization img">
+            <img class="img-fluid rounded-circle" src="{{ img.url }}" alt="organization img" width="{{ im.width }}" height="{{ im.height }}">
           {% endthumbnail %}
         {% endif %}
         <span class="">
@@ -85,7 +85,7 @@
                 <div class="position-relative float-start mini">
                   {% if orga.avatar_img %}
                     {% thumbnail orga.avatar_img "25x25" crop="center" format="PNG" as im %}
-                      <img src="{{ im.url }}" class="rounded-circle"/>
+                      <img src="{{ im.url }}" class="rounded-circle" width="{{ im.width }}" height="{{ im.height }}"/>
                     {% endthumbnail %}
                   {% else %}
                     {% if orga.first_name %}
